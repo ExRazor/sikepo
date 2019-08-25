@@ -17,7 +17,7 @@
         <p class="mg-b-0">Olah Data Tahun Akademik</p>
     </div>
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10" data-toggle="modal" data-target="#academicYear-add"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
+        <button class="btn btn-teal btn-block mg-b-10" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
     </div>
 </div>
     
@@ -47,7 +47,7 @@
                         </td>
                         <td width="150">
                             <div class="btn-group hidden-xs-down">
-                                <a href="academic-year/{{ encrypt($a->id) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit-ay"><div><i class="fa fa-pencil-alt"></i></div></a>
+                                <a href="{{ encrypt($a->id) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit-ay"><div><i class="fa fa-pencil-alt"></i></div></a>
                                 <form action="{{ url()->current() }}" method="POST">
                                     @method('delete')
                                     @csrf

@@ -19,6 +19,8 @@ $('.br-toggle').on('click', function(e){
 //Modal
 $('.modal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
+    $('.alert-danger').hide();
+    $('input, select').removeClass('is-invalid');
 })
 
 // Tahun Akademik
@@ -47,7 +49,7 @@ $('.toggle-ay-status').click(function(e){
                 $('.toggle-ay-status').removeClass('on');
                 toggle.toggleClass('on');
 
-                alertify.success(state.success);
+                alertify.success(state.message);
             }           
             
         }
@@ -57,25 +59,27 @@ $('.toggle-ay-status').click(function(e){
 $('#btn-add-ay').click(function(e) {
     e.preventDefault();
 
+    var action = $(this).val();
     var data = $('#form-academicYear').serialize();
+    var cont = $(this);
 
     $.ajax({
         url: base_url+'/master/academic-year',
         data: data,
-        type: 'POST',
+        type: action,
         dataType: 'json',
         beforeSend: function() {
-            $('#btn-add-ay').addClass('disabled');
+            cont.addClass('disabled');
             $('.btn-cancel').addClass('disabled');
-            $('#btn-add-ay').html('<i class="fa fa-spinner fa-spin"></i>');
+            cont.html('<i class="fa fa-spinner fa-spin"></i>');
         },
         success: function (state) {
 
-            $('#academicYear-add').modal('toggle');
+            $('#academicYear-form').modal('toggle');
 
             Swal.fire({
                 title: "Berhasil!",
-                text: "Data anda telah ditambahkan!",
+                text: state.message,
                 type: "success",
                 timer: 1500,
                 onClose: () => {
@@ -93,9 +97,9 @@ $('#btn-add-ay').click(function(e) {
                 $('[name='+key+']').addClass('is-invalid');
             });
 
-            $('#btn-add-ay').removeClass('disabled');
+            cont.removeClass('disabled');
             $('.btn-cancel').removeClass('disabled');
-            $('#btn-add-ay').html('Simpan');
+            cont.html('Simpan');
         }
     });
 
@@ -129,7 +133,7 @@ $('.btn-delete-ay').click(function(e){
                 success: function (state) {
                     Swal.fire({
                         title: "Berhasil!",
-                        text: state.success,
+                        text: state.message,
                         type: "success",
                         timer: 2000,
                         onClose: () => {
@@ -144,45 +148,23 @@ $('.btn-delete-ay').click(function(e){
       })
 })
 
-$('.btn-edit-ays').click(function(e){
+$('.btn-edit-ay').click(function(e){
     e.preventDefault();
 
-    var form = $(this).closest('form');
-    var data = form.serialize();
+    var id = $(this).attr('href');
 
-    Swal.fire({
-        title: 'Yakin menghapus?',
-        text: "Datanya tidak dapat dikembalikan!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal',
-      }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: base_url+'/master/academic-year',
-                data: data,
-                type: 'DELETE',
-                dataType: 'json',
-                beforeSend: function() {
-                    Swal.showLoading()
-                },
-                success: function (state) {
-                    Swal.fire({
-                        title: "Berhasil!",
-                        text: state.success,
-                        type: "success",
-                        timer: 2000,
-                        onClose: () => {
-                            window.location = "/master/academic-year";
-                        }
-                    });
-                            
-                }
-            });
-        // console.log(result.value);
+    $.ajax({
+        url: base_url+'/master/academic-year/'+id,
+        data: {id:id},
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $('input[name=id]').val(id);
+            $('input[name=tahun_akademik]').val(data.tahun_akademik);
+            $('select[name=semester]').val(data.semester);
+            $('h6.title-ay').text('Sunting Tahun Akademik ');
+            $('#btn-add-ay').val('put');
+            $('#academicYear-form').modal('toggle');
         }
-      })
+    });
 })
