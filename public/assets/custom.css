@@ -1,0 +1,22 @@
+.table td {
+    vertical-align: middle;
+}
+
+.form-control-label {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0;
+}
+
+.ajs-success {
+    color:white;
+}
+
+.ajs-warning {
+    color: black;
+}
+
+.btn {
+    transition: ease 1s;
+}
