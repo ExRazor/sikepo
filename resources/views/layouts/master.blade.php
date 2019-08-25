@@ -33,7 +33,7 @@
   <body>
 
     <!-- START: LEFT SIDEBAR -->
-    <div class="br-logo"><a href=""><span>[</span>bracket <i>plus</i><span>]</span></a></div>
+    <div class="br-logo"><a href=""><span>[</span>SI <i>BAK</i><span>]</span></a></div>
     <div class="br-sideleft sideleft-scrollbar">
         @include('layouts.sidebar')
     </div>
