@@ -20,3 +20,11 @@
 .btn {
     transition: ease 1s;
 }
+
+.alert ol, .alert ul {
+    margin: 0;
+}
+
+.nav-item.active a {
+    color: #0252a5;
+}

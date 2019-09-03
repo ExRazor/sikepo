@@ -12,13 +12,7 @@
     </a><!-- br-menu-link -->
     <ul class="br-menu-sub">
       <li class="sub-item"><a href="{{ url('master/academic-year') }}" class="sub-link {{ (request()->segment(2) == 'academic-year') ? 'active' : '' }}">Tahun Akademik</a></li>
-      <li class="sub-item"><a href="{{ url('master/study-program') }}" class="sub-link">Program Studi</a></li>
-      <li class="sub-item"><a href="height.html" class="sub-link">Jurusan</a></li>
-      <li class="sub-item"><a href="margin.html" class="sub-link">Margin</a></li>
-      <li class="sub-item"><a href="padding.html" class="sub-link">Padding</a></li>
-      <li class="sub-item"><a href="position.html" class="sub-link">Position</a></li>
-      <li class="sub-item"><a href="typography-util.html" class="sub-link">Typography</a></li>
-      <li class="sub-item"><a href="width.html" class="sub-link">Width</a></li>
+      <li class="sub-item"><a href="{{ url('master/study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Program Studi</a></li>
     </ul>
   </li>
 </ul><!-- br-sideleft-menu -->

@@ -17,7 +17,7 @@
         <p class="mg-b-0">Olah Data Tahun Akademik</p>
     </div>
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
+        <button class="btn btn-teal btn-block mg-b-10 btn-add-ay" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
     </div>
 </div>
     
@@ -72,5 +72,5 @@
 @endsection
 
 @section('js')
-<script src="{{ asset('assets/lib/jquery.maskedinput/jquery.maskedinput.js') }}"></script>
+
 @endsection

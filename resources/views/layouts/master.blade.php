@@ -21,9 +21,7 @@
     <link href="{{ asset ('assets/lib') }}/rickshaw/rickshaw.min.css" rel="stylesheet">
     <link href="{{ asset ('assets/lib') }}/select2/css/select2.min.css" rel="stylesheet">
     <link href="{{ asset ('assets/lib') }}/alertify/css/alertify.min.css" rel="stylesheet">
-    <link href="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.css" rel="stylesheet">
-
-    
+    <link href="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.css" rel="stylesheet">  
 
     <!-- Custom CSS -->
     @yield('style')
@@ -60,17 +58,17 @@
     <script src="{{ asset ('assets/lib') }}/jquery/jquery.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/jquery-ui/ui/widgets/datepicker.js"></script>
     <script src="{{ asset ('assets/lib') }}/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    {{-- <script src="{{ asset ('assets/lib') }}/perfect-scrollbar/perfect-scrollbar.min.js"></script> --}}
     <script src="{{ asset ('assets/lib') }}/moment/min/moment.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/peity/jquery.peity.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/rickshaw/vendor/d3.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/rickshaw/vendor/d3.layout.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/rickshaw/rickshaw.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/jquery.flot/jquery.flot.js"></script>
-    <script src="{{ asset ('assets/lib') }}/jquery.flot/jquery.flot.resize.js"></script>
-    <script src="{{ asset ('assets/lib') }}/flot-spline/js/jquery.flot.spline.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/echarts/echarts.min.js"></script>
+    {{-- <script src="{{ asset ('assets/lib') }}/rickshaw/vendor/d3.min.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/rickshaw/vendor/d3.layout.min.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/rickshaw/rickshaw.min.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/jquery.flot/jquery.flot.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/jquery.flot/jquery.flot.resize.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/flot-spline/js/jquery.flot.spline.min.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/jquery-sparkline/jquery.sparkline.min.js"></script> --}}
+    {{-- <script src="{{ asset ('assets/lib') }}/echarts/echarts.min.js"></script> --}}
     <script src="{{ asset ('assets/lib') }}/select2/js/select2.full.min.js"></script>
     
     <script src="{{ asset ('assets/js') }}/bracket.js"></script>
@@ -79,6 +77,7 @@
     <script src="{{ asset ('assets/js') }}/dashboard.js"></script>
     <script src="{{ asset ('assets/lib') }}/alertify/alertify.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.js"></script>
+    <script src="{{ asset('assets/lib') }}/jquery.maskedinput/jquery.maskedinput.js"></script>
     
     <!-- Custom JS -->
     @yield('js');

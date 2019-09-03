@@ -10,6 +10,12 @@ $.ajaxSetup({
     }
 });
 
+$('.datepicker').datepicker({ 
+    dateFormat: 'yy-mm-dd' 
+});
+
+$('.select2').select2();
+
 // Toggles
 $('.br-toggle').on('click', function(e){
     // e.preventDefault();
@@ -23,7 +29,7 @@ $('.modal').on('hidden.bs.modal', function () {
     $('input, select').removeClass('is-invalid');
 })
 
-// Tahun Akademik
+/********************************* TAHUN AKADEMIK *********************************/
 $('#tahunAkademik').mask('9999');
 $('input#tahunAkademik').keyup(function(){
     var year = parseInt($(this).val());
@@ -56,7 +62,12 @@ $('.toggle-ay-status').click(function(e){
     });
 })
 
-$('#btn-add-ay').click(function(e) {
+$('.btn-add-ay').click(function(e) {
+    $('h6.title-ay').text('Tambah Tahun Akademik');
+    $('#btn-save-ay').val('post');
+});
+
+$('#btn-save-ay').click(function(e) {
     e.preventDefault();
 
     var action = $(this).val();
@@ -78,7 +89,7 @@ $('#btn-add-ay').click(function(e) {
             $('#academicYear-form').modal('toggle');
 
             Swal.fire({
-                title: "Berhasil!",
+                title: state.title,
                 text: state.message,
                 type: "success",
                 timer: 1500,
@@ -132,7 +143,7 @@ $('.btn-delete-ay').click(function(e){
                 },
                 success: function (state) {
                     Swal.fire({
-                        title: "Berhasil!",
+                        title: state.title,
                         text: state.message,
                         type: "success",
                         timer: 2000,
@@ -163,8 +174,90 @@ $('.btn-edit-ay').click(function(e){
             $('input[name=tahun_akademik]').val(data.tahun_akademik);
             $('select[name=semester]').val(data.semester);
             $('h6.title-ay').text('Sunting Tahun Akademik ');
-            $('#btn-add-ay').val('put');
+            $('#btn-save-ay').val('put');
             $('#academicYear-form').modal('toggle');
         }
     });
 })
+/*********************************************************************************/
+
+/********************************* PROGRAM STUDI *********************************/
+
+$('.btn-show-sp').click(function(e){
+    
+    e.preventDefault();
+    var id = $(this).data('id');
+    
+    $.ajax({
+        url: base_url+'/master/study-program/'+id,
+        data: {id:id},
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function() {
+            $('span[name*=prodi]').text('');
+        },
+        success: function (data) {
+            $('span[name=kd_prodi]').text(data.kd_prodi);
+            $('span[name=nama_prodi]').text(data.nama);
+            $('span[name=jenjang_prodi]').text(data.jenjang);
+            $('span[name=no_sk_prodi]').text(data.no_sk);
+            $('span[name=tgl_sk_prodi]').text(data.tgl_sk);
+            $('span[name=pejabat_sk_prodi]').text(data.pejabat_sk);
+            $('span[name=thn_menerima_prodi]').text(data.thn_menerima);
+            $('span[name=singkatan_prodi]').text(data.singkatan);
+            
+            $('#studyProgram-show').modal('show')
+        }
+    })
+});
+
+$('.btn-delete-sp').click(function(e){
+    e.preventDefault();
+    
+    var form = $(this).closest('form');
+    var data = form.serialize();
+    
+    Swal.fire({
+        title: 'Yakin menghapus?',
+        text: "Datanya tidak dapat dikembalikan!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url+'/master/study-program',
+                data: data,
+                type: 'DELETE',
+                dataType: 'json',
+                beforeSend: function() {
+                    Swal.showLoading()
+                },
+                success: function (state) {
+                    Swal.fire({
+                        title: state.title,
+                        text: state.message,
+                        type: "success",
+                        timer: 2000,
+                        onClose: () => {
+                            window.location = "/master/study-program";
+                        }
+                    });
+                    
+                }
+            });
+            // console.log(result.value);
+        }
+    })
+})
+
+/*********************************************************************************/
+
+/********************************* SESSION PROGRAM STUDI *********************************/
+
+
+
+/*****************************************************************************************/

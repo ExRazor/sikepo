@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //Pages Controller
 Route::get('/dashboard', 'PageController@dashboard')->name('dashboard');
+Route::get('/setpro/{prodi}', 'PageController@set_prodi');
 
 //Academic Year
 Route::get('/master/academic-year', 'AcademicYearController@index')->name('master.academic-year');
@@ -31,3 +32,15 @@ Route::put('/master/academic-year','AcademicYearController@update' );
 Route::get('/ajax/academic-year/get_all','AcademicYearController@get_all' );
 Route::post('/ajax/academic-year/status','AcademicYearController@setStatus' );
 Route::delete('/master/academic-year','AcademicYearController@destroy' );
+
+//Study Program
+Route::get('/master/study-program', 'StudyProgramController@index')->name('master.study-program');
+Route::get('/master/study-program/add', 'StudyProgramController@create')->name('master.study-program.add');
+Route::get('/master/study-program/{id}', 'StudyProgramController@show')->name('master.study-program.show');
+Route::get('/master/study-program/{id}/edit', 'StudyProgramController@edit')->name('master.study-program.edit');
+Route::post('/master/study-program/', 'StudyProgramController@store')->name('master.study-program.store');
+Route::put('/master/study-program','StudyProgramController@update')->name('master.study-program.update');
+Route::delete('/master/study-program','StudyProgramController@destroy')->name('master.study-program.delete');
+
+//Session Study Program
+

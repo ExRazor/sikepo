@@ -28,13 +28,14 @@ class AcademicYearController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tahun_akademik' => 'required|size:4',
+            'tahun_akademik' => 'required|digits:4',
             'semester'       => 'required',
         ]);
 
         AcademicYear::create($request->all());
 
         return response()->json([
+            'title' => 'Berhasil',
             'message' => 'Data berhasil ditambahkan.'
         ]);
     }
@@ -65,7 +66,7 @@ class AcademicYearController extends Controller
         $id = decrypt($request->id);
 
         $request->validate([
-            'tahun_akademik' => 'required|size:4',
+            'tahun_akademik' => 'required|digits:4',
             'semester'       => 'required',
         ]);
 
@@ -75,6 +76,7 @@ class AcademicYearController extends Controller
         $academic->save();
 
         return response()->json([
+            'title' => 'Berhasil',
             'message' => 'Data berhasil disunting.'
         ]);
     }
@@ -89,7 +91,10 @@ class AcademicYearController extends Controller
     {
         $id = decrypt($request->id);
         AcademicYear::destroy($id);
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        return response()->json([
+            'title' => 'Berhasil',
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 
     public function setStatus(Request $request)
@@ -107,7 +112,10 @@ class AcademicYearController extends Controller
             $academicYear->status = 'Aktif';
             $academicYear->save();
 
-            return response()->json(['message' => 'Status berhasil diubah']);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Status berhasil diubah'
+            ]);
         }
     }
 

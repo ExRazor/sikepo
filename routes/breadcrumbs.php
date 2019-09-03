@@ -8,13 +8,28 @@ Breadcrumbs::for('dashboard', function ($trail) {
 // Dashboard > Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Master');
+    $trail->push('Data Master','#');
 });
 
 // Home > About
 Breadcrumbs::for('academic-year', function ($trail) {
     $trail->parent('master');
     $trail->push('Tahun Akademik', route('master.academic-year'));
+});
+
+Breadcrumbs::for('study-program', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Program Studi', route('master.study-program'));
+});
+
+Breadcrumbs::for('study-program-add', function ($trail) {
+    $trail->parent('study-program');
+    $trail->push('Tambah Program Studi');
+});
+
+Breadcrumbs::for('study-program-edit', function ($trail) {
+    $trail->parent('study-program');
+    $trail->push('Sunting Program Studi');
 });
 
 // // Home > About
