@@ -28,3 +28,7 @@
 .nav-item.active a {
     color: #0252a5;
 }
+
+#btn-action.dropdown-toggle:after {
+    display:none;
+}

@@ -5,6 +5,13 @@
       <i class="menu-item-icon icon ion-ios-home-outline tx-24"></i>
       <span class="menu-item-label">Beranda</span>
     </a><!-- br-menu-link -->
+  </li>
+  <li class="br-menu-item">
+    <a href="{{ url('collaboration') }}" class="br-menu-link {{ (request()->segment(1) == 'collaboration') ? 'active' : '' }}">
+      <i class="menu-item-icon fa fa-handshake"></i>
+      <span class="menu-item-label">Kerja Sama</span>
+    </a><!-- br-menu-link -->
+  </li>
   <li class="br-menu-item">
     <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'master') ? 'active' : '' }}">
       <i class="menu-item-icon icon ion-ios-briefcase-outline tx-22"></i>

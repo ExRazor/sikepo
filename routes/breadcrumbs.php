@@ -5,6 +5,16 @@ Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Beranda', route('dashboard'));
 });
 
+Breadcrumbs::for('collaboration', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Kerja Sama', route('collaboration'));
+});
+
+Breadcrumbs::for('collaboration-add', function ($trail) {
+    $trail->parent('collaboration');
+    $trail->push('Tambah Kerja Sama', route('collaboration.add'));
+});
+
 // Dashboard > Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');

@@ -8,4 +8,9 @@ class StudyProgram extends Model
 {
     protected $primaryKey = 'kd_prodi';
     protected $fillable = ['kd_prodi','nama','jenjang','no_sk','tgl_sk','pejabat_sk','thn_menerima','singkatan'];
+
+    public function collaboration()
+    {
+        return $this->hasOne('App\Collaboration');
+    }
 }

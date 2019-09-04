@@ -28,10 +28,10 @@ Route::get('/master/academic-year', 'AcademicYearController@index')->name('maste
 Route::get('/master/academic-year/{id}', 'AcademicYearController@edit');
 Route::post('/master/academic-year','AcademicYearController@store' );
 Route::put('/master/academic-year','AcademicYearController@update' );
+Route::delete('/master/academic-year','AcademicYearController@destroy' );
 
 Route::get('/ajax/academic-year/get_all','AcademicYearController@get_all' );
 Route::post('/ajax/academic-year/status','AcademicYearController@setStatus' );
-Route::delete('/master/academic-year','AcademicYearController@destroy' );
 
 //Study Program
 Route::get('/master/study-program', 'StudyProgramController@index')->name('master.study-program');
@@ -42,5 +42,7 @@ Route::post('/master/study-program/', 'StudyProgramController@store')->name('mas
 Route::put('/master/study-program','StudyProgramController@update')->name('master.study-program.update');
 Route::delete('/master/study-program','StudyProgramController@destroy')->name('master.study-program.delete');
 
-//Session Study Program
+//Collaboration
+Route::get('/collaboration','CollaborationController@index')->name('collaboration');
+Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
 

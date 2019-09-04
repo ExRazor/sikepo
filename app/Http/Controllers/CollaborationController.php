@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Collaboration;
+use App\StudyProgram;
 use Illuminate\Http\Request;
 
 class CollaborationController extends Controller
@@ -14,7 +15,9 @@ class CollaborationController extends Controller
      */
     public function index()
     {
-        //
+        $data = Collaboration::all();
+        // dd($data);
+        return view('admin/collaboration/index',compact('data'));
     }
 
     /**
@@ -24,7 +27,7 @@ class CollaborationController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin/collaboration/form');
     }
 
     /**

@@ -8,4 +8,8 @@ class AcademicYear extends Model
 {
     protected $fillable = ['tahun_akademik','semester','status'];
 
+    public function collaboration()
+    {
+        return $this->hasOne('App\Collaboration');
+    }
 }
