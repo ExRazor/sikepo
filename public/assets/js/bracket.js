@@ -161,27 +161,6 @@
     });
   }
 
-  // custom scrollbar style
-  new PerfectScrollbar('.sideleft-scrollbar', {
-    suppressScrollX: true
-  });
-
-  new PerfectScrollbar('.contact-scrollbar', {
-    suppressScrollX: true
-  });
-
-  new PerfectScrollbar('.attachment-scrollbar', {
-    suppressScrollX: true
-  });
-
-  new PerfectScrollbar('.schedule-scrollbar', {
-    suppressScrollX: true
-  });
-
-  new PerfectScrollbar('.settings-scrollbar', {
-    suppressScrollX: true
-  });
-
   // jquery ui datepicker
   $('.datepicker').datepicker();
 
@@ -227,7 +206,7 @@
   if($().select2) {
     $('.select2').select2({
       minimumResultsForSearch: Infinity,
-      placeholder: 'Choose one'
+      placeholder: 'Pilih satu'
     });
 
     // Select2 by showing the search

@@ -45,4 +45,9 @@ Route::delete('/master/study-program','StudyProgramController@destroy')->name('m
 //Collaboration
 Route::get('/collaboration','CollaborationController@index')->name('collaboration');
 Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
+Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
+Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
+Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
+Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
+Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
 

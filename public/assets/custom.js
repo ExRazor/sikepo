@@ -10,8 +10,8 @@ $.ajaxSetup({
     }
 });
 
-$('.datepicker').datepicker({ 
-    dateFormat: 'yy-mm-dd' 
+$('.datepicker').datepicker({
+    dateFormat: 'yy-mm-dd'
 });
 
 $('.select2').select2();
@@ -27,6 +27,51 @@ $('.modal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
     $('.alert-danger').hide();
     $('input, select').removeClass('is-invalid');
+})
+
+//Delete Button
+$('.btn-delete').click(function(e){
+    e.preventDefault();
+
+    var form = $(this).closest('form');
+    var data = form.serialize();
+    var url  = base_url+$(this).data('dest');
+
+    Swal.fire({
+        title: 'Yakin menghapus?',
+        text: "Datanya tidak dapat dikembalikan!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'DELETE',
+                dataType: 'json',
+                beforeSend: function() {
+                    Swal.showLoading()
+                },
+                success: function (state) {
+                    Swal.fire({
+                        title: state.title,
+                        text: state.message,
+                        type: "success",
+                        timer: 2000,
+                        onClose: () => {
+                            window.location = url;
+                        }
+                    });
+
+                }
+            });
+            // console.log(result.value);
+        }
+    })
 })
 
 /********************************* TAHUN AKADEMIK *********************************/
@@ -56,8 +101,8 @@ $('.toggle-ay-status').click(function(e){
                 toggle.toggleClass('on');
 
                 alertify.success(state.message);
-            }           
-            
+            }
+
         }
     });
 })
@@ -97,7 +142,7 @@ $('#btn-save-ay').click(function(e) {
                     window.location = "/master/academic-year";
                 }
             });
-                    
+
         },
         error: function (request) {
             json = $.parseJSON(request.responseText);
@@ -151,7 +196,7 @@ $('.btn-delete-ay').click(function(e){
                             window.location = "/master/academic-year";
                         }
                     });
-                            
+
                 }
             });
         // console.log(result.value);
@@ -184,10 +229,10 @@ $('.btn-edit-ay').click(function(e){
 /********************************* PROGRAM STUDI *********************************/
 
 $('.btn-show-sp').click(function(e){
-    
+
     e.preventDefault();
     var id = $(this).data('id');
-    
+
     $.ajax({
         url: base_url+'/master/study-program/'+id,
         data: {id:id},
@@ -205,7 +250,7 @@ $('.btn-show-sp').click(function(e){
             $('span[name=pejabat_sk_prodi]').text(data.pejabat_sk);
             $('span[name=thn_menerima_prodi]').text(data.thn_menerima);
             $('span[name=singkatan_prodi]').text(data.singkatan);
-            
+
             $('#studyProgram-show').modal('show')
         }
     })
@@ -213,10 +258,10 @@ $('.btn-show-sp').click(function(e){
 
 $('.btn-delete-sp').click(function(e){
     e.preventDefault();
-    
+
     var form = $(this).closest('form');
     var data = form.serialize();
-    
+
     Swal.fire({
         title: 'Yakin menghapus?',
         text: "Datanya tidak dapat dikembalikan!",
@@ -246,7 +291,7 @@ $('.btn-delete-sp').click(function(e){
                             window.location = "/master/study-program";
                         }
                     });
-                    
+
                 }
             });
             // console.log(result.value);
@@ -256,8 +301,26 @@ $('.btn-delete-sp').click(function(e){
 
 /*********************************************************************************/
 
-/********************************* SESSION PROGRAM STUDI *********************************/
+/********************************* KERJA SAMA PROGRAM STUDI *********************************/
 
+$('#bukti_kerjasama').change(function(){
+    var fileName = $(this).val();
+    // removing the fake path (Chrome)
+    fileName = fileName.replace("C:\\fakepath\\", "");
+    //replace the "Choose a file" label
+    $(this).next('.custom-file-label').html(fileName);
+});
 
+$('.datatable').DataTable({
+    responsive: true,
+    language: {
+      searchPlaceholder: 'Cari...',
+      sSearch: '',
+      lengthMenu: '_MENU_ items/page',
+    },
+    columnDefs: [
+        { "orderable": false, "targets": 'no-sort' }
+    ]
+  });
 
-/*****************************************************************************************/
+/********************************************************************************************/

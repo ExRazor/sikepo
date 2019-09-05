@@ -22,6 +22,7 @@ class Collaboration extends Model
     {
         return $this->belongsTo('App\StudyProgram','kd_prodi');
     }
+
     public function academicYear()
     {
         return $this->belongsTo('App\AcademicYear','id_ta');

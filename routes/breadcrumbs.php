@@ -15,6 +15,11 @@ Breadcrumbs::for('collaboration-add', function ($trail) {
     $trail->push('Tambah Kerja Sama', route('collaboration.add'));
 });
 
+Breadcrumbs::for('collaboration-edit', function ($trail) {
+    $trail->parent('collaboration');
+    $trail->push('Sunting Kerja Sama');
+});
+
 // Dashboard > Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');

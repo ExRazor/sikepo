@@ -25,7 +25,7 @@
             </div>
         @endif
     </div>
-    
+
 <div class="br-pagebody">
     @if($errors->any())
     <div class="alert alert-danger">
@@ -115,7 +115,6 @@
             </div>
         </div><!-- card-body -->
     </div>
-    @include('admin.academic-year.form');
 </div>
 @endsection
 
