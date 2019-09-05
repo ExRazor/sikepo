@@ -5,6 +5,7 @@ Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Beranda', route('dashboard'));
 });
 
+//Collaboration
 Breadcrumbs::for('collaboration', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Kerja Sama', route('collaboration'));
@@ -18,6 +19,22 @@ Breadcrumbs::for('collaboration-add', function ($trail) {
 Breadcrumbs::for('collaboration-edit', function ($trail) {
     $trail->parent('collaboration');
     $trail->push('Sunting Kerja Sama');
+});
+
+//Profil Dosen
+Breadcrumbs::for('teacher', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Dosen', route('teacher'));
+});
+
+Breadcrumbs::for('teacher-add', function ($trail) {
+    $trail->parent('teacher');
+    $trail->push('Tambah Data Dosen', route('teacher.add'));
+});
+
+Breadcrumbs::for('teacher-edit', function ($trail) {
+    $trail->parent('teacher');
+    $trail->push('Sunting Data Dosen');
 });
 
 // Dashboard > Data Master

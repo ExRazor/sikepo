@@ -51,3 +51,7 @@ Route::put('/collaboration','CollaborationController@update')->name('collaborati
 Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
 Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
 
+//Teacher
+Route::get('/teacher','TeacherController@index')->name('teacher');
+Route::get('/teacher/add','TeacherController@create')->name('teacher.add');
+
