@@ -34,7 +34,8 @@ class TeacherController extends Controller
      */
     public function create()
     {
-        return view('admin/teacher/form');
+        $studyProgram = StudyProgram::all();
+        return view('admin/teacher/form',compact('studyProgram'));
     }
 
     /**

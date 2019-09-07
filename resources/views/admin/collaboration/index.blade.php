@@ -50,7 +50,7 @@
                             <th>Lembaga Mitra</th>
                             <th>Tingkat</th>
                             <th class="no-sort">Judul Kegiatan</th>
-                            <th class="no-sort">Manfaat bagi PS yang Diakreditasi</th>
+                            <th class="no-sort">Manfaat</th>
                             <th class="no-sort">Waktu</th>
                             <th class="no-sort">Durasi</th>
                             <th class="no-sort">Bukti Kerjasama</th>
