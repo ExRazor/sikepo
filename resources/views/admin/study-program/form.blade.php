@@ -106,6 +106,7 @@
                                     <input class="form-control" type="text" name="singkatan" value="{{ isset($data) ? $data->singkatan : Request::old('singkatan')}}" placeholder="Isikan singkatan program studi">
                                 </div>
                             </div><!-- col-4 -->
+                        </div>
                     </div><!-- row -->
                     <div class="form-layout-footer bd pd-20 bd-t-0">
                         <button type="submit" class="btn btn-info">Simpan</button>

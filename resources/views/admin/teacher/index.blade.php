@@ -37,7 +37,7 @@
     @endif
     <div class="widget-2">
         @foreach($studyProgram as $sp)
-        <div class="card shadow-base overflow-hidden mb-3">
+        <div class="card shadow-base mb-3">
             <div class="card-header">
                 <h6 class="card-title">Program Studi: {{$sp->nama}}</h6>
             </div>
@@ -65,7 +65,7 @@
                             <td class="text-capitalize">{{$d->jk}}</td>
                             <td>{{$d->pend_terakhir}}</td>
                             <td>{{$d->bidang_ahli}}</td>
-                            <td>{{$d->status=='DT' ? 'Dosen Tetap':'Dosen Tidak Tetap'}}</td>
+                            <td>{{$d->status_pengajar==='DT' ? 'Dosen Tetap':'Dosen Tidak Tetap'}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
                             <td width="50">
                                 <div class="btn-group" role="group">
