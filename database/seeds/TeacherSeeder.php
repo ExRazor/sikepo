@@ -17,6 +17,7 @@ class TeacherSeeder extends Seeder
         $jk = ['Laki-Laki','Perempuan'];
         $agama = ['Islam','Kristen','Katholik','Buddha','Hindu','Kong Hu Cu'];
         $pend = ['D3','S1','S2','S3'];
+        $jurusan = ['Informatika','Ilmu Komputer','Elektro','Industri'];
         $status = ['DT','DTT'];
         $sesuai = ['Ya','Tidak'];
 
@@ -32,7 +33,8 @@ class TeacherSeeder extends Seeder
                 'alamat'                => $faker->address,
                 'no_telp'               => $faker->phoneNumber,
                 'email'                 => $faker->email,
-                'pend_terakhir'         => $pend[array_rand($pend)],
+                'pend_terakhir_jenjang' => $pend[array_rand($pend)],
+                'pend_terakhir_jurusan' => $jurusan[array_rand($jurusan)],
                 'bidang_ahli'           => 'Apa saja',
                 'dosen_ps'              => StudyProgram::all()->random()->kd_prodi,
                 'status_pengajar'       => $status[array_rand($status)],

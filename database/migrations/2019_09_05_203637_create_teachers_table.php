@@ -23,7 +23,8 @@ class CreateTeachersTable extends Migration
             $table->text('alamat');
             $table->string('no_telp');
             $table->string('email');
-            $table->string('pend_terakhir');
+            $table->string('pend_terakhir_jenjang');
+            $table->string('pend_terakhir_jurusan');
             $table->string('bidang_ahli');
             $table->char('dosen_ps',5);
             $table->enum('status_pengajar',['DT','DTT']);

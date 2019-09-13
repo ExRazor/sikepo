@@ -206,7 +206,8 @@
   if($().select2) {
     $('.select2').select2({
       minimumResultsForSearch: Infinity,
-      placeholder: 'Pilih satu'
+      placeholder: 'Pilih satu',
+      width: '100%'
     });
 
     // Select2 by showing the search
