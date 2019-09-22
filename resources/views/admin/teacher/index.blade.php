@@ -22,7 +22,14 @@
         <p class="mg-b-0">Olah Data Dosen</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
+        <div class="row">
+            <div class="col-6 pr-1">
+                <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
+            </div>
+            <div class="col-6 pl-1">
+                    <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-b-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a>
+                </div>
+        </div>
     </div>
 </div>
 
@@ -42,10 +49,9 @@
                 <h6 class="card-title">Program Studi: {{$sp->nama}}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table datatable display responsive nowrap">
+                <table class="table display responsive nowrap table-kerjasama">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>NIDN</th>
                             <th>Nama Dosen</th>
                             <th>Jenis Kelamin</th>
@@ -59,11 +65,10 @@
                     <tbody>
                         @foreach ($teacher[$sp->kd_prodi] as $d)
                         <tr>
-                            <th scope="row" style="vertical-align:middle">{{$loop->iteration}}</td>
                             <td>{{$d->nidn}}</td>
                             <td>{{$d->nama}}</td>
                             <td class="text-capitalize">{{$d->jk}}</td>
-                            <td>{{$d->pend_terakhir}}</td>
+                            <td>{{$d->pend_terakhir_jenjang}} - {{$d->pend_terakhir_jurusan}}</td>
                             <td>{{$d->bidang_ahli}}</td>
                             <td>{{$d->status_pengajar==='DT' ? 'Dosen Tetap':'Dosen Tidak Tetap'}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
@@ -73,11 +78,11 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="/teacher/{{encrypt($d->id)}}/edit">Sunting</a>
+                                        <a class="dropdown-item" href="/teacher/{{encrypt($d->nidn)}}/edit">Sunting</a>
                                         <form method="POST">
                                             @method('delete')
                                             @csrf
-                                            <input type="hidden" value="{{encrypt($d->id)}}" name="id">
+                                            <input type="hidden" value="{{encrypt($d->nidn)}}" name="id">
                                             <a href="#" class="dropdown-item btn-delete" data-dest="/teacher">Hapus</a>
                                         </form>
                                     </div>

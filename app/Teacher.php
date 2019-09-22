@@ -9,14 +9,22 @@ class Teacher extends Model
     protected $primaryKey = 'nidn';
     protected $fillable = [
         'nidn',
-        'id_ta',
-        'nama_lembaga',
-        'tingkat',
-        'judul_kegiatan',
-        'manfaat_kegiatan',
-        'waktu',
-        'durasi',
-        'bukti',
+        'nama'                 ,
+        'jk'                   ,
+        'agama'                ,
+        'tpt_lhr'              ,
+        'tgl_lhr'              ,
+        'alamat'               ,
+        'no_telp'              ,
+        'email'                ,
+        'pend_terakhir_jenjang',
+        'pend_terakhir_jurusan',
+        'bidang_ahli'          ,
+        'dosen_ps'             ,
+        'status_pengajar'      ,
+        'jabatan_akademik'     ,
+        'sertifikat_pendidik'     ,
+        'sesuai_bidang_ps'     ,
     ];
 
     public function studyProgram()

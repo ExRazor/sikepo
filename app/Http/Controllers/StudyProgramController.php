@@ -114,7 +114,7 @@ class StudyProgramController extends Controller
         $studyProgram->singkatan      = $request->singkatan;
         $studyProgram->save();
 
-        
+
         return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
 
     }

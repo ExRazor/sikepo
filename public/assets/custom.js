@@ -311,16 +311,29 @@ $('#bukti_kerjasama').change(function(){
     $(this).next('.custom-file-label').html(fileName);
 });
 
-$('.datatable').DataTable({
-    responsive: true,
-    language: {
-      searchPlaceholder: 'Cari...',
-      sSearch: '',
-      lengthMenu: '_MENU_ items/page',
-    },
-    columnDefs: [
-        { "orderable": false, "targets": 'no-sort' }
-    ]
-  });
+if($().DataTable) {
+    $('.table-kerjasama').DataTable({
+        order: [[1, 'asc']],
+        responsive: true,
+        language: {
+        searchPlaceholder: 'Cari...',
+        sSearch: '',
+        lengthMenu: '_MENU_ items/page',
+        },
+        columnDefs: [
+            { "orderable": false, "targets": 'no-sort' }
+        ]
+    });
+};
 
 /********************************************************************************************/
+
+/********************************* DATA DOSEN *********************************/
+$('.btn-submit-teacher').click(function(e){
+    e.preventDefault();
+
+    $('form[name=teacher_form]').submit();
+    // alert('hehe');
+})
+
+/*****************************************************************************/
