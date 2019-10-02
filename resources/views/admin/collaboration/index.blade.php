@@ -11,7 +11,11 @@
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('collaboration') as $breadcrumb)
-        <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @isset($breadcrumb->url)
+                <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @else
+                <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
+            @endisset
         @endforeach
     </nav>
 </div>

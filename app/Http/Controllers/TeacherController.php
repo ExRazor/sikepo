@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Teacher;
 use App\StudyProgram;
+use App\AcademicYear;
+use App\Ewmp;
+use File;
 
 class TeacherController extends Controller
 {
@@ -21,8 +24,6 @@ class TeacherController extends Controller
         foreach($studyProgram as $sp) {
             $teacher[$sp->kd_prodi] = Teacher::where('dosen_ps',$sp->kd_prodi)->get();
         }
-
-        // dd($teacher);
 
         return view('admin/teacher/index',compact(['studyProgram','teacher']));
     }
@@ -65,6 +66,34 @@ class TeacherController extends Controller
             'sesuai_bidang_ps'      => 'required',
         ]);
 
+        $Teacher            = new Teacher;
+        $Teacher->nidn      = $request->nidn;
+        $Teacher->nama      = $request->nama;
+        $Teacher->jk        = $request->jk;
+        $Teacher->agama     = $request->agama;
+        $Teacher->tpt_lhr   = $request->tpt_lhr;
+        $Teacher->tgl_lhr   = $request->tgl_lhr;
+        $Teacher->alamat    = $request->alamat;
+        $Teacher->no_telp   = $request->no_telp;
+        $Teacher->email     = $request->email;
+        $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
+        $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
+        $Teacher->bidang_ahli     = $request->bidang_ahli;
+        $Teacher->dosen_ps     = $request->dosen_ps;
+        $Teacher->status_pengajar     = $request->status_pengajar;
+        $Teacher->jabatan_akademik     = $request->jabatan_akademik;
+        $Teacher->sertifikat_pendidik     = $request->sertifikat_pendidik;
+        $Teacher->sesuai_bidang_ps     = $request->sesuai_bidang_ps;
+
+        if($request->file('foto')) {
+            $file = $request->file('foto');
+            $tgl_skrg = date('Y_m_d_H_i_s');
+            $tujuan_upload = 'upload/teacher';
+            $filename = $request->nidn.'_'.str_replace('', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
+            $Teacher->foto = $filename;
+        }
+
         Teacher::create($request->all());
 
         return redirect()->route('teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
@@ -88,9 +117,15 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function show(Teacher $teacher)
+    public function show($id)
     {
-        //
+        $id             = decrypt($id);
+        $data           = Teacher::find($id);
+        $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $ewmp           = Ewmp::where('nidn',$id)->orderBy('id_ta')->get();
+
+        // dd($ewmp);
+        return view('admin/teacher/profile',compact(['data','academicYear','ewmp']));
     }
 
     /**
@@ -117,7 +152,8 @@ class TeacherController extends Controller
      */
     public function update(Request $request)
     {
-        $id = decrypt($request->_token_id);
+        $id  = decrypt($request->_token_id);
+        $url = $request->_url;
 
         $request->validate([
             'nama'                  => 'required',
@@ -154,9 +190,25 @@ class TeacherController extends Controller
         $Teacher->jabatan_akademik     = $request->jabatan_akademik;
         $Teacher->sertifikat_pendidik     = $request->sertifikat_pendidik;
         $Teacher->sesuai_bidang_ps     = $request->sesuai_bidang_ps;
+
+        $storagePath = 'upload/teacher/'.$Teacher->foto;
+        if($request->file('foto')) {
+            if(File::exists($storagePath)) {
+                File::delete($storagePath);
+            }
+
+            $file = $request->file('foto');
+            $tgl_skrg = date('Y_m_d_H_i_s');
+            $tujuan_upload = 'upload/teacher';
+            $filename = $request->nidn.'_'.str_replace('', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
+            $Teacher->foto = $filename;
+        }
+
         $Teacher->save();
 
-        return redirect()->route('teacher')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+
+        return redirect($url)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**

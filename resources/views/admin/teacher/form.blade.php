@@ -6,7 +6,11 @@
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate( isset($data) ? 'teacher-edit' : 'teacher-add' ) as $breadcrumb)
-        <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @isset($breadcrumb->url)
+                <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @else
+                <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
+            @endisset
         @endforeach
     </nav>
 </div>
@@ -53,11 +57,13 @@
             <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                 <div class="row">
                     <div class="col-9 mx-auto">
-                        <form name="teacher_form" action="/teacher" method="POST">
+                        <form name="teacher_form" action="/teacher" method="POST" enctype="multipart/form-data">
                             @csrf
+                            <input type="hidden" name="_url" value="{{ url()->previous() }}">
                             @if(isset($data))
                                 @method('put')
                                 <input type="hidden" name="_token_id" value="{{encrypt($data->nidn)}}">
+
                             @else
                                 @method('post')
                             @endif
@@ -79,7 +85,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN">
+                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}}>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -227,6 +233,17 @@
                                                 <input name="sesuai_bidang_ps" type="radio" value="Tidak" {{ isset($data) && ($data->sesuai_bidang_ps=='Tidak' || Request::old('sesuai_bidang_ps')=='Tidak') ? 'checked' : ''}} required>
                                                 <span>Tidak</span>
                                             </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label">Foto Profil<span class="tx-danger"></span></label>
+                                <div class="col-8">
+                                    <div class="form-group mg-b-10-force">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" name="foto" id="foto_profil">
+                                            <label class="custom-file-label custom-file-label-primary" for="foto_profil">Pilih fail</label>
                                         </div>
                                     </div>
                                 </div>

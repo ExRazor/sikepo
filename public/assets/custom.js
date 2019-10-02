@@ -27,6 +27,7 @@ $('.modal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
     $('.alert-danger').hide();
     $('input, select').removeClass('is-invalid');
+    $(this).find('input[name=_id]').removeAttr('value');
 })
 
 //Delete Button
@@ -63,7 +64,7 @@ $('.btn-delete').click(function(e){
                         type: "success",
                         timer: 2000,
                         onClose: () => {
-                            window.location = url;
+                            location.reload();
                         }
                     });
 
@@ -207,8 +208,9 @@ $('.btn-delete-ay').click(function(e){
 $('.btn-edit-ay').click(function(e){
     e.preventDefault();
 
-    var id = $(this).attr('href');
+    $('#btn-save-ay').val('put');
 
+    var id = $(this).attr('href');
     $.ajax({
         url: base_url+'/master/academic-year/'+id,
         data: {id:id},
@@ -219,7 +221,6 @@ $('.btn-edit-ay').click(function(e){
             $('input[name=tahun_akademik]').val(data.tahun_akademik);
             $('select[name=semester]').val(data.semester);
             $('h6.title-ay').text('Sunting Tahun Akademik ');
-            $('#btn-save-ay').val('put');
             $('#academicYear-form').modal('toggle');
         }
     });
@@ -336,4 +337,97 @@ $('.btn-submit-teacher').click(function(e){
     // alert('hehe');
 })
 
+$('#foto_profil').change(function(){
+    var fileName = $(this).val();
+    // removing the fake path (Chrome)
+    fileName = fileName.replace("C:\\fakepath\\", "");
+    //replace the "Choose a file" label
+    $(this).next('.custom-file-label').html(fileName);
+});
+
 /*****************************************************************************/
+
+/********************************* DATA EWMP DOSEN *********************************/
+$('.btn-add-ewmp').click(function(e) {
+    $('h6.title-ewmp').text('Tambah Waktu Mengajar');
+    $('#btn-save-ewmp').val('post');
+});
+
+$('#btn-save-ewmp').click(function(e) {
+    e.preventDefault();
+
+    var action = $(this).val();
+    var data = $('#form-ewmp').serialize();
+    var cont = $(this);
+
+    $.ajax({
+        url: base_url+'/ajax/ewmp',
+        data: data,
+        type: action,
+        dataType: 'json',
+        beforeSend: function() {
+            cont.addClass('disabled');
+            $('.btn-cancel').addClass('disabled');
+            cont.html('<i class="fa fa-spinner fa-spin"></i>');
+        },
+        success: function (state) {
+
+            $('#ewmp-form').modal('toggle');
+
+            Swal.fire({
+                title: state.title,
+                text: state.message,
+                type: "success",
+                timer: 1500,
+                onClose: () => {
+                    location.reload();
+                }
+            });
+
+        },
+        error: function (request) {
+            json = $.parseJSON(request.responseText);
+            $('.alert-danger').html('');
+            $.each(json.errors, function(key, value){
+                $('.alert-danger').show();
+                $('.alert-danger').append('<span>'+value+'</span><br>');
+                $('[name='+key+']').addClass('is-invalid');
+            });
+
+            cont.removeClass('disabled');
+            $('.btn-cancel').removeClass('disabled');
+            cont.html('Simpan');
+        }
+    });
+
+});
+
+$('.btn-edit-ewmp').click(function(e){
+    e.preventDefault();
+
+    $('#btn-save-ewmp').val('put');
+    $('h6.title-ewmp').text('Sunting Waktu Mengajar');
+
+    var id = $(this).data('id');
+
+    $.ajax({
+        url: base_url+'/ajax/ewmp/'+id,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $('input[name=_id]').val(id);
+            $('select[name=id_ta]').val(data.id_ta);
+            $('input[name=tahun_akademik]').val(data.tahun_akademik);
+            $('input[name=ps_intra]').val(data.ps_intra);
+            $('input[name=ps_lain]').val(data.ps_lain);
+            $('input[name=ps_luar]').val(data.ps_luar);
+            $('input[name=penelitian]').val(data.penelitian);
+            $('input[name=pkm]').val(data.pkm);
+            $('input[name=tugas_tambahan]').val(data.tugas_tambahan);
+
+            $('#ewmp-form').modal('toggle');
+        }
+    });
+})
+
+/***********************************************************************************/

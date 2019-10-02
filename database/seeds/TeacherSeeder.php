@@ -41,7 +41,7 @@ class TeacherSeeder extends Seeder
                 'jabatan_akademik'      => 'Dosen',
                 'sertifikat_pendidik'   => 'hehe',
                 'sesuai_bidang_ps'      => $sesuai[array_rand($sesuai)],
-                ]);
+            ]);
         }
     }
 }

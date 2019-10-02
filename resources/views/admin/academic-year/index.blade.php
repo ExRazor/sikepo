@@ -6,7 +6,11 @@
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('academic-year') as $breadcrumb)
-        <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @isset($breadcrumb->url)
+                <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @else
+                <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
+            @endisset
         @endforeach
     </nav>
 </div>
@@ -20,7 +24,7 @@
         <button class="btn btn-teal btn-block mg-b-10 btn-add-ay" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
     </div>
 </div>
-    
+
 <div class="br-pagebody">
     <div class="card bd-0">
         <div class="card-body bd bd-t-0 rounded-bottom">
@@ -60,7 +64,7 @@
                         </td>
                     </tr>
                     @endforeach
-                    
+
                 </tbody>
             </table>
         </div><!-- card-body -->

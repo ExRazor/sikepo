@@ -31,6 +31,7 @@ class CreateTeachersTable extends Migration
             $table->string('jabatan_akademik');
             $table->string('sertifikat_pendidik');
             $table->enum('sesuai_bidang_ps',['Ya','Tidak']);
+            $table->string('foto')->nullable();;
             $table->timestamps();
 
             $table->foreign('dosen_ps')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

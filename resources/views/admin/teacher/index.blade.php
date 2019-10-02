@@ -11,7 +11,11 @@
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('teacher') as $breadcrumb)
-        <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @isset($breadcrumb->url)
+                <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+            @else
+                <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
+            @endisset
         @endforeach
     </nav>
 </div>
@@ -65,7 +69,7 @@
                     <tbody>
                         @foreach ($teacher[$sp->kd_prodi] as $d)
                         <tr>
-                            <td>{{$d->nidn}}</td>
+                            <td><a href="/teacher/{{encrypt($d->nidn)}}">{{$d->nidn}}</a></td>
                             <td>{{$d->nama}}</td>
                             <td class="text-capitalize">{{$d->jk}}</td>
                             <td>{{$d->pend_terakhir_jenjang}} - {{$d->pend_terakhir_jurusan}}</td>

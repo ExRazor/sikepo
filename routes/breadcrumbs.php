@@ -40,7 +40,7 @@ Breadcrumbs::for('teacher-edit', function ($trail) {
 // Dashboard > Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Master','#');
+    $trail->push('Data Master');
 });
 
 // Home > About

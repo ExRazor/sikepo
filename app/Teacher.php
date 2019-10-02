@@ -25,10 +25,11 @@ class Teacher extends Model
         'jabatan_akademik'     ,
         'sertifikat_pendidik'     ,
         'sesuai_bidang_ps'     ,
+        'foto'     ,
     ];
 
     public function studyProgram()
     {
-        return $this->belongsTo('App\StudyProgram','kd_prodi');
+        return $this->belongsTo('App\StudyProgram','dosen_ps');
     }
 }
