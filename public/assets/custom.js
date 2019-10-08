@@ -16,10 +16,20 @@ $('.datepicker').datepicker({
 
 $('.select2').select2();
 
-// Toggles
-$('.br-toggle').on('click', function(e){
-    // e.preventDefault();
-    // $(this).toggleClass('on');
+//Tab
+$(document).ready(function() {
+    // your existing tabs click listener
+    $('a.tab-link').click(function() {
+        location.hash = $(this).attr('href');
+    })
+    // get hash from url
+    var hash = location.hash;
+    if (hash) {
+      // now trigger click on appropriate tab
+      $('a.tab-link[href="' + hash + '"]').click();
+    } else {
+      $("a.tab-link").first().click();
+    }
 })
 
 //Modal
@@ -27,8 +37,84 @@ $('.modal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
     $('.alert-danger').hide();
     $('input, select').removeClass('is-invalid');
-    $(this).find('input[name=_id]').removeAttr('value');
+    $(this).find('input[name^=_id]').removeAttr('value');
 })
+
+/********************************* BUTTON / TOMBOL *********************************/
+
+//Add Button
+$('.btn-add').click(function(e) {
+    e.preventDefault();
+
+    $('span.title-action').text('Tambah');
+    $('.btn-save').val('post');
+});
+
+//Edit Button
+$('.btn-edit').click(function(e){
+    e.preventDefault();
+
+    $('span.title-action').text('Sunting');
+    $('.btn-save').val('put');
+});
+
+$('.btn-save').click(function(e) {
+    e.preventDefault();
+
+    var cont    = $(this);
+    var action  = cont.val();
+    var url     = cont.data('dest');
+    var modal   = cont.closest('.modal');
+    var data    = new FormData(cont.closest('form')[0]);
+    data.append('_method', action);
+
+    // for (var pair of data.entries()) {
+    //     console.log(pair[0]+ ', ' + pair[1]);
+    // }
+
+    $.ajax({
+        url: url,
+        data: data,
+        method: 'POST',
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        beforeSend: function() {
+            cont.addClass('disabled');
+            $('.btn-cancel').addClass('disabled');
+            cont.html('<i class="fa fa-spinner fa-spin"></i>');
+        },
+        success: function (state) {
+
+            modal.modal('toggle');
+
+            Swal.fire({
+                title: state.title,
+                text: state.message,
+                type: "success",
+                timer: 1500,
+                onClose: () => {
+                    location.reload();
+                }
+            });
+
+        },
+        error: function (request) {
+            json = $.parseJSON(request.responseText);
+            $('.alert-danger').html('');
+            $.each(json.errors, function(key, value){
+                $('.alert-danger').show();
+                $('.alert-danger').append('<span>'+value+'</span><br>');
+                $('[name='+key+']').addClass('is-invalid');
+            });
+
+            cont.removeClass('disabled');
+            $('.btn-cancel').removeClass('disabled');
+            cont.html('Simpan');
+        }
+    });
+
+});
 
 //Delete Button
 $('.btn-delete').click(function(e){
@@ -36,7 +122,7 @@ $('.btn-delete').click(function(e){
 
     var form = $(this).closest('form');
     var data = form.serialize();
-    var url  = base_url+$(this).data('dest');
+    var url  = $(this).data('dest');
 
     Swal.fire({
         title: 'Yakin menghapus?',
@@ -74,6 +160,25 @@ $('.btn-delete').click(function(e){
         }
     })
 })
+
+/***********************************************************************************/
+
+/********************************* DATA TABLE *********************************/
+if($().DataTable) {
+    $('.table-kerjasama').DataTable({
+        order: [[1, 'asc']],
+        responsive: true,
+        language: {
+        searchPlaceholder: 'Cari...',
+        sSearch: '',
+        lengthMenu: '_MENU_ items/page',
+        },
+        columnDefs: [
+            { "orderable": false, "targets": 'no-sort' }
+        ]
+    });
+};
+/******************************************************************************/
 
 /********************************* TAHUN AKADEMIK *********************************/
 $('#tahunAkademik').mask('9999');
@@ -224,11 +329,18 @@ $('.btn-edit-ay').click(function(e){
             $('#academicYear-form').modal('toggle');
         }
     });
-})
+});
+
+$('.custom-file-input').change(function(){
+    var fileName = $(this).val();
+    // removing the fake path (Chrome)
+    fileName = fileName.replace("C:\\fakepath\\", "");
+    //replace the "Choose a file" label
+    $(this).next('.custom-file-label').html(fileName);
+});
 /*********************************************************************************/
 
 /********************************* PROGRAM STUDI *********************************/
-
 $('.btn-show-sp').click(function(e){
 
     e.preventDefault();
@@ -302,33 +414,6 @@ $('.btn-delete-sp').click(function(e){
 
 /*********************************************************************************/
 
-/********************************* KERJA SAMA PROGRAM STUDI *********************************/
-
-$('#bukti_kerjasama').change(function(){
-    var fileName = $(this).val();
-    // removing the fake path (Chrome)
-    fileName = fileName.replace("C:\\fakepath\\", "");
-    //replace the "Choose a file" label
-    $(this).next('.custom-file-label').html(fileName);
-});
-
-if($().DataTable) {
-    $('.table-kerjasama').DataTable({
-        order: [[1, 'asc']],
-        responsive: true,
-        language: {
-        searchPlaceholder: 'Cari...',
-        sSearch: '',
-        lengthMenu: '_MENU_ items/page',
-        },
-        columnDefs: [
-            { "orderable": false, "targets": 'no-sort' }
-        ]
-    });
-};
-
-/********************************************************************************************/
-
 /********************************* DATA DOSEN *********************************/
 $('.btn-submit-teacher').click(function(e){
     e.preventDefault();
@@ -348,70 +433,14 @@ $('#foto_profil').change(function(){
 /*****************************************************************************/
 
 /********************************* DATA EWMP DOSEN *********************************/
-$('.btn-add-ewmp').click(function(e) {
-    $('h6.title-ewmp').text('Tambah Waktu Mengajar');
-    $('#btn-save-ewmp').val('post');
-});
-
-$('#btn-save-ewmp').click(function(e) {
-    e.preventDefault();
-
-    var action = $(this).val();
-    var data = $('#form-ewmp').serialize();
-    var cont = $(this);
-
-    $.ajax({
-        url: base_url+'/ajax/ewmp',
-        data: data,
-        type: action,
-        dataType: 'json',
-        beforeSend: function() {
-            cont.addClass('disabled');
-            $('.btn-cancel').addClass('disabled');
-            cont.html('<i class="fa fa-spinner fa-spin"></i>');
-        },
-        success: function (state) {
-
-            $('#ewmp-form').modal('toggle');
-
-            Swal.fire({
-                title: state.title,
-                text: state.message,
-                type: "success",
-                timer: 1500,
-                onClose: () => {
-                    location.reload();
-                }
-            });
-
-        },
-        error: function (request) {
-            json = $.parseJSON(request.responseText);
-            $('.alert-danger').html('');
-            $.each(json.errors, function(key, value){
-                $('.alert-danger').show();
-                $('.alert-danger').append('<span>'+value+'</span><br>');
-                $('[name='+key+']').addClass('is-invalid');
-            });
-
-            cont.removeClass('disabled');
-            $('.btn-cancel').removeClass('disabled');
-            cont.html('Simpan');
-        }
-    });
-
-});
-
 $('.btn-edit-ewmp').click(function(e){
     e.preventDefault();
 
-    $('#btn-save-ewmp').val('put');
-    $('h6.title-ewmp').text('Sunting Waktu Mengajar');
-
-    var id = $(this).data('id');
+    var id  = $(this).data('id');
+    var url = '/ajax/ewmp/'+id;
 
     $.ajax({
-        url: base_url+'/ajax/ewmp/'+id,
+        url: url,
         type: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -425,9 +454,42 @@ $('.btn-edit-ewmp').click(function(e){
             $('input[name=pkm]').val(data.pkm);
             $('input[name=tugas_tambahan]').val(data.tugas_tambahan);
 
-            $('#ewmp-form').modal('toggle');
+            $('#modal-teach-ewmp').modal('toggle');
         }
     });
-})
+});
+/***********************************************************************************/
 
+/********************************* DATA PRESTASI DOSEN *********************************/
+$('.btn-edit-acv').click(function(e){
+    e.preventDefault();
+
+    var id  = $(this).data('id');
+    var url = '/ajax/teacher-achievement/'+id;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $('input[name=_id_acv]').val(id);
+            $('input[name=prestasi]').val(data.prestasi);
+
+            switch(data.tingkat_prestasi) {
+                case 'Wilayah':
+                    $('input:radio[name=tingkat_prestasi][value="Wilayah"]').prop('checked',true);
+                break;
+                case 'Nasional':
+                    $('input:radio[name=tingkat_prestasi][value="Nasional"]').prop('checked',true);
+                break;
+                case 'Internasional':
+                    $('input:radio[name=tingkat_prestasi][value="Internasional"]').prop('checked',true);
+                break;
+            }
+            $('input[name=tanggal_dicapai]').val(data.tanggal);
+
+            $('#modal-teach-acv').modal('toggle');
+        }
+    });
+});
 /***********************************************************************************/

@@ -37,7 +37,7 @@ Route::post('/ajax/academic-year/status','AcademicYearController@setStatus' );
 Route::get('/master/study-program', 'StudyProgramController@index')->name('master.study-program');
 Route::get('/master/study-program/add', 'StudyProgramController@create')->name('master.study-program.add');
 Route::get('/master/study-program/{id}', 'StudyProgramController@show')->name('master.study-program.show');
-Route::get('/master/study-program/{id}/edit', 'StudyProgramController@edit')->name('master.study-program.edit');
+Route::get('/master/study-program/edit/{id}', 'StudyProgramController@edit')->name('master.study-program.edit');
 Route::post('/master/study-program/', 'StudyProgramController@store')->name('master.study-program.store');
 Route::put('/master/study-program','StudyProgramController@update')->name('master.study-program.update');
 Route::delete('/master/study-program','StudyProgramController@destroy')->name('master.study-program.delete');
@@ -55,14 +55,23 @@ Route::get('/download/collab/{filename}','CollaborationController@download')->na
 Route::get('/teacher','TeacherController@index')->name('teacher');
 Route::get('/teacher/add','TeacherController@create')->name('teacher.add');
 Route::get('/teacher/import','TeacherController@import')->name('teacher.import');
-Route::get('/teacher/{id}','TeacherController@show')->name('teacher.show');
-Route::get('/teacher/{id}/edit','TeacherController@edit')->name('teacher.edit');
+Route::get('/teacher/detail/{id}','TeacherController@show')->name('teacher.show');
+Route::get('/teacher/edit/{id}','TeacherController@edit')->name('teacher.edit');
 Route::post('/teacher','TeacherController@store')->name('teacher.store');
 Route::put('/teacher','TeacherController@update')->name('teacher.update');
 Route::delete('/teacher','TeacherController@destroy')->name('teacher.delete');
 
+//Teacher Achievement
+Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher-achievement.edit');
+Route::post('/ajax/teacher-achievement','TeacherAchievementController@store')->name('teacher-achievement.store');
+Route::put('/ajax/teacher-achievement','TeacherAchievementController@update')->name('teacher-achievement.update');
+Route::delete('/ajax/teacher-achievement','TeacherAchievementController@destroy')->name('teacher-achievement.delete');
+Route::get('/download/teacher-achievement/{filename}','TeacherAchievementController@download')->name('teacher-achievement.download');
+
 //EWMP
+Route::get('/teacher/ewmp', 'EwmpController@index')->name('teacher.ewmp');
 Route::get('/ajax/ewmp/{id}','EwmpController@edit')->name('ewmp.edit');
 Route::post('/ajax/ewmp','EwmpController@store')->name('ewmp.store');
 Route::put('/ajax/ewmp','EwmpController@update')->name('ewmp.update');
 Route::delete('/ajax/ewmp','EwmpController@destroy')->name('ewmp.delete');
+

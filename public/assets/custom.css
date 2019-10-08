@@ -64,7 +64,7 @@
     background-size: cover;
 }
 
-
+.ui-datepicker{z-index:1151 !important;}
 
 @media (min-width: 480px) {
     .br-profile-page .br-profile-body {
