@@ -229,4 +229,22 @@ class TeacherController extends Controller
             'message' => 'Data berhasil dihapus'
         ]);
     }
+
+    public function download($filename)
+    {
+        $file = decrypt($filename);
+
+        $storagePath = 'upload/teacher/'.$file;
+        if( ! File::exists($storagePath)) {
+            abort(404);
+        } else {
+            $mimeType = File::mimeType($storagePath);
+            $headers = array(
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="'.$file.'"'
+            );
+
+            return response(file_get_contents($storagePath), 200, $headers);
+        }
+    }
 }

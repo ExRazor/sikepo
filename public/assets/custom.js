@@ -177,6 +177,18 @@ if($().DataTable) {
             { "orderable": false, "targets": 'no-sort' }
         ]
     });
+    $('.table-ewmp').DataTable({
+        order: [[1, 'desc']],
+        responsive: true,
+        language: {
+        searchPlaceholder: 'Cari...',
+        sSearch: '',
+        lengthMenu: '_MENU_ items/page',
+        },
+        columnDefs: [
+            { "orderable": false, "targets": 'no-sort' }
+        ]
+    });
 };
 /******************************************************************************/
 
@@ -459,6 +471,78 @@ $('.btn-edit-ewmp').click(function(e){
         }
     });
 });
+
+$('#filter-ewmpsss').submit(function(e){
+    e.preventDefault();
+
+    var data = $(this).serialize();
+    var url  = $(this).attr('action');
+
+    $.ajax({
+        url: url,
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            if(data.length > 0) {
+                var html = ''
+                for (i = 0; i < data.length; i++) {
+
+                    var ps_intra        = parseInt(data[i].ps_intra);
+                    var ps_lain         = parseInt(data[i].ps_lain);
+                    var ps_luar         = parseInt(data[i].ps_luar);
+                    var penelitian      = parseInt(data[i].penelitian);
+                    var pkm             = parseInt(data[i].pkm);
+                    var tugas_tambahan  = parseInt(data[i].tugas_tambahan);
+                    var total = parseInt(ps_intra+ps_lain+ps_luar+penelitian+pkm+tugas_tambahan);
+                    var rata  = parseFloat(total/6).toFixed(2);
+                    html += '<tr>'+
+                                '<td>'+data[i].nama+'</td>'+
+                                '<td>'+data[i].tahun_akademik+' - '+data[i].semester+'</td>'+
+                                '<td>'+data[i].ps_intra+'</td>'+
+                                '<td>'+data[i].ps_lain+'</td>'+
+                                '<td>'+data[i].ps_luar+'</td>'+
+                                '<td>'+data[i].penelitian+'</td>'+
+                                '<td>'+data[i].pkm+'</td>'+
+                                '<td>'+data[i].tugas_tambahan+'</td>'+
+                                '<td>'+total+'</td>'+
+                                '<td>'+rata+'</td>'+
+                                '<td class="text-center" width="50">'+
+                                    '<div class="btn-group" role="group">'+
+                                        '<button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                            '<div><span class="fa fa-caret-down"></span></div>'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                            '<a class="dropdown-item btn-edit btn-edit-ewmp" href="#" data-id="{{encrypt($e->id)}}">Sunting</a>'+
+                                            '<form method="POST">'+
+                                                '@method("delete")'+
+                                                '@csrf'+
+                                                '<input type="hidden" value="{{encrypt($e->id)}}" name="_id">'+
+                                                '<a href="#" class="dropdown-item btn-delete" data-dest="{{ route("ewmp.delete") }}">Hapus</a>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</td>'+
+                            '<tr>'
+                }
+
+                $('.table-ewmp tbody').html(html);
+
+                console.log(data);
+
+
+
+
+
+
+            }
+
+
+
+        }
+    });
+    console.log(data);
+})
 /***********************************************************************************/
 
 /********************************* DATA PRESTASI DOSEN *********************************/

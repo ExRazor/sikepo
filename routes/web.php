@@ -52,14 +52,18 @@ Route::delete('/collaboration','CollaborationController@destroy')->name('collabo
 Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
 
 //Teacher
-Route::get('/teacher','TeacherController@index')->name('teacher');
-Route::get('/teacher/add','TeacherController@create')->name('teacher.add');
-Route::get('/teacher/import','TeacherController@import')->name('teacher.import');
-Route::get('/teacher/detail/{id}','TeacherController@show')->name('teacher.show');
-Route::get('/teacher/edit/{id}','TeacherController@edit')->name('teacher.edit');
-Route::post('/teacher','TeacherController@store')->name('teacher.store');
-Route::put('/teacher','TeacherController@update')->name('teacher.update');
-Route::delete('/teacher','TeacherController@destroy')->name('teacher.delete');
+Route::get('/teacher',function(){
+    return redirect(route('teacher'));
+});
+Route::get('/teacher/list','TeacherController@index')->name('teacher');
+Route::get('/teacher/list/add','TeacherController@create')->name('teacher.add');
+Route::get('/teacher/list/import','TeacherController@import')->name('teacher.import');
+Route::get('/teacher/list/detail/{id}','TeacherController@show')->name('teacher.show');
+Route::get('/teacher/list/edit/{id}','TeacherController@edit')->name('teacher.edit');
+Route::post('/teacher/list','TeacherController@store')->name('teacher.store');
+Route::put('/teacher/list','TeacherController@update')->name('teacher.update');
+Route::delete('/teacher/list','TeacherController@destroy')->name('teacher.delete');
+Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
 
 //Teacher Achievement
 Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher-achievement.edit');
@@ -70,6 +74,7 @@ Route::get('/download/teacher-achievement/{filename}','TeacherAchievementControl
 
 //EWMP
 Route::get('/teacher/ewmp', 'EwmpController@index')->name('teacher.ewmp');
+Route::post('/ajax/ewmp/list','EwmpController@show_by_filter')->name('ewmp.show_filter');
 Route::get('/ajax/ewmp/{id}','EwmpController@edit')->name('ewmp.edit');
 Route::post('/ajax/ewmp','EwmpController@store')->name('ewmp.store');
 Route::put('/ajax/ewmp','EwmpController@update')->name('ewmp.update');

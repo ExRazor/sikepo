@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Ewmp;
 use App\Teacher;
 use App\AcademicYear;
+use App\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EwmpController extends Controller
 {
@@ -16,7 +18,14 @@ class EwmpController extends Controller
      */
     public function index()
     {
-        //
+        $studyProgram = StudyProgram::all();
+        $academicYear = AcademicYear::all();
+
+        if(session()->has('ewmp')) {
+            $ewmp         = session()->get('ewmp');
+        }
+
+        return view('admin.ewmp.index',compact(['studyProgram','academicYear','ewmp']));
     }
 
     /**
@@ -65,9 +74,44 @@ class EwmpController extends Controller
         //
     }
 
-    public function show_based_nidn($nidn)
+    public function show_by_filter(Request $request)
     {
-        $data = Ewmp::find($nidn);
+        $studyProgram = StudyProgram::all();
+
+        $prodi = $request->program_studi;
+        $ta    = $request->tahun_akademik;
+        $smt   = $request->semester;
+
+        // $ewmp = Ewmp::with([
+        //                 'teacher.studyProgram' => function($query) use ($prodi) {
+        //                     $query->select('nama')->where('kd_prodi','=',$prodi);
+        //                 },
+        //                 'academicYear' => function($query) use ($ta,$smt) {
+        //                     $query->select('tahun_akademik','semester')
+        //                           ->where('tahun_akademik','=',$ta)
+        //                           ->where('semester','=',$smt);
+        //                 }
+        //             ])
+        //             ->get();
+
+        $ewmp = DB::table('ewmps')
+                    ->join('academic_years as ay', 'ewmps.id_ta', '=', 'ay.id')
+                    ->join('teachers as t', 'ewmps.nidn', '=', 't.nidn')
+                    ->join('study_programs as sp', 't.dosen_ps', '=', 'sp.kd_prodi')
+                    ->where([
+                        'kd_prodi'       => $prodi,
+                        'tahun_akademik' => $ta,
+                        'semester'       => $smt
+                    ])
+                    ->select('ewmps.*', 'ay.*', 't.nama as nama_dosen', 'sp.nama as nama_prodi')
+                    ->get();
+
+        // dd($ewmp);
+        if($ewmp->count() > 0) {
+            return redirect()->route('teacher.ewmp')->with(['ewmp' => $ewmp]);
+        } else {
+            return redirect()->route('teacher.ewmp');
+        }
     }
 
     /**

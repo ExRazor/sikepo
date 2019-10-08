@@ -57,7 +57,7 @@
             <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                 <div class="row">
                     <div class="col-9 mx-auto">
-                        <form name="teacher_form" action="/teacher" method="POST" enctype="multipart/form-data">
+                        <form name="teacher_form" action="{{route('teacher.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="_url" value="{{ url()->previous() }}">
                             @if(isset($data))

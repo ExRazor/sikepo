@@ -19,7 +19,7 @@
 <div class="br-profile-page">
         <div class="card shadow-base bd-0 rounded-0 widget-4">
             <div class="card-body">
-                <div class="card-profile-img" style="background-image: url('/upload/teacher/{{$data->foto}}')"></div>
+                <div class="card-profile-img" style="background-image: url('{{route('teacher.download',encrypt($data->foto))}}')"></div>
                 <h4 class="tx-normal tx-roboto tx-white">{{$data->nama}}</h4>
                 <p class="mg-b-25">NIDN. {{$data->nidn}}</p>
 
