@@ -140,7 +140,7 @@
                             <div class="form-group mg-b-10-force">
                                 <label class="form-control-label">Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="bukti" id="bukti_kerjasama" {{ isset($data) ? '' : 'required'}}>
+                                    <input type="file" class="custom-file-input" name="bukti" {{ isset($data) ? '' : 'required'}}>
                                     <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">Pilih fail</label>
                                 </div>
                             </div>
@@ -155,7 +155,6 @@
             </div>
         </div><!-- card-body -->
     </div>
-    {{-- @include('admin.academic-year.form'); --}}
 </div>
 @endsection
 

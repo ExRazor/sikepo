@@ -62,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($collab[$sp->kd_prodi] as $d)
+                        @forelse ($collab[$sp->kd_prodi] as $d)
                         <tr>
                             <th scope="row" style="vertical-align:middle">{{$loop->iteration}}</td>
                             <td>{{$d->academicYear->tahun_akademik." - ".$d->academicYear->semester}}</td>
@@ -73,7 +73,7 @@
                             <td>{{$d->waktu}}</td>
                             <td>{{$d->durasi}}</td>
                             <td style="text-align: center">
-                                <a class="mg-r-5 mg-b-10" href="/download/collab/{{encrypt($d->bukti)}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
+                                <a href="{{ route('collaboration.download',encrypt($d->bukti)) }}" target="_blank"><div><i class="fa fa-download"></i></div></a>
                             </td>
                             <td width="50">
                                 <div class="btn-group" role="group">
@@ -81,18 +81,22 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="/collaboration/{{encrypt($d->id)}}/edit">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('collaboration.edit',encrypt($d->id)) }}">Sunting</a>
                                         <form method="POST">
                                             @method('delete')
                                             @csrf
                                             <input type="hidden" value="{{encrypt($d->id)}}" name="id">
-                                            <a href="#" class="dropdown-item btn-delete" data-dest="/collaboration">Hapus</a>
+                                            <a href="#" class="dropdown-item btn-delete" data-dest={{ route('collaboration.delete') }}>Hapus</a>
                                         </form>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan=10 class="text-center align-middle">BELUM ADA DATA</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div><!-- card-body -->

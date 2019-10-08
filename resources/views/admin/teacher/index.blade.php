@@ -69,7 +69,7 @@
                     <tbody>
                         @foreach ($teacher[$sp->kd_prodi] as $d)
                         <tr>
-                            <td><a href="/teacher/{{encrypt($d->nidn)}}">{{$d->nidn}}</a></td>
+                            <td><a href="{{ route('teacher.show',encrypt($d->nidn)) }}">{{$d->nidn}}</a></td>
                             <td>{{$d->nama}}</td>
                             <td class="text-capitalize">{{$d->jk}}</td>
                             <td>{{$d->pend_terakhir_jenjang}} - {{$d->pend_terakhir_jurusan}}</td>
@@ -82,12 +82,12 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="/teacher/{{encrypt($d->nidn)}}/edit">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('teacher.edit',encrypt($d->nidn)) }}">Sunting</a>
                                         <form method="POST">
                                             @method('delete')
                                             @csrf
                                             <input type="hidden" value="{{encrypt($d->nidn)}}" name="id">
-                                            <a href="#" class="dropdown-item btn-delete" data-dest="/teacher">Hapus</a>
+                                            <a href="{{ route('teacher.delete') }}" class="dropdown-item btn-delete">Hapus</a>
                                         </form>
                                     </div>
                                 </div>

@@ -7,6 +7,7 @@ use App\Teacher;
 use App\StudyProgram;
 use App\AcademicYear;
 use App\Ewmp;
+use App\TeacherAchievement;
 use File;
 
 class TeacherController extends Controller
@@ -89,12 +90,12 @@ class TeacherController extends Controller
             $file = $request->file('foto');
             $tgl_skrg = date('Y_m_d_H_i_s');
             $tujuan_upload = 'upload/teacher';
-            $filename = $request->nidn.'_'.str_replace('', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
         }
 
-        Teacher::create($request->all());
+        $Teacher->save();
 
         return redirect()->route('teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
@@ -122,10 +123,11 @@ class TeacherController extends Controller
         $id             = decrypt($id);
         $data           = Teacher::find($id);
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $ewmp           = Ewmp::where('nidn',$id)->orderBy('id_ta')->get();
+        $ewmp           = Ewmp::where('nidn',$id)->orderBy('id_ta','desc')->get();
+        $achievement    = TeacherAchievement::where('nidn',$id)->orderBy('tanggal','desc')->get();
 
-        // dd($ewmp);
-        return view('admin/teacher/profile',compact(['data','academicYear','ewmp']));
+        // dd($achievement);
+        return view('admin/teacher/profile',compact(['data','academicYear','ewmp','achievement']));
     }
 
     /**
@@ -200,7 +202,7 @@ class TeacherController extends Controller
             $file = $request->file('foto');
             $tgl_skrg = date('Y_m_d_H_i_s');
             $tujuan_upload = 'upload/teacher';
-            $filename = $request->nidn.'_'.str_replace('', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
         }

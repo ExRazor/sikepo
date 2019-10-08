@@ -58,7 +58,7 @@
                         <td width="150">
                             <div class="btn-group hidden-xs-down">
                                 <button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="{{encrypt($d->kd_prodi)}}" ><div><i class="fa fa-search-plus"></i></div></button>
-                                <a href="/master/study-program/{{encrypt($d->kd_prodi)}}/edit" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
+                                <a href="{{ route('master.study-program.edit',encrypt($d->kd_prodi)) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
                                 <form method="POST">
                                     @method('delete')
                                     @csrf
