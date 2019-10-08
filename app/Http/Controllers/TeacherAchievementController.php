@@ -44,7 +44,7 @@ class TeacherAchievementController extends Controller
         ]);
 
         $acv                    = new TeacherAchievement;
-        $acv->nidn              = decrypt($request->_nidn);
+        $acv->nidn              = decrypt($request->nidn);
         $acv->prestasi          = $request->prestasi;
         $acv->tingkat_prestasi  = $request->tingkat_prestasi;
         $acv->tanggal           = $request->tanggal_dicapai;
@@ -99,7 +99,7 @@ class TeacherAchievementController extends Controller
      */
     public function update(Request $request)
     {
-        $id  = decrypt($request->_id_acv);
+        $id  = decrypt($request->_id);
 
         // dd($request->all());
 
@@ -110,7 +110,7 @@ class TeacherAchievementController extends Controller
         ]);
 
         $acv                    = TeacherAchievement::find($id);
-        $acv->nidn              = decrypt($request->_nidn);
+        $acv->nidn              = decrypt($request->nidn);
         $acv->prestasi          = $request->prestasi;
         $acv->tingkat_prestasi  = $request->tingkat_prestasi;
         $acv->tanggal           = $request->tanggal_dicapai;

@@ -38,7 +38,7 @@ class EwmpController extends Controller
         ]);
 
         $ewmp                   = new Ewmp;
-        $ewmp->nidn             = decrypt($request->_nidn);
+        $ewmp->nidn             = decrypt($request->nidn);
         $ewmp->id_ta            = $request->id_ta;
         $ewmp->ps_intra         = $request->ps_intra;
         $ewmp->ps_lain          = $request->ps_lain;
@@ -106,6 +106,7 @@ class EwmpController extends Controller
         $id = decrypt($request->_id);
 
         $ewmp                   = Ewmp::find($id);
+        $ewmp->nidn             = decrypt($request->nidn);
         $ewmp->id_ta            = $request->id_ta;
         $ewmp->ps_intra         = $request->ps_intra;
         $ewmp->ps_lain          = $request->ps_lain;

@@ -17,8 +17,8 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Tahun Akademik:</label>
                         <div class="col-sm-8">
-                            <input type="hidden" name="_id_ewmp">
-                            <input type="hidden" name="_nidn" value="{{encrypt($data->nidn)}}">
+                            <input type="hidden" name="_id">
+                            <input type="hidden" name="nidn" value="{{encrypt($data->nidn)}}">
                             <select class="form-control" name="id_ta">
                                 <option value="">= Pilih Tahun Akademik =</option>
                                 @foreach ($academicYear as $ay)

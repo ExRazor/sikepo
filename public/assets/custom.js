@@ -444,15 +444,16 @@ $('.btn-edit-ewmp').click(function(e){
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            $('input[name=_id]').val(id);
-            $('select[name=id_ta]').val(data.id_ta);
-            $('input[name=tahun_akademik]').val(data.tahun_akademik);
-            $('input[name=ps_intra]').val(data.ps_intra);
-            $('input[name=ps_lain]').val(data.ps_lain);
-            $('input[name=ps_luar]').val(data.ps_luar);
-            $('input[name=penelitian]').val(data.penelitian);
-            $('input[name=pkm]').val(data.pkm);
-            $('input[name=tugas_tambahan]').val(data.tugas_tambahan);
+            $('#modal-teach-ewmp')
+                .find('input[name=_id]').val(id).end()
+                .find('select[name=id_ta]').val(data.id_ta).end()
+                .find('input[name=tahun_akademik]').val(data.tahun_akademik).end()
+                .find('input[name=ps_intra]').val(data.ps_intra).end()
+                .find('input[name=ps_lain]').val(data.ps_lain).end()
+                .find('input[name=ps_luar]').val(data.ps_luar).end()
+                .find('input[name=penelitian]').val(data.penelitian).end()
+                .find('input[name=pkm]').val(data.pkm).end()
+                .find('input[name=tugas_tambahan]').val(data.tugas_tambahan).end()
 
             $('#modal-teach-ewmp').modal('toggle');
         }
@@ -472,8 +473,9 @@ $('.btn-edit-acv').click(function(e){
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            $('input[name=_id_acv]').val(id);
-            $('input[name=prestasi]').val(data.prestasi);
+            $('#modal-teach-acv')
+                .find('input[name=_id]').val(id).end()
+                .find('input[name=prestasi]').val(data.prestasi).end()
 
             switch(data.tingkat_prestasi) {
                 case 'Wilayah':
