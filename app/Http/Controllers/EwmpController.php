@@ -25,7 +25,9 @@ class EwmpController extends Controller
             $ewmp         = session()->get('ewmp');
         }
 
-        return view('admin.ewmp.index',compact(['studyProgram','academicYear','ewmp']));
+        $filter = session()->get('data');
+
+        return view('admin.ewmp.index',compact(['studyProgram','academicYear','ewmp','filter']));
     }
 
     /**
@@ -82,16 +84,44 @@ class EwmpController extends Controller
         $ta    = $request->tahun_akademik;
         $smt   = $request->semester;
 
-        $ewmp = Ewmp::whereHas(
-                        'teacher.studyProgram', function($query) use ($prodi) {
-                            $query->where('kd_prodi',$prodi);
+        if($smt == 'Penuh') {
+            $ewmp = Ewmp::whereHas(
+                            'teacher.studyProgram', function($query) use ($prodi) {
+                                $query->where('kd_prodi',$prodi);
+                            })
+                        ->whereHas(
+                            'academicYear', function($query) use ($ta,$smt) {
+                                $query->where('tahun_akademik',$ta);
                         })
-                    ->whereHas(
-                        'academicYear', function($query) use ($ta,$smt) {
-                            $query->where('tahun_akademik','=',$ta)
-                                  ->where('semester','=',$smt);
-                    })
-                    ->get();
+                        ->select([
+                            'nidn',
+                            DB::raw('sum(ps_intra) as ps_intra'),
+                            DB::raw('sum(ps_lain) as ps_lain'),
+                            DB::raw('sum(ps_luar) as ps_luar'),
+                            DB::raw('sum(penelitian) as penelitian'),
+                            DB::raw('sum(pkm) as pkm'),
+                            DB::raw('sum(tugas_tambahan) as tugas_tambahan'),
+                        ])
+                        ->groupBy('nidn')
+                        ->get();
+        } else {
+            $ewmp = Ewmp::whereHas(
+                            'teacher.studyProgram', function($query) use ($prodi) {
+                                $query->where('kd_prodi',$prodi);
+                            })
+                        ->whereHas(
+                            'academicYear', function($query) use ($ta,$smt) {
+                                $query->where('tahun_akademik',$ta)
+                                      ->where('semester',$smt);
+                        })
+                        ->get();
+        }
+
+        $data['prodi'] = StudyProgram::where('kd_prodi',$prodi)->first()->nama;
+        $data['tahun'] = $ta;
+        $data['semester'] = $smt;
+
+        // dd($ewmp);
 
         // $ewmp = DB::table('ewmps')
         //             ->join('academic_years as ay', 'ewmps.id_ta', '=', 'ay.id')
@@ -107,9 +137,9 @@ class EwmpController extends Controller
 
         // dd($ewmp);
         if($ewmp->count() > 0) {
-            return redirect()->route('teacher.ewmp')->with(['ewmp' => $ewmp]);
+            return redirect()->route('teacher.ewmp')->with(compact(['ewmp','data']));
         } else {
-            return redirect()->route('teacher.ewmp');
+            return redirect()->route('teacher.ewmp')->with(compact('data'));
         }
     }
 

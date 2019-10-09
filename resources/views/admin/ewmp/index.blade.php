@@ -98,8 +98,8 @@
         <div class="card shadow-base mb-3">
             <div class="card-header">
                 <h6 class="card-title">
-                    @isset($ewmp)
-                    Prodi: {{ $ewmp[0]->nama_prodi }} || Tahun Akademik: {{$ewmp[0]->tahun_akademik}} - {{$ewmp[0]->semester}}
+                    @isset($filter)
+                    Prodi: {{ $filter['prodi'] }} || Tahun Akademik: {{$filter['tahun']}}/{{$filter['tahun']+1}} - {{$filter['semester']}}
                     @else
                     Prodi: - || EWMP: -
                     @endisset
@@ -133,7 +133,7 @@
                             @foreach ($ewmp as $e)
                             <tr>
                                 <td>{{ $e->teacher->nama }}</td>
-                                <td>{{ $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester }}</td>
+                                <td class="text-center">{{ isset($e->academicYear->tahun_akademik) ? $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester : $filter['tahun'] }}</td>
                                 <td class="text-center">{{ $e->ps_intra }}</td>
                                 <td class="text-center">{{ $e->ps_lain }}</td>
                                 <td class="text-center">{{ $e->ps_luar }}</td>
