@@ -66,6 +66,14 @@
 
 .ui-datepicker{z-index:1151 !important;}
 
+/* DATA TABLE MOD */
+table.dataTable thead th.sorting::after, table.dataTable thead th.sorting_asc::after, table.dataTable thead th.sorting_desc::after, table.dataTable thead td.sorting::after, table.dataTable thead td.sorting_asc::after, table.dataTable thead td.sorting_desc::after {
+    display:none;
+}
+  table.dataTable thead th.sorting::before, table.dataTable thead th.sorting_asc::before, table.dataTable thead th.sorting_desc::before, table.dataTable thead td.sorting::before, table.dataTable thead td.sorting_asc::before, table.dataTable thead td.sorting_desc::before {
+    display:none;
+}
+
 @media (min-width: 480px) {
     .br-profile-page .br-profile-body {
         padding: 20px;
