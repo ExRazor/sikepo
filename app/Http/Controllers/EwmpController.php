@@ -82,29 +82,28 @@ class EwmpController extends Controller
         $ta    = $request->tahun_akademik;
         $smt   = $request->semester;
 
-        // $ewmp = Ewmp::with([
-        //                 'teacher.studyProgram' => function($query) use ($prodi) {
-        //                     $query->select('nama')->where('kd_prodi','=',$prodi);
-        //                 },
-        //                 'academicYear' => function($query) use ($ta,$smt) {
-        //                     $query->select('tahun_akademik','semester')
-        //                           ->where('tahun_akademik','=',$ta)
-        //                           ->where('semester','=',$smt);
-        //                 }
-        //             ])
-        //             ->get();
-
-        $ewmp = DB::table('ewmps')
-                    ->join('academic_years as ay', 'ewmps.id_ta', '=', 'ay.id')
-                    ->join('teachers as t', 'ewmps.nidn', '=', 't.nidn')
-                    ->join('study_programs as sp', 't.dosen_ps', '=', 'sp.kd_prodi')
-                    ->where([
-                        'kd_prodi'       => $prodi,
-                        'tahun_akademik' => $ta,
-                        'semester'       => $smt
-                    ])
-                    ->select('ewmps.*', 'ay.*', 't.nama as nama_dosen', 'sp.nama as nama_prodi')
+        $ewmp = Ewmp::whereHas(
+                        'teacher.studyProgram', function($query) use ($prodi) {
+                            $query->where('kd_prodi',$prodi);
+                        })
+                    ->whereHas(
+                        'academicYear', function($query) use ($ta,$smt) {
+                            $query->where('tahun_akademik','=',$ta)
+                                  ->where('semester','=',$smt);
+                    })
                     ->get();
+
+        // $ewmp = DB::table('ewmps')
+        //             ->join('academic_years as ay', 'ewmps.id_ta', '=', 'ay.id')
+        //             ->join('teachers as t', 'ewmps.nidn', '=', 't.nidn')
+        //             ->join('study_programs as sp', 't.dosen_ps', '=', 'sp.kd_prodi')
+        //             ->where([
+        //                 'kd_prodi'       => $prodi,
+        //                 'tahun_akademik' => $ta,
+        //                 'semester'       => $smt
+        //             ])
+        //             ->select('ewmps.*', 'ay.*', 't.nama as nama_dosen', 'sp.nama as nama_prodi')
+        //             ->get();
 
         // dd($ewmp);
         if($ewmp->count() > 0) {

@@ -132,8 +132,8 @@
                         @isset($ewmp)
                             @foreach ($ewmp as $e)
                             <tr>
-                                <td>{{ $e->nama_dosen }}</td>
-                                <td>{{ $e->tahun_akademik.' - '.$e->semester }}</td>
+                                <td>{{ $e->teacher->nama }}</td>
+                                <td>{{ $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester }}</td>
                                 <td class="text-center">{{ $e->ps_intra }}</td>
                                 <td class="text-center">{{ $e->ps_lain }}</td>
                                 <td class="text-center">{{ $e->ps_luar }}</td>
