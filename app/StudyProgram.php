@@ -11,6 +11,11 @@ class StudyProgram extends Model
 
     public function collaboration()
     {
-        return $this->hasOne('App\Collaboration');
+        return $this->hasMany('App\Collaboration');
+    }
+
+    public function teacher()
+    {
+        return $this->hasMany('App\Teacher');
     }
 }

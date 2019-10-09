@@ -12,4 +12,9 @@ class AcademicYear extends Model
     {
         return $this->hasOne('App\Collaboration');
     }
+
+    public function ewmp()
+    {
+        return $this->hasMany('App\Ewmp');
+    }
 }

@@ -32,4 +32,9 @@ class Teacher extends Model
     {
         return $this->belongsTo('App\StudyProgram','dosen_ps');
     }
+
+    public function ewmp()
+    {
+        return $this->hasMany('App\Ewmp');
+    }
 }
