@@ -57,7 +57,7 @@
             <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                 <div class="row">
                     <div class="col-9 mx-auto">
-                        <form name="teacher_form" action="{{route('teacher.store')}}" method="POST" enctype="multipart/form-data">
+                        <form name="teacher_form" action="{{route('teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                             @csrf
                             <input type="hidden" name="_url" value="{{ url()->previous() }}">
                             @if(isset($data))
@@ -85,13 +85,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}}>
+                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Nama Dosen: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan Nama Dosen">
+                                    <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan Nama Dosen" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -136,7 +136,7 @@
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-4">
-                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
+                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir" required>
                                         </div>
                                         <div class="col-8">
                                             <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir" required>
@@ -145,13 +145,13 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Alamat: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Alamat:</label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="alamat" value="{{ isset($data) ? $data->alamat : Request::old('alamat')}}" placeholder="Masukkan Alamat Tempat Tinggal">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">No. Telepon: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">No. Telepon:</label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="no_telp" value="{{ isset($data) ? $data->no_telp : Request::old('no_telp')}}" placeholder="Masukkan Nomor Telepon yang Dapat Dihubungi">
                                 </div>
@@ -159,7 +159,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Email: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="email" value="{{ isset($data) ? $data->email : Request::old('email')}}" placeholder="Masukkan Email Aktif">
+                                    <input class="form-control" type="text" name="email" value="{{ isset($data) ? $data->email : Request::old('email')}}" placeholder="Masukkan Email Aktif" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -181,7 +181,7 @@
                                             </div>
                                         </div>
                                         <div class="col-8">
-                                            <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan Pendidikan Terakhir">
+                                            <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan Pendidikan Terakhir" required>
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +189,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Bidang Keahlian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Masukkan Bidang Keahlian">
+                                    <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Masukkan Bidang Keahlian" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -209,13 +209,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jabatan Akademik: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="jabatan_akademik" value="{{ isset($data) ? $data->jabatan_akademik : Request::old('jabatan_akademik')}}" placeholder="Masukkan Jabatan Akademik">
+                                    <input class="form-control" type="text" name="jabatan_akademik" value="{{ isset($data) ? $data->jabatan_akademik : Request::old('jabatan_akademik')}}" placeholder="Masukkan Jabatan Akademik" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">No. Sertifikat Pendidik: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="sertifikat_pendidik" value="{{ isset($data) ? $data->sertifikat_pendidik : Request::old('sertifikat_pendidik')}}" placeholder="Masukkan No. Sertifikat Pendidik">
+                                    <input class="form-control" type="text" name="sertifikat_pendidik" value="{{ isset($data) ? $data->sertifikat_pendidik : Request::old('sertifikat_pendidik')}}" placeholder="Masukkan No. Sertifikat Pendidik" required>
                                 </div>
                             </div>
                             <div class="row mb-3">

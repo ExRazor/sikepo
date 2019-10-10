@@ -53,7 +53,7 @@
                 <h6 class="card-title">Program Studi: {{$sp->nama}}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table display responsive nowrap table-kerjasama">
+                <table class="table display responsive nowrap datatable">
                     <thead>
                         <tr>
                             <th>NIDN</th>

@@ -59,9 +59,9 @@
     <script src="{{ asset ('assets/lib') }}/jquery/jquery.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/jquery-ui/ui/widgets/datepicker.js"></script>
     <script src="{{ asset ('assets/lib') }}/bootstrap/js/bootstrap.bundle.min.js"></script>
-    {{-- <script src="{{ asset ('assets/lib') }}/perfect-scrollbar/perfect-scrollbar.min.js"></script> --}}
     <script src="{{ asset ('assets/lib') }}/moment/min/moment.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/peity/jquery.peity.min.js"></script>
+    {{-- <script src="{{ asset ('assets/lib') }}/perfect-scrollbar/perfect-scrollbar.min.js"></script> --}}
     {{-- <script src="{{ asset ('assets/lib') }}/rickshaw/vendor/d3.min.js"></script> --}}
     {{-- <script src="{{ asset ('assets/lib') }}/rickshaw/vendor/d3.layout.min.js"></script> --}}
     {{-- <script src="{{ asset ('assets/lib') }}/rickshaw/rickshaw.min.js"></script> --}}
@@ -81,6 +81,8 @@
     <script src="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.js"></script>
     <script src="{{ asset('assets/lib') }}/jquery.maskedinput/jquery.maskedinput.js"></script>
     <script src="{{ asset('assets/lib') }}/parsleyjs/parsley.min.js"></script>
+    <script src="{{ asset('assets/lib') }}/crypto-js/crypto-js.js"></script>
+    <script src="{{ asset('assets/lib') }}/js-base64/base64.min.js"></script>
 
 
     <!-- Custom JS -->

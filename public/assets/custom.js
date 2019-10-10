@@ -2,6 +2,10 @@
 var base_url = window.location.origin;
 var host = window.location.host;
 var pathArray = window.location.pathname.split( '/' );
+var base_key = CryptoJS.enc.Base64.parse('KfqUsXXhY0nhhqrmovEx5qQZ/ZW9kDyAywthWRCa0mQ=').toString();
+
+console.log(base_key);
+
 
 //Ajax Setup
 $.ajaxSetup({
@@ -165,8 +169,10 @@ $('.btn-delete').click(function(e){
 
 /********************************* DATA TABLE *********************************/
 if($().DataTable) {
-    $('.table-kerjasama').DataTable({
-        order: [[1, 'asc']],
+    var direction = $('.datatable').data('sort');
+
+    $('.datatable').DataTable({
+        order: [[$('th.defaultSort').index(), direction]],
         responsive: true,
         language: {
         searchPlaceholder: 'Cari...',
@@ -174,21 +180,9 @@ if($().DataTable) {
         lengthMenu: '_MENU_ items/page',
         },
         columnDefs: [
-            { "orderable": false, "targets": 'no-sort' }
+            { "orderable": false, "targets": 'no-sort' },
         ]
-    });
-    $('.table-ewmp').DataTable({
-        order: [[1, 'desc']],
-        responsive: true,
-        language: {
-        searchPlaceholder: 'Cari...',
-        sSearch: '',
-        lengthMenu: '_MENU_ items/page',
-        },
-        columnDefs: [
-            { "orderable": false, "targets": 'no-sort' }
-        ]
-    });
+    })
 };
 /******************************************************************************/
 
@@ -546,6 +540,11 @@ $('#filter-ewmpsss').submit(function(e){
 /***********************************************************************************/
 
 /********************************* DATA PRESTASI DOSEN *********************************/
+$('.btn-add-acv').click(function(){
+
+
+})
+
 $('.btn-edit-acv').click(function(e){
     e.preventDefault();
 
@@ -560,6 +559,14 @@ $('.btn-edit-acv').click(function(e){
             $('#modal-teach-acv')
                 .find('input[name=_id]').val(id).end()
                 .find('input[name=prestasi]').val(data.prestasi).end()
+                .find('input[name=tanggal_dicapai]').val(data.tanggal).end();
+
+            if($('#modal-teach-acv').find('select[name=nidn]').length) {
+                $('#selectProdi').val(data.teacher.study_program.kd_prodi);
+                $('#selectProdi').trigger('change');
+                $('#modal-teach-acv').find('select[name=nidn]').val(CryptoJS.AES.encrypt(data.nidn,base_key).toString());
+                $('#modal-teach-acv').find('select[name=nidn]').trigger('change');
+            }
 
             switch(data.tingkat_prestasi) {
                 case 'Wilayah':
@@ -572,10 +579,39 @@ $('.btn-edit-acv').click(function(e){
                     $('input:radio[name=tingkat_prestasi][value="Internasional"]').prop('checked',true);
                 break;
             }
-            $('input[name=tanggal_dicapai]').val(data.tanggal);
+
 
             $('#modal-teach-acv').modal('toggle');
         }
     });
 });
+
+$('#selectProdi').on('change',function(){
+    var prodi = $(this).val();
+    var url   = base_url+'/ajax/teacher/show_by_prodi';
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {kd_prodi:prodi},
+        dataType:"json",
+        success:function(data){
+
+            var opsi;
+            var cont = $('#modal-teach-acv').find('select[name=nidn]');
+
+            cont.prop('disabled',false);
+            cont.children('option:not(:first)').remove();
+
+            for(i=0; i<data.length; i++){
+                var kd_prodi = CryptoJS.AES.encrypt(data[i].kd_prodi,base_key).toString();
+                opsi += '<option value="'+kd_prodi+'">'+data[i].nama+'</option>';
+            }
+
+            cont.append(opsi);
+        }
+    });
+})
+
+
 /***********************************************************************************/

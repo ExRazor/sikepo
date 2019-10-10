@@ -64,8 +64,10 @@ Route::post('/teacher/list','TeacherController@store')->name('teacher.store');
 Route::put('/teacher/list','TeacherController@update')->name('teacher.update');
 Route::delete('/teacher/list','TeacherController@destroy')->name('teacher.delete');
 Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
+Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->name('teacher.show_by_prodi');
 
 //Teacher Achievement
+Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher-achievement.index');
 Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher-achievement.edit');
 Route::post('/ajax/teacher-achievement','TeacherAchievementController@store')->name('teacher-achievement.store');
 Route::put('/ajax/teacher-achievement','TeacherAchievementController@update')->name('teacher-achievement.update');

@@ -20,7 +20,7 @@
         <ul class="br-menu-sub">
           <li class="sub-item"><a href="{{ route('teacher') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Profil Dosen</a></li>
           <li class="sub-item"><a href="{{ route('teacher.ewmp') }}" class="sub-link {{ (request()->segment(2) == 'ewmp') ? 'active' : '' }}">EWMP</a></li>
-          <li class="sub-item"><a href="{{ url('teacher/ewmp') }}" class="sub-link {{ (request()->segment(2) == 'achievement') ? 'active' : '' }}">Prestasi</a></li>
+          <li class="sub-item"><a href="{{ url('teacher/achievement') }}" class="sub-link {{ (request()->segment(2) == 'achievement') ? 'active' : '' }}">Prestasi</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

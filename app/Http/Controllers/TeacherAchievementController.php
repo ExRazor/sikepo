@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\StudyProgram;
 use App\TeacherAchievement;
 use Illuminate\Http\Request;
 use File;
@@ -15,7 +16,10 @@ class TeacherAchievementController extends Controller
      */
     public function index()
     {
-        //
+        $achievement    = TeacherAchievement::orderBy('tanggal','desc')->get();
+        $studyProgram   = StudyProgram::all();
+
+        return view('admin.teacher-achievement.index',compact(['achievement','studyProgram']));
     }
 
     /**
@@ -37,6 +41,7 @@ class TeacherAchievementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nidn'                  => 'required',
             'prestasi'              => 'required',
             'tingkat_prestasi'      => 'required',
             'tanggal_dicapai'       => 'required|date',
@@ -85,7 +90,8 @@ class TeacherAchievementController extends Controller
     public function edit($id)
     {
         $id = decrypt($id);
-        $data = TeacherAchievement::find($id);
+        $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram')->first();
+        // $prodi = $data->teacher->studyProgram->kd_prodi;
 
         return response()->json($data);
     }

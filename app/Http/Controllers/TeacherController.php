@@ -130,6 +130,13 @@ class TeacherController extends Controller
         return view('admin/teacher/profile',compact(['data','academicYear','ewmp','achievement']));
     }
 
+    public function show_by_prodi(Request $request)
+    {
+        $data = Teacher::where('dosen_ps',$request->kd_prodi)->get();
+
+        return response()->json($data);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

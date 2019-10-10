@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'teacher-edit' : 'teacher-add' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('teacher-ewmp') as $breadcrumb)
             @isset($breadcrumb->url)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -21,10 +21,10 @@
 </div>
 
 <div class="br-pagetitle">
-        <i class="icon ion-calendar"></i>
+        <i class="icon fa fa-stopwatch"></i>
         <div>
-            <h4>Import</h4>
-            <p class="mg-b-0">Import Data Dosen</p>
+            <h4>Ekuivalen Waktu Mengajar Dosen</h4>
+            <p class="mg-b-0">Daftar EWMP Dosen</p>
         </div>
     </div>
 
@@ -106,7 +106,7 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table table-bordered mb-0 table-ewmp">
+                <table class="table datatable table-bordered mb-0 table-ewmp">
                     <thead>
                         <tr>
                             <th rowspan="3" class="text-center align-middle">Dosen</th>
@@ -114,7 +114,6 @@
                             <th colspan="6" class="text-center align-middle">Ekuivalen Waktu Mengajar Penuh (EWMP)<br>dalam satuan kredit semester (sks)</th>
                             <th rowspan="3" class="text-center align-middle">Jumlah<br>(sks)</th>
                             <th rowspan="3" class="text-center align-middle">Rata-rata<br>(sks)</th>
-                            <th rowspan="3" class="text-center align-middle no-sort">Aksi</th>
                         </tr>
                         <tr>
                             <th colspan="3" class="text-center align-middle" style="border-left-width: 1px;">Pendidikan</th>
@@ -132,7 +131,7 @@
                         @isset($ewmp)
                             @foreach ($ewmp as $e)
                             <tr>
-                                <td>{{ $e->teacher->nama }}</td>
+                                <td><a href="{{ route('teacher.show',encrypt($e->nidn)) }}#ewmp">{{ $e->teacher->nama }}</a></td>
                                 <td class="text-center">{{ isset($e->academicYear->tahun_akademik) ? $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester : $filter['tahun'] }}</td>
                                 <td class="text-center">{{ $e->ps_intra }}</td>
                                 <td class="text-center">{{ $e->ps_lain }}</td>
@@ -142,22 +141,6 @@
                                 <td class="text-center">{{ $e->tugas_tambahan }}</td>
                                 <td class="text-center">{{ $total = $e->ps_intra+$e->ps_lain+$e->ps_luar+$e->penelitian+$e->pkm+$e->tugas_tambahan}}</td>
                                 <td class="text-center">{{ number_format($total/6, 1, ',', ' ') }}</td>
-                                <td class="text-center" width="50">
-                                    <div class="btn-group" role="group">
-                                        <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div><span class="fa fa-caret-down"></span></div>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <a class="dropdown-item btn-edit btn-edit-ewmp" href="#" data-id="{{encrypt($e->id)}}">Sunting</a>
-                                            <form method="POST">
-                                                @method('delete')
-                                                @csrf
-                                                <input type="hidden" value="{{encrypt($e->id)}}" name="_id">
-                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('ewmp.delete') }}">Hapus</a>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
                             </tr>
                             @endforeach
                         @else

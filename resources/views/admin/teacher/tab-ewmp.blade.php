@@ -11,7 +11,7 @@
             </div>
             <div class="row">
                 <div class="bd rounded table-responsive">
-                    <table class="table table-bordered mb-0">
+                    <table class="table datatable table-bordered mb-0">
                         <thead>
                             <tr>
                                 <th rowspan="3" class="text-center align-middle">Tahun Akademik</th>
