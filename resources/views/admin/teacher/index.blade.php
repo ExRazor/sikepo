@@ -53,11 +53,11 @@
                 <h6 class="card-title">Program Studi: {{$sp->nama}}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table display responsive nowrap datatable">
+                <table class="table display responsive nowrap datatable" data-sort="asc">
                     <thead>
                         <tr>
                             <th>NIDN</th>
-                            <th>Nama Dosen</th>
+                            <th class="defaultSort">Nama Dosen</th>
                             <th>Jenis Kelamin</th>
                             <th>Pend Terakhir</th>
                             <th>Bidang Ahli</th>

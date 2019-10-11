@@ -18,7 +18,7 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Prestasi/Pengakuan:</label>
                         <div class="col-sm-8">
                             <input type="hidden" name="_id">
-                            <input type="hidden" name="nidn" value="{{encrypt($data->nidn)}}">
+                            <input type="hidden" name="nidn" value="{{$data->nidn}}">
                             <input type="text" class="form-control" name="prestasi" placeholder="Tuliskan prestasi yang diraih" required>
                         </div>
                     </div>

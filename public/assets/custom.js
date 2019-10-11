@@ -2,10 +2,6 @@
 var base_url = window.location.origin;
 var host = window.location.host;
 var pathArray = window.location.pathname.split( '/' );
-var base_key = CryptoJS.enc.Base64.parse('KfqUsXXhY0nhhqrmovEx5qQZ/ZW9kDyAywthWRCa0mQ=').toString();
-
-console.log(base_key);
-
 
 //Ajax Setup
 $.ajaxSetup({
@@ -540,9 +536,11 @@ $('#filter-ewmpsss').submit(function(e){
 /***********************************************************************************/
 
 /********************************* DATA PRESTASI DOSEN *********************************/
-$('.btn-add-acv').click(function(){
 
-
+$('#modal-teach-acv').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+    $(this).find('select[name=nidn]').children('option:not(:first)').remove();
+    $(this).find('select[name=nidn]').prop('disabled',true);
 })
 
 $('.btn-edit-acv').click(function(e){
@@ -562,10 +560,8 @@ $('.btn-edit-acv').click(function(e){
                 .find('input[name=tanggal_dicapai]').val(data.tanggal).end();
 
             if($('#modal-teach-acv').find('select[name=nidn]').length) {
-                $('#selectProdi').val(data.teacher.study_program.kd_prodi);
-                $('#selectProdi').trigger('change');
-                $('#modal-teach-acv').find('select[name=nidn]').val(CryptoJS.AES.encrypt(data.nidn,base_key).toString());
-                $('#modal-teach-acv').find('select[name=nidn]').trigger('change');
+                $('#selectProdi').attr('data-nidn',data.nidn);
+                $('#selectProdi').val(data.teacher.study_program.kd_prodi).change();
             }
 
             switch(data.tingkat_prestasi) {
@@ -580,7 +576,6 @@ $('.btn-edit-acv').click(function(e){
                 break;
             }
 
-
             $('#modal-teach-acv').modal('toggle');
         }
     });
@@ -589,6 +584,7 @@ $('.btn-edit-acv').click(function(e){
 $('#selectProdi').on('change',function(){
     var prodi = $(this).val();
     var url   = base_url+'/ajax/teacher/show_by_prodi';
+    var nidn  = $(this).attr('data-nidn');
 
     $.ajax({
         url: url,
@@ -603,12 +599,10 @@ $('#selectProdi').on('change',function(){
             cont.prop('disabled',false);
             cont.children('option:not(:first)').remove();
 
-            for(i=0; i<data.length; i++){
-                var kd_prodi = CryptoJS.AES.encrypt(data[i].kd_prodi,base_key).toString();
-                opsi += '<option value="'+kd_prodi+'">'+data[i].nama+'</option>';
-            }
+            $.each(data, function(i){
+                cont.append('<option value="'+data[i].nidn+'" '+((data[i].nidn == nidn) ? "selected" : "")+'>'+data[i].nama+'</option>');
+            });
 
-            cont.append(opsi);
         }
     });
 })

@@ -106,10 +106,10 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table datatable table-bordered mb-0 table-ewmp">
+                <table class="table datatable table-bordered mb-0 table-ewmp" data-sort='asc'>
                     <thead>
                         <tr>
-                            <th rowspan="3" class="text-center align-middle">Dosen</th>
+                            <th rowspan="3" class="text-center align-middle defaultSort">Dosen</th>
                             <th rowspan="3" class="text-center align-middle">Tahun Akademik</th>
                             <th colspan="6" class="text-center align-middle">Ekuivalen Waktu Mengajar Penuh (EWMP)<br>dalam satuan kredit semester (sks)</th>
                             <th rowspan="3" class="text-center align-middle">Jumlah<br>(sks)</th>
