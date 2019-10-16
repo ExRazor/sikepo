@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(StudyProgramSeeder::class);
         $this->call(CollaborationSeeder::class);
         $this->call(TeacherSeeder::class);
-        // $this->call(EwmpSeeder::class);
+        $this->call(EwmpSeeder::class);
+        $this->call(TeacherAchievement::class);
+        $this->call(StudentRegistrant::class);
     }
 }

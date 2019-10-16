@@ -66,6 +66,17 @@ Route::delete('/teacher/list','TeacherController@destroy')->name('teacher.delete
 Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
 Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->name('teacher.show_by_prodi');
 
+Route::get('/student',function(){
+    return redirect(route('student.registrant'));
+});
+Route::get('/student/registrant','StudentRegistrantController@index')->name('student.registrant');
+Route::get('/student/registrant/add','StudentRegistrantController@create')->name('student.registrant.add');
+Route::get('/student/registrant/detail/{id}','TeacherController@show')->name('teacher.show');
+Route::get('/student/registrant/edit/{id}','StudentRegistrantController@edit')->name('student.registrant.edit');
+Route::post('/student/registrant','StudentRegistrantController@store')->name('student.registrant.store');
+Route::put('/student/registrant','StudentRegistrantController@update')->name('student.registrant.update');
+Route::delete('/student/registrant','StudentRegistrantController@destroy')->name('student.registrant.delete');
+
 //Teacher Achievement
 Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher-achievement.index');
 Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher-achievement.edit');

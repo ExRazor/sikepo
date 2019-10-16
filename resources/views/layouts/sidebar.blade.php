@@ -24,6 +24,15 @@
         </ul>
     </li>
     <li class="br-menu-item">
+        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'student') ? 'active' : '' }}">
+          <i class="menu-item-icon fa fa-chalkboard-teacher"></i>
+          <span class="menu-item-label">Data Mahasiswa</span>
+        </a><!-- br-menu-link -->
+        <ul class="br-menu-sub">
+          <li class="sub-item"><a href="{{ route('student.registrant') }}" class="sub-link {{ (request()->segment(2) == 'registrant') ? 'active' : '' }}">Calon Mahasiswa</a></li>
+        </ul>
+    </li>
+    <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'academic') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-atom"></i>
             <span class="menu-item-label">Pendidikan</span>

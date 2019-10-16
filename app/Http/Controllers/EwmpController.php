@@ -121,8 +121,6 @@ class EwmpController extends Controller
         $data['tahun'] = $ta;
         $data['semester'] = $smt;
 
-        // dd($ewmp);
-
         // $ewmp = DB::table('ewmps')
         //             ->join('academic_years as ay', 'ewmps.id_ta', '=', 'ay.id')
         //             ->join('teachers as t', 'ewmps.nidn', '=', 't.nidn')
@@ -135,7 +133,6 @@ class EwmpController extends Controller
         //             ->select('ewmps.*', 'ay.*', 't.nama as nama_dosen', 'sp.nama as nama_prodi')
         //             ->get();
 
-        // dd($ewmp);
         if($ewmp->count() > 0) {
             return redirect()->route('teacher.ewmp')->with(compact(['ewmp','data']));
         } else {
