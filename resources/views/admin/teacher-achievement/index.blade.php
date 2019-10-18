@@ -27,7 +27,7 @@
         <p class="mg-b-0">Import Data Dosen</p>
     </div>
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10 btn-add btn-add-acv" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
+        <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
     </div>
 </div>
 

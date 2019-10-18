@@ -37,7 +37,22 @@ class FacultyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama'        => 'required',
+            'singkatan'   => 'required',
+        ]);
+
+        $data             = new Faculty;
+        $data->nama       = $request->nama;
+        $data->singkatan  = $request->singkatan;
+        $data->nip_dekan  = $request->nip_dekan;
+        $data->nm_dekan   = $request->nm_dekan;
+        $data->save();
+
+        return response()->json([
+            'title' => 'Berhasil',
+            'message' => 'Data berhasil ditambahkan.'
+        ]);
     }
 
     /**
@@ -46,10 +61,6 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function show(Faculty $faculty)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -57,9 +68,12 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function edit(Faculty $faculty)
+    public function edit($id)
     {
-        //
+        $id = decrypt($id);
+        $data = Faculty::find($id);
+
+        return response()->json($data);
     }
 
     /**
@@ -69,9 +83,26 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Faculty $faculty)
+    public function update(Request $request)
     {
-        //
+        $id  = decrypt($request->_id);
+
+        $request->validate([
+            'nama'        => 'required',
+            'singkatan'   => 'required',
+        ]);
+
+        $data             = Faculty::find($id);
+        $data->nama       = $request->nama;
+        $data->singkatan  = $request->singkatan;
+        $data->nip_dekan  = $request->nip_dekan;
+        $data->nm_dekan   = $request->nm_dekan;
+        $data->save();
+
+        return response()->json([
+            'title' => 'Berhasil',
+            'message' => 'Data berhasil ditambahkan.'
+        ]);
     }
 
     /**
@@ -80,8 +111,13 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Faculty $faculty)
+    public function destroy(Request $request)
     {
-        //
+        $id = decrypt($request->_id);
+        Faculty::destroy($id);
+        return response()->json([
+            'title' => 'Berhasil',
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 }

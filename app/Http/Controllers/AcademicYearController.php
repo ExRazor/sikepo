@@ -63,7 +63,7 @@ class AcademicYearController extends Controller
      */
     public function update(Request $request)
     {
-        $id = decrypt($request->id);
+        $id = decrypt($request->_id);
 
         $request->validate([
             'tahun_akademik' => 'required|digits:4',

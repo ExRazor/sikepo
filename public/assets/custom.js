@@ -225,55 +225,6 @@ $('.toggle-ay-status').click(function(e){
     });
 })
 
-$('#btn-save-ay').click(function(e) {
-    e.preventDefault();
-
-    var action = $(this).val();
-    var data = $('#form-academicYear').serialize();
-    var cont = $(this);
-
-    $.ajax({
-        url: base_url+'/master/academic-year',
-        data: data,
-        type: action,
-        dataType: 'json',
-        beforeSend: function() {
-            cont.addClass('disabled');
-            $('.btn-cancel').addClass('disabled');
-            cont.html('<i class="fa fa-spinner fa-spin"></i>');
-        },
-        success: function (state) {
-
-            $('#academicYear-form').modal('toggle');
-
-            Swal.fire({
-                title: state.title,
-                text: state.message,
-                type: "success",
-                timer: 1500,
-                onClose: () => {
-                    window.location = "/master/academic-year";
-                }
-            });
-
-        },
-        error: function (request) {
-            json = $.parseJSON(request.responseText);
-            $('.alert-danger').html('');
-            $.each(json.errors, function(key, value){
-                $('.alert-danger').show();
-                $('.alert-danger').append('<span>'+value+'</span><br>');
-                $('[name='+key+']').addClass('is-invalid');
-            });
-
-            cont.removeClass('disabled');
-            $('.btn-cancel').removeClass('disabled');
-            cont.html('Simpan');
-        }
-    });
-
-})
-
 $('.btn-edit-ay').click(function(e){
     e.preventDefault();
     var id = $(this).data('id');
@@ -283,11 +234,34 @@ $('.btn-edit-ay').click(function(e){
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            $('input[name=id]').val(id);
-            $('input[name=tahun_akademik]').val(data.tahun_akademik);
-            $('select[name=semester]').val(data.semester);
-            $('h6.title-ay').text('Sunting Tahun Akademik ');
-            $('#academicYear-form').modal('toggle');
+            $('#academicYear-form')
+                .find('input[name=_id]').val(id).end()
+                .find('input[name=tahun_akademik]').val(data.tahun_akademik).end()
+                .find('select[name=semester]').val(data.semester).end()
+                .modal('toggle').end();
+        }
+    });
+});
+/*********************************************************************************/
+
+/********************************* FAKULTAS *********************************/
+$('.btn-edit-faculty').click(function(e){
+    e.preventDefault();
+    var id = $(this).data('id');
+
+    $.ajax({
+        url: base_url+'/ajax/faculty/'+id,
+        data: {id:id},
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $('#modal-master-faculty')
+                .find('input[name=_id]').val(id).end()
+                .find('input[name=nama]').val(data.nama).end()
+                .find('input[name=singkatan]').val(data.singkatan).end()
+                .find('input[name=nip_dekan]').val(data.nip_dekan).end()
+                .find('input[name=nm_dekan]').val(data.nm_dekan).end()
+                .modal('toggle').end();
         }
     });
 });

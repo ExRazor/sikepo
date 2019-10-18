@@ -23,6 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'PageController@dashboard')->name('dashboard');
 Route::get('/setpro/{prodi}', 'PageController@set_prodi');
 
+//Master
 Route::prefix('master')->name('master.')->group(function () {
     //Tahun Akademik
     Route::get('academic-year', 'AcademicYearController@index')->name('academic-year');
@@ -35,7 +36,6 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::get('faculty', 'FacultyController@index')->name('faculty');
     Route::get('faculty/add', 'FacultyController@create')->name('faculty.add');
     Route::get('faculty/{id}', 'FacultyController@show')->name('faculty.show');
-    Route::get('faculty/edit/{id}', 'FacultyController@edit')->name('faculty.edit');
     Route::post('faculty/', 'FacultyController@store')->name('faculty.store');
     Route::put('faculty','FacultyController@update')->name('faculty.update');
     Route::delete('faculty','FacultyController@destroy')->name('faculty.delete');
@@ -43,7 +43,6 @@ Route::prefix('master')->name('master.')->group(function () {
     //Program Studi
     Route::get('study-program', 'StudyProgramController@index')->name('study-program');
     Route::get('study-program/add', 'StudyProgramController@create')->name('study-program.add');
-    Route::get('study-program/{id}', 'StudyProgramController@show')->name('study-program.show');
     Route::get('study-program/edit/{id}', 'StudyProgramController@edit')->name('study-program.edit');
     Route::post('study-program/', 'StudyProgramController@store')->name('study-program.store');
     Route::put('study-program','StudyProgramController@update')->name('study-program.update');
@@ -52,9 +51,14 @@ Route::prefix('master')->name('master.')->group(function () {
 
 });
 
+//Fungsi Ajax
 Route::prefix('ajax')->group(function () {
+    //Tahun Akademik
     Route::get('academic-year/get_all','AcademicYearController@get_all' );
     Route::post('academic-year/status','AcademicYearController@setStatus' );
+
+    //Fakultas
+    Route::get('faculty/{id}','FacultyController@edit' );
 });
 
 //Collaboration

@@ -15,7 +15,7 @@
                         @endforeach
                     </div>
                     <div class="form-group row mg-t-20">
-                        <input type="hidden" name="id">
+                        <input type="hidden" name="_id">
                         <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Tahun Akademik:</label>
                         <div class="input-group col-sm-4">
                             <input type="text" class="form-control" id="tahunAkademik" name="tahun_akademik" placeholder="{{ now()->year }}" required>

@@ -70,10 +70,7 @@
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Jenjang Pendidikan: <span class="tx-danger">*</span></label>
                                 <select class="form-control select2" data-placeholder="Pilih jenjang" name="jenjang">
-                                    <option value="D1" {{ (isset($data) && ($data->jenjang==='D1') || Request::old('jenjang')==='D1') ? 'selected' : ''}}>Diploma D1</option>
-                                    <option value="D2" {{ (isset($data) && ($data->jenjang==='D2') || Request::old('jenjang')==='D2') ? 'selected' : ''}}>Diploma D2</option>
                                     <option value="D3" {{ (isset($data) && ($data->jenjang==='D3') || Request::old('jenjang')==='D3') ? 'selected' : ''}}>Diploma D3</option>
-                                    <option value="D4" {{ (isset($data) && ($data->jenjang==='D4') || Request::old('jenjang')==='D4') ? 'selected' : ''}}>Diploma D4</option>
                                     <option value="S1" {{ (isset($data) && ($data->jenjang==='S1') || Request::old('jenjang')==='S1') ? 'selected' : ''}}>Strata 1 / Sarjana</option>
                                     <option value="S2" {{ (isset($data) && ($data->jenjang==='S2') || Request::old('jenjang')==='S2') ? 'selected' : ''}}>Strata 2 / Magister</option>
                                     <option value="S3" {{ (isset($data) && ($data->jenjang==='S3') || Request::old('jenjang')==='S3') ? 'selected' : ''}}>Strata 3 / Doktor</option>

@@ -50,6 +50,7 @@
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('master.academic-year') }}" class="sub-link {{ (request()->segment(2) == 'academic-year') ? 'active' : '' }}">Tahun Akademik</a></li>
             <li class="sub-item"><a href="{{ route('master.study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Program Studi</a></li>
+            <li class="sub-item"><a href="{{ route('master.faculty') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Fakultas</a></li>
         </ul>
     </li>
 </ul><!-- br-sideleft-menu -->

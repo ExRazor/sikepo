@@ -21,7 +21,7 @@
         <p class="mg-b-0">Olah Data Fakultas</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('master.study-program.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Fakultas</a>
+        <button class="btn btn-teal btn-block mg-b-10 btn-add" style="color:white" data-toggle="modal" data-target="#modal-master-faculty"><i class="fa fa-plus mg-r-10"></i> Fakultas</button>
     </div>
 </div>
 
@@ -39,29 +39,31 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Nama Fakultas</th>
-                        <th>Singkatan</th>
+                        <th width="25">ID</th>
+                        <th width="400">Nama Fakultas</th>
+                        <th width="150">Singkatan</th>
                         <th>Nama Dekan</th>
-                        <th>Aksi</th>
+                        <th class="text-center" width="150">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="table_studyProgram">
                     @foreach ($faculty as $f)
                     <tr>
-                        <th scope="row" style="vertical-align:middle">{{$loop->iteration}}</td>
+                        <th scope="row" style="vertical-align:middle">{{$f->id}}</td>
                         <td>{{$f->nama}}</td>
-                        <td>{{$f->jenjang}}</td>
                         <td>{{$f->singkatan}}</td>
-                        <td width="150">
+                        <td>
+                            {{$f->nm_dekan}}<br>
+                            <small>NIP. {{$f->nip_dekan}}</small>
+                        </td>
+                        <td class="text-center">
                             <div class="btn-group hidden-xs-down">
-                                <button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="{{encrypt($f->id)}}" ><div><i class="fa fa-search-plus"></i></div></button>
-                                <a href="{{ route('master.study-program.edit',encrypt($f->id)) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
+                                <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}""><div><i class="fa fa-pencil-alt"></i></div></button>
                                 <form method="POST">
                                     @method('delete')
                                     @csrf
-                                    <input type="hidden" value="{{encrypt($f->id)}}" name="id">
-                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete-sp">
+                                    <input type="hidden" value="{{encrypt($f->id)}}" name="_id">
+                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.faculty.delete') }}">
                                         <div><i class="fa fa-trash"></i></div>
                                     </button>
                                 </form>
@@ -73,8 +75,8 @@
             </table>
         </div><!-- card-body -->
     </div>
-    @include('admin.study-program.show');
 </div>
+@include('admin.faculty.form');
 @endsection
 
 @section('js')
