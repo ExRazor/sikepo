@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\StudentRegistrant;
-use App\StudyProgram;
+use App\Department;
 use Illuminate\Http\Request;
 
-class StudentRegistrantController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +14,7 @@ class StudentRegistrantController extends Controller
      */
     public function index()
     {
-        $studyProgram = StudyProgram::all();
-        $registrant   = array();
-
-        foreach($studyProgram as $sp) {
-            $registrant[$sp->kd_prodi] = StudentRegistrant::where('kd_prodi',$sp->kd_prodi)->get();
-        }
-
-        return view('admin/student-registrant/index',compact(['studyProgram','registrant']));
+        //
     }
 
     /**
@@ -49,10 +41,10 @@ class StudentRegistrantController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\StudentRegistrant  $studentRegistrant
+     * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function show(StudentRegistrant $studentRegistrant)
+    public function show(Department $department)
     {
         //
     }
@@ -60,10 +52,10 @@ class StudentRegistrantController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\StudentRegistrant  $studentRegistrant
+     * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function edit(StudentRegistrant $studentRegistrant)
+    public function edit(Department $department)
     {
         //
     }
@@ -72,10 +64,10 @@ class StudentRegistrantController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StudentRegistrant  $studentRegistrant
+     * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StudentRegistrant $studentRegistrant)
+    public function update(Request $request, Department $department)
     {
         //
     }
@@ -83,10 +75,10 @@ class StudentRegistrantController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\StudentRegistrant  $studentRegistrant
+     * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StudentRegistrant $studentRegistrant)
+    public function destroy(Department $department)
     {
         //
     }

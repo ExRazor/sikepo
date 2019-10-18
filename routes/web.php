@@ -23,24 +23,39 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'PageController@dashboard')->name('dashboard');
 Route::get('/setpro/{prodi}', 'PageController@set_prodi');
 
-//Academic Year
-Route::get('/master/academic-year', 'AcademicYearController@index')->name('master.academic-year');
-Route::get('/master/academic-year/{id}', 'AcademicYearController@edit');
-Route::post('/master/academic-year','AcademicYearController@store' );
-Route::put('/master/academic-year','AcademicYearController@update' );
-Route::delete('/master/academic-year','AcademicYearController@destroy' );
+Route::prefix('master')->name('master.')->group(function () {
+    //Tahun Akademik
+    Route::get('academic-year', 'AcademicYearController@index')->name('academic-year');
+    Route::get('academic-year/{id}', 'AcademicYearController@edit')->name('academic-year.edit');
+    Route::post('academic-year','AcademicYearController@store' )->name('academic-year.store');
+    Route::put('academic-year','AcademicYearController@update' )->name('academic-year.update');
+    Route::delete('academic-year','AcademicYearController@destroy')->name('academic-year.delete');
 
-Route::get('/ajax/academic-year/get_all','AcademicYearController@get_all' );
-Route::post('/ajax/academic-year/status','AcademicYearController@setStatus' );
+    //Fakultas
+    Route::get('faculty', 'FacultyController@index')->name('faculty');
+    Route::get('faculty/add', 'FacultyController@create')->name('faculty.add');
+    Route::get('faculty/{id}', 'FacultyController@show')->name('faculty.show');
+    Route::get('faculty/edit/{id}', 'FacultyController@edit')->name('faculty.edit');
+    Route::post('faculty/', 'FacultyController@store')->name('faculty.store');
+    Route::put('faculty','FacultyController@update')->name('faculty.update');
+    Route::delete('faculty','FacultyController@destroy')->name('faculty.delete');
 
-//Study Program
-Route::get('/master/study-program', 'StudyProgramController@index')->name('master.study-program');
-Route::get('/master/study-program/add', 'StudyProgramController@create')->name('master.study-program.add');
-Route::get('/master/study-program/{id}', 'StudyProgramController@show')->name('master.study-program.show');
-Route::get('/master/study-program/edit/{id}', 'StudyProgramController@edit')->name('master.study-program.edit');
-Route::post('/master/study-program/', 'StudyProgramController@store')->name('master.study-program.store');
-Route::put('/master/study-program','StudyProgramController@update')->name('master.study-program.update');
-Route::delete('/master/study-program','StudyProgramController@destroy')->name('master.study-program.delete');
+    //Program Studi
+    Route::get('study-program', 'StudyProgramController@index')->name('study-program');
+    Route::get('study-program/add', 'StudyProgramController@create')->name('study-program.add');
+    Route::get('study-program/{id}', 'StudyProgramController@show')->name('study-program.show');
+    Route::get('study-program/edit/{id}', 'StudyProgramController@edit')->name('study-program.edit');
+    Route::post('study-program/', 'StudyProgramController@store')->name('study-program.store');
+    Route::put('study-program','StudyProgramController@update')->name('study-program.update');
+    Route::delete('study-program','StudyProgramController@destroy')->name('study-program.delete');
+
+
+});
+
+Route::prefix('ajax')->group(function () {
+    Route::get('academic-year/get_all','AcademicYearController@get_all' );
+    Route::post('academic-year/status','AcademicYearController@setStatus' );
+});
 
 //Collaboration
 Route::get('/collaboration','CollaborationController@index')->name('collaboration');
@@ -69,7 +84,7 @@ Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->na
 Route::get('/student',function(){
     return redirect(route('student.registrant'));
 });
-Route::get('/student/registrant','StudentRegistrantController@index')->name('student.registrant');
+Route::get('/student/list','StudentController@index')->name('student');
 Route::get('/student/registrant/add','StudentRegistrantController@create')->name('student.registrant.add');
 Route::get('/student/registrant/detail/{id}','TeacherController@show')->name('teacher.show');
 Route::get('/student/registrant/edit/{id}','StudentRegistrantController@edit')->name('student.registrant.edit');
@@ -78,12 +93,12 @@ Route::put('/student/registrant','StudentRegistrantController@update')->name('st
 Route::delete('/student/registrant','StudentRegistrantController@destroy')->name('student.registrant.delete');
 
 //Teacher Achievement
-Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher-achievement.index');
-Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher-achievement.edit');
-Route::post('/ajax/teacher-achievement','TeacherAchievementController@store')->name('teacher-achievement.store');
-Route::put('/ajax/teacher-achievement','TeacherAchievementController@update')->name('teacher-achievement.update');
-Route::delete('/ajax/teacher-achievement','TeacherAchievementController@destroy')->name('teacher-achievement.delete');
-Route::get('/download/teacher-achievement/{filename}','TeacherAchievementController@download')->name('teacher-achievement.download');
+Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher.achievement');
+Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
+Route::post('/ajax/teacher-achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
+Route::put('/ajax/teacher-achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
+Route::delete('/ajax/teacher-achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
+Route::get('/download/teacher-achievement/{filename}','TeacherAchievementController@download')->name('teacher.achievement.download');
 
 //EWMP
 Route::get('/teacher/ewmp', 'EwmpController@index')->name('teacher.ewmp');

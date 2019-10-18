@@ -15,6 +15,8 @@ class CreateTeachersTable extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->char('nidn',9)->primary();
+            $table->char('kd_prodi',5);
+            $table->char('nip',18);
             $table->string('nama');
             $table->enum('jk',['Laki-Laki','Perempuan']);
             $table->string('agama');
@@ -26,15 +28,14 @@ class CreateTeachersTable extends Migration
             $table->string('pend_terakhir_jenjang');
             $table->string('pend_terakhir_jurusan');
             $table->string('bidang_ahli');
-            $table->char('dosen_ps',5);
-            $table->enum('status_pengajar',['DT','DTT']);
+            $table->string('ikatan_kerja');
             $table->string('jabatan_akademik');
             $table->string('sertifikat_pendidik');
             $table->enum('sesuai_bidang_ps',['Ya','Tidak']);
             $table->string('foto')->nullable();;
             $table->timestamps();
 
-            $table->foreign('dosen_ps')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

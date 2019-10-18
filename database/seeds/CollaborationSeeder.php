@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\StudyProgram;
+use App\AcademicYear;
 
 class CollaborationSeeder extends Seeder
 {
@@ -13,8 +15,8 @@ class CollaborationSeeder extends Seeder
     {
         DB::table('collaborations')->insert([
             [
-                'kd_prodi' => 53141,
-                'id_ta' => 1,
+                'kd_prodi' => StudyProgram::all()->random()->kd_prodi,
+                'id_ta' => AcademicYear::all()->random()->id,
                 'nama_lembaga' => 'RRI',
                 'tingkat' => 'lokal',
                 'judul_kegiatan' => 'Kerja Praktek',
@@ -24,9 +26,9 @@ class CollaborationSeeder extends Seeder
                 'bukti' => 'bukti-1.pdf'
             ],
             [
-                'kd_prodi' => 53242,
-                'id_ta' => 1,
-                'nama_lembaga' => 'DIgital Printing',
+                'kd_prodi' => StudyProgram::all()->random()->kd_prodi,
+                'id_ta' => AcademicYear::all()->random()->id,
+                'nama_lembaga' => 'Digital Printing',
                 'tingkat' => 'lokal',
                 'judul_kegiatan' => 'Magang',
                 'manfaat_kegiatan' => 'Pengalaman kerja',

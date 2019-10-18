@@ -18,13 +18,16 @@ class TeacherSeeder extends Seeder
         $agama = ['Islam','Kristen','Katholik','Buddha','Hindu','Kong Hu Cu'];
         $pend = ['D3','S1','S2','S3'];
         $jurusan = ['Informatika','Ilmu Komputer','Elektro','Industri'];
-        $status = ['DT','DTT'];
+        $ikatan = ['Dosen Tetap','Dosen Tidak Tetap','Dosen Honorer PTN'];
+        $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
         $sesuai = ['Ya','Tidak'];
 
     	for($i = 0; $i < 20; $i++){
                 // insert data ke table pegawai menggunakan Faker
             DB::table('teachers')->insert([
                 'nidn'                  => rand(000000000, 999999999),
+                'kd_prodi'              => StudyProgram::all()->random()->kd_prodi,
+                'nip'                   => rand(197201011982010101, 199001012000010101),
                 'nama'                  => $faker->name,
                 'jk'                    => $jk[array_rand($jk)],
                 'agama'                 => $agama[array_rand($agama)],
@@ -36,9 +39,8 @@ class TeacherSeeder extends Seeder
                 'pend_terakhir_jenjang' => $pend[array_rand($pend)],
                 'pend_terakhir_jurusan' => $jurusan[array_rand($jurusan)],
                 'bidang_ahli'           => 'Apa saja',
-                'dosen_ps'              => StudyProgram::all()->random()->kd_prodi,
-                'status_pengajar'       => $status[array_rand($status)],
-                'jabatan_akademik'      => 'Dosen',
+                'ikatan_kerja'          => $ikatan[array_rand($ikatan)],
+                'jabatan_akademik'      => $jabatan[array_rand($jabatan)],
                 'sertifikat_pendidik'   => 'hehe',
                 'sesuai_bidang_ps'      => $sesuai[array_rand($sesuai)],
             ]);

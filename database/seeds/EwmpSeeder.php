@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use App\Teacher;
 use App\AcademicYear;
-
 class EwmpSeeder extends Seeder
 {
     /**

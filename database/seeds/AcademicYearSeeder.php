@@ -11,18 +11,19 @@ class AcademicYearSeeder extends Seeder
      */
     public function run()
     {
-        // insert data ke table pegawai
-        DB::table('academic_years')->insert([
-            [
-                'tahun_akademik' => 2017,
-                'semester' => 'Ganjil',
-                'status' => 'Aktif',
-            ],
-            [
-                'tahun_akademik' => 2017,
-                'semester' => 'Genap',
-                'status' => 'Tidak Aktif',
-            ]
-        ]);
+        for($i=2010;$i<=date('Y');$i++) {
+            DB::table('academic_years')->insert([
+                [
+                    'tahun_akademik' => $i,
+                    'semester' => 'Ganjil',
+                    'status' => 'Tidak Aktif',
+                ],
+                [
+                    'tahun_akademik' => $i,
+                    'semester' => 'Genap',
+                    'status' => 'Tidak Aktif',
+                ]
+            ]);
+        }
     }
 }

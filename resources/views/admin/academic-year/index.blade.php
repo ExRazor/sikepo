@@ -21,7 +21,7 @@
         <p class="mg-b-0">Olah Data Tahun Akademik</p>
     </div>
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10 btn-add-ay" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
+        <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
     </div>
 </div>
 
@@ -51,12 +51,12 @@
                         </td>
                         <td width="150">
                             <div class="btn-group hidden-xs-down">
-                                <a href="{{ encrypt($a->id) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit-ay"><div><i class="fa fa-pencil-alt"></i></div></a>
+                                <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-ay" data-id="{{ encrypt($a->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
                                 <form action="{{ url()->current() }}" method="POST">
                                     @method('delete')
                                     @csrf
                                     <input type="hidden" value="{{ encrypt($a->id) }}" name="id">
-                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete-ay">
+                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.academic-year.delete') }}">
                                         <div><i class="fa fa-trash"></i></div>
                                     </button>
                                 </form>

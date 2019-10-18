@@ -15,17 +15,19 @@ class CreateStudyProgramsTable extends Migration
     {
         Schema::create('study_programs', function (Blueprint $table) {
             $table->char('kd_prodi',5)->primary();
-            // $table->char('kd_jur',5);
+            $table->char('kd_jurusan',5);
             $table->string('nama');
+            $table->string('singkatan');
             $table->string('jenjang');
             $table->string('no_sk');
             $table->date('tgl_sk');
             $table->string('pejabat_sk');
             $table->char('thn_menerima',4);
-            $table->string('singkatan');
+            $table->char('nip_kaprodi',18);
+            $table->string('nm_kaprodi',50);
             $table->timestamps();
-            
-            // $table->foreign('kd_jur')->references('kd_jur')->on('departments');
+
+            $table->foreign('kd_jurusan')->references('kd_jurusan')->on('departments');
         });
     }
 

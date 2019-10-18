@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Teacher;
 
-class TeacherAchievement extends Seeder
+class TeacherAchievementSeeder extends Seeder
 {
     /**
      * Run the database seeds.

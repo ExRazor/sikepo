@@ -9,6 +9,8 @@ class Teacher extends Model
     protected $primaryKey = 'nidn';
     protected $fillable = [
         'nidn',
+        'kd_prodi'             ,
+        'nip'             ,
         'nama'                 ,
         'jk'                   ,
         'agama'                ,
@@ -20,7 +22,6 @@ class Teacher extends Model
         'pend_terakhir_jenjang',
         'pend_terakhir_jurusan',
         'bidang_ahli'          ,
-        'dosen_ps'             ,
         'status_pengajar'      ,
         'jabatan_akademik'     ,
         'sertifikat_pendidik'     ,
@@ -30,11 +31,16 @@ class Teacher extends Model
 
     public function studyProgram()
     {
-        return $this->belongsTo('App\StudyProgram','dosen_ps');
+        return $this->belongsTo('App\StudyProgram','kd_prodi');
     }
 
     public function ewmp()
     {
-        return $this->hasMany('App\Ewmp');
+        return $this->hasMany('App\Ewmp','nidn');
+    }
+
+    public function achievement()
+    {
+        return $this->hasMany('App\TeacherAchievement','nidn');
     }
 }

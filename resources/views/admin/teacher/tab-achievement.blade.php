@@ -28,7 +28,7 @@
                                 <td>{{ $acv->tingkat_prestasi }}</td>
                                 <td>{{ $acv->tanggal }}</td>
                                 <td class="text-center align-middle">
-                                    <a href="{{route('teacher-achievement.download',encrypt($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
+                                    <a href="{{route('teacher.achievement.download',encrypt($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
                                 </td>
                                 <td width="50">
                                     <div class="btn-group" role="group">
@@ -41,7 +41,7 @@
                                                 @method('delete')
                                                 @csrf
                                                 <input type="hidden" value="{{encrypt($acv->id)}}" name="_id">
-                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher-achievement.delete') }}">Hapus</a>
+                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.delete') }}">Hapus</a>
                                             </form>
                                         </div>
                                     </div>
