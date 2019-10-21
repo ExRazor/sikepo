@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Fakultas')
+@section('title', 'Data Program Studi')
 
 @section('content')
 <div class="br-pageheader">
@@ -17,11 +17,11 @@
 <div class="br-pagetitle">
     <i class="icon ion-calendar"></i>
     <div>
-        <h4>Data Fakultas</h4>
-        <p class="mg-b-0">Olah Data Fakultas</p>
+        <h4>Program Studi</h4>
+        <p class="mg-b-0">Olah Data Program Studi</p>
     </div>
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10 btn-add" style="color:white" data-toggle="modal" data-target="#modal-master-faculty"><i class="fa fa-plus mg-r-10"></i> Fakultas</button>
+        <a href="{{ route('master.study-program.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Program Studi</a>
     </div>
 </div>
 
@@ -39,31 +39,34 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th width="25">ID</th>
-                        <th width="400">Nama Fakultas</th>
-                        <th width="150">Singkatan</th>
-                        <th>Nama Dekan</th>
-                        <th class="text-center" width="150">Aksi</th>
+                        <th width="75">Kode</th>
+                        <th width="400">Nama Prodi</th>
+                        <th width="100">Singkatan</th>
+                        <th width="150">Jenjang Pendidikan</th>
+                        <th>Nama Kaprodi</th>
+                        <th width="150">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="table_studyProgram">
-                    @foreach ($faculty as $f)
+                    @foreach ($data as $d)
                     <tr>
-                        <th scope="row" style="vertical-align:middle">{{$f->id}}</td>
-                        <td>{{$f->nama}}</td>
-                        <td>{{$f->singkatan}}</td>
+                        <td>{{$d->kd_prodi}}</td>
+                        <td>{{$d->nama}}</td>
+                        <td>{{$d->singkatan}}</td>
+                        <td>{{$d->jenjang}}</td>
                         <td>
-                            {{$f->nm_dekan}}<br>
-                            <small>NIP. {{$f->nip_dekan}}</small>
+                            {{$d->nm_kaprodi}}<br>
+                            <small>NIP. {{$d->nip_kaprodi}}</small>
                         </td>
-                        <td class="text-center">
+                        <td>
                             <div class="btn-group hidden-xs-down">
-                                <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}""><div><i class="fa fa-pencil-alt"></i></div></button>
+                                <button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="{{encrypt($d->kd_prodi)}}" ><div><i class="fa fa-search-plus"></i></div></button>
+                                <a href="{{ route('master.study-program.edit',encrypt($d->kd_prodi)) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
                                 <form method="POST">
                                     @method('delete')
                                     @csrf
-                                    <input type="hidden" value="{{encrypt($f->id)}}" name="_id">
-                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.faculty.delete') }}">
+                                    <input type="hidden" value="{{encrypt($d->kd_prodi)}}" name="id">
+                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.study-program.delete') }}">
                                         <div><i class="fa fa-trash"></i></div>
                                     </button>
                                 </form>
@@ -75,8 +78,8 @@
             </table>
         </div><!-- card-body -->
     </div>
+    @include('study-program.show');
 </div>
-@include('admin.faculty.form');
 @endsection
 
 @section('js')

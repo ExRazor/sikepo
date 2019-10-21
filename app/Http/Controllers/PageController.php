@@ -11,7 +11,7 @@ class PageController extends Controller
     public function dashboard(Request $request)
     {
         $prodi = StudyProgram::all();
-        return view('admin.index',compact('prodi'));
+        return view('index',compact('prodi'));
         // dd($request->session());
     }
 

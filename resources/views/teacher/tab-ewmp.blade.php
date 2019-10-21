@@ -73,4 +73,4 @@
         </div>
     </div>
 </div>
-@include('admin.teacher.form-ewmp')
+@include('teacher.form-ewmp')

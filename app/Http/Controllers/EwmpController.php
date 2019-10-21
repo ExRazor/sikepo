@@ -27,7 +27,7 @@ class EwmpController extends Controller
 
         $filter = session()->get('data');
 
-        return view('admin.ewmp.index',compact(['studyProgram','academicYear','ewmp','filter']));
+        return view('ewmp.index',compact(['studyProgram','academicYear','ewmp','filter']));
     }
 
     /**
@@ -38,31 +38,34 @@ class EwmpController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_ta'                 => 'required',
-            'ps_intra'              => 'required|numeric',
-            'ps_lain'               => 'required|numeric',
-            'ps_luar'               => 'required|numeric',
-            'penelitian'            => 'required|numeric',
-            'pkm'                   => 'required|numeric',
-            'tugas_tambahan'        => 'required|numeric',
-        ]);
+        if(request()->ajax()) {
+            $request->validate([
+                'id_ta'                 => 'required',
+                'ps_intra'              => 'required|numeric',
+                'ps_lain'               => 'required|numeric',
+                'ps_luar'               => 'required|numeric',
+                'penelitian'            => 'required|numeric',
+                'pkm'                   => 'required|numeric',
+                'tugas_tambahan'        => 'required|numeric',
+            ]);
 
-        $ewmp                   = new Ewmp;
-        $ewmp->nidn             = decrypt($request->nidn);
-        $ewmp->id_ta            = $request->id_ta;
-        $ewmp->ps_intra         = $request->ps_intra;
-        $ewmp->ps_lain          = $request->ps_lain;
-        $ewmp->ps_luar          = $request->ps_luar;
-        $ewmp->penelitian       = $request->penelitian;
-        $ewmp->pkm              = $request->pkm;
-        $ewmp->tugas_tambahan   = $request->tugas_tambahan;
-        $ewmp->save();
+            $ewmp                   = new Ewmp;
+            $ewmp->nidn             = decrypt($request->nidn);
+            $ewmp->id_ta            = $request->id_ta;
+            $ewmp->ps_intra         = $request->ps_intra;
+            $ewmp->ps_lain          = $request->ps_lain;
+            $ewmp->ps_luar          = $request->ps_luar;
+            $ewmp->penelitian       = $request->penelitian;
+            $ewmp->pkm              = $request->pkm;
+            $ewmp->tugas_tambahan   = $request->tugas_tambahan;
+            $ewmp->save();
 
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil ditambahkan.'
-        ]);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil ditambahkan.',
+                'type'    => 'success'
+            ]);
+        }
     }
 
     /**
@@ -148,10 +151,14 @@ class EwmpController extends Controller
      */
     public function edit($id)
     {
-        $id = decrypt($id);
-        $data = Ewmp::find($id);
+        if(request()->ajax()) {
+            $id = decrypt($id);
+            $data = Ewmp::find($id);
 
-        return response()->json($data);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -163,33 +170,36 @@ class EwmpController extends Controller
      */
     public function update(Request $request, Ewmp $ewmp)
     {
-        $request->validate([
-            'id_ta'                 => 'required',
-            'ps_intra'              => 'required|numeric',
-            'ps_lain'               => 'required|numeric',
-            'ps_luar'               => 'required|numeric',
-            'penelitian'            => 'required|numeric',
-            'pkm'                   => 'required|numeric',
-            'tugas_tambahan'        => 'required|numeric',
-        ]);
+        if(request()->ajax()) {
+            $request->validate([
+                'id_ta'                 => 'required',
+                'ps_intra'              => 'required|numeric',
+                'ps_lain'               => 'required|numeric',
+                'ps_luar'               => 'required|numeric',
+                'penelitian'            => 'required|numeric',
+                'pkm'                   => 'required|numeric',
+                'tugas_tambahan'        => 'required|numeric',
+            ]);
 
-        $id = decrypt($request->_id);
+            $id = decrypt($request->_id);
 
-        $ewmp                   = Ewmp::find($id);
-        $ewmp->nidn             = decrypt($request->nidn);
-        $ewmp->id_ta            = $request->id_ta;
-        $ewmp->ps_intra         = $request->ps_intra;
-        $ewmp->ps_lain          = $request->ps_lain;
-        $ewmp->ps_luar          = $request->ps_luar;
-        $ewmp->penelitian       = $request->penelitian;
-        $ewmp->pkm              = $request->pkm;
-        $ewmp->tugas_tambahan   = $request->tugas_tambahan;
-        $ewmp->save();
+            $ewmp                   = Ewmp::find($id);
+            $ewmp->nidn             = decrypt($request->nidn);
+            $ewmp->id_ta            = $request->id_ta;
+            $ewmp->ps_intra         = $request->ps_intra;
+            $ewmp->ps_lain          = $request->ps_lain;
+            $ewmp->ps_luar          = $request->ps_luar;
+            $ewmp->penelitian       = $request->penelitian;
+            $ewmp->pkm              = $request->pkm;
+            $ewmp->tugas_tambahan   = $request->tugas_tambahan;
+            $ewmp->save();
 
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil diubah.'
-        ]);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil diubah.',
+                'type'    => 'success'
+            ]);
+        }
     }
 
     /**
@@ -200,11 +210,16 @@ class EwmpController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->_id);
-        Ewmp::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+        if(request()->ajax()) {
+            $id = decrypt($request->_id);
+            Ewmp::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('collaboration');
+        }
     }
 }

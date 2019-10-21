@@ -25,7 +25,7 @@ class CollaborationController extends Controller
             $collab[$sp->kd_prodi] = Collaboration::where('kd_prodi',$sp->kd_prodi)->get();
         }
 
-        return view('admin/collaboration/index',compact(['studyProgram','collab']));
+        return view('collaboration/index',compact(['studyProgram','collab']));
     }
 
     /**
@@ -37,7 +37,7 @@ class CollaborationController extends Controller
     {
         $academicYear = AcademicYear::all();
         $studyProgram = StudyProgram::all();
-        return view('admin/collaboration/form',compact(['academicYear','studyProgram']));
+        return view('collaboration/form',compact(['academicYear','studyProgram']));
     }
 
     /**
@@ -86,17 +86,6 @@ class CollaborationController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Collaboration  $collaboration
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Collaboration $collaboration)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Collaboration  $collaboration
@@ -109,7 +98,7 @@ class CollaborationController extends Controller
 
         $academicYear = AcademicYear::all();
         $studyProgram = StudyProgram::all();
-        return view('admin/collaboration/form',compact(['academicYear','studyProgram','data']));
+        return view('collaboration/form',compact(['academicYear','studyProgram','data']));
 
     }
 
@@ -171,13 +160,18 @@ class CollaborationController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->id);
+        if(request()->ajax()){
+            $id = decrypt($request->id);
 
-        Collaboration::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+            Collaboration::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('collaboration');
+        }
     }
 
     public function download($filename)

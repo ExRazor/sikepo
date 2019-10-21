@@ -56,6 +56,7 @@ Breadcrumbs::for('academic-year', function ($trail) {
     $trail->push('Tahun Akademik', route('master.academic-year'));
 });
 
+//Program Studi
 Breadcrumbs::for('study-program', function ($trail) {
     $trail->parent('master');
     $trail->push('Program Studi', route('master.study-program'));
@@ -69,6 +70,18 @@ Breadcrumbs::for('study-program-add', function ($trail) {
 Breadcrumbs::for('study-program-edit', function ($trail) {
     $trail->parent('study-program');
     $trail->push('Sunting Program Studi');
+});
+
+//Jurusan
+Breadcrumbs::for('department', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Jurusan', route('master.department'));
+});
+
+//Fakultas
+Breadcrumbs::for('faculty', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Fakultas', route('master.faculty'));
 });
 
 // // Home > About

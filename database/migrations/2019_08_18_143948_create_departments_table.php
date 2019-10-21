@@ -17,8 +17,8 @@ class CreateDepartmentsTable extends Migration
             $table->char('kd_jurusan',5)->primary();
             $table->unsignedBigInteger('id_fakultas');
             $table->string('nama');
-            $table->char('nip_kajur',18);
-            $table->string('nm_kajur',50);
+            $table->char('nip_kajur',18)->nullable();
+            $table->string('nm_kajur',50)->nullable();
             $table->timestamps();
 
             $table->foreign('id_fakultas')->references('id')->on('faculties');

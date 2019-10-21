@@ -23,8 +23,8 @@ class CreateStudyProgramsTable extends Migration
             $table->date('tgl_sk');
             $table->string('pejabat_sk');
             $table->char('thn_menerima',4);
-            $table->char('nip_kaprodi',18);
-            $table->string('nm_kaprodi',50);
+            $table->char('nip_kaprodi',18)->nullable();
+            $table->string('nm_kaprodi',50)->nullable();
             $table->timestamps();
 
             $table->foreign('kd_jurusan')->references('kd_jurusan')->on('departments');

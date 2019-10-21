@@ -16,7 +16,7 @@ class AcademicYearController extends Controller
     {
         $academicYears = AcademicYear::orderBy('tahun_akademik', 'desc')->orderBy('semester', 'desc')->get();
 
-        return view('admin/academic-year/index',compact('academicYears'));
+        return view('academic-year/index',compact('academicYears'));
     }
 
     /**
@@ -27,17 +27,21 @@ class AcademicYearController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'tahun_akademik' => 'required|digits:4',
-            'semester'       => 'required',
-        ]);
+        if($request->ajax()) {
+            $request->validate([
+                'tahun_akademik' => 'required|digits:4',
+                'semester'       => 'required',
+            ]);
 
-        AcademicYear::create($request->all());
+            AcademicYear::create($request->all());
 
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil ditambahkan.'
-        ]);
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil ditambahkan.',
+                'type'    => 'success'
+            ]);
+        }
+
     }
 
     /**
@@ -48,10 +52,12 @@ class AcademicYearController extends Controller
      */
     public function edit($id)
     {
-        $id = decrypt($id);
-        $data = AcademicYear::find($id);
+        if(request()->ajax()){
+            $id = decrypt($id);
+            $data = AcademicYear::find($id);
 
-        return response()->json($data);
+            return response()->json($data);
+        }
     }
 
     /**
@@ -63,22 +69,25 @@ class AcademicYearController extends Controller
      */
     public function update(Request $request)
     {
-        $id = decrypt($request->_id);
+        if(request()->ajax()){
+            $id = decrypt($request->_id);
 
-        $request->validate([
-            'tahun_akademik' => 'required|digits:4',
-            'semester'       => 'required',
-        ]);
+            $request->validate([
+                'tahun_akademik' => 'required|digits:4',
+                'semester'       => 'required',
+            ]);
 
-        $academic = AcademicYear::find($id);
-        $academic->tahun_akademik = $request->tahun_akademik;
-        $academic->semester       = $request->semester;
-        $academic->save();
+            $academic = AcademicYear::find($id);
+            $academic->tahun_akademik = $request->tahun_akademik;
+            $academic->semester       = $request->semester;
+            $academic->save();
 
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil disunting.'
-        ]);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil disunting.',
+                'type'    => 'success'
+            ]);
+        }
     }
 
     /**
@@ -89,39 +98,50 @@ class AcademicYearController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->id);
-        AcademicYear::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+        if($request->ajax()){
+            $id = decrypt($request->id);
+            AcademicYear::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('master.academy-year');
+        }
+
     }
 
     public function setStatus(Request $request)
     {
-        $academicYear = AcademicYear::find($request->id);
+        if(request()->ajax()){
+            $academicYear = AcademicYear::find($request->id);
 
-        if($academicYear->status == 'Aktif') {
-            return response()->json(['warning' => 'Status sudah aktif']);
-        } else {
-            AcademicYear::where('status','Aktif')
-                        ->update([
-                            'status' => 'Tidak Aktif'
-                        ]);
+            if($academicYear->status == 'Aktif') {
+                return response()->json(['warning' => 'Status sudah aktif']);
+            } else {
+                AcademicYear::where('status','Aktif')
+                            ->update([
+                                'status' => 'Tidak Aktif'
+                            ]);
 
-            $academicYear->status = 'Aktif';
-            $academicYear->save();
+                $academicYear->status = 'Aktif';
+                $academicYear->save();
 
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Status berhasil diubah'
-            ]);
+                return response()->json([
+                    'title' => 'Berhasil',
+                    'message' => 'Status berhasil diubah',
+                    'type'    => 'success'
+                ]);
+            }
         }
     }
 
     public function get_all() {
-        $academicYears = AcademicYear::get();
+        if(request()->ajax()){
+            $academicYears = AcademicYear::get();
 
-        return response()->json($academicYears, 200);
+            return response()->json($academicYears);
+        }
     }
 }

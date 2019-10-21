@@ -60,10 +60,16 @@
                                 <input class="form-control" type="text" name="kd_prodi" maxlength="5" value="{{ isset($data) ? $data->kd_prodi : Request::old('kd_prodi')}}" placeholder="Isikan kode prodi" {{ isset($data) ? 'readonly' : ''}}>
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-7 mg-t--1 mg-md-t-0">
+                        <div class="col-md-5 mg-t--1 mg-md-t-0">
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Nama Prodi: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Isikan nama program studi">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-md-2 mg-md-t-0">
+                            <div class="form-group mg-md-l--1">
+                                <label class="form-control-label">Singkatan Program Studi: <span class="tx-danger">*</span></label>
+                                <input class="form-control" type="text" name="singkatan" value="{{ isset($data) ? $data->singkatan : Request::old('singkatan')}}" placeholder="Isikan singkatan program studi">
                             </div>
                         </div><!-- col-4 -->
                         <div class="col-md-3 mg-t--1 mg-md-t-0">
@@ -77,37 +83,43 @@
                                 </select>
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group bd-t-0-force">
                                 <label class="form-control-label">Nomor SK Pembukaan Program Studi: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="no_sk" value="{{ isset($data) ? $data->no_sk : Request::old('no_sk')}}" placeholder="Isikan nomor SK">
                             </div>
                         </div><!-- col-8 -->
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group mg-md-l--1 bd-t-0-force">
-                                <label class="form-control-label mg-b-0-force">Tanggal SK Pembukaan Program Studi: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label">Tanggal SK Pembukaan Program Studi: <span class="tx-danger">*</span></label>
                                 <input class="form-control datepicker" type="text" name="tgl_sk" value="{{ isset($data) ? $data->tgl_sk : Request::old('tgl_sk')}}" placeholder="Isikan tanggal disahkan SK">
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-4 mg-t--1">
+                        <div class="col-md-3 mg-t--1">
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Penandatangan SK Pembukaan: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="pejabat_sk" value="{{ isset($data) ? $data->pejabat_sk : Request::old('pejabat_sk')}}" placeholder="Isikan nama pejabat penandatangan SK">
                             </div>
                         </div><!-- col-8 -->
+                        <div class="col-md-3 mg-md-t--1">
+                            <div class="form-group mg-md-l--1">
+                                <label class="form-control-label">Tahun Pertama Menerima Mahasiswa: <span class="tx-danger">*</span></label>
+                                <input class="form-control" type="text" name="thn_menerima" maxlength="4" value="{{ isset($data) ? $data->thn_menerima : Request::old('thn_menerima')}}" placeholder="Isikan tahun pertama menerima mahasiswa">
+                            </div>
+                        </div><!-- col-4 -->
                         <div class="col-md-6 mg-md-t--1">
-                                <div class="form-group">
-                                    <label class="form-control-label">Tahun Pertama Menerima Mahasiswa: <span class="tx-danger">*</span></label>
-                                    <input class="form-control" type="text" name="thn_menerima" maxlength="4" value="{{ isset($data) ? $data->thn_menerima : Request::old('thn_menerima')}}" placeholder="Isikan tahun pertama menerima mahasiswa">
-                                </div>
-                            </div><!-- col-4 -->
-                            <div class="col-md-6 mg-md-t--1">
-                                <div class="form-group mg-md-l--1">
-                                    <label class="form-control-label">Singkatan Program Studi: <span class="tx-danger">*</span></label>
-                                    <input class="form-control" type="text" name="singkatan" value="{{ isset($data) ? $data->singkatan : Request::old('singkatan')}}" placeholder="Isikan singkatan program studi">
-                                </div>
-                            </div><!-- col-4 -->
-                        </div>
+                            <div class="form-group">
+                                <label class="form-control-label">NIP Kepala Program Studi:</label>
+                                <input class="form-control" type="text" name="nip_kaprodi" value="{{ isset($data) ? $data->nip_kaprodi : Request::old('nip_kaprodi')}}" placeholder="Isikan NIP kepala program studi">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-md-6 mg-md-t--1">
+                            <div class="form-group mg-md-l--1">
+                                <label class="form-control-label">Nama Kepala Program Studi:</label>
+                                <input class="form-control" type="text" name="nm_kaprodi" value="{{ isset($data) ? $data->nm_kaprodi : Request::old('nm_kaprodi')}}" placeholder="Isikan nama kepala program studi">
+                            </div>
+                        </div><!-- col-4 -->
+
                     </div><!-- row -->
                     <div class="form-layout-footer bd pd-20 bd-t-0">
                         <button type="submit" class="btn btn-info">Simpan</button>

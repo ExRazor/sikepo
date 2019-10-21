@@ -23,10 +23,10 @@ class TeacherController extends Controller
         $teacher = array();
 
         foreach($studyProgram as $sp) {
-            $teacher[$sp->kd_prodi] = Teacher::where('dosen_ps',$sp->kd_prodi)->get();
+            $teacher[$sp->kd_prodi] = Teacher::where('kd_prodi',$sp->kd_prodi)->get();
         }
 
-        return view('admin/teacher/index',compact(['studyProgram','teacher']));
+        return view('teacher/index',compact(['studyProgram','teacher']));
     }
 
     /**
@@ -37,7 +37,7 @@ class TeacherController extends Controller
     public function create()
     {
         $studyProgram = StudyProgram::all();
-        return view('admin/teacher/form',compact('studyProgram'));
+        return view('teacher/form',compact('studyProgram'));
     }
 
     /**
@@ -50,6 +50,8 @@ class TeacherController extends Controller
     {
         $request->validate([
             'nidn'                  => 'required|numeric|digits:9',
+            'kd_prodi'              => 'required',
+            'nip'                   => 'required|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
             'agama'                 => 'required',
@@ -61,30 +63,30 @@ class TeacherController extends Controller
             'pend_terakhir_jenjang' => 'required',
             'pend_terakhir_jurusan' => 'required',
             'bidang_ahli'           => 'required',
-            'dosen_ps'              => 'required',
-            'status_pengajar'       => 'required',
+            'ikatan_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
             'sesuai_bidang_ps'      => 'required',
         ]);
 
-        $Teacher            = new Teacher;
-        $Teacher->nidn      = $request->nidn;
-        $Teacher->nama      = $request->nama;
-        $Teacher->jk        = $request->jk;
-        $Teacher->agama     = $request->agama;
-        $Teacher->tpt_lhr   = $request->tpt_lhr;
-        $Teacher->tgl_lhr   = $request->tgl_lhr;
-        $Teacher->alamat    = $request->alamat;
-        $Teacher->no_telp   = $request->no_telp;
-        $Teacher->email     = $request->email;
+        $Teacher                            = new Teacher;
+        $Teacher->nidn                      = $request->nidn;
+        $Teacher->kd_prodi                  = $request->kd_prodi;
+        $Teacher->nip                       = $request->nip;
+        $Teacher->nama                      = $request->nama;
+        $Teacher->jk                        = $request->jk;
+        $Teacher->agama                     = $request->agama;
+        $Teacher->tpt_lhr                   = $request->tpt_lhr;
+        $Teacher->tgl_lhr                   = $request->tgl_lhr;
+        $Teacher->alamat                    = $request->alamat;
+        $Teacher->no_telp                   = $request->no_telp;
+        $Teacher->email                     = $request->email;
         $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
         $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
-        $Teacher->bidang_ahli     = $request->bidang_ahli;
-        $Teacher->dosen_ps     = $request->dosen_ps;
-        $Teacher->status_pengajar     = $request->status_pengajar;
-        $Teacher->jabatan_akademik     = $request->jabatan_akademik;
-        $Teacher->sertifikat_pendidik     = $request->sertifikat_pendidik;
-        $Teacher->sesuai_bidang_ps     = $request->sesuai_bidang_ps;
+        $Teacher->bidang_ahli               = $request->bidang_ahli;
+        $Teacher->ikatan_kerja              = $request->ikatan_kerja;
+        $Teacher->jabatan_akademik          = $request->jabatan_akademik;
+        $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
+        $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
         if($request->file('foto')) {
             $file = $request->file('foto');
@@ -103,13 +105,13 @@ class TeacherController extends Controller
     public function import()
     {
         $studyProgram = StudyProgram::all();
-        return view('admin/teacher/import',compact('studyProgram'));
+        return view('teacher/import',compact('studyProgram'));
     }
 
     public function store_import()
     {
         $studyProgram = StudyProgram::all();
-        return view('admin/teacher/form',compact('studyProgram'));
+        return view('teacher/form',compact('studyProgram'));
     }
 
     /**
@@ -127,12 +129,12 @@ class TeacherController extends Controller
         $achievement    = TeacherAchievement::where('nidn',$id)->orderBy('tanggal','desc')->get();
 
         // dd($achievement);
-        return view('admin/teacher/profile',compact(['data','academicYear','ewmp','achievement']));
+        return view('teacher/profile',compact(['data','academicYear','ewmp','achievement']));
     }
 
     public function show_by_prodi(Request $request)
     {
-        $data = Teacher::where('dosen_ps',$request->kd_prodi)->get();
+        $data = Teacher::where('kd_prodi',$request->kd_prodi)->get();
 
         return response()->json($data);
     }
@@ -149,7 +151,7 @@ class TeacherController extends Controller
         $studyProgram = StudyProgram::all();
         $data = Teacher::find($id);
 
-        return view('admin/teacher/form',compact(['data','studyProgram']));
+        return view('teacher/form',compact(['data','studyProgram']));
     }
 
     /**
@@ -165,6 +167,8 @@ class TeacherController extends Controller
         $url = $request->_url;
 
         $request->validate([
+            'kd_prodi'              => 'required',
+            'nip'                   => 'required|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
             'agama'                 => 'required',
@@ -176,29 +180,29 @@ class TeacherController extends Controller
             'pend_terakhir_jenjang' => 'required',
             'pend_terakhir_jurusan' => 'required',
             'bidang_ahli'           => 'required',
-            'dosen_ps'              => 'required',
-            'status_pengajar'       => 'required',
+            'ikatan_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
             'sesuai_bidang_ps'      => 'required',
         ]);
 
-        $Teacher            = Teacher::find($id);
-        $Teacher->nama      = $request->nama;
-        $Teacher->jk        = $request->jk;
-        $Teacher->agama     = $request->agama;
-        $Teacher->tpt_lhr   = $request->tpt_lhr;
-        $Teacher->tgl_lhr   = $request->tgl_lhr;
-        $Teacher->alamat    = $request->alamat;
-        $Teacher->no_telp   = $request->no_telp;
-        $Teacher->email     = $request->email;
+        $Teacher                            = Teacher::find($id);
+        $Teacher->kd_prodi                  = $request->kd_prodi;
+        $Teacher->nip                       = $request->nip;
+        $Teacher->nama                      = $request->nama;
+        $Teacher->jk                        = $request->jk;
+        $Teacher->agama                     = $request->agama;
+        $Teacher->tpt_lhr                   = $request->tpt_lhr;
+        $Teacher->tgl_lhr                   = $request->tgl_lhr;
+        $Teacher->alamat                    = $request->alamat;
+        $Teacher->no_telp                   = $request->no_telp;
+        $Teacher->email                     = $request->email;
         $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
         $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
-        $Teacher->bidang_ahli     = $request->bidang_ahli;
-        $Teacher->dosen_ps     = $request->dosen_ps;
-        $Teacher->status_pengajar     = $request->status_pengajar;
-        $Teacher->jabatan_akademik     = $request->jabatan_akademik;
-        $Teacher->sertifikat_pendidik     = $request->sertifikat_pendidik;
-        $Teacher->sesuai_bidang_ps     = $request->sesuai_bidang_ps;
+        $Teacher->bidang_ahli               = $request->bidang_ahli;
+        $Teacher->ikatan_kerja              = $request->ikatan_kerja;
+        $Teacher->jabatan_akademik          = $request->jabatan_akademik;
+        $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
+        $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
         $storagePath = 'upload/teacher/'.$Teacher->foto;
         if($request->file('foto')) {
@@ -228,13 +232,18 @@ class TeacherController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->id);
+        if(request()->ajax()) {
+            $id = decrypt($request->id);
 
-        Teacher::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+            Teacher::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('teacher.achievement');
+        }
     }
 
     public function download($filename)

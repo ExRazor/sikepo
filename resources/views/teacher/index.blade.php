@@ -74,7 +74,7 @@
                             <td class="text-capitalize">{{$d->jk}}</td>
                             <td>{{$d->pend_terakhir_jenjang}} - {{$d->pend_terakhir_jurusan}}</td>
                             <td>{{$d->bidang_ahli}}</td>
-                            <td>{{$d->status_pengajar==='DT' ? 'Dosen Tetap':'Dosen Tidak Tetap'}}</td>
+                            <td>{{$d->ikatan_kerja}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
                             <td width="50">
                                 <div class="btn-group" role="group">

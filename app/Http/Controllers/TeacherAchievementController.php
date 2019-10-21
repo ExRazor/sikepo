@@ -19,7 +19,7 @@ class TeacherAchievementController extends Controller
         $achievement    = TeacherAchievement::orderBy('tanggal','desc')->get();
         $studyProgram   = StudyProgram::all();
 
-        return view('admin.teacher-achievement.index',compact(['achievement','studyProgram']));
+        return view('teacher-achievement.index',compact(['achievement','studyProgram']));
     }
 
     /**
@@ -40,34 +40,37 @@ class TeacherAchievementController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nidn'                  => 'required',
-            'prestasi'              => 'required',
-            'tingkat_prestasi'      => 'required',
-            'tanggal_dicapai'       => 'required|date',
-            'bukti_pendukung'       => 'required',
-        ]);
+        if(request()->ajax()) {
+            $request->validate([
+                'nidn'                  => 'required',
+                'prestasi'              => 'required',
+                'tingkat_prestasi'      => 'required',
+                'tanggal_dicapai'       => 'required|date',
+                'bukti_pendukung'       => 'required',
+            ]);
 
-        $acv                    = new TeacherAchievement;
-        $acv->nidn              = $request->nidn;
-        $acv->prestasi          = $request->prestasi;
-        $acv->tingkat_prestasi  = $request->tingkat_prestasi;
-        $acv->tanggal           = $request->tanggal_dicapai;
+            $acv                    = new TeacherAchievement;
+            $acv->nidn              = $request->nidn;
+            $acv->prestasi          = $request->prestasi;
+            $acv->tingkat_prestasi  = $request->tingkat_prestasi;
+            $acv->tanggal           = $request->tanggal_dicapai;
 
-        if($file = $request->file('bukti_pendukung')) {
-            $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = 'upload/teacher-achievement';
-            $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $acv->bukti_pendukung = $filename;
+            if($file = $request->file('bukti_pendukung')) {
+                $tgl_skrg = date('Y_m_d_H_i_s');
+                $tujuan_upload = 'upload/teacher-achievement';
+                $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $acv->bukti_pendukung = $filename;
+            }
+
+            $acv->save();
+
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil ditambahkan.',
+                'type'    => 'success'
+            ]);
         }
-
-        $acv->save();
-
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil ditambahkan.'
-        ]);
     }
 
     /**
@@ -89,11 +92,14 @@ class TeacherAchievementController extends Controller
      */
     public function edit($id)
     {
-        $id = decrypt($id);
-        $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram')->first();
-        // $prodi = $data->teacher->studyProgram->kd_prodi;
+        if(request()->ajax()) {
+            $id = decrypt($id);
+            $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram')->first();
 
-        return response()->json($data);
+            return response()->json($data);
+        } else {
+            return "Hehe";
+        }
     }
 
     /**
@@ -105,42 +111,43 @@ class TeacherAchievementController extends Controller
      */
     public function update(Request $request)
     {
-        $id  = decrypt($request->_id);
+        if(request()->ajax()) {
+            $id  = decrypt($request->_id);
 
-        // dd($request->all());
+            $request->validate([
+                'prestasi'              => 'required',
+                'tingkat_prestasi'      => 'required',
+                'tanggal_dicapai'       => 'required|date',
+            ]);
 
-        $request->validate([
-            'prestasi'              => 'required',
-            'tingkat_prestasi'      => 'required',
-            'tanggal_dicapai'       => 'required|date',
-        ]);
+            $acv                    = TeacherAchievement::find($id);
+            $acv->nidn              = $request->nidn;
+            $acv->prestasi          = $request->prestasi;
+            $acv->tingkat_prestasi  = $request->tingkat_prestasi;
+            $acv->tanggal           = $request->tanggal_dicapai;
 
-        $acv                    = TeacherAchievement::find($id);
-        $acv->nidn              = $request->nidn;
-        $acv->prestasi          = $request->prestasi;
-        $acv->tingkat_prestasi  = $request->tingkat_prestasi;
-        $acv->tanggal           = $request->tanggal_dicapai;
+            $storagePath = 'upload/teacher-achievement/'.$acv->bukti_pendukung;
+            if($file = $request->file('bukti_pendukung')) {
 
-        $storagePath = 'upload/teacher-achievement/'.$acv->bukti_pendukung;
-        if($file = $request->file('bukti_pendukung')) {
+                if(File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
 
-            if(File::exists($storagePath)) {
-                File::delete($storagePath);
+                $tgl_skrg = date('Y_m_d_H_i_s');
+                $tujuan_upload = 'upload/teacher-achievement';
+                $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $acv->bukti_pendukung = $filename;
             }
 
-            $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = 'upload/teacher-achievement';
-            $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $acv->bukti_pendukung = $filename;
+            $acv->save();
+
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil diubah.',
+                'type'    => 'success'
+            ]);
         }
-
-        $acv->save();
-
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil diubah.'
-        ]);
     }
 
     /**
@@ -151,12 +158,17 @@ class TeacherAchievementController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->_id);
-        TeacherAchievement::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+        if(request()->ajax()) {
+            $id = decrypt($request->_id);
+            TeacherAchievement::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('teacher.achievement');
+        }
     }
 
     public function download($filename)

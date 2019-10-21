@@ -24,7 +24,7 @@
                 <p class="mg-b-25">NIDN. {{$data->nidn}}</p>
 
                 <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">
-                    {{ $data->status_pengajar=='DT' ? 'Dosen Tetap' : 'Dosen Tidak Tetap' }} Program Studi.<br>
+                    {{ $data->ikatan_kerja}} Program Studi.<br>
                     Menjabat sebagai
                     {{ $data->jabatan_akademik }}
                     di Program Studi
@@ -39,7 +39,7 @@
         <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">
             <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
-                @if($data->status_pengajar=='DT')
+                @if($data->ikatan_kerja=='Dosen Tetap')
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                 @endif
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#" role="tab">Favorites</a></li>
@@ -49,9 +49,9 @@
         <div class="row br-profile-body">
             <div class="col-lg-9">
                 <div class="tab-content">
-                    @include('admin.teacher.tab-achievement')
-                    @if($data->status_pengajar=='DT')
-                        @include('admin.teacher.tab-ewmp')
+                    @include('teacher.tab-achievement')
+                    @if($data->ikatan_kerja=='Dosen Tetap')
+                        @include('teacher.tab-ewmp')
                     @endif
                 </div>
             </div>

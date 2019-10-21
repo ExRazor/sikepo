@@ -16,17 +16,7 @@ class FacultyController extends Controller
     {
         $faculty = Faculty::all();
 
-        return view('admin.faculty.index',compact(['faculty']));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('faculty.index',compact(['faculty']));
     }
 
     /**
@@ -37,22 +27,25 @@ class FacultyController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama'        => 'required',
-            'singkatan'   => 'required',
-        ]);
+        if(request()->ajax()) {
+            $request->validate([
+                'nama'        => 'required',
+                'singkatan'   => 'required',
+            ]);
 
-        $data             = new Faculty;
-        $data->nama       = $request->nama;
-        $data->singkatan  = $request->singkatan;
-        $data->nip_dekan  = $request->nip_dekan;
-        $data->nm_dekan   = $request->nm_dekan;
-        $data->save();
+            $data             = new Faculty;
+            $data->nama       = $request->nama;
+            $data->singkatan  = $request->singkatan;
+            $data->nip_dekan  = $request->nip_dekan;
+            $data->nm_dekan   = $request->nm_dekan;
+            $data->save();
 
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil ditambahkan.'
-        ]);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil ditambahkan.',
+                'type'    => 'success'
+            ]);
+        }
     }
 
     /**
@@ -68,12 +61,16 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        $id = decrypt($id);
-        $data = Faculty::find($id);
+        if(request()->ajax()) {
+            $id = decrypt($request->id);
+            $data = Faculty::find($id);
 
-        return response()->json($data);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -85,24 +82,27 @@ class FacultyController extends Controller
      */
     public function update(Request $request)
     {
-        $id  = decrypt($request->_id);
+        if(request()->ajax()) {
+            $id  = decrypt($request->_id);
 
-        $request->validate([
-            'nama'        => 'required',
-            'singkatan'   => 'required',
-        ]);
+            $request->validate([
+                'nama'        => 'required',
+                'singkatan'   => 'required',
+            ]);
 
-        $data             = Faculty::find($id);
-        $data->nama       = $request->nama;
-        $data->singkatan  = $request->singkatan;
-        $data->nip_dekan  = $request->nip_dekan;
-        $data->nm_dekan   = $request->nm_dekan;
-        $data->save();
+            $data             = Faculty::find($id);
+            $data->nama       = $request->nama;
+            $data->singkatan  = $request->singkatan;
+            $data->nip_dekan  = $request->nip_dekan;
+            $data->nm_dekan   = $request->nm_dekan;
+            $data->save();
 
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil ditambahkan.'
-        ]);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil ditambahkan.',
+                'type'    => 'success'
+            ]);
+        }
     }
 
     /**
@@ -113,11 +113,16 @@ class FacultyController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->_id);
-        Faculty::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+        if($request->ajax()) {
+            $id = decrypt($request->_id);
+            Faculty::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('master.faculty');
+        }
     }
 }

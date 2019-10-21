@@ -103,7 +103,7 @@
         </div>
     </div>
 </div>
-@include('admin.teacher-achievement.form')
+@include('teacher-achievement.form')
 @endsection
 
 @section('js')

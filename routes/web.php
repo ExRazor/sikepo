@@ -36,15 +36,23 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::get('faculty', 'FacultyController@index')->name('faculty');
     Route::get('faculty/add', 'FacultyController@create')->name('faculty.add');
     Route::get('faculty/{id}', 'FacultyController@show')->name('faculty.show');
-    Route::post('faculty/', 'FacultyController@store')->name('faculty.store');
+    Route::post('faculty', 'FacultyController@store')->name('faculty.store');
     Route::put('faculty','FacultyController@update')->name('faculty.update');
     Route::delete('faculty','FacultyController@destroy')->name('faculty.delete');
+
+    //Jurusan
+    Route::get('department', 'DepartmentController@index')->name('department');
+    Route::get('department/add', 'DepartmentController@create')->name('department.add');
+    Route::post('department/show', 'DepartmentController@show')->name('department.show');
+    Route::post('department', 'DepartmentController@store')->name('department.store');
+    Route::put('department','DepartmentController@update')->name('department.update');
+    Route::delete('department','DepartmentController@destroy')->name('department.delete');
 
     //Program Studi
     Route::get('study-program', 'StudyProgramController@index')->name('study-program');
     Route::get('study-program/add', 'StudyProgramController@create')->name('study-program.add');
     Route::get('study-program/edit/{id}', 'StudyProgramController@edit')->name('study-program.edit');
-    Route::post('study-program/', 'StudyProgramController@store')->name('study-program.store');
+    Route::post('study-program', 'StudyProgramController@store')->name('study-program.store');
     Route::put('study-program','StudyProgramController@update')->name('study-program.update');
     Route::delete('study-program','StudyProgramController@destroy')->name('study-program.delete');
 
@@ -58,7 +66,13 @@ Route::prefix('ajax')->group(function () {
     Route::post('academic-year/status','AcademicYearController@setStatus' );
 
     //Fakultas
-    Route::get('faculty/{id}','FacultyController@edit' );
+    Route::post('faculty/{id}','FacultyController@edit' );
+
+    //Jurusan
+    Route::post('department/edit','DepartmentController@edit' );
+
+    //Program Studi
+    Route::get('study-program/{id}','StudyProgramController@show' );
 });
 
 //Collaboration
@@ -84,17 +98,6 @@ Route::put('/teacher/list','TeacherController@update')->name('teacher.update');
 Route::delete('/teacher/list','TeacherController@destroy')->name('teacher.delete');
 Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
 Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->name('teacher.show_by_prodi');
-
-Route::get('/student',function(){
-    return redirect(route('student.registrant'));
-});
-Route::get('/student/list','StudentController@index')->name('student');
-Route::get('/student/registrant/add','StudentRegistrantController@create')->name('student.registrant.add');
-Route::get('/student/registrant/detail/{id}','TeacherController@show')->name('teacher.show');
-Route::get('/student/registrant/edit/{id}','StudentRegistrantController@edit')->name('student.registrant.edit');
-Route::post('/student/registrant','StudentRegistrantController@store')->name('student.registrant.store');
-Route::put('/student/registrant','StudentRegistrantController@update')->name('student.registrant.update');
-Route::delete('/student/registrant','StudentRegistrantController@destroy')->name('student.registrant.delete');
 
 //Teacher Achievement
 Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher.achievement');

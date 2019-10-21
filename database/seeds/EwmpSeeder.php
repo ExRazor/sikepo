@@ -15,7 +15,7 @@ class EwmpSeeder extends Seeder
         for($i = 0; $i < 25; $i++){
             // insert data ke table pegawai menggunakan Faker
             DB::table('ewmps')->insert([
-                'nidn'                  => Teacher::all()->random()->nidn,
+                'nidn'                  => Teacher::inRandomOrder()->where('ikatan_kerja','Dosen Tetap')->first()->nidn,
                 'id_ta'                 => AcademicYear::all()->random()->id,
                 'ps_intra'              => rand(0, 40),
                 'ps_lain'               => rand(0, 40),

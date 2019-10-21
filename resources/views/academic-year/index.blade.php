@@ -69,12 +69,11 @@
             </table>
         </div><!-- card-body -->
     </div>
-    @include('admin.academic-year.form');
+    @include('academic-year.form');
 </div>
 
 
 @endsection
 
 @section('js')
-
 @endsection

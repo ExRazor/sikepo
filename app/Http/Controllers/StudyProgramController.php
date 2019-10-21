@@ -15,7 +15,7 @@ class StudyProgramController extends Controller
     public function index()
     {
         $data = StudyProgram::all();
-        return view('admin.study-program.index',compact('data'));
+        return view('study-program.index',compact('data'));
     }
 
     /**
@@ -25,7 +25,7 @@ class StudyProgramController extends Controller
      */
     public function create()
     {
-        return view('admin.study-program.form');
+        return view('study-program.form');
     }
 
     /**
@@ -39,12 +39,12 @@ class StudyProgramController extends Controller
         $request->validate([
             'kd_prodi'      => 'required|numeric|digits:5',
             'nama'          => 'required',
+            'singkatan'     => 'required',
             'jenjang'       => 'required',
             'no_sk'         => 'required',
             'tgl_sk'        => 'required',
             'pejabat_sk'    => 'required',
             'thn_menerima'  => 'required|numeric|digits:4',
-            'singkatan'     => 'required',
         ]);
 
         StudyProgram::create($request->all());
@@ -61,10 +61,14 @@ class StudyProgramController extends Controller
      */
     public function show($id)
     {
-        $id = decrypt($id);
-        $data = StudyProgram::find($id);
+        if(request()->ajax()) {
+            $id = decrypt($id);
+            $data = StudyProgram::find($id);
 
-        return response()->json($data);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -78,7 +82,7 @@ class StudyProgramController extends Controller
         $id = decrypt($id);
         $data = StudyProgram::find($id);
 
-        return view('admin.study-program.form',compact('data'));
+        return view('study-program.form',compact('data'));
     }
 
     /**
@@ -96,12 +100,12 @@ class StudyProgramController extends Controller
 
         $request->validate([
             'nama'          => 'required',
+            'singkatan'     => 'required',
             'jenjang'       => 'required',
             'no_sk'         => 'required',
             'tgl_sk'        => 'required',
             'pejabat_sk'    => 'required',
             'thn_menerima'  => 'required|numeric|digits:4',
-            'singkatan'     => 'required',
         ]);
 
         $studyProgram = StudyProgram::find($id);
@@ -112,6 +116,8 @@ class StudyProgramController extends Controller
         $studyProgram->pejabat_sk     = $request->pejabat_sk;
         $studyProgram->thn_menerima   = $request->thn_menerima;
         $studyProgram->singkatan      = $request->singkatan;
+        $studyProgram->nip_kaprodi    = $request->nip_kaprodi;
+        $studyProgram->nm_kaprodi     = $request->nm_kaprodi;
         $studyProgram->save();
 
 
@@ -127,12 +133,17 @@ class StudyProgramController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = decrypt($request->id);
+        if(request()->ajax()) {
+            $id = decrypt($request->id);
 
-        StudyProgram::destroy($id);
-        return response()->json([
-            'title' => 'Berhasil',
-            'message' => 'Data berhasil dihapus'
-        ]);
+            StudyProgram::destroy($id);
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } else {
+            return redirect()->route('master.study-program');
+        }
     }
 }
