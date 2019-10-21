@@ -8,9 +8,9 @@ class Teacher extends Model
 {
     protected $primaryKey = 'nidn';
     protected $fillable = [
-        'nidn',
+        'nidn'                 ,
         'kd_prodi'             ,
-        'nip'             ,
+        'nip'                  ,
         'nama'                 ,
         'jk'                   ,
         'agama'                ,
@@ -22,9 +22,9 @@ class Teacher extends Model
         'pend_terakhir_jenjang',
         'pend_terakhir_jurusan',
         'bidang_ahli'          ,
-        'status_pengajar'      ,
+        'ikatan_kerja'         ,
         'jabatan_akademik'     ,
-        'sertifikat_pendidik'     ,
+        'sertifikat_pendidik'  ,
         'sesuai_bidang_ps'     ,
         'foto'     ,
     ];

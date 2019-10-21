@@ -59,7 +59,6 @@
                     <div class="col-9 mx-auto">
                         <form name="teacher_form" action="{{route('teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                             @csrf
-                            <input type="hidden" name="_url" value="{{ url()->previous() }}">
                             @if(isset($data))
                                 @method('put')
                                 <input type="hidden" name="_token_id" value="{{encrypt($data->nidn)}}">
@@ -71,11 +70,11 @@
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div id="prodi" class="parsley-select">
-                                        <select class="form-control select2" name="dosen_ps" data-placeholder="Pilih Prodi" data-parsley-class-handler="#prodi"
+                                        <select class="form-control select2" name="kd_prodi" data-placeholder="Pilih Prodi" data-parsley-class-handler="#prodi"
                                         data-parsley-errors-container="#errorProdi" required>
                                             <option></option>
                                             @foreach ($studyProgram as $sp)
-                                            <option value="{{$sp->kd_prodi}}" {{ isset($data) && $data->dosen_ps==$sp->kd_prodi || Request::old('dosen_ps')==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                            <option value="{{$sp->kd_prodi}}" {{ isset($data) && $data->kd_prodi==$sp->kd_prodi || Request::old('kd_prodi')==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
                                             @endforeach
                                         </select>
                                         <div id="errorProdi"></div>
@@ -85,7 +84,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} required>
+                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} maxlength="9" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label">NIP: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -195,14 +200,15 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Status Pengajar: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <div id="status_pengajar" class="parsley-select">
-                                        <select class="form-control select2" name="status_pengajar" data-placeholder="Pilih Agama" data-parsley-class-handler="#status_pengajar"
-                                        data-parsley-errors-container="#errorStatusPengajar" required>
+                                    <div id="ikatan_kerja" class="parsley-select">
+                                        <select class="form-control select2" name="ikatan_kerja" data-placeholder="Pilih Ikatan Kerja" data-parsley-class-handler="#ikatan_kerja"
+                                        data-parsley-errors-container="#errorIkatanKerja" required>
                                             <option></option>
-                                            <option value="DT" {{ isset($data) && ($data->status_pengajar=='DT' || Request::old('agama')=='DT') ? 'selected' : ''}}>Dosen Tetap</option>
-                                            <option value="DTT" {{ isset($data) && ($data->status_pengajar=='DTT' || Request::old('agama')=='DTT') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
+                                            <option value="Dosen Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap' || Request::old('ikatan_kerja')=='Dosen Tetap') ? 'selected' : ''}}>Dosen Tetap</option>
+                                            <option value="Dosen Tidak Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tidak Tetap' || Request::old('ikatan_kerja')=='Dosen Tidak Tetap') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
+                                            <option value="Dosen Honorer PTN" {{ isset($data) && ($data->ikatan_kerja=='Dosen Honorer PTN' || Request::old('ikatan_kerja')=='Dosen Honorer PTN') ? 'selected' : ''}}>Dosen Honorer PTN</option>
                                         </select>
-                                        <div id="errorStatusPengajar"></div>
+                                        <div id="errorIkatanKerja"></div>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +263,7 @@
                     <div class="col-6 mx-auto">
                         <div class="text-center">
                             <button class="btn btn-info btn-submit-teacher">Simpan</button>
-                            <a href="{{route('master.study-program')}}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ url()->previous() }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </div>
                 </div>

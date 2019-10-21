@@ -164,7 +164,6 @@ class TeacherController extends Controller
     public function update(Request $request)
     {
         $id  = decrypt($request->_token_id);
-        $url = $request->_url;
 
         $request->validate([
             'kd_prodi'              => 'required',
@@ -221,7 +220,7 @@ class TeacherController extends Controller
         $Teacher->save();
 
 
-        return redirect($url)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.show',$request->_token_id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**

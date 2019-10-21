@@ -19,9 +19,10 @@
 <div class="br-profile-page">
         <div class="card shadow-base bd-0 rounded-0 widget-4">
             <div class="card-body">
-                <div class="card-profile-img" style="background-image: url('{{route('teacher.download',encrypt($data->foto))}}')"></div>
+                <div class="card-profile-img" style="background-image: url('{{isset($data->foto) ? route('teacher.download',encrypt($data->foto)): route('teacher.download',encrypt('avatar.png'))}}')"></div>
                 <h4 class="tx-normal tx-roboto tx-white">{{$data->nama}}</h4>
-                <p class="mg-b-25">NIDN. {{$data->nidn}}</p>
+                <p class="mg-b-1">NIDN. {{$data->nidn}}</p>
+                <p class="mg-b-25">NIP. {{$data->nip}}</p>
 
                 <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">
                     {{ $data->ikatan_kerja}} Program Studi.<br>
