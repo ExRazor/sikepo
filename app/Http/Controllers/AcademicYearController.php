@@ -16,7 +16,7 @@ class AcademicYearController extends Controller
     {
         $academicYears = AcademicYear::orderBy('tahun_akademik', 'desc')->orderBy('semester', 'desc')->get();
 
-        return view('academic-year/index',compact('academicYears'));
+        return view('master.academic-year.index',compact('academicYears'));
     }
 
     /**
@@ -50,10 +50,10 @@ class AcademicYearController extends Controller
      * @param  \App\AcademicYear  $academicYear
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
         if(request()->ajax()){
-            $id = decrypt($id);
+            $id = decrypt($request->id);
             $data = AcademicYear::find($id);
 
             return response()->json($data);
@@ -134,14 +134,6 @@ class AcademicYearController extends Controller
                     'type'    => 'success'
                 ]);
             }
-        }
-    }
-
-    public function get_all() {
-        if(request()->ajax()){
-            $academicYears = AcademicYear::get();
-
-            return response()->json($academicYears);
         }
     }
 }

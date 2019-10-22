@@ -69,7 +69,7 @@
             </table>
         </div><!-- card-body -->
     </div>
-    @include('academic-year.form');
+    @include('master.academic-year.form');
 </div>
 
 

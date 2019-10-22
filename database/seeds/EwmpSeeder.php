@@ -23,6 +23,7 @@ class EwmpSeeder extends Seeder
                 'penelitian'            => rand(0, 40),
                 'pkm'                   => rand(0, 40),
                 'tugas_tambahan'        => rand(0, 40),
+                'created_at' => now()
             ]);
         }
     }

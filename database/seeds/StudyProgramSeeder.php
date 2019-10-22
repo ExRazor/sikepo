@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Department;
+use Faker\Factory as Faker;
 
 class StudyProgramSeeder extends Seeder
 {
@@ -23,7 +25,8 @@ class StudyProgramSeeder extends Seeder
                 'pejabat_sk' => 'Kurniawan Salih, S.T, M.T',
                 'thn_menerima' => '2008',
                 'nip_kaprodi' => '198004172002122002',
-                'nm_kaprodi' => 'LILLYAN HADJARATIE',
+                'nm_kaprodi' => 'Lillyan Hadjaratie',
+                'created_at' => now()
             ],
             [
                 'kd_prodi' => 53242,
@@ -36,8 +39,27 @@ class StudyProgramSeeder extends Seeder
                 'pejabat_sk' => 'Hermawan Prasetyo, M.Eng',
                 'thn_menerima' => '2013',
                 'nip_kaprodi' => '197511242001121001',
-                'nm_kaprodi' => 'DIAN NOVIAN',
+                'nm_kaprodi' => 'Dian Novian',
+                'created_at' => now()
             ],
         ]);
+
+        $faker = Faker::create('id_ID');
+        $jenjang = ['D3','S1','S2','S3'];
+
+        for($i = 0; $i < 20; $i++){
+            DB::table('study_programs')->insert([
+                [
+                    'kd_prodi'      => rand(22222, 59999),
+                    'kd_jurusan'    => Department::all()->random()->kd_jurusan,
+                    'nama'          => 'Program Studi Random '.$i,
+                    'singkatan'     => 'PSR'.$i,
+                    'jenjang'       => $jenjang[array_rand($jenjang)],
+                    'nip_kaprodi'   => rand(197201011982010101, 199001012000010101),
+                    'nm_kaprodi'    => $faker->name,
+                    'created_at'    => now()
+                ],
+            ]);
+        }
     }
 }

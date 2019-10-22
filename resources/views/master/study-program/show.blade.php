@@ -10,6 +10,14 @@
         <div class="modal-body pd-20">
             <div class="col-md studyProgram-show">
                 <p class="d-flex justify-content-between mg-b-5">
+                    <span class="tx-bold tx-uppercase">Asal Fakultas :</span>
+                    <span name="fakultas"></span>
+                </p>
+                <p class="d-flex justify-content-between mg-b-5">
+                    <span class="tx-bold tx-uppercase">Asal Jurusan :</span>
+                    <span name="jurusan"></span>
+                </p>
+                <p class="d-flex justify-content-between mg-b-5">
                     <span class="tx-bold tx-uppercase">Kode Prodi :</span>
                     <span name="kd_prodi"></span>
                 </p>

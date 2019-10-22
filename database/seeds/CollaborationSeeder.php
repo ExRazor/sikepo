@@ -23,7 +23,8 @@ class CollaborationSeeder extends Seeder
                 'manfaat_kegiatan' => 'Pengalaman kerja',
                 'waktu' => '2018/12/15',
                 'durasi' => '45 hari',
-                'bukti' => 'bukti-1.pdf'
+                'bukti' => 'bukti-1.pdf',
+                'created_at' => now()
             ],
             [
                 'kd_prodi' => StudyProgram::all()->random()->kd_prodi,
@@ -34,7 +35,8 @@ class CollaborationSeeder extends Seeder
                 'manfaat_kegiatan' => 'Pengalaman kerja',
                 'waktu' => '2018/07/07',
                 'durasi' => '45 hari',
-                'bukti' => 'bukti-2.pdf'
+                'bukti' => 'bukti-2.pdf',
+                'created_at' => now()
             ],
         ]);
     }

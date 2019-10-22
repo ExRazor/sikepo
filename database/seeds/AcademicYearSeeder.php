@@ -17,11 +17,13 @@ class AcademicYearSeeder extends Seeder
                     'tahun_akademik' => $i,
                     'semester' => 'Ganjil',
                     'status' => 'Tidak Aktif',
+                    'created_at' => now()
                 ],
                 [
                     'tahun_akademik' => $i,
                     'semester' => 'Genap',
                     'status' => 'Tidak Aktif',
+                    'created_at' => now()
                 ]
             ]);
         }

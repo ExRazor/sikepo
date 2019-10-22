@@ -18,7 +18,7 @@ class DepartmentController extends Controller
         $faculty    = Faculty::all();
         $department = Department::all();
 
-        return view('department.index',compact(['faculty','department']));
+        return view('master.department.index',compact(['faculty','department']));
     }
 
     /**
@@ -75,7 +75,7 @@ class DepartmentController extends Controller
             $fakultas = $request->input('id_fakultas');
 
             if($fakultas == 0){
-                $data = Department::with('faculty')->get();
+                $data = Department::with('faculty')->orderBy('id_fakultas','asc')->get();
             } else {
                 $data = Department::where('id_fakultas',$fakultas)->with('faculty')->get();
             }
@@ -167,10 +167,21 @@ class DepartmentController extends Controller
                     'type'    => 'danger'
                 ]);
             }
-
-
         } else {
             return redirect()->route('master.department');
+        }
+    }
+
+    public function get_by_faculty(Request $request)
+    {
+        if(request()->ajax()) {
+
+            $data = Department::where('id_fakultas',$request->id)->get();
+
+            return response()->json($data);
+
+        } else {
+            abort(404);
         }
     }
 }

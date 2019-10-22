@@ -42,6 +42,10 @@
     <script src="{{ asset('assets/lib') }}/js-base64/base64.min.js"></script>
     @yield('js')
 
+    <!-- BASE JS -->
+    <script src="{{ asset ('assets/js') }}/bracket.js"></script>
+    <script src="{{ asset ('assets') }}/custom.js"></script>
+
   </head>
 
   <body>
@@ -71,8 +75,6 @@
     </div>
     <!-- END: CONTENT -->
 
-    <!-- BASE JS -->
-    <script src="{{ asset ('assets/js') }}/bracket.js"></script>
-    <script src="{{ asset ('assets') }}/custom.js"></script>
+
   </body>
 </html>

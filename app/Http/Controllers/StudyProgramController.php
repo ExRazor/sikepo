@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\StudyProgram;
+use App\Department;
+use App\Faculty;
 use Illuminate\Http\Request;
 
 class StudyProgramController extends Controller
@@ -14,8 +16,10 @@ class StudyProgramController extends Controller
      */
     public function index()
     {
-        $data = StudyProgram::all();
-        return view('study-program.index',compact('data'));
+        $data          = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $faculty       = Faculty::all();
+
+        return view('master.study-program.index',compact(['data','faculty']));
     }
 
     /**
@@ -25,7 +29,10 @@ class StudyProgramController extends Controller
      */
     public function create()
     {
-        return view('study-program.form');
+        $department = "";
+        $faculty = Faculty::all();
+
+        return view('master.study-program.form',compact(['department','faculty']));
     }
 
     /**
@@ -38,12 +45,9 @@ class StudyProgramController extends Controller
     {
         $request->validate([
             'kd_prodi'      => 'required|numeric|digits:5',
+            'kd_jurusan'    => 'required',
             'nama'          => 'required',
-            'singkatan'     => 'required',
             'jenjang'       => 'required',
-            'no_sk'         => 'required',
-            'tgl_sk'        => 'required',
-            'pejabat_sk'    => 'required',
             'thn_menerima'  => 'required|numeric|digits:4',
         ]);
 
@@ -59,11 +63,10 @@ class StudyProgramController extends Controller
      * @param  \App\StudyProgram  $studyProgram
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
         if(request()->ajax()) {
-            $id = decrypt($id);
-            $data = StudyProgram::find($id);
+            $data = StudyProgram::where('kd_prodi',$request->id)->with('department','department.faculty')->first();
 
             return response()->json($data);
         } else {
@@ -79,10 +82,11 @@ class StudyProgramController extends Controller
      */
     public function edit($id)
     {
-        $id = decrypt($id);
-        $data = StudyProgram::find($id);
+        $data       = StudyProgram::where('kd_prodi',$id)->with('department','department.faculty')->first();
+        $department = Department::where('id_fakultas',$data->department->faculty->id)->get();
+        $faculty    = Faculty::all();
 
-        return view('study-program.form',compact('data'));
+        return view('master.study-program.form',compact('data','department','faculty'));
     }
 
     /**
@@ -99,12 +103,9 @@ class StudyProgramController extends Controller
         // dd($request->all());
 
         $request->validate([
+            'kd_jurusan'    => 'required',
             'nama'          => 'required',
-            'singkatan'     => 'required',
             'jenjang'       => 'required',
-            'no_sk'         => 'required',
-            'tgl_sk'        => 'required',
-            'pejabat_sk'    => 'required',
             'thn_menerima'  => 'required|numeric|digits:4',
         ]);
 
@@ -134,9 +135,7 @@ class StudyProgramController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decrypt($request->id);
-
-            StudyProgram::destroy($id);
+            StudyProgram::destroy($request->id);
             return response()->json([
                 'title' => 'Berhasil',
                 'message' => 'Data berhasil dihapus',
@@ -144,6 +143,23 @@ class StudyProgramController extends Controller
             ]);
         } else {
             return redirect()->route('master.study-program');
+        }
+    }
+
+    public function get_by_department(Request $request)
+    {
+        if($request->ajax()) {
+
+            $kd = $request->input('kd_jurusan');
+
+            if($kd == 0){
+                $data = StudyProgram::with('department')->where('kd_jurusan','!=',setting('app_department_id'))->orderBy('created_at','desc')->get();
+            } else {
+                $data = StudyProgram::where('kd_jurusan',$kd)->with('department')->get();
+            }
+            return response()->json($data);
+        } else {
+            abort(404);
         }
     }
 }

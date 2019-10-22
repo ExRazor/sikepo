@@ -17,7 +17,24 @@ $(document).ready(function() {
     });
 
     //Select 2
-    $('.select2').select2();
+    if($().select2) {
+        $('.select2').select2({
+          minimumResultsForSearch: Infinity,
+          placeholder: 'Pilih satu',
+          width: '100%'
+        });
+
+        // Select2 by showing the search
+        $('.select2-show-search').select2({
+          minimumResultsForSearch: ''
+        });
+
+        // Select2 with tagging support
+        $('.select2-tag').select2({
+          tags: true,
+          tokenSeparators: [',', ' ']
+        });
+    }
 
     //Tab
     $('a.tab-link').click(function() {
@@ -169,6 +186,7 @@ $(document).ready(function() {
         $('.datatable').DataTable({
             order: [[$('th.defaultSort').index(), direction]],
             responsive: true,
+            autoWidth: false,
             language: {
             searchPlaceholder: 'Cari...',
             sSearch: '',
@@ -228,9 +246,9 @@ $(document).ready(function() {
         e.preventDefault();
         var id = $(this).data('id');
         $.ajax({
-            url: base_url+'/master/academic-year/'+id,
+            url: base_url+'/ajax/academic-year/edit',
             data: {id:id},
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 $('#academicYear-form')
@@ -272,6 +290,86 @@ $(document).ready(function() {
             .find('input[name=kd_jurusan]').prop('disabled',false).end()
     })
 
+    if($('#table_department').length) {
+        load_department_table()
+    }
+
+    $('#filter-department').submit(function(e){
+        e.preventDefault();
+
+        load_department_table();
+    })
+
+    function load_department_table()
+    {
+        $('#table_department tbody').empty();
+
+        var cont = $('#filter-department');
+        var btn  = cont.find('button.btn-info');
+        var data = cont.serialize();
+        var url  = cont.attr('action');
+        var opsi = cont.find('select[name=id_fakultas] option:selected').text();
+
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                $('span.nm_fakultas').text(opsi);
+                $('span.tot_jurusan').text(data.length);
+                var html = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i){
+
+                        var kd_jurusan   = data[i].kd_jurusan;
+                        var nama         = data[i].nama;
+                        var fakultas     = data[i].faculty.nama;
+                        var nip_kajur    = data[i].nip_kajur;
+                        var nm_kajur     = data[i].nm_kajur;
+
+                        html += '<tr>'+
+                                    '<td>'+kd_jurusan+'</td>'+
+                                    '<td>'+nama+'</td>'+
+                                    '<td>'+fakultas+'</td>'+
+                                    '<td>'+
+                                        nm_kajur+'<br>'+
+                                        '<small>'+nip_kajur+'</small>'+
+                                    '</td>'+
+                                    '<td class="text-center">'+
+                                        '<div class="btn-group hidden-xs-down">'+
+                                            '<button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-department" data-id="'+kd_jurusan+'"><div><i class="fa fa-pencil-alt"></i></div></button>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+kd_jurusan+'" name="_id">'+
+                                                '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/department">'+
+                                                    '<div><i class="fa fa-trash"></i></div>'+
+                                                '</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>'
+                    })
+                    $('#table_department tbody').html(html);
+                } else {
+                    html = '<tr><td colspan="5" class="text-center">BELUM ADA DATA</td></tr>';
+
+                    $('#table_department tbody').html(html);
+                }
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    }
+
     $('#table_department').on('click','.btn-edit-department',function(e){
         e.preventDefault();
         var id = $(this).data('id');
@@ -297,20 +395,123 @@ $(document).ready(function() {
     /*********************************************************************************/
 
     /********************************* PROGRAM STUDI *********************************/
-    $('.btn-show-sp').click(function(e){
+    if($('#table_studyProgram').length) {
+        load_studyProgram_table()
+    }
+
+    $('form#filter-study-program').submit(function(e){
+        e.preventDefault();
+
+        load_studyProgram_table()
+
+    })
+
+    function load_studyProgram_table()
+    {
+        $('#table_studyProgram').find('tbody').empty();
+
+        var cont = $('#filter-study-program');
+        var btn  = cont.find('button[type=submit]');
+        var data = cont.serialize();
+        var url  = cont.attr('action');
+        var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
+
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                $('span.nm_jurusan').text(opsi);
+                $('span.tot_prodi').text(data.length);
+
+                var tabel = $('#table_studyProgram').find('table');
+                var html = '';
+
+                $('#table_studyProgram').show();
+
+                if(data.length > 0) {
+                    $.each(data, function(i){
+
+                        var jurusan      = data[i].department.nama;
+                        var kd_prodi     = data[i].kd_prodi;
+                        var nama         = data[i].nama;
+                        var singkatan    = data[i].singkatan;
+                        var jenjang      = data[i].jenjang;
+                        var nip_kaprodi  = data[i].nip_kaprodi;
+                        var nm_kaprodi   = data[i].nm_kaprodi;
+
+                        html += '<tr>'+
+                                    '<td>'+jurusan+'</td>'+
+                                    '<td>'+kd_prodi+'</td>'+
+                                    '<td>'+nama+'</td>'+
+                                    '<td>'+singkatan+'</td>'+
+                                    '<td>'+jenjang+'</td>'+
+                                    '<td>'+
+                                        nm_kaprodi+'<br>'+
+                                        '<small>'+nip_kaprodi+'</small>'+
+                                    '</td>'+
+                                    '<td class="text-center">'+
+                                        '<div class="btn-group hidden-xs-down">'+
+                                            '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+kd_prodi+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
+                                            '<a href="/master/study-program/edit/'+kd_prodi+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+kd_prodi+'" name="id">'+
+                                                '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/study-program">'+
+                                                    '<div><i class="fa fa-trash"></i></div>'+
+                                                '</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>'
+                    })
+                    tabel.dataTable().fnDestroy();
+                    tabel.find('tbody').html(html);
+                    tabel.DataTable({
+                        responsive: true,
+                        autoWidth: false,
+                        columnDefs: [ {
+                            "targets"  : 'no-sort',
+                            "orderable": false,
+                        }],
+                        bInfo: false
+                    });
+                } else {
+                    html = '<tr><td colspan="5" class="text-center">BELUM ADA DATA</td></tr>';
+                    tabel.find('tbody').html(html);
+
+
+                }
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    }
+
+    $(document).on('click','.btn-show-sp',function(e){
 
         e.preventDefault();
         var id = $(this).data('id');
 
         $.ajax({
-            url: base_url+'/ajax/study-program/'+id,
+            url: base_url+'/ajax/study-program/show',
             data: {id:id},
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             beforeSend: function() {
                 $('span[name*=prodi]').text('');
             },
             success: function (data) {
+                $('span[name=fakultas]').text(data.department.faculty.nama);
+                $('span[name=jurusan]').text(data.department.nama);
                 $('span[name=kd_prodi]').text(data.kd_prodi);
                 $('span[name=nama_prodi]').text(data.nama);
                 $('span[name=singkatan_prodi]').text(data.singkatan);
@@ -327,15 +528,75 @@ $(document).ready(function() {
         })
     });
 
+    $('select[name=id_fakultas]').change(function(){
+        var target        = $('select[name=kd_jurusan]');
+        var id_fakultas   = $(this).val();
+
+        target.find('option').remove();
+
+        $.ajax({
+            url: base_url+'/ajax/department/get_by_faculty',
+            data: {id:id_fakultas},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+
+                var html = '';
+
+                if(data.length > 0) {
+                    $.each(data,function(i){
+                        html += '<option value="'+data[i].kd_jurusan+'">'+data[i].nama+'</option>';
+                    })
+                } else {
+                    html = '<option value="">- BELUM ADA DATA -</option>';
+                }
+
+                target.append(html);
+
+
+            }
+        })
+    })
+
     /*********************************************************************************/
 
     /********************************* DATA DOSEN *********************************/
-    $('.btn-submit-teacher').click(function(e){
-        e.preventDefault();
+    $('select#kd_jurusan').change(function(){
+        var cont    = $(this);
+        var target  = $('select[name=kd_prodi]');
+        var id      = cont.val();
 
-        $('form[name=teacher_form]').submit();
-        // alert('hehe');
+        target.find('option').remove();
+
+        $.ajax({
+            url: base_url+'/ajax/study-program/get_by_department',
+            data: {kd_jurusan:id},
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function() {
+                target.prop('disabled',true);
+            },
+            success: function (data) {
+
+                var html = '';
+
+                if(data.length > 0) {
+                    $.each(data,function(i){
+                        html += '<option value="'+data[i].kd_prodi+'">'+data[i].nama+'</option>';
+                    })
+                } else {
+                    html = '<option value="">- BELUM ADA DATA -</option>';
+                }
+
+                target.append(html);
+                target.prop('disabled',false);
+                target.prop('required',true);
+                cont.prop('required',false);
+            }
+        })
     })
+
+
 
     $('#foto_profil').change(function(){
         var fileName = $(this).val();

@@ -27,7 +27,7 @@ Route::get('/setpro/{prodi}', 'PageController@set_prodi');
 Route::prefix('master')->name('master.')->group(function () {
     //Tahun Akademik
     Route::get('academic-year', 'AcademicYearController@index')->name('academic-year');
-    Route::get('academic-year/{id}', 'AcademicYearController@edit')->name('academic-year.edit');
+
     Route::post('academic-year','AcademicYearController@store' )->name('academic-year.store');
     Route::put('academic-year','AcademicYearController@update' )->name('academic-year.update');
     Route::delete('academic-year','AcademicYearController@destroy')->name('academic-year.delete');
@@ -62,17 +62,19 @@ Route::prefix('master')->name('master.')->group(function () {
 //Fungsi Ajax
 Route::prefix('ajax')->group(function () {
     //Tahun Akademik
-    Route::get('academic-year/get_all','AcademicYearController@get_all' );
-    Route::post('academic-year/status','AcademicYearController@setStatus' );
+    Route::post('academic-year/edit', 'AcademicYearController@edit');
+    Route::post('academic-year/status','AcademicYearController@setStatus');
 
     //Fakultas
-    Route::post('faculty/{id}','FacultyController@edit' );
+    Route::post('faculty/edit','FacultyController@edit' );
 
     //Jurusan
     Route::post('department/edit','DepartmentController@edit' );
+    Route::post('department/get_by_faculty','DepartmentController@get_by_faculty' );
 
     //Program Studi
-    Route::get('study-program/{id}','StudyProgramController@show' );
+    Route::post('study-program/show','StudyProgramController@show' );
+    Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('ajax.study-program.filter');
 });
 
 //Collaboration

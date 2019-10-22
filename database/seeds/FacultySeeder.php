@@ -53,6 +53,7 @@ class FacultySeeder extends Seeder
                 'singkatan'             => $singkatan[$i],
                 'nip_dekan'             => rand(197201011982010101, 199001012000010101),
                 'nm_dekan'              => $faker->name,
+                'created_at'            => now()
             ]);
         }
     }

@@ -16,7 +16,7 @@ class FacultyController extends Controller
     {
         $faculty = Faculty::all();
 
-        return view('faculty.index',compact(['faculty']));
+        return view('master.faculty.index',compact(['faculty']));
     }
 
     /**

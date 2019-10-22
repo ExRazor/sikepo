@@ -37,6 +37,7 @@ class TeacherAchievementSeeder extends Seeder
                     'tingkat_prestasi'      => $tingkat[array_rand($tingkat)],
                     'tanggal'               => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = 'Asia/Singapore'),
                     'bukti_pendukung'       => 'hehe.jpg',
+                    'created_at' => now()
                 ]);
             }
         }

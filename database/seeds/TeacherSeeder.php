@@ -43,6 +43,7 @@ class TeacherSeeder extends Seeder
                 'jabatan_akademik'      => $jabatan[array_rand($jabatan)],
                 'sertifikat_pendidik'   => 'hehe',
                 'sesuai_bidang_ps'      => $sesuai[array_rand($sesuai)],
+                'created_at'            => now()
             ]);
         }
     }

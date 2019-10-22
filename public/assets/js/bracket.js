@@ -161,9 +161,6 @@
     });
   }
 
-  // jquery ui datepicker
-  $('.datepicker').datepicker();
-
   // switch button
   $('.br-switchbutton').on('click', function(){
     $(this).toggleClass('checked');
@@ -203,23 +200,6 @@
 
   // Select2 Initialize
   // Select2 without the search
-  if($().select2) {
-    $('.select2').select2({
-      minimumResultsForSearch: Infinity,
-      placeholder: 'Pilih satu',
-      width: '100%'
-    });
 
-    // Select2 by showing the search
-    $('.select2-show-search').select2({
-      minimumResultsForSearch: ''
-    });
-
-    // Select2 with tagging support
-    $('.select2-tag').select2({
-      tags: true,
-      tokenSeparators: [',', ' ']
-    });
-  }
 
 });

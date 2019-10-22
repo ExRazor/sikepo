@@ -7,6 +7,7 @@ use App\Teacher;
 use App\StudyProgram;
 use App\AcademicYear;
 use App\Ewmp;
+use App\Faculty;
 use App\TeacherAchievement;
 use File;
 
@@ -36,8 +37,8 @@ class TeacherController extends Controller
      */
     public function create()
     {
-        $studyProgram = StudyProgram::all();
-        return view('teacher/form',compact('studyProgram'));
+        $faculty = Faculty::all();
+        return view('teacher/form',compact('faculty'));
     }
 
     /**
@@ -57,8 +58,6 @@ class TeacherController extends Controller
             'agama'                 => 'required',
             'tpt_lhr'               => 'required',
             'tgl_lhr'               => 'required',
-            'alamat'                => 'required',
-            'no_telp'               => 'required',
             'email'                 => 'required|email',
             'pend_terakhir_jenjang' => 'required',
             'pend_terakhir_jurusan' => 'required',
@@ -148,10 +147,11 @@ class TeacherController extends Controller
     public function edit($id)
     {
         $id = decrypt($id);
-        $studyProgram = StudyProgram::all();
-        $data = Teacher::find($id);
+        $data         = Teacher::find($id);
+        $faculty      = Faculty::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
 
-        return view('teacher/form',compact(['data','studyProgram']));
+        return view('teacher/form',compact(['data','faculty','studyProgram']));
     }
 
     /**
@@ -173,8 +173,6 @@ class TeacherController extends Controller
             'agama'                 => 'required',
             'tpt_lhr'               => 'required',
             'tgl_lhr'               => 'required',
-            'alamat'                => 'required',
-            'no_telp'               => 'required',
             'email'                 => 'required|email',
             'pend_terakhir_jenjang' => 'required',
             'pend_terakhir_jurusan' => 'required',

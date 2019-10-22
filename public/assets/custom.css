@@ -67,13 +67,50 @@
 
 .ui-datepicker{z-index:1151 !important;}
 
-/* DATA TABLE MOD */
+/* ----------------------------------------------- */
+/* ############### DATA TABLE CUSTOM ############### */
+/* ----------------------------------------------- */
 table.dataTable thead th.sorting::after, table.dataTable thead th.sorting_asc::after, table.dataTable thead th.sorting_desc::after, table.dataTable thead td.sorting::after, table.dataTable thead td.sorting_asc::after, table.dataTable thead td.sorting_desc::after {
     display:none;
 }
   table.dataTable thead th.sorting::before, table.dataTable thead th.sorting_asc::before, table.dataTable thead th.sorting_desc::before, table.dataTable thead td.sorting::before, table.dataTable thead td.sorting_asc::before, table.dataTable thead td.sorting_desc::before {
     display:none;
 }
+
+.filter-box {
+    max-width:360px;
+}
+
+/* ----------------------------------------------- */
+/* ############### PARSLEY CUSTOM ############### */
+/* ----------------------------------------------- */
+
+select.parsley-error {
+  border-color: #DC3545;
+}
+select.parsley-error:focus {
+    border-color: #DC3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+div.radio.parsley-error {
+    color:white;
+    background-color: rgb(231, 64, 78, 0.75);
+    padding: 5px 10px;
+}
+
+select.parsley-success {
+    border-color: #23BF08;
+}
+
+select.parsley-success:focus {
+    border-color: #23BF08;
+    box-shadow: 0 0 0 0.2rem rgba(35, 191, 8, 0.25);
+}
+
+/* ----------------------------------------------- */
+/* ############### MEDIA ############### */
+/* ----------------------------------------------- */
 
 @media (min-width: 480px) {
     .br-profile-page .br-profile-body {
