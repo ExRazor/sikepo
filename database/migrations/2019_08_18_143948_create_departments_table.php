@@ -21,7 +21,7 @@ class CreateDepartmentsTable extends Migration
             $table->string('nm_kajur',50)->nullable();
             $table->timestamps();
 
-            $table->foreign('id_fakultas')->references('id')->on('faculties');
+            $table->foreign('id_fakultas')->references('id')->on('faculties')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

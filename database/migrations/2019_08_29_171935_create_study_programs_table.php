@@ -27,7 +27,7 @@ class CreateStudyProgramsTable extends Migration
             $table->string('nm_kaprodi',50)->nullable();
             $table->timestamps();
 
-            $table->foreign('kd_jurusan')->references('kd_jurusan')->on('departments');
+            $table->foreign('kd_jurusan')->references('kd_jurusan')->on('departments')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
