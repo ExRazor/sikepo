@@ -6,11 +6,11 @@
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('faculty') as $breadcrumb)
-            @isset($breadcrumb->url)
+            @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
-            @endisset
+            @endif
         @endforeach
     </nav>
 </div>
@@ -60,8 +60,6 @@
                             <div class="btn-group hidden-xs-down">
                                 <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}""><div><i class="fa fa-pencil-alt"></i></div></button>
                                 <form method="POST">
-                                    @method('delete')
-                                    @csrf
                                     <input type="hidden" value="{{encrypt($f->id)}}" name="_id">
                                     <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.faculty.delete') }}">
                                         <div><i class="fa fa-trash"></i></div>

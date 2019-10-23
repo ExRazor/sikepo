@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Kerja Sama Prodi')
+@section('title', 'Data Dosen')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -11,11 +11,11 @@
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('teacher') as $breadcrumb)
-            @isset($breadcrumb->url)
+            @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
-            @endisset
+            @endif
         @endforeach
     </nav>
 </div>
@@ -46,48 +46,73 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    <div class="row">
+        <div class="col-12">
+            <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" method="POST">
+                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    <div class="justify-content-end flex-grow-1 w-100 mg-r-10">
+                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                            <option value="0">Semua Jurusan</option>
+                            @foreach($faculty as $f)
+                                @if($f->department->count())
+                                <optgroup label="{{$f->nama}}">
+                                    @foreach($f->department as $d)
+                                    <option value="{{$d->kd_jurusan}}">{{$d->nama}}</option>
+                                    @endforeach
+                                </optgroup>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="justify-content-end">
+                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="widget-2">
-        @foreach($studyProgram as $sp)
         <div class="card shadow-base mb-3">
             <div class="card-header">
-                <h6 class="card-title">Program Studi: {{$sp->nama}}</h6>
+                <h6 class="card-title"><span class="nm_jurusan">{{ setting('app_department_name') }}</span></h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table display responsive nowrap datatable" data-sort="asc">
+                <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="asc">
                     <thead>
                         <tr>
-                            <th>NIDN</th>
-                            <th class="defaultSort">Nama Dosen</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Pend Terakhir</th>
-                            <th>Bidang Ahli</th>
-                            <th>Status</th>
-                            <th>Jabatan</th>
-                            <th class="no-sort">Aksi</th>
+                            <th class="text-center">NIDN</th>
+                            <th class="text-center defaultSort">Nama</th>
+                            <th class="text-center">Program Studi</th>
+                            <th class="text-center">Ikatan Kerja</th>
+                            <th class="text-center">Jabatan<br>Akademik</th>
+                            <th class="text-center">Pend<br>Tertinggi</th>
+                            <th class="text-center no-sort">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teacher[$sp->kd_prodi] as $d)
+                        @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.show',encrypt($d->nidn)) }}">{{$d->nidn}}</a></td>
-                            <td>{{$d->nama}}</td>
-                            <td class="text-capitalize">{{$d->jk}}</td>
-                            <td>{{$d->pend_terakhir_jenjang}} - {{$d->pend_terakhir_jurusan}}</td>
-                            <td>{{$d->bidang_ahli}}</td>
+                            <td><a href="{{ route('teacher.show',encode_url($d->nip)) }}">{{$d->nidn}}</a></td>
+                            <td>
+                                {{$d->nama}}<br>
+                                <small>NIP. {{$d->nip}}</small>
+                            </td>
+                            <td>
+                                {{$d->studyProgram->nama}}
+                            </td>
                             <td>{{$d->ikatan_kerja}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
-                            <td width="50">
+                            <td class="text-center">{{$d->pend_terakhir_jenjang}}</td>
+                            <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-teal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('teacher.edit',encrypt($d->nidn)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_url($d->nip)) }}">Sunting</a>
                                         <form method="POST">
-                                            @method('delete')
-                                            @csrf
-                                            <input type="hidden" value="{{encrypt($d->nidn)}}" name="id">
-                                            <a href="{{ route('teacher.delete') }}" class="dropdown-item btn-delete">Hapus</a>
+                                            <input type="hidden" value="{{encode_url($d->nidn)}}" name="id">
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('teacher.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>
@@ -98,7 +123,6 @@
                 </table>
             </div><!-- card-body -->
         </div>
-        @endforeach
     </div>
 </div>
 @endsection

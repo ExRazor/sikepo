@@ -1,16 +1,16 @@
 @extends('layouts.master')
 
-@section('title', 'Data Program Studi')
+@section('title', 'Detail Data Dosen')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('teacher') as $breadcrumb)
-            @isset($breadcrumb->url)
+            @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
-            @endisset
+            @endif
         @endforeach
         <span class="breadcrumb-item">{{$data->nidn}} : {{$data->nama}}</span>
     </nav>
@@ -25,15 +25,13 @@
                 <p class="mg-b-25">NIP. {{$data->nip}}</p>
 
                 <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">
-                    {{ $data->ikatan_kerja}} Program Studi.<br>
-                    Menjabat sebagai
-                    {{ $data->jabatan_akademik }}
-                    di Program Studi
-                    {{ $data->studyProgram->nama }}.
+                    Ikatan Kerja: {{ $data->ikatan_kerja}}<br>
+                    Jabatan Akademik: {{ $data->jabatan_akademik }}<br>
+                    Program Studi: {{ $data->studyProgram->nama }}
                 </p>
 
                 <p class="mg-b-0 tx-24">
-                    <a href="{{ route('teacher.edit',encrypt($data->nidn)) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Ubah Data</a>
+                    <a href="{{ route('teacher.edit',encode_url($data->nip)) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Ubah Data</a>
                 </p>
             </div><!-- card-body -->
         </div>

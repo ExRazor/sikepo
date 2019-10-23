@@ -1,16 +1,16 @@
 @extends('layouts.master')
 
-@section('title', 'Data Fakultas')
+@section('title', 'Data Jurusan')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('department') as $breadcrumb)
-            @isset($breadcrumb->url)
+            @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
-            @endisset
+            @endif
         @endforeach
     </nav>
 </div>

@@ -52,8 +52,6 @@
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
                                             <a class="dropdown-item btn-edit btn-edit-ewmp" href="#" data-id="{{encrypt($e->id)}}">Sunting</a>
                                             <form method="POST">
-                                                @method('delete')
-                                                @csrf
                                                 <input type="hidden" value="{{encrypt($e->id)}}" name="_id">
                                                 <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('ewmp.delete') }}">Hapus</a>
                                             </form>
@@ -63,7 +61,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan=5 class="text-center align-middle">BELUM ADA DATA</td>
+                                <td colspan="10" class="text-center align-middle">BELUM ADA DATA</td>
                             </tr>
                             @endforelse
                         </tbody>

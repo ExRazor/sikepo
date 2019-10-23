@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
+    // use Uuid;
+
     protected $primaryKey = 'nidn';
     protected $fillable = [
         'nidn'                 ,

@@ -4,18 +4,18 @@
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-{{-- <link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet"> --}}
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate('study-program') as $breadcrumb)
-            @isset($breadcrumb->url)
+            @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
-            @endisset
+            @endif
         @endforeach
     </nav>
 </div>
@@ -72,12 +72,10 @@
                                 </td>
                                 <td>
                                     <div class="btn-group hidden-xs-down">
-                                        <button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="{{$d->kd_prodi}}" ><div><i class="fa fa-search-plus"></i></div></button>
-                                        <a href="{{ route('master.study-program.edit',$d->kd_prodi) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
+                                        <button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="{{encode_url($d->kd_prodi)}}" ><div><i class="fa fa-search-plus"></i></div></button>
+                                        <a href="{{ route('master.study-program.edit',encode_url($d->kd_prodi)) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
                                         <form method="POST">
-                                            @method('delete')
-                                            @csrf
-                                            <input type="hidden" value="{{$d->kd_prodi}}" name="id">
+                                            <input type="hidden" value="{{encode_url($d->kd_prodi)}}" name="id">
                                             <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.study-program.delete') }}">
                                                 <div><i class="fa fa-trash"></i></div>
                                             </button>
@@ -122,7 +120,7 @@
                     </h6>
                 </div>
                 <div class="card-body bd bd-t-0 rounded-bottom">
-                    <table class="table display responsive nowrap datatable">
+                    <table class="table display responsive nowrap">
                         <thead>
                             <tr>
                                 <th width="150" class="defaultSort">Asal Jurusan</th>

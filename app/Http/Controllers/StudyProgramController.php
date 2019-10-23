@@ -48,24 +48,10 @@ class StudyProgramController extends Controller
             'kd_jurusan'    => 'required',
             'nama'          => 'required',
             'jenjang'       => 'required',
-            'thn_menerima'  => 'required|numeric|digits:4',
+            'thn_menerima'  => 'numeric|digits:4|nullable',
         ]);
 
-        $q = StudyProgram::create($request->all());
-
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Terjadi kesalahan',
-                'type'    => 'error'
-            ]);
-        } else {
-            return response()->json([
-                'title'   => 'Berhasil',
-                'message' => 'Data berhasil disimpan',
-                'type'    => 'success'
-            ]);
-        }
+        StudyProgram::create($request->all());
 
         return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
 
@@ -122,7 +108,7 @@ class StudyProgramController extends Controller
             'kd_jurusan'    => 'required',
             'nama'          => 'required',
             'jenjang'       => 'required',
-            'thn_menerima'  => 'required|numeric|digits:4',
+            'thn_menerima'  => 'numeric|digits:4|nullable',
         ]);
 
         $studyProgram = StudyProgram::find($id);
@@ -135,22 +121,7 @@ class StudyProgramController extends Controller
         $studyProgram->singkatan      = $request->singkatan;
         $studyProgram->nip_kaprodi    = $request->nip_kaprodi;
         $studyProgram->nm_kaprodi     = $request->nm_kaprodi;
-        $q = $studyProgram->save();
-
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Terjadi kesalahan',
-                'type'    => 'error'
-            ]);
-        } else {
-            return response()->json([
-                'title'   => 'Berhasil',
-                'message' => 'Data berhasil disimpan',
-                'type'    => 'success'
-            ]);
-        }
-
+        $studyProgram->save();
 
         return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
 
@@ -165,7 +136,7 @@ class StudyProgramController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_url($request->ids);
+            $id = decode_url($request->id);
 
             $q = StudyProgram::destroy($id);
 

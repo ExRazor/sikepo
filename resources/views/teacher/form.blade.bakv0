@@ -1,19 +1,16 @@
 @extends('layouts.master')
 
-@section('title', isset($data) ? 'Edit Dosen' : 'Tambah Dosen')
+@section('title', 'Data Program Studi')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
         @foreach (Breadcrumbs::generate( isset($data) ? 'teacher-edit' : 'teacher-add' ) as $breadcrumb)
-            @if($breadcrumb->url && !$loop->last)
+            @isset($breadcrumb->url)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
-                @isset($data)
-                <a href="{{route('teacher.show',encode_url($data->nip))}}" class="breadcrumb-item">{{$data->nidn}} : {{$data->nama}}</a>
-                @endisset
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
-            @endif
+            @endisset
         @endforeach
     </nav>
 </div>
@@ -64,7 +61,7 @@
                             @csrf
                             @if(isset($data))
                                 @method('put')
-                                <input type="hidden" name="_id" value="{{encrypt($data->nidn)}}">
+                                <input type="hidden" name="_token_id" value="{{encrypt($data->nidn)}}">
                             @else
                                 @method('post')
                             @endif
@@ -77,7 +74,7 @@
                                             @if($f->department->count())
                                             <optgroup label="{{$f->nama}}">
                                                 @foreach($f->department as $d)
-                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) || $d->kd_jurusan==setting('app_department_id') ? 'selected': ''}}>{{$d->nama}}</option>
+                                                <option value="{{$d->kd_jurusan}}" {{isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan ? 'selected': ''}}>{{$d->nama}}</option>
                                                 @endforeach
                                             </optgroup>
                                             @endif
@@ -88,11 +85,14 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="kd_prodi" required>
-                                        <option value="">- Pilih Prodi -</option>
-                                        @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                        @endforeach
+                                    <select class="form-control" name="kd_prodi" {{isset($data) ? '':'disabled'}}>
+                                        @isset($data)
+                                            @foreach($studyProgram as $sp)
+                                            <option value="{{$sp->kd_prodi}}" {{ (($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                            @endforeach
+                                        @else
+                                        <option value="">- Pilih Jurusan Dulu -</option>
+                                        @endisset
                                     </select>
                                 </div>
                             </div>
@@ -171,9 +171,9 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Email:</label>
+                                <label class="col-3 form-control-label">Email: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="email" name="email" value="{{ isset($data) ? $data->email : Request::old('email')}}" placeholder="Masukkan Email Aktif">
+                                    <input class="form-control" type="text" name="email" value="{{ isset($data) ? $data->email : Request::old('email')}}" placeholder="Masukkan Email Aktif" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -216,14 +216,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jabatan Akademik: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="jabatan_akademik" required>
-                                        <option value="">- Pilih Jabatan Akademik -</option>
-                                        <option value="Tenaga Pengajar" {{ isset($data) && ($data->jabatan_akademik=='Tenaga Pengajar' || Request::old('jabatan_akademik')=='Tenaga Pengajar') ? 'selected' : ''}}>Tenaga Pengajar</option>
-                                        <option value="Asisten Ahli" {{ isset($data) && ($data->jabatan_akademik=='Asisten Ahli' || Request::old('jabatan_akademik')=='Asisten Ahli') ? 'selected' : ''}}>Asisten Ahli</option>
-                                        <option value="Lektor" {{ isset($data) && ($data->jabatan_akademik=='Lektor' || Request::old('jabatan_akademik')=='Lektor') ? 'selected' : ''}}>Lektor</option>
-                                        <option value="Lektor Kepala" {{ isset($data) && ($data->jabatan_akademik=='Lektor Kepala' || Request::old('jabatan_akademik')=='Lektor Kepala') ? 'selected' : ''}}>Lektor Kepala</option>
-                                        <option value="Guru Besar" {{ isset($data) && ($data->jabatan_akademik=='Guru Besar' || Request::old('jabatan_akademik')=='Guru Besar') ? 'selected' : ''}}>Guru Besar</option>
-                                    </select>
+                                    <input class="form-control" type="text" name="jabatan_akademik" value="{{ isset($data) ? $data->jabatan_akademik : Request::old('jabatan_akademik')}}" placeholder="Masukkan Jabatan Akademik" required>
                                 </div>
                             </div>
                             <div class="row mb-3">

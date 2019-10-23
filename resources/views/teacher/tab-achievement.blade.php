@@ -38,8 +38,6 @@
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
                                             <a class="dropdown-item btn-edit btn-edit-acv" href="#" data-id="{{ encrypt($acv->id) }}">Sunting</a>
                                             <form method="POST">
-                                                @method('delete')
-                                                @csrf
                                                 <input type="hidden" value="{{encrypt($acv->id)}}" name="_id">
                                                 <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.delete') }}">Hapus</a>
                                             </form>

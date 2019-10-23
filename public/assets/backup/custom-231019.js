@@ -160,25 +160,17 @@ $(document).ready(function() {
                         Swal.showLoading()
                     },
                     success: function (state) {
-                        if(state.type=='success') {
-                            Swal.fire({
-                                title: state.title,
-                                text: state.message,
-                                type: state.type,
-                                timer: 2000,
-                                onClose: () => {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: state.title,
-                                text: state.message,
-                                type: state.type,
-                                timer: 2000,
-                            });
-                        }
-                    },
+                        Swal.fire({
+                            title: state.title,
+                            text: state.message,
+                            type: state.type,
+                            timer: 2000,
+                            onClose: () => {
+                                location.reload();
+                            }
+                        });
+
+                    }
                 });
                 // console.log(result.value);
             }
@@ -351,9 +343,9 @@ $(document).ready(function() {
                                     '</td>'+
                                     '<td class="text-center">'+
                                         '<div class="btn-group hidden-xs-down">'+
-                                            '<button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-department" data-id="'+encode_url(kd_jurusan)+'"><div><i class="fa fa-pencil-alt"></i></div></button>'+
+                                            '<button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-department" data-id="'+kd_jurusan+'"><div><i class="fa fa-pencil-alt"></i></div></button>'+
                                             '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_url(kd_jurusan)+'" name="id">'+
+                                                '<input type="hidden" value="'+kd_jurusan+'" name="_id">'+
                                                 '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/department">'+
                                                     '<div><i class="fa fa-trash"></i></div>'+
                                                 '</button>'+
@@ -409,7 +401,9 @@ $(document).ready(function() {
 
     $('form#filter-study-program').submit(function(e){
         e.preventDefault();
+
         load_studyProgram_table()
+
     })
 
     function load_studyProgram_table()
@@ -463,10 +457,10 @@ $(document).ready(function() {
                                     '</td>'+
                                     '<td class="text-center">'+
                                         '<div class="btn-group hidden-xs-down">'+
-                                            '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+encode_url(kd_prodi)+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
-                                            '<a href="/master/study-program/edit/'+encode_url(kd_prodi)+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
+                                            '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+kd_prodi+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
+                                            '<a href="/master/study-program/edit/'+kd_prodi+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
                                             '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_url(kd_prodi)+'" name="id">'+
+                                                '<input type="hidden" value="'+kd_prodi+'" name="id">'+
                                                 '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/study-program">'+
                                                     '<div><i class="fa fa-trash"></i></div>'+
                                                 '</button>'+
@@ -484,16 +478,13 @@ $(document).ready(function() {
                             "targets"  : 'no-sort',
                             "orderable": false,
                         }],
-                        language: {
-                            searchPlaceholder: 'Cari...',
-                            sSearch: '',
-                            lengthMenu: '_MENU_ items/page',
-                        },
                         bInfo: false
                     });
                 } else {
                     html = '<tr><td colspan="5" class="text-center">BELUM ADA DATA</td></tr>';
                     tabel.find('tbody').html(html);
+
+
                 }
                 btn.removeClass('disabled');
                 btn.html('Cari');
@@ -605,6 +596,8 @@ $(document).ready(function() {
         })
     })
 
+
+
     $('#foto_profil').change(function(){
         var fileName = $(this).val();
         // removing the fake path (Chrome)
@@ -612,115 +605,6 @@ $(document).ready(function() {
         //replace the "Choose a file" label
         $(this).next('.custom-file-label').html(fileName);
     });
-
-    $('form#filter-teacher').submit(function(e){
-        e.preventDefault();
-        load_teacher_table();
-    })
-
-    function load_teacher_table()
-    {
-        $('#table_teacher tbody').empty();
-
-        var cont = $('form#filter-teacher');
-        var btn  = cont.find('button[type=submit]');
-        var data = cont.serialize();
-        var url  = cont.attr('action');
-        var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
-
-        $.ajax({
-            url: url,
-            data: data,
-            type: 'POST',
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                $('span.nm_jurusan').text(opsi);
-
-                var tabel = $('#table_teacher');
-                var html = '';
-
-                tabel.show();
-
-                if(data.length > 0) {
-                    $.each(data, function(i){
-
-                        var nidn        = data[i].nidn;
-                        var nama        = data[i].nama;
-                        var nip         = data[i].nip;
-                        var prodi       = data[i].study_program.nama;
-                        var jurusan     = data[i].study_program.department.nama;
-                        var fakultas    = data[i].study_program.department.faculty.singkatan;
-                        var ikatan      = data[i].ikatan_kerja;
-                        var jabatan     = data[i].jabatan_akademik;
-                        var pend        = data[i].pend_terakhir_jenjang;
-
-
-                        html += '<tr>'+
-                                    '<td><a href="/teacher/list/'+encode_url(nip)+'">'+nidn+'</a></td>'+
-                                    '<td>'+
-                                        nama+'<br>'+
-                                        '<small>NIP. '+nip+'</small>'+
-                                    '</td>'+
-                                    '<td>'+
-                                        prodi+'<br>'+
-                                        '<small>'+fakultas+' - '+jurusan+'</small>'+
-                                    '</td>'+
-                                    '<td>'+ikatan+'</td>'+
-                                    '<td>'+jabatan+'</td>'+
-                                    '<td class="text-center">'+pend+'</td>'+
-                                    '<td class="text-center no-sort" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/teacher/list/'+encode_url(nip)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_url(nidn)+'" name="id">'+
-                                                    '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
-                                                    // '<a href="{{ route('teacher.delete') }}" class="dropdown-item btn-delete">Hapus</a>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
-                                '</tr>';
-                    })
-
-                    tabel.dataTable().fnDestroy();
-                    tabel.find('tbody').html(html);
-                    tabel.DataTable({
-                        order: ['1','asc'],
-                        responsive: true,
-                        autoWidth: false,
-                        columnDefs: [ {
-                            "targets"  : 'no-sort',
-                            "orderable": false,
-                        }],
-                        language: {
-                            searchPlaceholder: 'Cari...',
-                            sSearch: '',
-                            lengthMenu: '_MENU_ items/page',
-                        },
-                    });
-                } else {
-                    html = '<tr><td colspan="7" class="text-center">BELUM ADA DATA</td></tr>';
-                    tabel.find('tbody').html(html);
-
-
-                }
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    }
 
     /*****************************************************************************/
 
@@ -809,6 +693,12 @@ $(document).ready(function() {
                     $('.table-ewmp tbody').html(html);
 
                     console.log(data);
+
+
+
+
+
+
                 }
 
 

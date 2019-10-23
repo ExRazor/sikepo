@@ -23,12 +23,11 @@ class TeacherController extends Controller
     {
         $studyProgram = StudyProgram::all();
         $faculty      = Faculty::all();
-
-        $data = Teacher::whereHas(
-                    'studyProgram', function($query) {
-                        $query->where('kd_jurusan',setting('app_department_id'));
-                    })
-                ->get();
+        $data         = Teacher::whereHas(
+                            'studyProgram', function($query) {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            })
+                        ->get();
 
         return view('teacher/index',compact(['studyProgram','faculty','data']));
     }
@@ -63,7 +62,7 @@ class TeacherController extends Controller
             'agama'                 => 'required',
             'tpt_lhr'               => 'required',
             'tgl_lhr'               => 'required',
-            'email'                 => 'required|email',
+            'email'                 => 'email|nullable',
             'pend_terakhir_jenjang' => 'required',
             'pend_terakhir_jurusan' => 'required',
             'bidang_ahli'           => 'required',
@@ -124,13 +123,13 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($nip)
     {
-        $id             = decrypt($id);
-        $data           = Teacher::find($id);
+        $nip            = decode_url($nip);
+        $data           = Teacher::where('nip',$nip)->first();
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $ewmp           = Ewmp::where('nidn',$id)->orderBy('id_ta','desc')->get();
-        $achievement    = TeacherAchievement::where('nidn',$id)->orderBy('tanggal','desc')->get();
+        $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
+        $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('tanggal','desc')->get();
 
         // dd($achievement);
         return view('teacher/profile',compact(['data','academicYear','ewmp','achievement']));
@@ -149,10 +148,10 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($nip)
     {
-        $id = decrypt($id);
-        $data         = Teacher::find($id);
+        $nip          = decode_url($nip);
+        $data         = Teacher::where('nip',$nip)->first();
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
 
@@ -168,7 +167,7 @@ class TeacherController extends Controller
      */
     public function update(Request $request)
     {
-        $id  = decrypt($request->_token_id);
+        $id  = decrypt($request->_id);
 
         $request->validate([
             'kd_prodi'              => 'required',
@@ -178,7 +177,7 @@ class TeacherController extends Controller
             'agama'                 => 'required',
             'tpt_lhr'               => 'required',
             'tgl_lhr'               => 'required',
-            'email'                 => 'required|email',
+            'email'                 => 'email|nullable',
             'pend_terakhir_jenjang' => 'required',
             'pend_terakhir_jurusan' => 'required',
             'bidang_ahli'           => 'required',
@@ -223,7 +222,7 @@ class TeacherController extends Controller
         $Teacher->save();
 
 
-        return redirect()->route('teacher.show',$request->_token_id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.show',encode_url($Teacher->nip))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**
@@ -235,8 +234,8 @@ class TeacherController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decrypt($request->id);
 
+            $id = decode_url($request->id);
             $q = Teacher::destroy($id);
             if(!$q) {
                 return response()->json([
@@ -271,6 +270,29 @@ class TeacherController extends Controller
             );
 
             return response(file_get_contents($storagePath), 200, $headers);
+        }
+    }
+
+    public function get_by_department(Request $request)
+    {
+        if($request->ajax()) {
+
+            $kd = $request->input('kd_jurusan');
+
+            if($kd == 0){
+                $data = Teacher::with(['studyProgram','studyProgram.department','studyProgram.department.faculty'])->orderBy('created_at','desc')->get();
+            } else {
+                $data = Teacher::whereHas(
+                            'studyProgram', function($query) use ($kd) {
+                                $query->where('kd_jurusan',$kd);
+                            })
+                        ->with(['studyProgram','studyProgram.department','studyProgram.department.faculty'])
+                        ->get();
+            }
+
+            return response()->json($data);
+        } else {
+            abort(404);
         }
     }
 }
