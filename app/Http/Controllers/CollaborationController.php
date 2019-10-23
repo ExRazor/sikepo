@@ -163,12 +163,20 @@ class CollaborationController extends Controller
         if(request()->ajax()){
             $id = decrypt($request->id);
 
-            Collaboration::destroy($id);
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil dihapus',
-                'type'    => 'success'
-            ]);
+            $q = Collaboration::destroy($id);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
         } else {
             return redirect()->route('collaboration');
         }

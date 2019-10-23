@@ -33,13 +33,21 @@ class AcademicYearController extends Controller
                 'semester'       => 'required',
             ]);
 
-            AcademicYear::create($request->all());
+            $q = AcademicYear::create($request->all());
 
-            return response()->json([
-                'title'   => 'Berhasil',
-                'message' => 'Data berhasil ditambahkan.',
-                'type'    => 'success'
-            ]);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
         }
 
     }
@@ -80,13 +88,21 @@ class AcademicYearController extends Controller
             $academic = AcademicYear::find($id);
             $academic->tahun_akademik = $request->tahun_akademik;
             $academic->semester       = $request->semester;
-            $academic->save();
+            $q = $academic->save();
 
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil disunting.',
-                'type'    => 'success'
-            ]);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
         }
     }
 
@@ -100,12 +116,21 @@ class AcademicYearController extends Controller
     {
         if($request->ajax()){
             $id = decrypt($request->id);
-            AcademicYear::destroy($id);
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil dihapus',
-                'type'    => 'success'
-            ]);
+            $q  = AcademicYear::destroy($id);
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
         } else {
             return redirect()->route('master.academy-year');
         }

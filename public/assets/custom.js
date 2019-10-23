@@ -160,17 +160,25 @@ $(document).ready(function() {
                         Swal.showLoading()
                     },
                     success: function (state) {
-                        Swal.fire({
-                            title: state.title,
-                            text: state.message,
-                            type: state.type,
-                            timer: 2000,
-                            onClose: () => {
-                                location.reload();
-                            }
-                        });
-
-                    }
+                        if(state.type=='success') {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                                onClose: () => {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                            });
+                        }
+                    },
                 });
                 // console.log(result.value);
             }
@@ -343,9 +351,9 @@ $(document).ready(function() {
                                     '</td>'+
                                     '<td class="text-center">'+
                                         '<div class="btn-group hidden-xs-down">'+
-                                            '<button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-department" data-id="'+kd_jurusan+'"><div><i class="fa fa-pencil-alt"></i></div></button>'+
+                                            '<button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-department" data-id="'+encode_url(kd_jurusan)+'"><div><i class="fa fa-pencil-alt"></i></div></button>'+
                                             '<form method="POST">'+
-                                                '<input type="hidden" value="'+kd_jurusan+'" name="_id">'+
+                                                '<input type="hidden" value="'+encode_url(kd_jurusan)+'" name="id">'+
                                                 '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/department">'+
                                                     '<div><i class="fa fa-trash"></i></div>'+
                                                 '</button>'+
@@ -457,10 +465,10 @@ $(document).ready(function() {
                                     '</td>'+
                                     '<td class="text-center">'+
                                         '<div class="btn-group hidden-xs-down">'+
-                                            '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+kd_prodi+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
-                                            '<a href="/master/study-program/edit/'+kd_prodi+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
+                                            '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+encode_url(kd_prodi)+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
+                                            '<a href="/master/study-program/edit/'+encode_url(kd_prodi)+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
                                             '<form method="POST">'+
-                                                '<input type="hidden" value="'+kd_prodi+'" name="id">'+
+                                                '<input type="hidden" value="'+encode_url(kd_prodi)+'" name="id">'+
                                                 '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/study-program">'+
                                                     '<div><i class="fa fa-trash"></i></div>'+
                                                 '</button>'+
@@ -478,6 +486,11 @@ $(document).ready(function() {
                             "targets"  : 'no-sort',
                             "orderable": false,
                         }],
+                        language: {
+                            searchPlaceholder: 'Cari...',
+                            sSearch: '',
+                            lengthMenu: '_MENU_ items/page',
+                        },
                         bInfo: false
                     });
                 } else {
@@ -596,8 +609,6 @@ $(document).ready(function() {
         })
     })
 
-
-
     $('#foto_profil').change(function(){
         var fileName = $(this).val();
         // removing the fake path (Chrome)
@@ -605,6 +616,101 @@ $(document).ready(function() {
         //replace the "Choose a file" label
         $(this).next('.custom-file-label').html(fileName);
     });
+
+    function load_teacher_table()
+    {
+        $('#table_teacher tbody').empty();
+
+        var cont = $('#filter-study-program');
+        var btn  = cont.find('button[type=submit]');
+        var data = cont.serialize();
+        var url  = cont.attr('action');
+        var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
+
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                $('span.nm_jurusan').text(opsi);
+                $('span.tot_prodi').text(data.length);
+
+                var tabel = $('#table_studyProgram').find('table');
+                var html = '';
+
+                $('#table_studyProgram').show();
+
+                if(data.length > 0) {
+                    $.each(data, function(i){
+
+                        var jurusan      = data[i].department.nama;
+                        var kd_prodi     = data[i].kd_prodi;
+                        var nama         = data[i].nama;
+                        var singkatan    = data[i].singkatan;
+                        var jenjang      = data[i].jenjang;
+                        var nip_kaprodi  = data[i].nip_kaprodi;
+                        var nm_kaprodi   = data[i].nm_kaprodi;
+
+                        html += '<tr>'+
+                                    '<td>'+jurusan+'</td>'+
+                                    '<td>'+kd_prodi+'</td>'+
+                                    '<td>'+nama+'</td>'+
+                                    '<td>'+singkatan+'</td>'+
+                                    '<td>'+jenjang+'</td>'+
+                                    '<td>'+
+                                        nm_kaprodi+'<br>'+
+                                        '<small>'+nip_kaprodi+'</small>'+
+                                    '</td>'+
+                                    '<td class="text-center">'+
+                                        '<div class="btn-group hidden-xs-down">'+
+                                            '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+kd_prodi+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
+                                            '<a href="/master/study-program/edit/'+kd_prodi+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+kd_prodi+'" name="id">'+
+                                                '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/study-program">'+
+                                                    '<div><i class="fa fa-trash"></i></div>'+
+                                                '</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>'
+                    })
+                    tabel.dataTable().fnDestroy();
+                    tabel.find('tbody').html(html);
+                    tabel.DataTable({
+                        responsive: true,
+                        autoWidth: false,
+                        columnDefs: [ {
+                            "targets"  : 'no-sort',
+                            "orderable": false,
+                        }],
+                        language: {
+                            searchPlaceholder: 'Cari...',
+                            sSearch: '',
+                            lengthMenu: '_MENU_ items/page',
+                        },
+                        bInfo: false
+                    });
+                } else {
+                    html = '<tr><td colspan="5" class="text-center">BELUM ADA DATA</td></tr>';
+                    tabel.find('tbody').html(html);
+
+
+                }
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    }
 
     /*****************************************************************************/
 

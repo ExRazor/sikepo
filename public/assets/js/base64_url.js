@@ -7,6 +7,7 @@
  * @returns {String} the URL friendly encoded String
  */
 function encode_url(str){
+    str = btoa(str);
     return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
 }
 
@@ -20,5 +21,6 @@ function encode_url(str){
  */
 function decode_url(str){
     str = (str + '===').slice(0, str.length + (str.length % 4));
-    return str.replace(/-/g, '+').replace(/_/g, '/');
+    str.replace(/-/g, '+').replace(/_/g, '/');
+    return atob(str);
 }

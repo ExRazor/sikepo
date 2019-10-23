@@ -45,17 +45,17 @@ class DepartmentController extends Controller
             $data->nm_kajur    = $request->nm_kajur;
             $q = $data->save();
 
-            if($q) {
+            if(!$q) {
                 return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil ditambahkan.',
-                    'type'    => 'success'
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
                 ]);
             } else {
                 return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi masalah saat menambah data.',
-                    'type'    => 'danger'
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
                 ]);
             }
 
@@ -72,7 +72,7 @@ class DepartmentController extends Controller
     {
         if($request->ajax()) {
 
-            $fakultas = $request->input('id_fakultas');
+            $fakultas = decode_url($request->input('id_fakultas'));
 
             if($fakultas == 0){
                 $data = Department::with('faculty')->orderBy('id_fakultas','asc')->get();
@@ -95,7 +95,8 @@ class DepartmentController extends Controller
     public function edit(Request $request)
     {
         if(request()->ajax()) {
-            $data = Department::find($request->id);
+            $id = decode_url($request->id);
+            $data = Department::find($id);
             return response()->json($data);
         } else {
             abort(404);
@@ -125,17 +126,17 @@ class DepartmentController extends Controller
             $data->nm_kajur    = $request->nm_kajur;
             $q = $data->save();
 
-            if($q) {
+            if(!$q) {
                 return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil diubah.',
-                    'type'    => 'success'
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
                 ]);
             } else {
                 return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi masalah saat menambah data.',
-                    'type'    => 'danger'
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
                 ]);
             }
 
@@ -151,22 +152,24 @@ class DepartmentController extends Controller
     public function destroy(Request $request)
     {
         if($request->ajax()) {
+            $id = decode_url($request->id);
 
-            $q = Department::destroy($request->_id);
+            $q = Department::destroy($id);
 
-            if($q) {
+            if(!$q) {
                 return response()->json([
-                    'title' => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
                 ]);
             } else {
                 return response()->json([
-                    'title' => 'Gagal',
-                    'message' => 'Data tidak berhasil dihapus',
-                    'type'    => 'danger'
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
                 ]);
             }
+
         } else {
             return redirect()->route('master.department');
         }

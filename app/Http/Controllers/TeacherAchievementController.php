@@ -63,13 +63,21 @@ class TeacherAchievementController extends Controller
                 $acv->bukti_pendukung = $filename;
             }
 
-            $acv->save();
+            $q = $acv->save();
 
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil ditambahkan.',
-                'type'    => 'success'
-            ]);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
         }
     }
 
@@ -140,13 +148,21 @@ class TeacherAchievementController extends Controller
                 $acv->bukti_pendukung = $filename;
             }
 
-            $acv->save();
+            $q = $acv->save();
 
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil diubah.',
-                'type'    => 'success'
-            ]);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
         }
     }
 
@@ -160,12 +176,21 @@ class TeacherAchievementController extends Controller
     {
         if(request()->ajax()) {
             $id = decrypt($request->_id);
-            TeacherAchievement::destroy($id);
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil dihapus',
-                'type'    => 'success'
-            ]);
+
+            $q = TeacherAchievement::destroy($id);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
         } else {
             return redirect()->route('teacher.achievement');
         }

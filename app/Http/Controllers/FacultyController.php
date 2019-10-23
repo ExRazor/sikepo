@@ -38,13 +38,21 @@ class FacultyController extends Controller
             $data->singkatan  = $request->singkatan;
             $data->nip_dekan  = $request->nip_dekan;
             $data->nm_dekan   = $request->nm_dekan;
-            $data->save();
+            $q = $data->save();
 
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil ditambahkan.',
-                'type'    => 'success'
-            ]);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
         }
     }
 
@@ -95,13 +103,21 @@ class FacultyController extends Controller
             $data->singkatan  = $request->singkatan;
             $data->nip_dekan  = $request->nip_dekan;
             $data->nm_dekan   = $request->nm_dekan;
-            $data->save();
+            $q = $data->save();
 
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil ditambahkan.',
-                'type'    => 'success'
-            ]);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
         }
     }
 
@@ -115,12 +131,21 @@ class FacultyController extends Controller
     {
         if($request->ajax()) {
             $id = decrypt($request->_id);
-            Faculty::destroy($id);
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil dihapus',
-                'type'    => 'success'
-            ]);
+            $q  = Faculty::destroy($id);
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
         } else {
             return redirect()->route('master.faculty');
         }

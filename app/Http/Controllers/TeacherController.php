@@ -8,6 +8,7 @@ use App\StudyProgram;
 use App\AcademicYear;
 use App\Ewmp;
 use App\Faculty;
+use App\Department;
 use App\TeacherAchievement;
 use File;
 
@@ -21,13 +22,15 @@ class TeacherController extends Controller
     public function index()
     {
         $studyProgram = StudyProgram::all();
-        $teacher = array();
+        $faculty      = Faculty::all();
 
-        foreach($studyProgram as $sp) {
-            $teacher[$sp->kd_prodi] = Teacher::where('kd_prodi',$sp->kd_prodi)->get();
-        }
+        $data = Teacher::whereHas(
+                    'studyProgram', function($query) {
+                        $query->where('kd_jurusan',setting('app_department_id'));
+                    })
+                ->get();
 
-        return view('teacher/index',compact(['studyProgram','teacher']));
+        return view('teacher/index',compact(['studyProgram','faculty','data']));
     }
 
     /**
@@ -38,7 +41,9 @@ class TeacherController extends Controller
     public function create()
     {
         $faculty = Faculty::all();
-        return view('teacher/form',compact('faculty'));
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
+        return view('teacher/form',compact(['faculty','studyProgram']));
     }
 
     /**
@@ -232,12 +237,20 @@ class TeacherController extends Controller
         if(request()->ajax()) {
             $id = decrypt($request->id);
 
-            Teacher::destroy($id);
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil dihapus',
-                'type'    => 'success'
-            ]);
+            $q = Teacher::destroy($id);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
         } else {
             return redirect()->route('teacher.achievement');
         }

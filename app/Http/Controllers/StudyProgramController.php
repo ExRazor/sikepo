@@ -51,7 +51,21 @@ class StudyProgramController extends Controller
             'thn_menerima'  => 'required|numeric|digits:4',
         ]);
 
-        StudyProgram::create($request->all());
+        $q = StudyProgram::create($request->all());
+
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        }
 
         return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
 
@@ -66,7 +80,8 @@ class StudyProgramController extends Controller
     public function show(Request $request)
     {
         if(request()->ajax()) {
-            $data = StudyProgram::where('kd_prodi',$request->id)->with('department','department.faculty')->first();
+            $id   = decode_url($request->id);
+            $data = StudyProgram::where('kd_prodi',$id)->with('department','department.faculty')->first();
 
             return response()->json($data);
         } else {
@@ -82,6 +97,7 @@ class StudyProgramController extends Controller
      */
     public function edit($id)
     {
+        $id         = decode_url($id);
         $data       = StudyProgram::where('kd_prodi',$id)->with('department','department.faculty')->first();
         $department = Department::where('id_fakultas',$data->department->faculty->id)->get();
         $faculty    = Faculty::all();
@@ -119,7 +135,21 @@ class StudyProgramController extends Controller
         $studyProgram->singkatan      = $request->singkatan;
         $studyProgram->nip_kaprodi    = $request->nip_kaprodi;
         $studyProgram->nm_kaprodi     = $request->nm_kaprodi;
-        $studyProgram->save();
+        $q = $studyProgram->save();
+
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        }
 
 
         return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
@@ -135,12 +165,23 @@ class StudyProgramController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            StudyProgram::destroy($request->id);
-            return response()->json([
-                'title' => 'Berhasil',
-                'message' => 'Data berhasil dihapus',
-                'type'    => 'success'
-            ]);
+            $id = decode_url($request->ids);
+
+            $q = StudyProgram::destroy($id);
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
         } else {
             return redirect()->route('master.study-program');
         }
