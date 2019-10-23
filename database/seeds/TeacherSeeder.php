@@ -22,7 +22,7 @@ class TeacherSeeder extends Seeder
         $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
         $sesuai = ['Ya','Tidak'];
 
-    	for($i = 0; $i < 20; $i++){
+    	for($i = 0; $i < 50; $i++){
                 // insert data ke table pegawai menggunakan Faker
             DB::table('teachers')->insert([
                 'nidn'                  => rand(000000000, 999999999),

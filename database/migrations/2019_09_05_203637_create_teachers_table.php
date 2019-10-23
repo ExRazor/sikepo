@@ -14,7 +14,7 @@ class CreateTeachersTable extends Migration
     public function up()
     {
         Schema::create('teachers', function (Blueprint $table) {
-            $table->char('nidn',9)->primary();
+            $table->char('nidn',10)->primary();
             $table->char('kd_prodi',5);
             $table->char('nip',18);
             $table->string('nama');

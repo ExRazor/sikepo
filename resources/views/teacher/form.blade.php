@@ -99,13 +99,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} maxlength="9" required>
+                                    <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} minlength="8" maxlength="10" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">NIP: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" maxlength="18" required>
+                                    <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" minlength="16" maxlength="18" required>
                                 </div>
                             </div>
                             <div class="row mb-3">

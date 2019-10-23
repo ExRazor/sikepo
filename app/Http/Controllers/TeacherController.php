@@ -54,7 +54,7 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nidn'                  => 'required|numeric|digits:9',
+            'nidn'                  => 'required|numeric|min:8',
             'kd_prodi'              => 'required',
             'nip'                   => 'required|numeric|digits:18',
             'nama'                  => 'required',
