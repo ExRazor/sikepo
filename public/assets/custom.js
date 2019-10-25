@@ -144,8 +144,10 @@ $(document).ready(function() {
 
     //Submit Button
     $(document).on('click','.btn-submit',function(e){
-        $(this).addClass('disabled');
-        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
+        // $(this).prop('disabled',true);
+        // $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+
     });
 
     //Delete Button
@@ -206,6 +208,22 @@ $(document).ready(function() {
     /********************************* DATA TABLE *********************************/
     if($().DataTable) {
         var direction = $('.datatable').data('sort');
+
+        var datatable_opt = {
+                                order: ['1','asc'],
+                                responsive: true,
+                                autoWidth: false,
+                                columnDefs: [ {
+                                    "targets"  : 'no-sort',
+                                    "orderable": false,
+                                }],
+                                language: {
+                                    searchPlaceholder: 'Cari...',
+                                    emptyTable: "BELUM ADA DATA TERSEDIA",
+                                    sSearch: '',
+                                    lengthMenu: '_MENU_ items/page',
+                                }
+                            }
 
         $('.datatable').DataTable({
             order: [[$('th.defaultSort').index(), direction]],
@@ -491,26 +509,27 @@ $(document).ready(function() {
                                     '</td>'+
                                 '</tr>'
                     })
-                    tabel.dataTable().fnDestroy();
-                    tabel.find('tbody').html(html);
-                    tabel.DataTable({
-                        responsive: true,
-                        autoWidth: false,
-                        columnDefs: [ {
-                            "targets"  : 'no-sort',
-                            "orderable": false,
-                        }],
-                        language: {
-                            searchPlaceholder: 'Cari...',
-                            sSearch: '',
-                            lengthMenu: '_MENU_ items/page',
-                        },
-                        bInfo: false
-                    });
                 } else {
                     html = '<tr><td colspan="7" class="text-center">BELUM ADA DATA</td></tr>';
                     tabel.find('tbody').html(html);
                 }
+
+                tabel.dataTable().fnDestroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    columnDefs: [ {
+                        "targets"  : 'no-sort',
+                        "orderable": false,
+                    }],
+                    language: {
+                        searchPlaceholder: 'Cari...',
+                        sSearch: '',
+                        lengthMenu: '_MENU_ items/page',
+                    },
+                    bInfo: false
+                });
                 btn.removeClass('disabled');
                 btn.html('Cari');
             },
@@ -648,6 +667,7 @@ $(document).ready(function() {
             url: url,
             data: data,
             type: 'POST',
+            async: true,
             dataType: 'json',
             beforeSend: function() {
                 btn.addClass('disabled');
@@ -698,7 +718,6 @@ $(document).ready(function() {
                                                 '<form method="POST">'+
                                                     '<input type="hidden" value="'+encode_url(nidn)+'" name="id">'+
                                                     '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
-                                                    // '<a href="{{ route('teacher.delete') }}" class="dropdown-item btn-delete">Hapus</a>'+
                                                 '</form>'+
                                             '</div>'+
                                         '</div>'+
@@ -706,7 +725,8 @@ $(document).ready(function() {
                                 '</tr>';
                     })
 
-                    tabel.dataTable().fnDestroy();
+                    // tabel.dataTable().fnDestroy();
+                    tabel.DataTable().clear().destroy();
                     tabel.find('tbody').html(html);
                     tabel.DataTable({
                         order: ['1','asc'],
@@ -725,8 +745,6 @@ $(document).ready(function() {
                 } else {
                     html = '<tr><td colspan="7" class="text-center">BELUM ADA DATA</td></tr>';
                     tabel.find('tbody').html(html);
-
-
                 }
                 btn.removeClass('disabled');
                 btn.html('Cari');
@@ -743,7 +761,6 @@ $(document).ready(function() {
     /********************************* DATA EWMP DOSEN *********************************/
     $('.btn-edit-ewmp').click(function(e){
         e.preventDefault();
-
         var id  = $(this).data('id');
         var url = '/ajax/ewmp/'+id;
 
@@ -768,70 +785,76 @@ $(document).ready(function() {
         });
     });
 
-    $('#filter-ewmpsss').submit(function(e){
+    $('#filter-ewmp').submit(function(e){
         e.preventDefault();
 
-        var data = $(this).serialize();
-        var url  = $(this).attr('action');
+        var tabel   = $('#table-ewmp');
+        var data    = $(this).serialize();
+        var url     = $(this).attr('action');
+        var btn     = $(this).find('button[type=submit]');
+        var prodi   = $('select[name=program_studi]').val();
+        var ta      = $('select[name=tahun_akademik]').val();
+        var smt     = $('select[name=semester]').val();
+
+        tabel.find('tbody').empty();
 
         $.ajax({
             url: url,
             data: data,
             type: 'POST',
+            async: true,
             dataType: 'json',
+            beforeSend: function() {
+                btn.prop('disabled',true);
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
             success: function (data) {
-                if(data.length > 0) {
-                    var html = ''
-                    for (i = 0; i < data.length; i++) {
 
-                        var ps_intra        = parseInt(data[i].ps_intra);
-                        var ps_lain         = parseInt(data[i].ps_lain);
-                        var ps_luar         = parseInt(data[i].ps_luar);
-                        var penelitian      = parseInt(data[i].penelitian);
-                        var pkm             = parseInt(data[i].pkm);
-                        var tugas_tambahan  = parseInt(data[i].tugas_tambahan);
+                $('span.program-studi').text('prodi');
+                $('span.tahun_akademik').text(ta+' - '+smt);
+
+                if(data.ewmp.length > 0) {
+                    var html = ''
+                    $.each(data.ewmp, function(i,val) {
+                        var ps_intra        = parseInt(val.ps_intra);
+                        var ps_lain         = parseInt(val.ps_lain);
+                        var ps_luar         = parseInt(val.ps_luar);
+                        var penelitian      = parseInt(val.penelitian);
+                        var pkm             = parseInt(val.pkm);
+                        var tugas_tambahan  = parseInt(val.tugas_tambahan);
                         var total = parseInt(ps_intra+ps_lain+ps_luar+penelitian+pkm+tugas_tambahan);
                         var rata  = parseFloat(total/6).toFixed(2);
                         html += '<tr>'+
-                                    '<td>'+data[i].nama+'</td>'+
-                                    '<td>'+data[i].tahun_akademik+' - '+data[i].semester+'</td>'+
-                                    '<td>'+data[i].ps_intra+'</td>'+
-                                    '<td>'+data[i].ps_lain+'</td>'+
-                                    '<td>'+data[i].ps_luar+'</td>'+
-                                    '<td>'+data[i].penelitian+'</td>'+
-                                    '<td>'+data[i].pkm+'</td>'+
-                                    '<td>'+data[i].tugas_tambahan+'</td>'+
-                                    '<td>'+total+'</td>'+
-                                    '<td>'+rata+'</td>'+
-                                    '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item btn-edit btn-edit-ewmp" href="#" data-id="{{encrypt($e->id)}}">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '@method("delete")'+
-                                                    '@csrf'+
-                                                    '<input type="hidden" value="{{encrypt($e->id)}}" name="_id">'+
-                                                    '<a href="#" class="dropdown-item btn-delete" data-dest="{{ route("ewmp.delete") }}">Hapus</a>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
+                                    '<td>'+val.teacher.nama+'</td>'+
+                                    '<td class="text-center">'+data.tahun_akademik+'</td>'+
+                                    '<td class="text-center">'+val.ps_intra+'</td>'+
+                                    '<td class="text-center">'+val.ps_lain+'</td>'+
+                                    '<td class="text-center">'+val.ps_luar+'</td>'+
+                                    '<td class="text-center">'+val.penelitian+'</td>'+
+                                    '<td class="text-center">'+val.pkm+'</td>'+
+                                    '<td class="text-center">'+val.tugas_tambahan+'</td>'+
+                                    '<td class="text-center no-sort">'+total+'</td>'+
+                                    '<td class="text-center no-sort">'+rata+'</td>'+
                                 '<tr>'
-                    }
+                    });
+                } else {
+                    html =  '<tr>'+
+                                '<td colspan="10" class="text-center align-middle">BELUM ADA DATA</td>'+
+                            '</tr>'
 
-                    $('.table-ewmp tbody').html(html);
-
-                    console.log(data);
                 }
 
+                tabel.find('tbody').html(html);
 
+                btn.prop('disabled',false);
+                btn.html('Cari');
 
+            },
+            error: function (request) {
+                btn.prop('disabled',false);
+                btn.html('Cari');
             }
         });
-        console.log(data);
     })
     /***********************************************************************************/
 

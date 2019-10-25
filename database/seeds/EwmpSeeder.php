@@ -13,7 +13,7 @@ class EwmpSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 0; $i < 50; $i++){
+        for($i = 0; $i < 100; $i++){
 
             $id   = AcademicYear::all()->random()->id;
             $nidn = Teacher::inRandomOrder()->where('ikatan_kerja','Dosen Tetap')->first()->nidn;

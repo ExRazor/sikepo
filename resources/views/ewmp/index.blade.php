@@ -50,8 +50,6 @@
                 <div class="row">
                     <div class="col-md-10">
                         <form action="{{route('ewmp.show_filter')}}" id="filter-ewmp" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('post')
                             <div class="form-group row mb-3">
                                 <label class="col-3 form-control-label">Program Studi:</label>
                                 <div class="col-6">
@@ -98,15 +96,11 @@
         <div class="card shadow-base mb-3">
             <div class="card-header">
                 <h6 class="card-title">
-                    @isset($filter)
-                    Prodi: {{ $filter['prodi'] }} || Tahun Akademik: {{$filter['tahun']}}/{{$filter['tahun']+1}} - {{$filter['semester']}}
-                    @else
-                    Prodi: - || EWMP: -
-                    @endisset
+                    Prodi: <span class="program_studi">-</span> || EWMP: <span class="tahun_akademik">-</span>
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table datatable table-bordered mb-0 table-ewmp" data-sort='asc'>
+                <table id="table-ewmp" class="table table-bordered mb-0">
                     <thead>
                         <tr>
                             <th rowspan="3" class="text-center align-middle defaultSort">Dosen</th>
@@ -127,27 +121,7 @@
                             <th class="text-center align-middle" width="70">Luar PT</th>
                         </tr>
                     </thead>
-                    <tbody class="tbody-ewmp">
-                        @isset($ewmp)
-                            @foreach ($ewmp as $e)
-                            <tr>
-                                <td><a href="{{ route('teacher.show',encrypt($e->nidn)) }}#ewmp">{{ $e->teacher->nama }}</a></td>
-                                <td class="text-center">{{ isset($e->academicYear->tahun_akademik) ? $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester : $filter['tahun'] }}</td>
-                                <td class="text-center">{{ $e->ps_intra }}</td>
-                                <td class="text-center">{{ $e->ps_lain }}</td>
-                                <td class="text-center">{{ $e->ps_luar }}</td>
-                                <td class="text-center">{{ $e->penelitian }}</td>
-                                <td class="text-center">{{ $e->pkm }}</td>
-                                <td class="text-center">{{ $e->tugas_tambahan }}</td>
-                                <td class="text-center">{{ $total = $e->ps_intra+$e->ps_lain+$e->ps_luar+$e->penelitian+$e->pkm+$e->tugas_tambahan}}</td>
-                                <td class="text-center">{{ number_format($total/6, 1, ',', ' ') }}</td>
-                            </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan=11 class="text-center align-middle">BELUM ADA DATA</td>
-                            </tr>
-                        @endisset
+                    <tbody>
                     </tbody>
                 </table>
             </div><!-- card-body -->

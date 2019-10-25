@@ -19,7 +19,7 @@ class CollaborationController extends Controller
     {
         // $data = Collaboration::all();
 
-        $studyProgram = StudyProgram::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
         foreach($studyProgram as $sp) {
             $collab[$sp->kd_prodi] = Collaboration::where('kd_prodi',$sp->kd_prodi)->get();
@@ -36,7 +36,7 @@ class CollaborationController extends Controller
     public function create()
     {
         $academicYear = AcademicYear::all();
-        $studyProgram = StudyProgram::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         return view('collaboration/form',compact(['academicYear','studyProgram']));
     }
 
