@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Meta -->
-    <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
-    <meta name="author" content="ThemePixels">
+    <meta name="description" content="{{setting('app_description')}}">
+    <meta name="author" content="Dikadikkun">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title') - SIBAK</title>
+    <title>@yield('title') - {{setting('app_name')}}</title>
 
     <!-- vendor css -->
     <link href="{{ asset ('assets/lib') }}/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -50,7 +50,7 @@
   <body>
 
     <!-- START: LEFT SIDEBAR -->
-    <div class="br-logo"><a href=""><span>[</span>SI <i>BAK</i><span>]</span></a></div>
+    <div class="br-logo"><a href="#"><span><i>[</i></span>{{setting('app_short')}}<span><i>]</i></span></a></div>
     <div class="br-sideleft sideleft-scrollbar">
         @include('layouts.sidebar')
     </div>

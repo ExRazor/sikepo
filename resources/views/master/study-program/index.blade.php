@@ -60,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $d)
+                            @forelse ($data as $d)
                             <tr>
                                 <td>{{$d->kd_prodi}}</td>
                                 <td>{{$d->nama}}</td>
@@ -83,7 +83,11 @@
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center">BELUM ADA DATA PRODI</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div><!-- card-body -->

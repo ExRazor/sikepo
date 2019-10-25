@@ -187,4 +187,18 @@ class DepartmentController extends Controller
             abort(404);
         }
     }
+
+    public function get_faculty(Request $request)
+    {
+        if($request->ajax()) {
+
+            $kd = $request->input('kd_jurusan');
+
+            $data = Department::with('faculty')->where('kd_jurusan',$kd)->first();
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
 }

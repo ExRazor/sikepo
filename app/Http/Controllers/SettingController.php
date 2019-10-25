@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Setting;
+use App\Faculty;
+use App\Department;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -14,72 +16,42 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
+        $faculty = Faculty::all();
+        $setting = Setting::all();
+
+        foreach($setting as $s) {
+            $data[$s->name] = $s->value;
+        }
+
+        return view('setting.general',compact(['faculty','data']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function update(Request $request)
     {
-        //
-    }
+        $kd_jurusan = decrypt($request->app_department_id);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $jurusan = Department::with('faculty')->where('kd_jurusan',$kd_jurusan)->first();
+        $data = array(
+            'app_name'            => $request->app_name,
+            'app_short'           => $request->app_short,
+            'app_description'     => $request->app_description,
+            'app_department_id'   => $kd_jurusan,
+            'app_department_name' => $jurusan->nama,
+            'app_faculty_id'      => $jurusan->faculty->id,
+            'app_faculty_name'    => $jurusan->faculty->nama,
+        );
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Setting $setting)
-    {
-        //
-    }
+        foreach($data as $key => $value) {
+            Setting::updateOrCreate(
+                [
+                    'name'         => $key,
+                ],
+                [
+                    'value'        => $value,
+                ]
+            );
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Setting $setting)
-    {
-        //
+        return redirect()->route('setting.general')->with('flash.message', 'Setelan berhasil diubah!')->with('flash.class', 'success');
     }
 }

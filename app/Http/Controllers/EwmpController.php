@@ -82,10 +82,6 @@ class EwmpController extends Controller
      * @param  \App\Ewmp  $ewmp
      * @return \Illuminate\Http\Response
      */
-    public function show(Ewmp $ewmp)
-    {
-        //
-    }
 
     public function show_by_filter(Request $request)
     {

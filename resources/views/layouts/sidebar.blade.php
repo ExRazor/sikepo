@@ -60,7 +60,7 @@
             <span class="menu-item-label">Setelan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="#" class="sub-link {{ (request()->segment(2) == 'general') ? 'active' : '' }}">Umum</a></li>
+            <li class="sub-item"><a href="{{route('setting.general')}}" class="sub-link {{ (request()->segment(2) == 'general') ? 'active' : '' }}">Umum</a></li>
             <li class="sub-item"><a href="#" class="sub-link {{ (request()->segment(2) == 'users') ? 'active' : '' }}">Pengguna</a></li>
         </ul>
     </li>

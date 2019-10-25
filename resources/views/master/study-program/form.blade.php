@@ -147,7 +147,7 @@
 
                     </div><!-- row -->
                     <div class="form-layout-footer bd pd-20 bd-t-0">
-                        <button type="submit" class="btn btn-info">Simpan</button>
+                        <button type="submit" class="btn btn-info btn-submit">Simpan</button>
                         <a href="{{route('master.study-program')}}" class="btn btn-secondary">Batal</a>
                     </div><!-- form-group -->
                 </form>

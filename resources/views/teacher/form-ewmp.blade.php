@@ -22,7 +22,9 @@
                             <select class="form-control" name="id_ta">
                                 <option value="">= Pilih Tahun Akademik =</option>
                                 @foreach ($academicYear as $ay)
-                                <option value="{{$ay->id}}">{{$ay->tahun_akademik.' - '.$ay->semester}}</option>
+                                    @foreach($ewmp as $e)
+                                    @endforeach
+                                    <option value="{{$ay->id}}">{{$ay->tahun_akademik.' - '.$ay->semester}}</option>
                                 @endforeach
                             </select>
                         </div>

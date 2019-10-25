@@ -84,6 +84,16 @@ Breadcrumbs::for('faculty', function ($trail) {
     $trail->push('Fakultas', route('master.faculty'));
 });
 
+Breadcrumbs::for('setting', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Setelan');
+});
+
+Breadcrumbs::for('setting-general', function ($trail) {
+    $trail->parent('setting');
+    $trail->push('Setelan Umum');
+});
+
 // // Home > About
 // Breadcrumbs::for('about', function ($trail) {
 //     $trail->parent('home');

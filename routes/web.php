@@ -55,8 +55,14 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::post('study-program', 'StudyProgramController@store')->name('study-program.store');
     Route::put('study-program','StudyProgramController@update')->name('study-program.update');
     Route::delete('study-program','StudyProgramController@destroy')->name('study-program.delete');
+});
 
+//Setting
+Route::prefix('setting')->name('setting.')->group(function () {
 
+    //Umum
+    Route::get('general', 'SettingController@index')->name('general');
+    Route::put('general', 'SettingController@update')->name('general.update');
 });
 
 //Fungsi Ajax
@@ -71,6 +77,7 @@ Route::prefix('ajax')->group(function () {
     //Jurusan
     Route::post('department/edit','DepartmentController@edit' );
     Route::post('department/get_by_faculty','DepartmentController@get_by_faculty' );
+    Route::post('department/get_faculty','DepartmentController@get_faculty' );
 
     //Program Studi
     Route::post('study-program/show','StudyProgramController@show' );

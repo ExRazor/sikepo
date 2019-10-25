@@ -127,11 +127,18 @@ class TeacherController extends Controller
     {
         $nip            = decode_url($nip);
         $data           = Teacher::where('nip',$nip)->first();
-        $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
+        $ayExist        = array();
+
+        foreach($ewmp as $e) {
+            $ayExist[] = $e->id_ta;
+        }
+
+        $academicYear   = AcademicYear::whereNotIn('id',$ayExist)->orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('tanggal','desc')->get();
 
-        // dd($achievement);
         return view('teacher/profile',compact(['data','academicYear','ewmp','achievement']));
     }
 

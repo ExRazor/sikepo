@@ -28,7 +28,7 @@ class TeacherAchievementSeeder extends Seeder
                     'Internasional',
                 ];
 
-        for($i = 0; $i < 10; $i++){
+        for($i = 0; $i < 20; $i++){
             $nidn = Teacher::all()->random()->nidn;
             for($j = 0; $j < 5; $j++){
                 DB::table('teacher_achievements')->insert([

@@ -15,8 +15,8 @@ class CreateEwmpsTable extends Migration
     {
         Schema::create('ewmps', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('nidn',9);
             $table->unsignedBigInteger('id_ta');
+            $table->char('nidn',9);
             $table->integer('ps_intra');
             $table->integer('ps_lain');
             $table->integer('ps_luar');
@@ -25,6 +25,7 @@ class CreateEwmpsTable extends Migration
             $table->integer('tugas_tambahan');
             $table->timestamps();
 
+            $table->unique(['id_ta','nidn']);
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });

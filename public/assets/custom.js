@@ -127,9 +127,25 @@ $(document).ready(function() {
                 cont.removeClass('disabled');
                 $('.btn-cancel').removeClass('disabled');
                 cont.html('Simpan');
-            }
+            },
+            statusCode: {
+                500: function(state) {
+                    Swal.fire({
+                        title: state.title,
+                        text: state.message,
+                        type: state.type,
+                        timer: 1500,
+                    });
+                }
+            },
         });
 
+    });
+
+    //Submit Button
+    $(document).on('click','.btn-submit',function(e){
+        $(this).addClass('disabled');
+        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
     });
 
     //Delete Button
@@ -313,7 +329,7 @@ $(document).ready(function() {
         $('#table_department tbody').empty();
 
         var cont = $('#filter-department');
-        var btn  = cont.find('button.btn-info');
+        var btn  = cont.find('button.btn-cari');
         var data = cont.serialize();
         var url  = cont.attr('action');
         var opsi = cont.find('select[name=id_fakultas] option:selected').text();
@@ -492,7 +508,7 @@ $(document).ready(function() {
                         bInfo: false
                     });
                 } else {
-                    html = '<tr><td colspan="5" class="text-center">BELUM ADA DATA</td></tr>';
+                    html = '<tr><td colspan="7" class="text-center">BELUM ADA DATA</td></tr>';
                     tabel.find('tbody').html(html);
                 }
                 btn.removeClass('disabled');

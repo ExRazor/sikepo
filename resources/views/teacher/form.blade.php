@@ -267,7 +267,7 @@
                     <div class="row">
                         <div class="col-6 mx-auto">
                             <div class="text-center">
-                                <button class="btn btn-info btn-submit-teacher">Simpan</button>
+                                <button class="btn btn-info btn-submit">Simpan</button>
                                 <a href="{{ url()->previous() }}" class="btn btn-secondary">Batal</a>
                             </div>
                         </div>

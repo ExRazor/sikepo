@@ -146,9 +146,8 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-layout-footer">
-                        <button type="submit" class="btn btn-info">Simpan</button>
+                        <button type="submit" class="btn btn-info btn-submit">Simpan</button>
                         <a href="{{route('collaboration')}}" class="btn btn-secondary">Batal</a>
                     </div>
                 </form>

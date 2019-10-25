@@ -40,28 +40,6 @@
                 <h6 class="card-title">Tampilkan</h6>
             </div>
             <div class="card-body bd bd-t-0 rounded-bottom bd-color-gray-lighter">
-                <div class="row">
-                    <div class="col-md-10">
-                        <form action="{{route('master.department.show')}}" id="filter-department" method="POST">
-                            <div class="form-group row mb-3">
-                                <label class="col-3 form-control-label">Fakultas:</label>
-                                <div class="col-6">
-                                    <select id="fakultas" class="form-control" name="id_fakultas" data-placeholder="Pilih Prodi" required>
-                                        <option value="0">Semua Fakultas</option>
-                                        @foreach ($faculty as $f)
-                                        <option value="{{$f->id}}">{{$f->nama}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <div class="col-6 offset-3">
-                                    <button type="submit" class="btn btn-info">Cari</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div><!-- card-body -->
         </div>
         <div class="card mb-3">
@@ -71,6 +49,21 @@
                 </h6>
             </div>
             <div class="card-body bd bd-t-0 rounded-bottom bd-color-gray-lighter">
+                <form action="{{route('master.department.show')}}" id="filter-department" method="POST">
+                    <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                        <div class="justify-content-end flex-grow-1 w-100 mg-r-10">
+                            <select id="fakultas" class="form-control" name="id_fakultas" required>
+                                <option value="0">Semua Fakultas</option>
+                                @foreach ($faculty as $f)
+                                <option value="{{encode_url($f->id)}}">{{$f->nama}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="justify-content-end">
+                            <button type="submit" class="btn btn-purple btn-block btn-cari " style="color:white">Cari</a>
+                        </div>
+                    </div>
+                </form>
                 <table id="table_department" class="table table-striped">
                     <thead>
                         <tr>
