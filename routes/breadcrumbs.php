@@ -21,7 +21,7 @@ Breadcrumbs::for('collaboration-edit', function ($trail) {
     $trail->push('Sunting Kerja Sama');
 });
 
-//Profil Dosen
+//Dosen
 Breadcrumbs::for('teacher', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Dosen', route('teacher'));
@@ -37,11 +37,26 @@ Breadcrumbs::for('teacher-edit', function ($trail) {
     $trail->push('Sunting Data Dosen');
 });
 
-//Profil Dosen
-
+//Dosen > EWMP
 Breadcrumbs::for('teacher-ewmp', function ($trail) {
     $trail->parent('teacher');
     $trail->push('Daftar EWMP Dosen', route('teacher.ewmp'));
+});
+
+//Dosen
+Breadcrumbs::for('student', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Mahasiswa', route('student'));
+});
+
+Breadcrumbs::for('student-add', function ($trail) {
+    $trail->parent('student');
+    $trail->push('Tambah Data Mahasiswa', route('student.add'));
+});
+
+Breadcrumbs::for('student-edit', function ($trail) {
+    $trail->parent('student');
+    $trail->push('Sunting Data Mahasiswa');
 });
 
 // Dashboard > Data Master

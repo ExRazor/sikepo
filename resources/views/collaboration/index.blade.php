@@ -46,7 +46,7 @@
                 <h6 class="card-title">Program Studi: {{$sp->nama}}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table datatable display responsive nowrap">
+                <table class="table datatable display responsive nowrap" data-sort="desc">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -55,14 +55,14 @@
                             <th>Tingkat</th>
                             <th class="no-sort">Judul Kegiatan</th>
                             <th class="no-sort">Manfaat</th>
-                            <th class="no-sort">Waktu</th>
+                            <th class="defaultSort">Waktu</th>
                             <th class="no-sort">Durasi</th>
                             <th class="no-sort">Bukti Kerjasama</th>
                             <th class="no-sort">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($collab[$sp->kd_prodi] as $d)
+                        @foreach ($collab[$sp->kd_prodi] as $d)
                         <tr>
                             <th scope="row" style="vertical-align:middle">{{$loop->iteration}}</td>
                             <td>{{$d->academicYear->tahun_akademik." - ".$d->academicYear->semester}}</td>
@@ -92,11 +92,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @empty
-                            <tr>
-                                <td colspan=10 class="text-center align-middle">BELUM ADA DATA</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div><!-- card-body -->

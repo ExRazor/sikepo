@@ -18,7 +18,7 @@ class CreateTeachersTable extends Migration
             $table->char('kd_prodi',5);
             $table->char('nip',18);
             $table->string('nama');
-            $table->enum('jk',['Laki-Laki','Perempuan']);
+            $table->string('jk');
             $table->string('agama');
             $table->string('tpt_lhr');
             $table->date('tgl_lhr');

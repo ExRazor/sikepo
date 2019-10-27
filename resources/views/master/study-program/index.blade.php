@@ -44,94 +44,38 @@
             <div class="card bd-0">
                 <div class="card-header bd rounded-top bd-color-gray-lighter">
                     <h6 class="card-title">
-                        <span class="nm_fakultas">Jurusan: {{setting('app_department_name')}}</span>
-                    </h6>
-                </div>
-                <div class="card-body bd bd-t-0 rounded-bottom">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th width="75">Kode</th>
-                                <th width="400">Nama Prodi</th>
-                                <th width="100">Singkatan</th>
-                                <th width="150">Jenjang</th>
-                                <th>Nama Kaprodi</th>
-                                <th width="150">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($data as $d)
-                            <tr>
-                                <td>{{$d->kd_prodi}}</td>
-                                <td>{{$d->nama}}</td>
-                                <td>{{$d->singkatan}}</td>
-                                <td>{{$d->jenjang}}</td>
-                                <td>
-                                    {{$d->nm_kaprodi}}<br>
-                                    <small>NIP. {{$d->nip_kaprodi}}</small>
-                                </td>
-                                <td>
-                                    <div class="btn-group hidden-xs-down">
-                                        <button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="{{encode_url($d->kd_prodi)}}" ><div><i class="fa fa-search-plus"></i></div></button>
-                                        <a href="{{ route('master.study-program.edit',encode_url($d->kd_prodi)) }}" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>
-                                        <form method="POST">
-                                            <input type="hidden" value="{{encode_url($d->kd_prodi)}}" name="id">
-                                            <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.study-program.delete') }}">
-                                                <div><i class="fa fa-trash"></i></div>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="6" class="text-center">BELUM ADA DATA PRODI</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div><!-- card-body -->
-            </div>
-        </div>
-    </div>
-    <div class="row widget-2 mg-b-50">
-        <div class="col-12">
-            <form action="{{route('ajax.study-program.filter')}}" id="filter-study-program" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="justify-content-end flex-grow-1 w-100 mg-r-10">
-                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                            <option value="0">Semua Jurusan</option>
-                            @foreach($faculty as $f)
-                                @if($f->department->count())
-                                <optgroup label="{{$f->nama}}">
-                                    @foreach($f->department as $d)
-                                    <option value="{{$d->kd_jurusan}}">{{$d->nama}}</option>
-                                    @endforeach
-                                </optgroup>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="justify-content-end">
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
-                    </div>
-                </div>
-            </form>
-            <div id="table_studyProgram" class="card bd-0" style="display:none">
-                <div class="card-header bd rounded-top bd-color-gray-lighter">
-                    <h6 class="card-title">
                         <span class="nm_jurusan">-</span>  // Total: <span class="tot_prodi">-</span> Prodi
                     </h6>
                 </div>
                 <div class="card-body bd bd-t-0 rounded-bottom">
-                    <table class="table display responsive nowrap">
+                    <form action="{{route('ajax.study-program.filter')}}" id="filter-study-program" method="POST">
+                        <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                            <div class="mg-r-10">
+                                <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                                    <option value="all">Semua Jurusan</option>
+                                    @foreach($faculty as $f)
+                                        @if($f->department->count())
+                                        <optgroup label="{{$f->nama}}">
+                                            @foreach($f->department as $d)
+                                            <option value="{{$d->kd_jurusan}}" {{ ($d->kd_jurusan == setting('app_department_id') ? 'selected': '')}}>{{$d->nama}}</option>
+                                            @endforeach
+                                        </optgroup>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
+                    </form>
+                    <table id="table_studyProgram" class="table display responsive nowrap" data-sort="asc">
                         <thead>
                             <tr>
-                                <th width="150" class="defaultSort">Asal Jurusan</th>
-                                <th width="75">Kode</th>
-                                <th width="300">Nama Prodi</th>
+                                <th width="75"  class="defaultSort">Kode</th>
+                                <th width="400">Nama Prodi</th>
                                 <th width="100">Singkatan</th>
-                                <th width="75">Jenjang</th>
+                                <th width="150">Jenjang</th>
                                 <th>Nama Kaprodi</th>
                                 <th width="150" class="no-sort">Aksi</th>
                             </tr>

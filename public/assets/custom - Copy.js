@@ -207,10 +207,10 @@ $(document).ready(function() {
 
     /********************************* DATA TABLE *********************************/
     if($().DataTable) {
-        var direction = $('table').data('sort');
+        var direction = $('.datatable').data('sort');
 
         var datatable_opt = {
-                                order: [[$('th.defaultSort').index(), direction]],
+                                order: ['1','asc'],
                                 responsive: true,
                                 autoWidth: false,
                                 columnDefs: [ {
@@ -218,25 +218,26 @@ $(document).ready(function() {
                                     "orderable": false,
                                 }],
                                 language: {
-                                    "sProcessing":   "Sedang proses...",
-                                    "sLengthMenu":   "Tampilan _MENU_ entri",
-                                    "sZeroRecords":  "Tidak ditemukan data",
-                                    "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
-                                    "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
-                                    "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                                    "sInfoPostFix":  "",
-                                    'searchPlaceholder': 'Cari...',
-                                    'sSearch': '',
-                                    "sUrl":          "",
-                                    "oPaginate": {
-                                        "sFirst":    "Awal",
-                                        "sPrevious": "Balik",
-                                        "sNext":     "Lanjut",
-                                        "sLast":     "Akhir"
-                                    }
-                                 }
+                                    searchPlaceholder: 'Cari...',
+                                    emptyTable: "BELUM ADA DATA TERSEDIA",
+                                    sSearch: '',
+                                    lengthMenu: '_MENU_ items/page',
+                                }
                             }
-        $('.datatable').DataTable(datatable_opt)
+
+        $('.datatable').DataTable({
+            order: [[$('th.defaultSort').index(), direction]],
+            responsive: true,
+            autoWidth: false,
+            language: {
+            searchPlaceholder: 'Cari...',
+            sSearch: '',
+            lengthMenu: '_MENU_ items/page',
+            },
+            columnDefs: [
+                { "orderable": false, "targets": 'no-sort' },
+            ]
+        })
     };
     /******************************************************************************/
 
@@ -447,12 +448,13 @@ $(document).ready(function() {
 
     function load_studyProgram_table()
     {
-        var cont    = $('#filter-study-program');
-        var tabel   = $('#table_studyProgram');
-        var btn     = cont.find('button[type=submit]');
-        var data    = cont.serialize();
-        var url     = cont.attr('action');
-        var opsi    = cont.find('select[name=kd_jurusan] option:selected').text();
+        $('#table_studyProgram').find('tbody').empty();
+
+        var cont = $('#filter-study-program');
+        var btn  = cont.find('button[type=submit]');
+        var data = cont.serialize();
+        var url  = cont.attr('action');
+        var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
 
         $.ajax({
             url: url,
@@ -467,7 +469,7 @@ $(document).ready(function() {
                 $('span.nm_jurusan').text(opsi);
                 $('span.tot_prodi').text(data.length);
 
-
+                var tabel = $('#table_studyProgram').find('table');
                 var html = '';
 
                 $('#table_studyProgram').show();
@@ -475,7 +477,6 @@ $(document).ready(function() {
                 if(data.length > 0) {
                     $.each(data, function(i){
 
-                        var fakultas     = data[i].department.faculty.singkatan;
                         var jurusan      = data[i].department.nama;
                         var kd_prodi     = data[i].kd_prodi;
                         var nama         = data[i].nama;
@@ -485,11 +486,9 @@ $(document).ready(function() {
                         var nm_kaprodi   = data[i].nm_kaprodi;
 
                         html += '<tr>'+
+                                    '<td>'+jurusan+'</td>'+
                                     '<td>'+kd_prodi+'</td>'+
-                                    '<td>'
-                                        +nama+'<br>'+
-                                        '<small>'+fakultas+' - '+jurusan+'</small>'+
-                                    '</td>'+
+                                    '<td>'+nama+'</td>'+
                                     '<td>'+singkatan+'</td>'+
                                     '<td>'+jenjang+'</td>'+
                                     '<td>'+
@@ -499,7 +498,7 @@ $(document).ready(function() {
                                     '<td class="text-center">'+
                                         '<div class="btn-group hidden-xs-down">'+
                                             '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+encode_id(kd_prodi)+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
-                                            '<a href="/master/study-program/'+encode_id(kd_prodi)+'/edit" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
+                                            '<a href="/master/study-program/edit/'+encode_id(kd_prodi)+'" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
                                             '<form method="POST">'+
                                                 '<input type="hidden" value="'+encode_id(kd_prodi)+'" name="id">'+
                                                 '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/study-program">'+
@@ -510,12 +509,27 @@ $(document).ready(function() {
                                     '</td>'+
                                 '</tr>'
                     })
+                } else {
+                    html = '<tr><td colspan="7" class="text-center">BELUM ADA DATA</td></tr>';
+                    tabel.find('tbody').html(html);
                 }
 
                 tabel.dataTable().fnDestroy();
                 tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
+                tabel.DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    columnDefs: [ {
+                        "targets"  : 'no-sort',
+                        "orderable": false,
+                    }],
+                    language: {
+                        searchPlaceholder: 'Cari...',
+                        sSearch: '',
+                        lengthMenu: '_MENU_ items/page',
+                    },
+                    bInfo: false
+                });
                 btn.removeClass('disabled');
                 btn.html('Cari');
             },
@@ -526,7 +540,7 @@ $(document).ready(function() {
         });
     }
 
-    $('#table_studyProgram').on('click','.btn-show-sp',function(e){
+    $(document).on('click','.btn-show-sp',function(e){
 
         e.preventDefault();
         var id = $(this).data('id');
@@ -588,7 +602,10 @@ $(document).ready(function() {
         })
     })
 
-    $('select[name=kd_jurusan]').change(function(){
+    /*********************************************************************************/
+
+    /********************************* DATA DOSEN *********************************/
+    $('select#kd_jurusan').change(function(){
         var cont    = $(this);
         var target  = $('select[name=kd_prodi]');
         var id      = cont.val();
@@ -601,43 +618,27 @@ $(document).ready(function() {
             type: 'POST',
             dataType: 'json',
             beforeSend: function() {
-                if(cont.data('type') == 'form') {
-                    target.prop('disabled',true);
-                }
+                target.prop('disabled',true);
             },
             success: function (data) {
 
                 var html = '';
 
                 if(data.length > 0) {
-                    html += '<option value="">- Pilih Program Studi -</option>';
                     $.each(data,function(i){
                         html += '<option value="'+data[i].kd_prodi+'">'+data[i].nama+'</option>';
                     })
-
-                    if(cont.data('type') == 'form') {
-                        target.prop('disabled',false);
-                        target.prop('required',true);
-                        cont.prop('required',false);
-                    }
-
                 } else {
-                    html = '<option value="">- Pilih Program Studi -</option>';
-                    if(cont.data('type') == 'form') {
-                        target.prop('disabled',true);
-                        target.prop('required',false);
-                        cont.prop('required',true);
-                    }
+                    html = '<option value="">- BELUM ADA DATA -</option>';
                 }
 
                 target.append(html);
+                target.prop('disabled',false);
+                target.prop('required',true);
+                cont.prop('required',false);
             }
         })
     })
-
-    /*********************************************************************************/
-
-    /********************************* DATA DOSEN *********************************/
 
     $('#foto_profil').change(function(){
         var fileName = $(this).val();
@@ -649,8 +650,14 @@ $(document).ready(function() {
 
     $('form#filter-teacher').submit(function(e){
         e.preventDefault();
+        load_teacher_table();
+    })
 
-        var cont = $(this);
+    function load_teacher_table()
+    {
+        $('#table_teacher tbody').empty();
+
+        var cont = $('form#filter-teacher');
         var btn  = cont.find('button[type=submit]');
         var data = cont.serialize();
         var url  = cont.attr('action');
@@ -717,12 +724,28 @@ $(document).ready(function() {
                                     '</td>'+
                                 '</tr>';
                     })
-                }
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
 
+                    // tabel.dataTable().fnDestroy();
+                    tabel.DataTable().clear().destroy();
+                    tabel.find('tbody').html(html);
+                    tabel.DataTable({
+                        order: ['1','asc'],
+                        responsive: true,
+                        autoWidth: false,
+                        columnDefs: [ {
+                            "targets"  : 'no-sort',
+                            "orderable": false,
+                        }],
+                        language: {
+                            searchPlaceholder: 'Cari...',
+                            sSearch: '',
+                            lengthMenu: '_MENU_ items/page',
+                        },
+                    });
+                } else {
+                    html = '<tr><td colspan="7" class="text-center">BELUM ADA DATA</td></tr>';
+                    tabel.find('tbody').html(html);
+                }
                 btn.removeClass('disabled');
                 btn.html('Cari');
             },
@@ -731,7 +754,7 @@ $(document).ready(function() {
                 btn.html('Cari');
             }
         });
-    });
+    }
 
     /*****************************************************************************/
 
@@ -909,91 +932,4 @@ $(document).ready(function() {
 
 
     /***********************************************************************************/
-
-    /********************************* DATA MAHASISWA *********************************/
-    $('form#filter-student').submit(function(e){
-        e.preventDefault();
-
-        var cont    = $(this);
-        var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table_teacher');
-        var data    = cont.serialize();
-        var url     = cont.attr('action');
-
-        $('.nm_jurusan').hide();
-
-        $.ajax({
-            url: url,
-            data: data,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                var html = '';
-
-                if(data.length > 0) {
-                    $.each(data, function(i){
-
-                        var nim         = data[i].nim;
-                        var nama        = data[i].nama;
-                        var tgl_lhr     = data[i].tgl_lhr;
-                        var prodi       = data[i].study_program.nama;
-                        var jurusan     = data[i].study_program.department.nama;
-                        var fakultas    = data[i].study_program.department.faculty.singkatan;
-                        var angkatan    = data[i].angkatan;
-                        var kelas       = data[i].kelas;
-                        var program     = data[i].program;
-
-                        html += '<tr>'+
-                                    '<td>'+
-                                        '<a href="/student/list/'+encode_id(nim)+'">'+
-                                            nama+'<br>'+
-                                            '<small>NIM. '+nim+'</small>'+
-                                        '</a>'+
-                                    '</td>'+
-                                    '<td>'+tgl_lhr+'</td>'+
-                                    '<td>'+
-                                        prodi+'<br>'+
-                                        '<small>'+fakultas+' - '+jurusan+'</small>'+
-                                    '</td>'+
-                                    '<td>'+angkatan+'</td>'+
-                                    '<td>'+kelas+'</td>'+
-                                    '<td class="text-center">'+program+'</td>'+
-                                    '<td class="text-center no-sort" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/student/list/'+encode_id(nim)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(nim)+'" name="id">'+
-                                                    '<button type="submit" class="dropdown-item btn-delete" data-dest="/student/list">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
-                                '</tr>';
-                    })
-                }
-
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    });
-    /**********************************************************************************/
 });

@@ -6,9 +6,10 @@
  * @param {String} str the encoded string
  * @returns {String} the URL friendly encoded String
  */
-function encode_url(str){
-    str = btoa(str);
-    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+function encode_id(str){
+    str         = btoa(str);
+    replace     = str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+    return replace
 }
 
 /**
@@ -19,8 +20,8 @@ function encode_url(str){
  * @param {String} str the encoded string
  * @returns {String} the URL friendly encoded String
  */
-function decode_url(str){
-    str = (str + '===').slice(0, str.length + (str.length % 4));
-    str.replace(/-/g, '+').replace(/_/g, '/');
+function decode_id(str){
+    str     = (str + '===').slice(0, str.length + (str.length % 4));
+    replace = str.replace(/-/g, '+').replace(/_/g, '/');
     return atob(str);
 }

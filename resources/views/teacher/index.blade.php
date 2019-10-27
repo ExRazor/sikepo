@@ -50,7 +50,7 @@
         <div class="col-12">
             <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="justify-content-end flex-grow-1 w-100 mg-r-10">
+                    <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">Semua Jurusan</option>
                             @foreach($faculty as $f)
@@ -64,7 +64,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="justify-content-end">
+                    <div>
                         <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.show',encode_url($d->nip)) }}">{{$d->nidn}}</a></td>
+                            <td><a href="{{ route('teacher.show',encode_id($d->nip)) }}">{{$d->nidn}}</a></td>
                             <td>
                                 {{$d->nama}}<br>
                                 <small>NIP. {{$d->nip}}</small>
@@ -109,9 +109,9 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_url($d->nip)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_id($d->nip)) }}">Sunting</a>
                                         <form method="POST">
-                                            <input type="hidden" value="{{encode_url($d->nidn)}}" name="id">
+                                            <input type="hidden" value="{{encode_id($d->nidn)}}" name="id">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('teacher.delete') }}">Hapus</button>
                                         </form>
                                     </div>

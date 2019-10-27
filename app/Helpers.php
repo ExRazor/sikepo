@@ -29,7 +29,7 @@ if (!function_exists('encode_url')) {
      * @param
      * @return
      */
-    function encode_url($string) {
+    function encode_id($string) {
         return str_replace(['+','/','='], ['-','_',''], base64_encode($string));
     }
 }
@@ -42,7 +42,7 @@ if (!function_exists('decode_url')) {
      * @param
      * @return
      */
-    function decode_url($string) {
+    function decode_id($string) {
         return base64_decode(str_replace(['-','_'], ['+','/'], $string));
     }
 }

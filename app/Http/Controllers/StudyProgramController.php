@@ -66,7 +66,7 @@ class StudyProgramController extends Controller
     public function show(Request $request)
     {
         if(request()->ajax()) {
-            $id   = decode_url($request->id);
+            $id   = decode_id($request->id);
             $data = StudyProgram::where('kd_prodi',$id)->with('department','department.faculty')->first();
 
             return response()->json($data);
@@ -83,7 +83,7 @@ class StudyProgramController extends Controller
      */
     public function edit($id)
     {
-        $id         = decode_url($id);
+        $id         = decode_id($id);
         $data       = StudyProgram::where('kd_prodi',$id)->with('department','department.faculty')->first();
         $department = Department::where('id_fakultas',$data->department->faculty->id)->get();
         $faculty    = Faculty::all();
@@ -136,7 +136,7 @@ class StudyProgramController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_url($request->id);
+            $id = decode_id($request->id);
 
             $q = StudyProgram::destroy($id);
 
@@ -164,10 +164,12 @@ class StudyProgramController extends Controller
 
             $kd = $request->input('kd_jurusan');
 
-            if($kd == 0){
-                $data = StudyProgram::with('department')->where('kd_jurusan','!=',setting('app_department_id'))->orderBy('created_at','desc')->get();
+            if($kd == 'all'){
+                $data = StudyProgram::with('department.faculty')->where('kd_jurusan','!=',setting('app_department_id'))->orderBy('created_at','desc')->get();
+            } elseif($kd == 0) {
+                $data = '';
             } else {
-                $data = StudyProgram::where('kd_jurusan',$kd)->with('department')->get();
+                $data = StudyProgram::where('kd_jurusan',$kd)->with('department.faculty')->get();
             }
             return response()->json($data);
         } else {

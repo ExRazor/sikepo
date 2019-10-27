@@ -19,6 +19,7 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         $studyProgram = StudyProgram::all();
@@ -125,7 +126,7 @@ class TeacherController extends Controller
      */
     public function show($nip)
     {
-        $nip            = decode_url($nip);
+        $nip            = decode_id($nip);
         $data           = Teacher::where('nip',$nip)->first();
 
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
@@ -157,7 +158,7 @@ class TeacherController extends Controller
      */
     public function edit($nip)
     {
-        $nip          = decode_url($nip);
+        $nip          = decode_id($nip);
         $data         = Teacher::where('nip',$nip)->first();
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
@@ -229,7 +230,7 @@ class TeacherController extends Controller
         $Teacher->save();
 
 
-        return redirect()->route('teacher.show',encode_url($Teacher->nip))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.show',encode_id($Teacher->nip))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**
@@ -242,7 +243,7 @@ class TeacherController extends Controller
     {
         if(request()->ajax()) {
 
-            $id = decode_url($request->id);
+            $id = decode_id($request->id);
             $q = Teacher::destroy($id);
             if(!$q) {
                 return response()->json([

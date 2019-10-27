@@ -29,7 +29,7 @@
           <span class="menu-item-label">Data Mahasiswa</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-          <li class="sub-item"><a href="#" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Data Mahasiswa</a></li>
+          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->segment(2) == 'index') ? 'active' : '' }}">Data Mahasiswa</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

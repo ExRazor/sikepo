@@ -37,13 +37,6 @@
     <div class="widget-2">
         <div class="card mb-3">
             <div class="card-header bd rounded-top bd-color-gray-lighter">
-                <h6 class="card-title">Tampilkan</h6>
-            </div>
-            <div class="card-body bd bd-t-0 rounded-bottom bd-color-gray-lighter">
-            </div><!-- card-body -->
-        </div>
-        <div class="card mb-3">
-            <div class="card-header bd rounded-top bd-color-gray-lighter">
                 <h6 class="card-title">
                     <span class="nm_fakultas">-</span>  ||  Total: <span class="tot_jurusan">-</span> Jurusan
                 </h6>
@@ -51,15 +44,15 @@
             <div class="card-body bd bd-t-0 rounded-bottom bd-color-gray-lighter">
                 <form action="{{route('master.department.show')}}" id="filter-department" method="POST">
                     <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                        <div class="justify-content-end flex-grow-1 w-100 mg-r-10">
+                        <div class="mg-r-10">
                             <select id="fakultas" class="form-control" name="id_fakultas" required>
                                 <option value="0">Semua Fakultas</option>
                                 @foreach ($faculty as $f)
-                                <option value="{{encode_url($f->id)}}">{{$f->nama}}</option>
+                                <option value="{{encode_id($f->id)}}">{{$f->nama}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="justify-content-end">
+                        <div>
                             <button type="submit" class="btn btn-purple btn-block btn-cari " style="color:white">Cari</a>
                         </div>
                     </div>

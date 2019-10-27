@@ -131,19 +131,7 @@ class EwmpController extends Controller
                 $data['tahun_akademik'] = $ta.' - '.$smt;
             }
 
-            // $ewmp = DB::table('ewmps')
-            //             ->join('academic_years as ay', 'ewmps.id_ta', '=', 'ay.id')
-            //             ->join('teachers as t', 'ewmps.nidn', '=', 't.nidn')
-            //             ->join('study_programs as sp', 't.dosen_ps', '=', 'sp.kd_prodi')
-            //             ->where([
-            //                 'kd_prodi'       => $prodi,
-            //                 'tahun_akademik' => $ta,
-            //                 'semester'       => $smt
-            //             ])
-            //             ->select('ewmps.*', 'ay.*', 't.nama as nama_dosen', 'sp.nama as nama_prodi')
-            //             ->get();
-
-            $data['ewmp']           = $ewmp;
+            $data['data']           = $ewmp;
 
             return response()->json($data);
         }

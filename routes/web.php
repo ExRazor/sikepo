@@ -85,7 +85,19 @@ Route::prefix('ajax')->group(function () {
 
     //Teacher
     Route::post('teacher/get_by_department','TeacherController@get_by_department')->name('ajax.teacher.filter');
+
+    //Student
+    Route::post('student/get_by_filter','StudentController@get_by_filter')->name('ajax.student.filter');
 });
+
+//Collaboration
+Route::get('/collaboration','CollaborationController@index')->name('collaboration');
+Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
+Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
+Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
+Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
+Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
+Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
 
 //Teacher
 Route::get('/teacher',function(){
@@ -101,15 +113,6 @@ Route::put('/teacher/list','TeacherController@update')->name('teacher.update');
 Route::delete('/teacher/list','TeacherController@destroy')->name('teacher.delete');
 Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
 Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->name('teacher.show_by_prodi');
-
-//Collaboration
-Route::get('/collaboration','CollaborationController@index')->name('collaboration');
-Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
-Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
-Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
-Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
-Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
-Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
 
 //Teacher Achievement
 Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher.achievement');
@@ -127,7 +130,17 @@ Route::post('/ajax/ewmp','EwmpController@store')->name('ewmp.store');
 Route::put('/ajax/ewmp','EwmpController@update')->name('ewmp.update');
 Route::delete('/ajax/ewmp','EwmpController@destroy')->name('ewmp.delete');
 
+//Students
+Route::get('student',function(){
+    return redirect(route('student'));
+});
+Route::get('student/list','StudentController@index')->name('student');
+Route::get('student/list/add','StudentController@create')->name('student.add');
+Route::get('student/list/{id}','StudentController@show')->name('student.show');
+Route::get('student/list/{id}/edit','StudentController@edit')->name('student.edit');
+Route::post('student/list','StudentController@store')->name('student.store');
+Route::put('student/list','StudentController@update')->name('student.update');
+Route::delete('student/list','StudentController@destroy')->name('student.delete');
 
-Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

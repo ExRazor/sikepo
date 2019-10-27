@@ -31,7 +31,7 @@
                 </p>
 
                 <p class="mg-b-0 tx-24">
-                    <a href="{{ route('teacher.edit',encode_url($data->nip)) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Ubah Data</a>
+                    <a href="{{ route('teacher.edit',encode_id($data->nip)) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Ubah Data</a>
                 </p>
             </div><!-- card-body -->
         </div>

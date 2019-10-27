@@ -77,8 +77,12 @@ table.dataTable thead th.sorting::after, table.dataTable thead th.sorting_asc::a
     display:none;
 }
 
-.filter-box {
-    max-width:360px;
+.dataTables_length {
+    padding-top: 17px;
+}
+
+.filter-box select {
+    width:275px;
 }
 
 /* ----------------------------------------------- */

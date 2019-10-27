@@ -72,7 +72,7 @@ class DepartmentController extends Controller
     {
         if($request->ajax()) {
 
-            $fakultas = decode_url($request->input('id_fakultas'));
+            $fakultas = decode_id($request->input('id_fakultas'));
 
             if($fakultas == 0){
                 $data = Department::with('faculty')->orderBy('id_fakultas','asc')->get();
@@ -95,7 +95,7 @@ class DepartmentController extends Controller
     public function edit(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_url($request->id);
+            $id = decode_id($request->id);
             $data = Department::find($id);
             return response()->json($data);
         } else {
@@ -152,7 +152,7 @@ class DepartmentController extends Controller
     public function destroy(Request $request)
     {
         if($request->ajax()) {
-            $id = decode_url($request->id);
+            $id = decode_id($request->id);
 
             $q = Department::destroy($id);
 

@@ -10,7 +10,7 @@
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
                 @isset($data)
-                <a href="{{route('teacher.show',encode_url($data->nip))}}" class="breadcrumb-item">{{$data->nidn}} : {{$data->nama}}</a>
+                <a href="{{route('teacher.show',encode_id($data->nip))}}" class="breadcrumb-item">{{$data->nidn}} : {{$data->nama}}</a>
                 @endisset
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
             @endif
@@ -71,7 +71,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" id="kd_jurusan" required>
+                                    <select class="form-control" name="kd_jurusan" data-type="form" required>
                                         <option value="">- Pilih Jurusan -</option>
                                         @foreach($faculty as $f)
                                             @if($f->department->count())
