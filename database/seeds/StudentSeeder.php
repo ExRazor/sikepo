@@ -33,7 +33,7 @@ class StudentSeeder extends Seeder
                 // insert data ke table pegawai menggunakan Faker
             $jenis_seleksi  = $seleksi_jenis[array_rand($seleksi_jenis)];
             $count_jalur    = count($seleksi_jalur[$jenis_seleksi])-1;
-            $jalur_seleksi  = $seleksi_jalur[$jenis_seleksi][$count_jalur];
+            $jalur_seleksi  = $seleksi_jalur[$jenis_seleksi][rand(0,$count_jalur)];
             $ta             = AcademicYear::all()->random();
 
             DB::table('students')->insert([

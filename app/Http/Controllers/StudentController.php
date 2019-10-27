@@ -36,7 +36,11 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        $faculty      = Faculty::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+
+        return view('student/form',compact(['faculty','studyProgram','academicYear']));
     }
 
     /**
@@ -47,7 +51,45 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nim'               => 'required|numeric|min:9',
+            'kd_prodi'          => 'required',
+            'nama'              => 'required',
+            'tgl_lhr'           => 'required',
+            'jk'                => 'required',
+            'agama'             => 'required',
+            'alamat'            => 'required',
+            'kewarganegaraan'   => 'required',
+            'kelas'             => 'required',
+            'tipe'              => 'required',
+            'seleksi_jenis'     => 'required',
+            'seleksi_jalur'     => 'required',
+            'masuk_status'      => 'required',
+            'masuk_ta'          => 'required',
+            'status'            => 'required',
+        ]);
+
+        $query                  = new Student;
+        $query->kd_prodi        = $request->kd_prodi;
+        $query->nim             = $request->nim;
+        $query->nama            = $request->nama;
+        $query->tgl_lhr         = $request->tgl_lhr;
+        $query->jk              = $request->jk;
+        $query->agama           = $request->agama;
+        $query->alamat          = $request->alamat;
+        $query->kewarganegaraan = $request->kewarganegaraan;
+        $query->kelas           = $request->kelas;
+        $query->tipe            = $request->tipe;
+        $query->program         = $request->program;
+        $query->seleksi_jenis   = $request->seleksi_jenis;
+        $query->seleksi_jalur   = $request->seleksi_jalur;
+        $query->masuk_status    = $request->masuk_status;
+        $query->masuk_ta        = $request->masuk_ta;
+        $query->angkatan        = AcademicYear::find($request->masuk_ta)->tahun_akademik;
+        $query->status          = $request->status;
+        $query->save();
+
+        return redirect()->route('student')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     /**
@@ -67,9 +109,15 @@ class StudentController extends Controller
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
-        //
+        $nim          = decode_id($id);
+        $data         = Student::where('nim',$nim)->first();
+        $faculty      = Faculty::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+
+        return view('student/form',compact(['faculty','studyProgram','academicYear','data']));
     }
 
     /**
@@ -79,9 +127,47 @@ class StudentController extends Controller
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request)
     {
-        //
+        $id = decrypt($request->_id);
+        $request->validate([
+            'kd_prodi'          => 'required',
+            'nama'              => 'required',
+            'tgl_lhr'           => 'required',
+            'jk'                => 'required',
+            'agama'             => 'required',
+            'alamat'            => 'required',
+            'kewarganegaraan'   => 'required',
+            'kelas'             => 'required',
+            'tipe'              => 'required',
+            'program'           => 'required',
+            'seleksi_jenis'     => 'required',
+            'seleksi_jalur'     => 'required',
+            'masuk_status'      => 'required',
+            'masuk_ta'          => 'required',
+            'status'            => 'required',
+        ]);
+
+        $query                  = Student::find($id);
+        $query->kd_prodi        = $request->kd_prodi;
+        $query->nama            = $request->nama;
+        $query->tgl_lhr         = $request->tgl_lhr;
+        $query->jk              = $request->jk;
+        $query->agama           = $request->agama;
+        $query->alamat          = $request->alamat;
+        $query->kewarganegaraan = $request->kewarganegaraan;
+        $query->kelas           = $request->kelas;
+        $query->tipe            = $request->tipe;
+        $query->program         = $request->program;
+        $query->seleksi_jenis   = $request->seleksi_jenis;
+        $query->seleksi_jalur   = $request->seleksi_jalur;
+        $query->masuk_status    = $request->masuk_status;
+        $query->masuk_ta        = $request->masuk_ta;
+        $query->angkatan        = AcademicYear::find($request->masuk_ta)->tahun_akademik;
+        $query->status          = $request->status;
+        $query->save();
+
+        return redirect()->route('student')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**

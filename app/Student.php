@@ -8,16 +8,17 @@ class Student extends Model
 {
     protected $primaryKey = 'nim';
     protected $fillable = [
+        'kd_prodi',
         'nim',
         'nama',
-        'tpt_lhr',
         'tgl_lhr',
         'jk',
         'agama',
         'alamat',
-        'kd_prodi',
+        'kewarganegaraan',
         'kelas',
         'tipe',
+        'program',
         'seleksi_jenis',
         'seleksi_jalur',
         'masuk_status',

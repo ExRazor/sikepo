@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon ion-calendar"></i>
+    <i class="icon fa fa-user-graduate"></i>
     <div>
         <h4>Data Mahasiswa</h4>
         <p class="mg-b-0">Olah Data Mahasiswa</p>
@@ -28,7 +28,7 @@
     <div class="ml-auto">
         <div class="row">
             <div class="col-6 pr-1">
-                <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
+                <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
             </div>
             <div class="col-6 pl-1">
                     <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-b-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a>
@@ -122,7 +122,7 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_id($d->nim)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('student.edit',encode_id($d->nim)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($d->nim)}}" name="id">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('student.delete') }}">Hapus</button>

@@ -995,5 +995,101 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#student_form').on('change','#tipe_mahasiswa',function(){
+        var select      = $(this).find('select');
+        var divlain     = $('#student_form').find('#tipe_lainlain');
+        var inputlain   = divlain.find('input');
+        var val         = select.val();
+
+        if(val=='Lain-Lain') {
+            $(this).removeClass('col-12');
+            $(this).addClass('col-6');
+
+            select.removeAttr('name');
+            select.prop('required',false);
+            inputlain.val('');
+            inputlain.prop('disabled',false);
+            inputlain.prop('required',true);
+            divlain.show();
+
+        } else {
+            divlain.hide();
+            $(this).removeClass('col-6');
+            $(this).addClass('col-12');
+
+            inputlain.prop('disabled',true);
+            inputlain.prop('required',false);
+            inputlain.removeAttr('name')
+
+            select.attr('name','tipe');
+            select.prop('required',true);
+        }
+    })
+
+    $('#student_form').on('change','select[name=seleksi_jenis]',function(){
+        load_seleksi_jenis()
+    })
+
+    if($('#student_form').length) {
+        var student_form  = $('#student_form');
+        var val           = student_form.find('select[name=seleksi_jenis]').val();
+        var seleksi_jalur = student_form.find('select[name=seleksi_jalur]');
+
+        if(!val) {
+            seleksi_jalur.children('option:not(:first)').remove();
+        }
+        else {
+            if(val!='Nasional') {
+                var seleksi = ['SNMPTN','SBMPTN'];
+            } else if(val!='Lokal') {
+                var seleksi = ['Mandiri'];
+            }
+
+            $.each(seleksi, function(i,value){
+                seleksi_jalur.children('option[value='+value+']').remove();
+            });
+        }
+
+        ///////////////////////////////////////////////////////
+
+        var divtipe        = student_form.find('#tipe_mahasiswa');
+        var divlain        = student_form.find('#tipe_lainlain');
+        var select         = divtipe.find('select');
+        var inputlain      = divlain.find('input');
+
+        if(select.val() == 'Lain-Lain') {
+            divtipe.removeClass('col-12');
+            divtipe.addClass('col-6');
+            select.prop('required',false);
+            select.removeAttr('name');
+
+            inputlain.prop('disabled',false);
+            inputlain.prop('required',true);
+            divlain.show();
+        }
+
+
+    }
+
+    function load_seleksi_jenis() {
+        var student_form  = $('#student_form');
+        var seleksi_jalur = student_form.find('select[name=seleksi_jalur]');
+        var val           = student_form.find('select[name=seleksi_jenis]').val();
+
+        seleksi_jalur.children('option:not(:first)').remove();
+
+        if(val=='Nasional') {
+            var seleksi = ['SNMPTN','SBMPTN'];
+        } else if(val=='Lokal') {
+            var seleksi = ['Mandiri'];
+        }
+
+        $.each(seleksi, function(i,val){
+            seleksi_jalur.append('<option>'+val+'</option>');
+        });
+    }
+
+
     /**********************************************************************************/
 });

@@ -19,7 +19,7 @@
 </div>
 
 <div class="br-pagetitle">
-        <i class="icon ion-calendar"></i>
+        <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
             <h4>Sunting</h4>
