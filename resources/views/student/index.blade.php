@@ -80,6 +80,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="mg-r-10">
+                        <select class="form-control" name="status" style="width:200px">
+                            <option value="">- Pilih Status -</option>
+                            @foreach($status as $s)
+                                <option value="{{$s->status}}">{{$s->status}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div>
                         <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
                     </div>
@@ -108,7 +116,7 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.show',encode_id($d->nim)) }}">{{$d->nama}}<br><small>NIM. {{$d->nim}}</small></a></td>
+                            <td><a href="{{ route('student.profile',encode_id($d->nim)) }}">{{$d->nama}}<br><small>NIM. {{$d->nim}}</small></a></td>
                             <td>{{$d->tgl_lhr}}</td>
                             <td>
                                 {{$d->studyProgram->nama}}

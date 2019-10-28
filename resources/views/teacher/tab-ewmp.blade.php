@@ -6,7 +6,7 @@
                     <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">EWMP Per Semester Akademik</h6>
                 </div>
                 <div class="ml-auto">
-                    <button href="#" class="btn btn-sm btn-primary mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-ewmp" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
+                    <button href="#" class="btn btn-sm btn-primary mg-b-10 btn-add text-white" data-toggle="modal" data-target="#modal-teach-ewmp"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
                 </div>
             </div>
             <div class="row">

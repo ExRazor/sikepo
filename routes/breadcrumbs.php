@@ -54,8 +54,13 @@ Breadcrumbs::for('student-add', function ($trail) {
     $trail->push('Tambah Data Mahasiswa', route('student.add'));
 });
 
-Breadcrumbs::for('student-edit', function ($trail) {
+Breadcrumbs::for('student-profile', function ($trail,$data) {
     $trail->parent('student');
+    $trail->push($data->nim.' : '.$data->nama,route('student.profile',encode_id($data->nim)));
+});
+
+Breadcrumbs::for('student-edit', function ($trail,$data) {
+    $trail->parent('student-profile',$data);
     $trail->push('Sunting Data Mahasiswa');
 });
 

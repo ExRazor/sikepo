@@ -4,6 +4,7 @@ var host = window.location.host;
 var pathArray = window.location.pathname.split( '/' );
 
 $(document).ready(function() {
+
     //Ajax Setup
     $.ajaxSetup({
         headers: {
@@ -39,12 +40,14 @@ $(document).ready(function() {
     //Tab
     $('a.tab-link').click(function() {
         location.hash = $(this).attr('href');
+        $(window).scrollTop();
     })
     var hash = location.hash;
     if (hash) {
         $('a.tab-link[href="' + hash + '"]').click();
     } else {
         $("a.tab-link").first().click();
+
     }
 
     //Modal

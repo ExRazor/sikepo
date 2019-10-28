@@ -27,7 +27,7 @@ class StudentSeeder extends Seeder
             'Lokal'    => array('Mandiri')
         ];
         $masuk_status = ['Baru','Pindahan'];
-        $status       = ['Aktif','Non-Aktif'];
+        $status       = ['Aktif','Nonaktif','Lulus'];
 
     	for($i = 0; $i < 200; $i++){
                 // insert data ke table pegawai menggunakan Faker
@@ -39,6 +39,7 @@ class StudentSeeder extends Seeder
             DB::table('students')->insert([
                 'nim'                   => rand(000000000, 999999999),
                 'nama'                  => $faker->name,
+                'tpt_lhr'               => $faker->city,
                 'tgl_lhr'               => $faker->date($format = 'Y-m-d', $max = '2001-12-31'),
                 'jk'                    => $jk[array_rand($jk)],
                 'agama'                 => $agama[array_rand($agama)],
@@ -52,7 +53,7 @@ class StudentSeeder extends Seeder
                 'seleksi_jalur'         => $jalur_seleksi,
                 'masuk_status'          => $masuk_status[array_rand($masuk_status)],
                 'masuk_ta'              => $ta->id,
-                'status'                => $status[array_rand($masuk_status)],
+                'status'                => $status[array_rand($status)],
                 'angkatan'              => $ta->tahun_akademik,
                 'created_at'            => now()
             ]);

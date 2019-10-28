@@ -5,13 +5,10 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'student-edit' : 'student-add' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'student-edit' : 'student-add', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
-                @isset($data)
-                <a href="{{route('student.show',encode_id($data->nip))}}" class="breadcrumb-item">{{$data->nidn}} : {{$data->nama}}</a>
-                @endisset
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
             @endif
         @endforeach

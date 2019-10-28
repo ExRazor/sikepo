@@ -58,7 +58,6 @@ class DepartmentController extends Controller
                     'type'    => 'success'
                 ]);
             }
-
         }
     }
 

@@ -136,11 +136,13 @@ Route::get('student',function(){
 });
 Route::get('student/list','StudentController@index')->name('student');
 Route::get('student/list/add','StudentController@create')->name('student.add');
-Route::get('student/list/{id}','StudentController@show')->name('student.show');
+Route::get('student/list/{id}','StudentController@profile')->name('student.profile');
 Route::get('student/list/{id}/edit','StudentController@edit')->name('student.edit');
+Route::post('student/list/upload_photo','StudentController@upload_photo')->name('student.photo');
 Route::post('student/list','StudentController@store')->name('student.store');
 Route::put('student/list','StudentController@update')->name('student.update');
 Route::delete('student/list','StudentController@destroy')->name('student.delete');
 
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');

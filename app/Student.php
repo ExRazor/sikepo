@@ -11,6 +11,7 @@ class Student extends Model
         'kd_prodi',
         'nim',
         'nama',
+        'tpt_lhr',
         'tgl_lhr',
         'jk',
         'agama',

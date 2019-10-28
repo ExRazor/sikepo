@@ -7,6 +7,7 @@ use App\Faculty;
 use App\StudyProgram;
 use App\AcademicYear;
 use Illuminate\Http\Request;
+use File;
 
 class StudentController extends Controller
 {
@@ -20,13 +21,14 @@ class StudentController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $faculty      = Faculty::all();
         $angkatan     = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
+        $status       = Student::groupBy('status')->get('status');
         $data         = Student::whereHas(
                             'studyProgram', function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
                             })
                         ->get();
 
-        return view('student.index',compact(['studyProgram','faculty','angkatan','data']));
+        return view('student.index',compact(['studyProgram','faculty','angkatan','status','data']));
     }
 
     /**
@@ -55,6 +57,7 @@ class StudentController extends Controller
             'nim'               => 'required|numeric|min:9',
             'kd_prodi'          => 'required',
             'nama'              => 'required',
+            'tpt_lhr'           => 'required',
             'tgl_lhr'           => 'required',
             'jk'                => 'required',
             'agama'             => 'required',
@@ -98,9 +101,21 @@ class StudentController extends Controller
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function profile($id)
     {
-        //
+        $id = decode_id($id);
+
+        $data = Student::with('studyProgram','academicYear')->where('nim',$id)->first();
+
+        if($data->status == 'Aktif') {
+            $data->setAttribute('status_button','btn-success');
+        } else if($data->status=='Lulus') {
+            $data->setAttribute('status_button','btn-pink');
+        } else {
+            $data->setAttribute('status_button','btn-danger');
+        }
+
+        return view('student.profile',compact(['data']));
     }
 
     /**
@@ -133,6 +148,7 @@ class StudentController extends Controller
         $request->validate([
             'kd_prodi'          => 'required',
             'nama'              => 'required',
+            'tpt_lhr'           => 'required',
             'tgl_lhr'           => 'required',
             'jk'                => 'required',
             'agama'             => 'required',
@@ -197,6 +213,47 @@ class StudentController extends Controller
         }
     }
 
+    public function upload_photo(Request $request)
+    {
+        if(request()->ajax()) {
+            $id = decrypt($request->_id);
+
+            $request->validate([
+                'foto'        => 'required',
+            ]);
+
+            $data = Student::find($id);
+
+            $storagePath = 'upload/student/'.$data->foto;
+            if($storagePath || $request->file('foto')) {
+                if(File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
+                $file = $request->file('foto');
+                $tgl_skrg = date('Y_m_d_H_i_s');
+                $tujuan_upload = 'upload/student';
+                $filename = $id.'_'.str_replace(' ', '', $data->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $data->foto = $filename;
+            }
+            $q = $data->save();
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Foto profil berhasil diubah',
+                    'type'    => 'success'
+                ]);
+            }
+        }
+    }
+
     public function get_by_filter(Request $request)
     {
         if($request->ajax()) {
@@ -216,6 +273,10 @@ class StudentController extends Controller
 
             if($request->angkatan) {
                 $q->where('angkatan',$request->angkatan);
+            }
+
+            if($request->status) {
+                $q->where('status',$request->status);
             }
 
             $data = $q->orderBy('created_at','desc')->get();

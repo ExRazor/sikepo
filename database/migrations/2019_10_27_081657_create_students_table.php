@@ -16,6 +16,7 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->char('nim',9)->primary();
             $table->string('nama');
+            $table->string('tpt_lhr')->nulllable();
             $table->date('tgl_lhr');
             $table->string('jk');
             $table->string('agama');
@@ -31,6 +32,7 @@ class CreateStudentsTable extends Migration
             $table->unsignedBigInteger('masuk_ta');
             $table->char('angkatan',4);
             $table->string('status');
+            $table->string('foto')->nullable();
             $table->timestamps();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

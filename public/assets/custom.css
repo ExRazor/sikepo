@@ -17,6 +17,10 @@
     color: black;
 }
 
+/* ----------------------------------------------- */
+/* ############### BUTTON ############### */
+/* ----------------------------------------------- */
+
 .btn {
     transition: ease 1s;
 }
@@ -33,6 +37,15 @@
     display:none;
 }
 
+.btn-status {
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-size:9pt;
+}
+
+/* ----------------------------------------------- */
+/* ############### DATA TABLE CUSTOM ############### */
+/* ----------------------------------------------- */
 
 .custom-file-label {
     white-space: nowrap;
@@ -111,6 +124,106 @@ select.parsley-success:focus {
     border-color: #23BF08;
     box-shadow: 0 0 0 0.2rem rgba(35, 191, 8, 0.25);
 }
+
+/* ----------------------------------------------- */
+/* ############### PROFILE ############### */
+/* ----------------------------------------------- */
+.profil-kiri .profil-avatar {
+
+}
+
+.profil-kiri .profil-avatar img {
+    width: 100%;
+    border-radius: 100%;
+    object-fit: contain;
+}
+
+.profil-kiri .profil-status span {
+    padding: 3px 15px;
+    border-radius: 50px;
+    font-size:12pt;
+    font-weight: 500;
+}
+
+.profil-menu {
+    padding: 0;
+    margin:0;
+    list-style: none;
+}
+
+.profil-menu .profil-menu-list {
+    display: block;
+    position: relative;
+    transition: 0.3s;
+}
+
+.profil-menu .profil-menu-list .profil-menu-link {
+    display:flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 20px;
+    border: 1px solid #eee;
+    margin: -1px 0 0 0;
+    color: #778ca3;
+    transition: 0.3s;
+    border-left: 3px solid transparent;
+}
+
+.profil-menu .profil-menu-list .profil-menu-link:hover {
+    background: #ecf0f1;
+    color: #17A2B8;
+    border-left: 3px solid #17A2B8;
+}
+
+
+.profil-menu .profil-menu-list .profil-menu-link span {
+    margin-left: 15px;
+    font-size: 12pt;
+}
+
+/* ----------------------------------------------- */
+/* ############### WIDGET CUSTOM ############### */
+/* ----------------------------------------------- */
+
+.widget-custom-tab > .card {
+    border: 0;
+}
+    .widget-custom-tab .card-header {
+        background-color: rgb(255, 255, 255);
+    }
+        .widget-custom-tab .card-header .tab-header {
+            border-bottom: 1px solid #eee;
+            height:60px;
+        }
+
+        .widget-custom-tab .card-header h4 {
+            font-size: 14pt;
+            color:#17A2B8;
+            padding: 15px 0;
+        }
+        .widget-custom-tab .card-header a {
+            color: #6c757d;
+        }
+
+    .widget-custom-tab .card-body {
+        background: rgb(255, 255, 255);
+    }
+        .widget-custom-tab .card-body .profil-judul {
+            font-size: 13pt;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .widget-custom-tab .card-body .profil-row {
+            border-bottom: 1px solid #eee;
+            padding: 7px 0;
+        }
+            .widget-custom-tab .card-body .profil-nama {
+                padding: 0 10px;
+                width: 175px;
+            }
+
 
 /* ----------------------------------------------- */
 /* ############### MEDIA ############### */
