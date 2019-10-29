@@ -57,19 +57,19 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label">Daya Tampung: <span class="tx-danger">*</span> </label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="daya_tampung" placeholder="Daya tampung mahasiswa per tahun akademik" required>
+                            <input type="text" class="form-control" name="daya_tampung" placeholder="Daya tampung mahasiswa per tahun akademik" value="0" required>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label">Calon Pendaftar:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="calon_pendaftar" placeholder="Jumlah calon mahasiswa yang mendaftar ke Program Studi">
+                            <input type="text" class="form-control" name="calon_pendaftar" placeholder="Jumlah calon mahasiswa yang mendaftar ke Program Studi" value="0">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label">Calon Lulus:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="calon_lulus" placeholder="Jumlah calon mahasiswa yang lulus di Program Studi">
+                            <input type="text" class="form-control" name="calon_lulus" placeholder="Jumlah calon mahasiswa yang lulus di Program Studi" value="0">
                         </div>
                     </div>
                 </div>
