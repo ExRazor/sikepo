@@ -22,7 +22,7 @@ class TeacherController extends Controller
 
     public function index()
     {
-        $studyProgram = StudyProgram::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $faculty      = Faculty::all();
         $data         = Teacher::whereHas(
                             'studyProgram', function($query) {
@@ -288,15 +288,40 @@ class TeacherController extends Controller
             $kd = $request->input('kd_jurusan');
 
             if($kd == 0){
-                $data = Teacher::with(['studyProgram','studyProgram.department','studyProgram.department.faculty'])->orderBy('created_at','desc')->get();
+                $data = Teacher::with(['studyProgram.department.faculty'])->orderBy('created_at','desc')->get();
             } else {
                 $data = Teacher::whereHas(
                             'studyProgram', function($query) use ($kd) {
                                 $query->where('kd_jurusan',$kd);
                             })
-                        ->with(['studyProgram','studyProgram.department','studyProgram.department.faculty'])
+                        ->with(['studyProgram.department.faculty'])
                         ->get();
             }
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function get_by_filter(Request $request)
+    {
+        if($request->ajax()) {
+
+            $q = Teacher::with(['studyProgram.department.faculty']);
+
+            if($request->kd_jurusan) {
+                $q->whereHas(
+                    'studyProgram', function($query) use($request) {
+                        $query->where('kd_jurusan',$request->kd_jurusan);
+                    });
+            }
+
+            if($request->kd_prodi){
+                $q->where('kd_prodi',$request->kd_prodi);
+            }
+
+            $data = $q->orderBy('created_at','desc')->get();
 
             return response()->json($data);
         } else {

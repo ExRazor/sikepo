@@ -21,7 +21,7 @@
         <p class="mg-b-0">Olah Data Jurusan</p>
     </div>
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10 btn-add btn-add-department" style="color:white" data-toggle="modal" data-target="#modal-master-department"><i class="fa fa-plus mg-r-10"></i> Jurusan</button>
+        <button class="btn btn-teal btn-block mg-b-10 btn-add btn-add-department text-white" data-toggle="modal" data-target="#modal-master-department"><i class="fa fa-plus mg-r-10"></i> Jurusan</button>
     </div>
 </div>
 

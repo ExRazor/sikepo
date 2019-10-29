@@ -169,7 +169,7 @@ select.parsley-success:focus {
     border-left: 3px solid transparent;
 }
 
-.profil-menu .profil-menu-list .profil-menu-link:hover {
+.profil-menu .profil-menu-list .profil-menu-link:hover, .profil-menu .profil-menu-list .profil-menu-link:active {
     background: #ecf0f1;
     color: #17A2B8;
     border-left: 3px solid #17A2B8;

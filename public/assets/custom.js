@@ -121,6 +121,7 @@ $(document).ready(function() {
             error: function (request) {
                 json = $.parseJSON(request.responseText);
                 $('.alert-danger').html('');
+                $('.is-invalid').removeClass('is-invalid');
                 $.each(json.errors, function(key, value){
                     $('.alert-danger').show();
                     $('.alert-danger').append('<span>'+value+'</span><br>');
@@ -1095,4 +1096,29 @@ $(document).ready(function() {
 
 
     /**********************************************************************************/
+
+    /********************************* DATA KUOTA MAHASISWA *********************************/
+    $('#table_student_quota').on('click','.btn-edit-quota',function(e){
+        e.preventDefault();
+
+        var id  = $(this).data('id');
+        var url = '/ajax/student/quota/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-student-quota')
+                    .find('input[name=_id]').val(id).end()
+                    .find('select[name=kd_prodi]').val(data.kd_prodi).end()
+                    .find('select[name=id_ta]').val(data.id_ta).end()
+                    .find('input[name=daya_tampung]').val(data.daya_tampung).end()
+                    .find('input[name=calon_pendaftar]').val(data.calon_pendaftar).end()
+                    .find('input[name=calon_lulus]').val(data.calon_lulus).end()
+                    .modal('toggle').end();
+            }
+        });
+    });
+    /****************************************************************************************/
 });

@@ -35,4 +35,14 @@ class StudyProgram extends Model
     {
         return $this->hasMany('App\Teacher','kd_prodi');
     }
+
+    public function student()
+    {
+        return $this->hasMany('App\Student','kd_prodi');
+    }
+
+    public function studentQuota()
+    {
+        return $this->hasMany('App\StudentQuota','kd_prodi');
+    }
 }

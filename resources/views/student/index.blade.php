@@ -51,7 +51,7 @@
             <form action="{{route('ajax.student.filter')}}" id="filter-student" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
-                        <select id="kd_jurusan" class="form-control" name="kd_jurusan">
+                        <select id="kd_jurusan" class="form-control" name="kd_jurusan" disabled>
                             <option value="">Semua Jurusan</option>
                             @foreach($faculty as $f)
                                 @if($f->department->count())

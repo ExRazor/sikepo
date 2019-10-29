@@ -22,8 +22,13 @@ class AcademicYear extends Model
         return $this->hasMany('App\Ewmp','id_ta');
     }
 
-    public function stundet()
+    public function student()
     {
         return $this->hasMany('App\Student','masuk_ta');
+    }
+
+    public function studentQuota()
+    {
+        return $this->hasMany('App\StudentQuota','id_ta');
     }
 }
