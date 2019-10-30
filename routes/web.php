@@ -91,6 +91,9 @@ Route::prefix('ajax')->group(function () {
 
     //Student Quota
     Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
+
+    //Funding Category
+    Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
 });
 
 //Collaboration
@@ -147,14 +150,20 @@ Route::put('student/list','StudentController@update')->name('student.update');
 Route::delete('student/list','StudentController@destroy')->name('student.delete');
 
 //Students - Quota
-Route::get('student',function(){
-    return redirect(route('student'));
-});
 Route::get('student/quota','StudentQuotaController@index')->name('student.quota');
 Route::get('student/quota/add','StudentQuotaController@create')->name('student.quota.add');
 Route::post('student/quota','StudentQuotaController@store')->name('student.quota.store');
 Route::put('student/quota','StudentQuotaController@update')->name('student.quota.update');
 Route::delete('student/quota','StudentQuotaController@destroy')->name('student.quota.delete');
+
+//Funding
+Route::get('funding',function(){
+    return redirect(route('student'));
+});
+Route::get('funding/category','FundingCategoryController@index')->name('funding.category');
+Route::post('funding/category','FundingCategoryController@store')->name('funding.category.store');
+Route::put('funding/category','FundingCategoryController@update')->name('funding.category.update');
+Route::delete('funding/category','FundingCategoryController@destroy')->name('funding.category.delete');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

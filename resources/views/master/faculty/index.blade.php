@@ -46,7 +46,7 @@
                         <th class="text-center" width="150">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="table_studyProgram">
+                <tbody>
                     @foreach ($faculty as $f)
                     <tr>
                         <th scope="row" style="vertical-align:middle">{{$f->id}}</td>
@@ -58,7 +58,7 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group hidden-xs-down">
-                                <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}""><div><i class="fa fa-pencil-alt"></i></div></button>
+                                <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
                                 <form method="POST">
                                     <input type="hidden" value="{{encrypt($f->id)}}" name="_id">
                                     <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.faculty.delete') }}">

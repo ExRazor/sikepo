@@ -29,8 +29,8 @@
           <span class="menu-item-label">Data Mahasiswa</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->segment(2) == 'quota') ? 'active' : '' }}">Kuota Mahasiswa</a></li>
-          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Data Mahasiswa</a></li>
+            <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->segment(1) == 'student/quota') ? 'active' : '' }}">Kuota Mahasiswa</a></li>
+          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->segment(1) == 'student/list') ? 'active' : '' }}">Data Mahasiswa</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -41,6 +41,16 @@
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ url('academic/course') }}" class="sub-link {{ (request()->segment(2) == 'course') ? 'active' : '' }}">Mata Kuliah</a></li>
             <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(2) == 'minithesis') ? 'active' : '' }}">Tugas Akhir</a></li>
+        </ul>
+    </li>
+    <li class="br-menu-item">
+        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'funding') ? 'active' : '' }}">
+            <i class="menu-item-icon fa fa-balance-scale"></i>
+            <span class="menu-item-label">Keuangan</span>
+        </a><!-- br-menu-link -->
+        <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->segment(1) == 'funding/category') ? 'active' : '' }}">Kategori</a></li>
+            <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(1) == 'funding/list') ? 'active' : '' }}">Data Keuangan</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

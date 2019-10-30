@@ -66,6 +66,8 @@ $(document).ready(function() {
 
         $('span.title-action').text('Tambah');
         $('.btn-save').val('post');
+
+
     });
 
     //Edit Button
@@ -1120,5 +1122,68 @@ $(document).ready(function() {
             }
         });
     });
+    /****************************************************************************************/
+
+    /********************************* DATA KATEGORI PENDANAAN *********************************/
+    $('#table-fundCat').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = '/ajax/funding/category/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#form-fundCat')
+                    .find('input[name=_id]').val(id).end()
+                    .find('select[name=id_parent]').val(data.id_parent).end()
+                    .find('select[name=jenis]').val(data.jenis).end()
+                    .find('input[name=nama]').val(data.nama).end()
+                    .find('textarea[name=deskripsi]').text(data.deskripsi).end();
+
+                if(data.id_parent) {
+                    $('#form-fundCat').find('.category-description').show();
+                    $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',false);
+                    $('#form-fundCat').find('.category-type').hide();
+                    $('#form-fundCat').find('.category-type').find('select').prop('required',false);
+                    $('#form-fundCat').find('.category-type').find('select').prop('disabled',true);
+                } else {
+                    $('#form-fundCat').find('.category-description').hide();
+                    $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',true);
+                    $('#form-fundCat').find('.category-type').show();
+                    $('#form-fundCat').find('.category-type').find('select').prop('required',true);
+                    $('#form-fundCat').find('.category-type').find('select').prop('disabled',false);
+                }
+
+            }
+        });
+    })
+
+    $('#form-fundCat')
+        .on('change','select[name=id_parent]',function(){
+            var form  = $('#form-fundCat')
+            var value = $(this).val();
+
+            if(value) {
+                form.find('.category-description').show();
+                form.find('.category-description').find('textarea').prop('disabled',false);
+                form.find('.category-type').hide();
+                form.find('.category-type').find('select').prop('required',false);
+                form.find('.category-type').find('select').prop('disabled',true);
+            } else {
+                form.find('.category-description').hide();
+                form.find('.category-description').find('textarea').prop('disabled',true);
+                form.find('.category-type').show();
+                form.find('.category-type').find('select').prop('required',true);
+                form.find('.category-type').find('select').prop('disabled',false);
+
+            }
+        })
+        .on('click','.btn-add',function(e){
+            var form  = $('#form-fundCat')
+            form.trigger('reset');
+            form.find('select[name=id_parent]').trigger('change')
+        }).end()
     /****************************************************************************************/
 });
