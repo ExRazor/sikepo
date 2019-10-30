@@ -4,13 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Funding extends Model
+class FundingFaculty extends Model
 {
     protected $fillable = [
-        'kd_prodi',
+        'id_fakultas',
         'id_ta',
         'id_kategori',
-        'unit',
         'nominal',
     ];
 
@@ -24,8 +23,8 @@ class Funding extends Model
         return $this->belongsTo('App\AcademicYear','id_ta');
     }
 
-    public function studyProgram()
+    public function faculty()
     {
-        return $this->belongsTo('App\StudyProgram','kd_prodi');
+        return $this->belongsTo('App\Faculty','id_fakultas');
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Funding;
+use App\FundingStudyProgram;
 use Illuminate\Http\Request;
 
-class FundingController extends Controller
+class FundingStudyProgramController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,9 @@ class FundingController extends Controller
      */
     public function index()
     {
-        //
+        $data = FundingStudyProgram::all();
+
+        return view('funding.study-program.index',compact(['data']));
     }
 
     /**
@@ -41,10 +43,10 @@ class FundingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Funding  $funding
+     * @param  \App\FundingStudyProgram  $fundingStudyProgram
      * @return \Illuminate\Http\Response
      */
-    public function show(Funding $funding)
+    public function show(FundingStudyProgram $fundingStudyProgram)
     {
         //
     }
@@ -52,10 +54,10 @@ class FundingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Funding  $funding
+     * @param  \App\FundingStudyProgram  $fundingStudyProgram
      * @return \Illuminate\Http\Response
      */
-    public function edit(Funding $funding)
+    public function edit(FundingStudyProgram $fundingStudyProgram)
     {
         //
     }
@@ -64,10 +66,10 @@ class FundingController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Funding  $funding
+     * @param  \App\FundingStudyProgram  $fundingStudyProgram
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Funding $funding)
+    public function update(Request $request, FundingStudyProgram $fundingStudyProgram)
     {
         //
     }
@@ -75,10 +77,10 @@ class FundingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Funding  $funding
+     * @param  \App\FundingStudyProgram  $fundingStudyProgram
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Funding $funding)
+    public function destroy(FundingStudyProgram $fundingStudyProgram)
     {
         //
     }

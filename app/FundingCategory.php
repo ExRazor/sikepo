@@ -12,8 +12,14 @@ class FundingCategory extends Model
         'deskripsi',
         'jenis',
     ];
+
     public function children()
     {
         return $this->hasMany('App\FundingCategory','id_parent');
+    }
+
+    public function funding()
+    {
+        return $this->hasMany('App\Funding','id_kategori');
     }
 }

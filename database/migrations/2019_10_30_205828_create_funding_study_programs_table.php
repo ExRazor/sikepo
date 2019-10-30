@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStudentQuotasTable extends Migration
+class CreateFundingStudyProgramsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,18 @@ class CreateStudentQuotasTable extends Migration
      */
     public function up()
     {
-        Schema::create('student_quotas', function (Blueprint $table) {
+        Schema::create('funding_study_programs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_ta');
-            $table->integer('daya_tampung');
-            $table->integer('calon_pendaftar')->nullable()->default('0');
-            $table->integer('calon_lulus')->nullable()->default('0');
+            $table->unsignedInteger('id_kategori');
+            $table->string('nominal');
             $table->timestamps();
 
-            $table->unique(['kd_prodi','id_ta']);
+            $table->unique(['kd_prodi','id_ta','id_kategori']);
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_kategori')->references('id')->on('funding_categories')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -35,6 +35,6 @@ class CreateStudentQuotasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student_quotas');
+        Schema::dropIfExists('funding_study_programs');
     }
 }

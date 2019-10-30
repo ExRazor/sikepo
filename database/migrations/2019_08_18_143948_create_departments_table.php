@@ -15,7 +15,7 @@ class CreateDepartmentsTable extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->char('kd_jurusan',5)->primary();
-            $table->unsignedBigInteger('id_fakultas');
+            $table->unsignedInteger('id_fakultas');
             $table->string('nama');
             $table->char('nip_kajur',18)->nullable();
             $table->string('nm_kajur',50)->nullable();

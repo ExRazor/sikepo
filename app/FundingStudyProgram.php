@@ -4,13 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Funding extends Model
+class FundingStudyProgram extends Model
 {
     protected $fillable = [
         'kd_prodi',
         'id_ta',
         'id_kategori',
-        'unit',
         'nominal',
     ];
 

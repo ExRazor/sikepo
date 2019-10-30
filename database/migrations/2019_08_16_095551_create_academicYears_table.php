@@ -14,7 +14,7 @@ class CreateAcademicYearsTable extends Migration
     public function up()
     {
         Schema::create('academic_years', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->char('tahun_akademik',4);
             $table->enum('semester', ['Ganjil', 'Genap']);
             $table->enum('status', ['Tidak Aktif', 'Aktif']);

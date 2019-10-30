@@ -31,4 +31,9 @@ class AcademicYear extends Model
     {
         return $this->hasMany('App\StudentQuota','id_ta');
     }
+
+    public function funding()
+    {
+        return $this->hasMany('App\Funding','id_ta');
+    }
 }

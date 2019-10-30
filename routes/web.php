@@ -165,6 +165,12 @@ Route::post('funding/category','FundingCategoryController@store')->name('funding
 Route::put('funding/category','FundingCategoryController@update')->name('funding.category.update');
 Route::delete('funding/category','FundingCategoryController@destroy')->name('funding.category.delete');
 
+//Funding
+Route::get('funding/study-program','FundingStudyProgramController@index')->name('funding.study-program');
+Route::post('funding/study-program','FundingStudyProgramController@store')->name('funding.study-program.store');
+Route::put('funding/study-program','FundingStudyProgramController@update')->name('funding.study-program.update');
+Route::delete('funding/study-program','FundingStudyProgramController@destroy')->name('funding.study-program.delete');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');

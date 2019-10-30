@@ -45,4 +45,9 @@ class StudyProgram extends Model
     {
         return $this->hasMany('App\StudentQuota','kd_prodi');
     }
+
+    public function funding()
+    {
+        return $this->hasMany('App\Funding','kd_prodi');
+    }
 }

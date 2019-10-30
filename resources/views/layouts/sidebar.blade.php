@@ -29,8 +29,8 @@
           <span class="menu-item-label">Data Mahasiswa</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->segment(1) == 'student/quota') ? 'active' : '' }}">Kuota Mahasiswa</a></li>
-          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->segment(1) == 'student/list') ? 'active' : '' }}">Data Mahasiswa</a></li>
+            <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->segment(2) == 'quota') ? 'active' : '' }}">Kuota Mahasiswa</a></li>
+          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Data Mahasiswa</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -49,8 +49,9 @@
             <span class="menu-item-label">Keuangan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->segment(1) == 'funding/category') ? 'active' : '' }}">Kategori</a></li>
-            <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(1) == 'funding/list') ? 'active' : '' }}">Data Keuangan</a></li>
+            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Kategori</a></li>
+            <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Keuangan Fakultas</a></li>
+            <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Keuangan Program Studi</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

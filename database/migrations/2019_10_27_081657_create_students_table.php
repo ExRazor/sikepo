@@ -29,7 +29,7 @@ class CreateStudentsTable extends Migration
             $table->string('seleksi_jenis');
             $table->string('seleksi_jalur');
             $table->string('masuk_status');
-            $table->unsignedBigInteger('masuk_ta');
+            $table->unsignedInteger('masuk_ta');
             $table->char('angkatan',4);
             $table->string('status');
             $table->string('foto')->nullable();

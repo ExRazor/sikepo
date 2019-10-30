@@ -16,7 +16,7 @@ class CreateCollaborationsTable extends Migration
         Schema::create('collaborations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('kd_prodi',5);
-            $table->unsignedBigInteger('id_ta');
+            $table->unsignedInteger('id_ta');
             $table->string('nama_lembaga');
             $table->enum('tingkat',['Internasional','Nasional','Lokal']);
             $table->string('judul_kegiatan');

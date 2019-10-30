@@ -15,7 +15,7 @@ class CreateEwmpsTable extends Migration
     {
         Schema::create('ewmps', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_ta');
+            $table->unsignedInteger('id_ta');
             $table->char('nidn',9);
             $table->integer('ps_intra');
             $table->integer('ps_lain');
