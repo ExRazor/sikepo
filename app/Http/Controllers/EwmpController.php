@@ -131,7 +131,7 @@ class EwmpController extends Controller
                 $data['tahun_akademik'] = $ta.' - '.$smt;
             }
 
-            $data['data']           = $ewmp;
+            $data['ewmp']           = $ewmp;
 
             return response()->json($data);
         }

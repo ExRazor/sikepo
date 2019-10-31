@@ -15,6 +15,7 @@ class CreateFundingFacultiesTable extends Migration
     {
         Schema::create('funding_faculties', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('kd_dana');
             $table->unsignedInteger('id_fakultas');
             $table->unsignedInteger('id_ta');
             $table->unsignedInteger('id_kategori');

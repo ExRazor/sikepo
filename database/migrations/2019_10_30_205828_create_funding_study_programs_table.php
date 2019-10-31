@@ -15,6 +15,7 @@ class CreateFundingStudyProgramsTable extends Migration
     {
         Schema::create('funding_study_programs', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('kd_dana');
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_ta');
             $table->unsignedInteger('id_kategori');

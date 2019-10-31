@@ -23,6 +23,14 @@
 </div>
 
 <div class="br-pagebody">
+    <div class="alert alert-warning" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong class="d-block d-sm-inline-block-force">Hati-Hati!</strong><br>
+        Data Kategori yang disunting atau pun dihapus akan berdampak langung pada Data Keuangan Program Studi dan Fakultas.<br>
+        Jika data kategori dihapus, maka data keuangan yang berkaitan dengan kategori tersebut akan ikut terhapus.<br>
+    </div>
     @if (session()->has('flash.message'))
         <div class="alert alert-{{ session('flash.class') }}" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

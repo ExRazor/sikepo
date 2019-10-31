@@ -46,3 +46,18 @@ if (!function_exists('decode_url')) {
         return base64_decode(str_replace(['-','_'], ['+','/'], $string));
     }
 }
+
+if (!function_exists('decode_url')) {
+    /**
+     * description
+     *
+     * @param
+     * @return
+     */
+    function rupiah($angka){
+
+        $hasil_rupiah = "Rp " . number_format($angka,0,',','.');
+        return $hasil_rupiah;
+
+    }
+}

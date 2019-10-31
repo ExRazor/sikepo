@@ -167,6 +167,9 @@ Route::delete('funding/category','FundingCategoryController@destroy')->name('fun
 
 //Funding
 Route::get('funding/study-program','FundingStudyProgramController@index')->name('funding.study-program');
+Route::get('funding/study-program/add','FundingStudyProgramController@create')->name('funding.study-program.add');
+Route::get('funding/study-program/{id}','FundingStudyProgramController@show')->name('funding.study-program.show');
+Route::get('funding/study-program/{id}/edit','FundingStudyProgramController@edit')->name('funding.study-program.edit');
 Route::post('funding/study-program','FundingStudyProgramController@store')->name('funding.study-program.store');
 Route::put('funding/study-program','FundingStudyProgramController@update')->name('funding.study-program.update');
 Route::delete('funding/study-program','FundingStudyProgramController@destroy')->name('funding.study-program.delete');
