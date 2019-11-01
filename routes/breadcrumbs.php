@@ -70,6 +70,30 @@ Breadcrumbs::for('funding', function ($trail) {
     $trail->push('Data Keuangan');
 });
 
+//Keuangan - Fakultas
+Breadcrumbs::for('funding-faculty', function ($trail) {
+    $trail->parent('funding');
+    $trail->push('Keuangan Fakultas', route('funding.faculty'));
+});
+
+Breadcrumbs::for('funding-faculty-add', function ($trail) {
+    $trail->parent('funding-faculty');
+    $trail->push('Tambah Keuangan Fakultas', route('funding.faculty.add'));
+});
+
+Breadcrumbs::for('funding-faculty-show', function ($trail,$data) {
+    $trail->parent('funding-faculty');
+    $trail->push(
+        'Rincian Keuangan: '.$data->faculty->singkatan.' - '.$data->academicYear->tahun_akademik,
+        route('funding.faculty.show',encrypt($data->kd_dana))
+    );
+});
+
+Breadcrumbs::for('funding-faculty-edit', function ($trail,$data) {
+    $trail->parent('funding-faculty-show',$data);
+    $trail->push('Sunting Keuangan Fakultas');
+});
+
 //Keuangan - Program Studi
 Breadcrumbs::for('funding-studyProgram', function ($trail) {
     $trail->parent('funding');

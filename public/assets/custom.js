@@ -17,8 +17,18 @@ $(document).ready(function() {
         dateFormat: 'yy-mm-dd'
     });
 
-    //Input-Mask
-    $('.rupiah').mask('99.999.999');
+    //Input Money Mask
+    $('.rupiah').each(function(){ // function to apply mask on load!
+        $(this).maskMoney({
+            precision: 0,
+            thousands: '.',
+            decimal: ',',
+        });
+        if($(this).val()){
+            $(this).maskMoney('mask', $(this).val());
+        }
+    })
+
 
     //Select 2
     if($().select2) {

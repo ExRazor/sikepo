@@ -24,6 +24,7 @@ class FundStudyProgramSeeder extends Seeder
             foreach($academicYear as $ay) {
                 foreach($category as $c) {
                     if(!$c->children->count()) {
+                        $nominal = rand(10000, 50000).'000';
                         FundingStudyProgram::updateOrCreate(
                             [
                                 'kd_dana'    => 'pd'.$sp->kd_prodi.'_thn'.$ay->id,
@@ -32,7 +33,7 @@ class FundStudyProgramSeeder extends Seeder
                                 'id_kategori'   => $c->id,
                             ],
                             [
-                                'nominal'       => rand(10000000, 50000000),
+                                'nominal'       => $nominal,
                                 'created_at'    => now()
                             ]
                         );

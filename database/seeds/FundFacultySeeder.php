@@ -21,12 +21,13 @@ class FundFacultySeeder extends Seeder
         foreach($academicYear as $ay) {
             foreach($category as $c) {
                 if(!$c->children->count()) {
+                    $nominal = rand(10000, 50000).'000';
                     DB::table('funding_faculties')->insert([
                         'id_fakultas'   => $faculty,
                         'kd_dana'       => 'fak'.$faculty.'_thn'.$ay->id,
                         'id_ta'         => $ay->id,
                         'id_kategori'   => $c->id,
-                        'nominal'       => rand(10000000, 50000000),
+                        'nominal'       => $nominal,
                         'created_at'    => now()
                     ]);
                 }

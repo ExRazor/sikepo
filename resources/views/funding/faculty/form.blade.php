@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', isset($data) ? 'Sunting Keuangan Program Studi' : 'Tambah Keuangan Program Studi')
+@section('title', isset($data) ? 'Sunting Keuangan Fakultas' : 'Tambah Keuangan Fakultas')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'funding-studyProgram-edit' : 'funding-studyProgram-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'funding-faculty-edit' : 'funding-faculty-add', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,12 +20,12 @@
         @if(isset($data))
         <div>
             <h4>Sunting</h4>
-            <p class="mg-b-0">Sunting Data Keuangan Program Studi</p>
+            <p class="mg-b-0">Sunting Data Keuangan Fakultas</p>
         </div>
         @else
         <div>
             <h4>Tambah</h4>
-            <p class="mg-b-0">Tambah Data Keuangan Program Studi</p>
+            <p class="mg-b-0">Tambah Data Keuangan Fakultas</p>
         </div>
         @endif
     </div>
@@ -45,7 +45,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="funding_studyProgram_form" action="{{route('funding.study-program.store')}}" method="POST" enctype="multipart/form-data">
+            <form id="funding_faculty_form" action="{{route('funding.faculty.store')}}" method="POST" enctype="multipart/form-data">
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-10 mx-auto">
@@ -57,37 +57,20 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Periode Tahun: <span class="tx-danger">*</span></label>
                                 <div class="col-7">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" required>
-                                                <option value="">- Pilih Prodi -</option>
-                                                @foreach($studyProgram as $sp)
-                                                <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                                @endforeach
-                                            </select>
-                                            @if($errors->has('kd_prodi'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    {{ $errors->first('kd_prodi') }}
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="col-6">
-                                            <select class="form-control {{ $errors->has('id_ta') ? 'is-invalid' : ''}}" name="id_ta" required>
-                                                <option value="">- Pilih Tahun -</option>
-                                                @foreach($academicYear as $ay)
-                                                <option value="{{$ay->id}}" {{ (isset($data) && ($data->id_ta==$ay->id) || Request::old('id_ta')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik}}</option>
-                                                @endforeach
-                                            </select>
-                                            @if($errors->has('id_ta'))
-                                                <span class="invalid-feedback" role="alert">
-                                                    {{ $errors->first('id_ta') }}
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
+                                    <input type="hidden" name="id_fakultas" value="{{ encrypt(setting('app_faculty_id'))}}">
+                                    <select class="form-control {{ $errors->has('id_ta') ? 'is-invalid' : ''}}" name="id_ta" required>
+                                        <option value="">- Pilih Tahun -</option>
+                                        @foreach($academicYear as $ay)
+                                        <option value="{{$ay->id}}" {{ (isset($data) && ($data->id_ta==$ay->id) || Request::old('id_ta')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik}}</option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('id_ta'))
+                                        <span class="invalid-feedback" role="alert">
+                                            {{ $errors->first('id_ta') }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             @foreach($category as $c)

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Keuangan Program Studi')
+@section('title', 'Data Keuangan fakultas')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('funding-studyProgram') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('funding-faculty') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -22,11 +22,11 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-balance-scale"></i>
     <div>
-        <h4>Keuangan Program Studi</h4>
-        <p class="mg-b-0">Olah Data Keuangan Program Studi</p>
+        <h4>Keuangan Fakultas</h4>
+        <p class="mg-b-0">Olah Data Keuangan Fakultas</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('funding.study-program.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Keuangan</a>
+        <a href="{{ route('funding.faculty.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Keuangan</a>
     </div>
 </div>
 
@@ -42,13 +42,13 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
-                <h6 class="card-title">{{ setting('app_department_name') }}</h6>
+                <h6 class="card-title">{{ setting('app_faculty_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
                         <tr>
-                            <th class="text-center align-middle">Program Studi</th>
+                            <th class="text-center align-middle no-sort" width="50"></th>
                             <th class="text-center align-middle defaultSort">Tahun Akademik</th>
                             <th class="text-center">Total Biaya<br>Operasional Akademik</th>
                             <th class="text-center">Total Biaya<br>Pengabdian kepada Masyarakat</th>
@@ -59,7 +59,11 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('funding.study-program.show',encrypt($d->kd_dana)) }}">{{ $d->studyProgram->nama }}</a></td>
+                            <td class="text-center">
+                                <a class="btn btn-success btn-sm btn-icon rounded-circle" href="{{ route('funding.faculty.show',encrypt($d->kd_dana)) }}">
+                                    <div><i class="fa fa-search-plus"></i></div>
+                                </a>
+                            </td>
                             <td class="text-center">{{ $d->academicYear->tahun_akademik }}</td>
                             @php
                                 $kolom = 0;

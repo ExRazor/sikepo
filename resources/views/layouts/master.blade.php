@@ -37,6 +37,7 @@
     <script src="{{ asset ('assets/lib') }}/alertify/alertify.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.js"></script>
     <script src="{{ asset('assets/lib') }}/jquery.maskedinput/jquery.maskedinput.js"></script>
+    <script src="{{ asset('assets/lib') }}/jquery-maskMoney/jquery.maskMoney.min.js"></script>
     <script src="{{ asset('assets/lib') }}/parsleyjs/parsley.min.js"></script>
     <script src="{{ asset('assets/lib') }}/crypto-js/crypto-js.js"></script>
     {{-- <script src="{{ asset('assets/js') }}/encrypt.js"></script> --}}

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Rincian Keuangan Program Studi')
+@section('title', 'Rincian Keuangan Fakultas')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('funding-studyProgram-show',$data) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('funding-faculty-show',$data) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -22,18 +22,18 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-balance-scale"></i>
     <div>
-        <h4>{{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
-        <p class="mg-b-0">Rincian keuangan untuk program studi {{ $data->studyProgram->nama }} periode tahun {{ $data->academicYear->tahun_akademik }}</p>
+        <h4>Dana {{ $data->faculty->singkatan }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
+        <p class="mg-b-0">Rincian keuangan untuk {{ $data->faculty->nama }} periode tahun {{ $data->academicYear->tahun_akademik }}</p>
     </div>
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encrypt($data->kd_dana)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('funding.study-program.delete') }}" data-redir="{{ route('funding.study-program') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('funding.faculty.delete') }}" data-redir="{{ route('funding.faculty') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('funding.study-program.edit',encrypt($data->kd_dana)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('funding.faculty.edit',encrypt($data->kd_dana)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
 </div>

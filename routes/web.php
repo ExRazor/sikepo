@@ -161,12 +161,23 @@ Route::delete('student/quota','StudentQuotaController@destroy')->name('student.q
 Route::get('funding',function(){
     return redirect(route('student'));
 });
+
+//Funding - Category
 Route::get('funding/category','FundingCategoryController@index')->name('funding.category');
 Route::post('funding/category','FundingCategoryController@store')->name('funding.category.store');
 Route::put('funding/category','FundingCategoryController@update')->name('funding.category.update');
 Route::delete('funding/category','FundingCategoryController@destroy')->name('funding.category.delete');
 
-//Funding
+//Funding - Faculty
+Route::get('funding/faculty','FundingFacultyController@index')->name('funding.faculty');
+Route::get('funding/faculty/add','FundingFacultyController@create')->name('funding.faculty.add');
+Route::get('funding/faculty/{id}','FundingFacultyController@show')->name('funding.faculty.show');
+Route::get('funding/faculty/{id}/edit','FundingFacultyController@edit')->name('funding.faculty.edit');
+Route::post('funding/faculty','FundingFacultyController@store')->name('funding.faculty.store');
+Route::put('funding/faculty','FundingFacultyController@update')->name('funding.faculty.update');
+Route::delete('funding/faculty','FundingFacultyController@destroy')->name('funding.faculty.delete');
+
+//Funding - Study Program
 Route::get('funding/study-program','FundingStudyProgramController@index')->name('funding.study-program');
 Route::get('funding/study-program/add','FundingStudyProgramController@create')->name('funding.study-program.add');
 Route::get('funding/study-program/{id}','FundingStudyProgramController@show')->name('funding.study-program.show');

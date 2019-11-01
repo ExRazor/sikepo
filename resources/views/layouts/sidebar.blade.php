@@ -50,7 +50,7 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Kategori</a></li>
-            <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Keuangan Fakultas</a></li>
+            <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Keuangan Fakultas</a></li>
             <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Keuangan Program Studi</a></li>
         </ul>
     </li>
