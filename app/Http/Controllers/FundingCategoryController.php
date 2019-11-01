@@ -171,4 +171,14 @@ class FundingCategoryController extends Controller
             }
         }
     }
+
+    public function get_jenis($id)
+    {
+        if(request()->ajax()) {
+
+            $data  = FundingCategory::where('id',$id)->first()->jenis;
+
+            return response()->json($data);
+        }
+    }
 }

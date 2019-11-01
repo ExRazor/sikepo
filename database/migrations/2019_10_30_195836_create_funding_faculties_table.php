@@ -19,7 +19,7 @@ class CreateFundingFacultiesTable extends Migration
             $table->unsignedInteger('id_fakultas');
             $table->unsignedInteger('id_ta');
             $table->unsignedInteger('id_kategori');
-            $table->string('nominal');
+            $table->string('nominal')->default(0);
             $table->timestamps();
 
             $table->unique(['id_fakultas','id_ta','id_kategori']);

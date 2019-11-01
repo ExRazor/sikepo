@@ -17,12 +17,12 @@ class CreateEwmpsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('id_ta');
             $table->char('nidn',9);
-            $table->integer('ps_intra');
-            $table->integer('ps_lain');
-            $table->integer('ps_luar');
-            $table->integer('penelitian');
-            $table->integer('pkm');
-            $table->integer('tugas_tambahan');
+            $table->integer('ps_intra')->default(0);
+            $table->integer('ps_lain')->default(0);
+            $table->integer('ps_luar')->default(0);
+            $table->integer('penelitian')->default(0);
+            $table->integer('pkm')->default(0);
+            $table->integer('tugas_tambahan')->default(0);
             $table->timestamps();
 
             $table->unique(['id_ta','nidn']);

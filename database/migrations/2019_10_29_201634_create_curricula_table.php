@@ -20,9 +20,9 @@ class CreateCurriculaTable extends Migration
             $table->integer('semester');
             $table->string('jenis');
             $table->integer('versi');
-            $table->integer('sks_teori');
-            $table->integer('sks_seminar');
-            $table->integer('sks_praktikum');
+            $table->integer('sks_teori')->default(0);
+            $table->integer('sks_seminar')->default(0);
+            $table->integer('sks_praktikum')->default(0);
             $table->string('capaian');
             $table->string('dokumen_nama')->nullable();
             $table->string('dokumen_file')->nullable();

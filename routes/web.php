@@ -94,6 +94,7 @@ Route::prefix('ajax')->group(function () {
 
     //Funding Category
     Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
+    Route::get('funding/category/select/{id}','FundingCategoryController@get_jenis')->name('funding.category.select');
 });
 
 //Collaboration

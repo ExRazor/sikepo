@@ -13,6 +13,11 @@ class FundingCategory extends Model
         'jenis',
     ];
 
+    public function scopeParent($query)
+    {
+        return $query->where('id_parent',null);
+    }
+
     public function children()
     {
         return $this->hasMany('App\FundingCategory','id_parent');

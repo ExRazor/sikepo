@@ -19,7 +19,7 @@ class CreateFundingStudyProgramsTable extends Migration
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_ta');
             $table->unsignedInteger('id_kategori');
-            $table->string('nominal');
+            $table->string('nominal')->default(0);
             $table->timestamps();
 
             $table->unique(['kd_prodi','id_ta','id_kategori']);

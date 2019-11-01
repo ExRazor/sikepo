@@ -17,6 +17,9 @@ $(document).ready(function() {
         dateFormat: 'yy-mm-dd'
     });
 
+    //Input-Mask
+    $('.rupiah').mask('99.999.999');
+
     //Select 2
     if($().select2) {
         $('.select2').select2({
@@ -67,7 +70,8 @@ $(document).ready(function() {
         $('span.title-action').text('Tambah');
         $('.btn-save').val('post');
 
-
+        $('.alert-danger').remove();
+        $('.is-invalid').removeClass('is-invalid');
     });
 
     //Edit Button
@@ -163,6 +167,7 @@ $(document).ready(function() {
         var form = $(this).closest('form');
         var data = form.serialize();
         var url  = $(this).data('dest');
+        var redir= $(this).data('redir');
 
         Swal.fire({
             title: 'Yakin menghapus?',
@@ -191,7 +196,11 @@ $(document).ready(function() {
                                 type: state.type,
                                 timer: 2000,
                                 onClose: () => {
-                                    location.reload();
+                                    if(redir) {
+                                        window.location.replace(redir);
+                                    } else {
+                                        location.reload();
+                                    }
                                 }
                             });
                         } else {
@@ -1138,22 +1147,19 @@ $(document).ready(function() {
                 $('#form-fundCat')
                     .find('input[name=_id]').val(id).end()
                     .find('select[name=id_parent]').val(data.id_parent).end()
-                    .find('select[name=jenis]').val(data.jenis).end()
                     .find('input[name=nama]').val(data.nama).end()
-                    .find('textarea[name=deskripsi]').text(data.deskripsi).end();
+                    .find('textarea[name=deskripsi]').text(data.deskripsi).end()
 
                 if(data.id_parent) {
                     $('#form-fundCat').find('.category-description').show();
                     $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',false);
-                    $('#form-fundCat').find('.category-type').hide();
-                    $('#form-fundCat').find('.category-type').find('select').prop('required',false);
-                    $('#form-fundCat').find('.category-type').find('select').prop('disabled',true);
+                    $('#form-fundCat').find('select[name=jenis]').prop('disabled',true).val(data.jenis);
+                    $('#form-fundCat').find('input[name=jenis]').prop('disabled',false).val(data.jenis);
                 } else {
                     $('#form-fundCat').find('.category-description').hide();
                     $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',true);
-                    $('#form-fundCat').find('.category-type').show();
-                    $('#form-fundCat').find('.category-type').find('select').prop('required',true);
-                    $('#form-fundCat').find('.category-type').find('select').prop('disabled',false);
+                    $('#form-fundCat').find('input[name=jenis]').prop('disabled',true).removeAttr('value');
+                    $('#form-fundCat').find('select[name=jenis]').prop('disabled',false).val(data.jenis);
                 }
 
             }
@@ -1166,19 +1172,30 @@ $(document).ready(function() {
             var value = $(this).val();
 
             if(value) {
-                form.find('.category-description').show();
-                form.find('.category-description').find('textarea').prop('disabled',false);
-                form.find('.category-type').hide();
-                form.find('.category-type').find('select').prop('required',false);
-                form.find('.category-type').find('select').prop('disabled',true);
+                $.ajax({
+                    url: '/ajax/funding/category/select/'+value,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        form.find('.category-description').show();
+                        form.find('.category-description').find('textarea').prop('disabled',false);
+                        form.find('.category-type').find('select').prop('disabled',true);
+                        form.find('.category-type').find('select').val(data);
+                        form.find('input[name=jenis]').prop('disabled',false);
+                        form.find('input[name=jenis]').val(data);
+                    }
+                });
             } else {
                 form.find('.category-description').hide();
                 form.find('.category-description').find('textarea').prop('disabled',true);
-                form.find('.category-type').show();
-                form.find('.category-type').find('select').prop('required',true);
+                form.find('input[name=jenis]').prop('disabled',true)
+                form.find('input[name=jenis]').removeAttr("value");
                 form.find('.category-type').find('select').prop('disabled',false);
+                form.find('.category-type').find('select').val("");
 
             }
+
+
         })
         .on('click','.btn-add',function(e){
             var form  = $('#form-fundCat')

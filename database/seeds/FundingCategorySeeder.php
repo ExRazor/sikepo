@@ -38,9 +38,9 @@ class FundingCategorySeeder extends Seeder
 
 
         foreach($jenis_parent as $i => $value){
-            if($i<3){
+            if($i<2){
                 $jenis_biaya = 'Operasional Akademik';
-            } else if($i<5) {
+            } else if($i<4) {
                 $jenis_biaya = 'Pengabdian kepada Masyarakat';
             } else {
                 $jenis_biaya = 'Sarana dan Prasarana';
@@ -58,6 +58,7 @@ class FundingCategorySeeder extends Seeder
             DB::table('funding_categories')->insert([
                 'id_parent'  => FundingCategory::where('nama','Biaya Operasional Pendidikan')->first()->id,
                 'nama'       => $value,
+                'jenis'      => 'Operasional Akademik',
                 'deskripsi'  => $jenis_child_desc[$i],
                 'created_at' => now()
             ]);

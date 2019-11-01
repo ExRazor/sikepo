@@ -43,7 +43,7 @@ Breadcrumbs::for('teacher-ewmp', function ($trail) {
     $trail->push('Daftar EWMP Dosen', route('teacher.ewmp'));
 });
 
-//Dosen
+//Mahasiswa
 Breadcrumbs::for('student', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Mahasiswa', route('student'));
@@ -62,6 +62,36 @@ Breadcrumbs::for('student-profile', function ($trail,$data) {
 Breadcrumbs::for('student-edit', function ($trail,$data) {
     $trail->parent('student-profile',$data);
     $trail->push('Sunting Data Mahasiswa');
+});
+
+//Keuangan
+Breadcrumbs::for('funding', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Keuangan');
+});
+
+//Keuangan - Program Studi
+Breadcrumbs::for('funding-studyProgram', function ($trail) {
+    $trail->parent('funding');
+    $trail->push('Keuangan Program Studi', route('funding.study-program'));
+});
+
+Breadcrumbs::for('funding-studyProgram-add', function ($trail) {
+    $trail->parent('funding-studyProgram');
+    $trail->push('Tambah Keuangan Program Studi', route('funding.study-program.add'));
+});
+
+Breadcrumbs::for('funding-studyProgram-show', function ($trail,$data) {
+    $trail->parent('funding-studyProgram');
+    $trail->push(
+        'Rincian Keuangan: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
+        route('funding.study-program.show',encrypt($data->kd_dana))
+    );
+});
+
+Breadcrumbs::for('funding-studyProgram-edit', function ($trail,$data) {
+    $trail->parent('funding-studyProgram-show',$data);
+    $trail->push('Sunting Keuangan Program Studi');
 });
 
 // Dashboard > Data Master

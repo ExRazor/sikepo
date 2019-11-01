@@ -18,8 +18,8 @@ class CreateStudentQuotasTable extends Migration
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_ta');
             $table->integer('daya_tampung');
-            $table->integer('calon_pendaftar')->nullable()->default('0');
-            $table->integer('calon_lulus')->nullable()->default('0');
+            $table->integer('calon_pendaftar')->nullable()->default(0);
+            $table->integer('calon_lulus')->nullable()->default(0);
             $table->timestamps();
 
             $table->unique(['kd_prodi','id_ta']);

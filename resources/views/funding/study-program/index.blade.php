@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('student') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('funding-studyProgram') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -61,17 +61,17 @@
                         <tr>
                             <td><a href="{{ route('funding.study-program.show',encrypt($d->kd_dana)) }}">{{ $d->studyProgram->nama }}</a></td>
                             <td class="text-center">{{ $d->academicYear->tahun_akademik }}</td>
-                            <?php
+                            @php
                                 $kolom = 0;
                                 $total = 0;
-                            ?>
-                            @foreach($dana[$d->kd_prodi][$d->id_ta] as $index => $value)
+                            @endphp
+                            @foreach($dana[$d->kd_dana] as $index => $value)
                             <td class="text-center">
                                 {{ rupiah($value->total) }}
-                                <?php
+                                @php
                                     $kolom = $index;
                                     $total += $value->total;
-                                ?>
+                                @endphp
                             </td>
                             @endforeach
                             @for($i=1;$i<3-$kolom;$i++)

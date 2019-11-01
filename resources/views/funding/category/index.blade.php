@@ -134,6 +134,7 @@
                                     <option>Pengabdian kepada Masyarakat</option>
                                     <option>Sarana dan Prasarana</option>
                                 </select>
+                                <input type="hidden" name="jenis" disabled>
                             </div>
                         </div>
                         <div class="row mg-t-20">
