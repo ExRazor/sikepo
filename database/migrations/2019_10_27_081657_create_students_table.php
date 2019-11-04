@@ -28,15 +28,12 @@ class CreateStudentsTable extends Migration
             $table->string('program');
             $table->string('seleksi_jenis');
             $table->string('seleksi_jalur');
-            $table->string('masuk_status');
-            $table->unsignedInteger('masuk_ta');
-            $table->char('angkatan',4);
-            $table->string('status');
+            $table->string('status_masuk');
+            $table->char('angkatan',4)->nullable();
             $table->string('foto')->nullable();
             $table->timestamps();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('masuk_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

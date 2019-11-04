@@ -215,6 +215,13 @@ select.parsley-success:focus {
             padding-bottom: 10px;
         }
 
+        .widget-custom-tab .card-body .profil-judul .alert {
+            font-size: 10pt;
+            font-weight:normal;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
         .widget-custom-tab .card-body .profil-row {
             border-bottom: 1px solid #eee;
             padding: 7px 0;

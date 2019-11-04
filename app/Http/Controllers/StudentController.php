@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Student;
+use App\StudentStatus;
 use App\Faculty;
 use App\StudyProgram;
 use App\AcademicYear;
@@ -21,7 +22,7 @@ class StudentController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $faculty      = Faculty::all();
         $angkatan     = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
-        $status       = Student::groupBy('status')->get('status');
+        $status       = StudentStatus::groupBy('status')->get('status');
         $data         = Student::whereHas(
                             'studyProgram', function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
@@ -67,8 +68,8 @@ class StudentController extends Controller
             'tipe'              => 'required',
             'seleksi_jenis'     => 'required',
             'seleksi_jalur'     => 'required',
-            'masuk_status'      => 'required',
-            'masuk_ta'          => 'required',
+            'status_masuk'      => 'required',
+            'tahun_masuk'       => 'required',
             'status'            => 'required',
         ]);
 
@@ -86,11 +87,15 @@ class StudentController extends Controller
         $query->program         = $request->program;
         $query->seleksi_jenis   = $request->seleksi_jenis;
         $query->seleksi_jalur   = $request->seleksi_jalur;
-        $query->masuk_status    = $request->masuk_status;
-        $query->masuk_ta        = $request->masuk_ta;
-        $query->angkatan        = AcademicYear::find($request->masuk_ta)->tahun_akademik;
+        $query->status_masuk    = $request->status_masuk;
+        $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
         $query->status          = $request->status;
         $query->save();
+
+        $status         = new StudentStatus;
+        $status->id_ta  = $request->tahun_masuk;
+        $status->status = 'Aktif';
+        $status->save();
 
         return redirect()->route('student')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
@@ -105,17 +110,20 @@ class StudentController extends Controller
     {
         $id = decode_id($id);
 
-        $data = Student::with('studyProgram','academicYear')->where('nim',$id)->first();
+        $data       = Student::with('studyProgram','academicYear')->where('nim',$id)->first();
+        $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->first();
+        $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','asc')->get();
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
-        if($data->status == 'Aktif') {
-            $data->setAttribute('status_button','btn-success');
-        } else if($data->status=='Lulus') {
-            $data->setAttribute('status_button','btn-pink');
+        if($status->status == 'Aktif') {
+            $status->setAttribute('status_button','btn-success');
+        } else if($status->status=='Lulus') {
+            $status->setAttribute('status_button','btn-pink');
         } else {
-            $data->setAttribute('status_button','btn-danger');
+            $status->setAttribute('status_button','btn-danger');
         }
 
-        return view('student.profile',compact(['data']));
+        return view('student.profile',compact(['data','status','statusList','academicYear']));
     }
 
     /**
@@ -131,8 +139,9 @@ class StudentController extends Controller
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $status       = StudentStatus::where('nim',$nim)->orderBy('id','asc')->first();
 
-        return view('student/form',compact(['faculty','studyProgram','academicYear','data']));
+        return view('student/form',compact(['faculty','studyProgram','academicYear','data','status']));
     }
 
     /**
@@ -145,6 +154,7 @@ class StudentController extends Controller
     public function update(Request $request)
     {
         $id = decrypt($request->_id);
+
         $request->validate([
             'kd_prodi'          => 'required',
             'nama'              => 'required',
@@ -159,9 +169,8 @@ class StudentController extends Controller
             'program'           => 'required',
             'seleksi_jenis'     => 'required',
             'seleksi_jalur'     => 'required',
-            'masuk_status'      => 'required',
-            'masuk_ta'          => 'required',
-            'status'            => 'required',
+            'status_masuk'      => 'required',
+            'tahun_masuk'       => 'required',
         ]);
 
         $query                  = Student::find($id);
@@ -177,13 +186,15 @@ class StudentController extends Controller
         $query->program         = $request->program;
         $query->seleksi_jenis   = $request->seleksi_jenis;
         $query->seleksi_jalur   = $request->seleksi_jalur;
-        $query->masuk_status    = $request->masuk_status;
-        $query->masuk_ta        = $request->masuk_ta;
-        $query->angkatan        = AcademicYear::find($request->masuk_ta)->tahun_akademik;
-        $query->status          = $request->status;
+        $query->status_masuk    = $request->status_masuk;
+        $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
         $query->save();
 
-        return redirect()->route('student')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        $status        = StudentStatus::where('nim',$id)->orderBy('id','asc')->first();
+        $status->id_ta = $request->tahun_masuk;
+        $status->save();
+
+        return redirect()->route('student.profile',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**
@@ -258,7 +269,9 @@ class StudentController extends Controller
     {
         if($request->ajax()) {
 
-            $q = Student::with(['studyProgram.department.faculty']);
+            $students = Student::all();
+            $status   =
+            $q        = Student::with(['studyProgram.department.faculty','latestStatus']);
 
             if($request->kd_jurusan) {
                 $q->whereHas(
@@ -276,7 +289,10 @@ class StudentController extends Controller
             }
 
             if($request->status) {
-                $q->where('status',$request->status);
+                $q->whereHas(
+                    'latestStatus', function($query) use ($request) {
+                        $query->where('status',$request->status);
+                });
             }
 
             $data = $q->orderBy('created_at','desc')->get();

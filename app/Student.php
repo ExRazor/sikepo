@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    use \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
+
     protected $primaryKey = 'nim';
     protected $fillable = [
         'kd_prodi',
@@ -22,9 +24,8 @@ class Student extends Model
         'program',
         'seleksi_jenis',
         'seleksi_jalur',
-        'masuk_status',
-        'masuk_ta',
-        'status',
+        'status_masuk',
+        'angkatan',
     ];
 
     public function studyProgram()
@@ -35,5 +36,15 @@ class Student extends Model
     public function academicYear()
     {
         return $this->belongsTo('App\AcademicYear','masuk_ta');
+    }
+
+    public function studentStatus()
+    {
+        return $this->hasMany('App\StudentStatus','nim');
+    }
+
+    public function latestStatus()
+    {
+        return $this->hasOne('App\StudentStatus','nim')->orderBy('id_ta','desc')->limit(1);
     }
 }

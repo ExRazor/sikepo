@@ -128,9 +128,16 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tanggal Lahir: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Tempat Tanggal Lahir: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir" required>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -222,39 +229,22 @@
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-6">
-                                            <select class="form-control" name="masuk_status" required>
-                                                <option value="">- Pilih Jenis Seleksi -</option>
-                                                <option value="Baru" {{ (isset($data) && ($data->masuk_status=='Baru') || Request::old('masuk_status')=='Baru') ? 'selected' : ''}}>Baru</option>
-                                                <option value="Pindahan" {{ (isset($data) && ($data->masuk_status=='Pindahan') || Request::old('masuk_status')=='Pindahan') ? 'selected' : ''}}>Pindahan</option>
-                                                <option value="Pertukaran" {{ (isset($data) && ($data->masuk_status=='Pertukaran') || Request::old('masuk_status')=='Pertukaran') ? 'selected' : ''}}>Pertukaran</option>
+                                            <select class="form-control" name="status_masuk" required>
+                                                <option value="">- Pilih Status Awal Masuk -</option>
+                                                <option value="Baru" {{ (isset($data) && ($data->status_masuk=='Baru') || Request::old('status_masuk')=='Baru') ? 'selected' : ''}}>Baru</option>
+                                                <option value="Pindahan" {{ (isset($data) && ($data->status_masuk=='Pindahan') || Request::old('status_masuk')=='Pindahan') ? 'selected' : ''}}>Pindahan</option>
+                                                <option value="Pertukaran" {{ (isset($data) && ($data->status_masuk=='Pertukaran') || Request::old('status_masuk')=='Pertukaran') ? 'selected' : ''}}>Pertukaran</option>
                                             </select>
                                         </div>
                                         <div class="col-6">
-                                            <select class="form-control" name="masuk_ta" required>
+                                            <select class="form-control" name="tahun_masuk" required>
                                                 <option value="">- Pilih Tahun Masuk -</option>
                                                 @foreach($academicYear as $ay)
-                                                <option value="{{$ay->id}}" {{ (isset($data) && ($data->masuk_ta==$ay->id) || Request::old('masuk_ta')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik}} - {{ $ay->semester }}</option>
+                                                <option value="{{$ay->id}}" {{ (isset($status) && ($status->id_ta==$ay->id) || Request::old('tahun_masuk')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik}} - {{ $ay->semester }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-3 form-control-label">Status Aktif: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    <div id="status_aktif" class="radio">
-                                        <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="status" type="radio" value="Aktif" {{ isset($data) && ($data->status=='Aktif' || Request::old('status')=='Aktif') ? 'checked' : ''}} data-parsley-class-handler="#status_aktif"
-                                            data-parsley-errors-container="#errorsStatusAktif" required>
-                                            <span>Aktif</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </label>
-                                        <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="status" type="radio" value="Non-Aktif" {{ isset($data) && ($data->status=='Non-Aktif' || Request::old('status')=='Non-Aktif') ? 'checked' : ''}}>
-                                            <span>Non-Aktif</span>
-                                        </label>
-                                    </div>
-                                    <div id="errorsStatusAktif"></div>
                                 </div>
                             </div>
                         </div>

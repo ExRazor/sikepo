@@ -61,14 +61,11 @@
     </div>
     <div class="profil-row d-flex">
         <div class="profil-nama">Status Awal Masuk</div>
-        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->masuk_status }}</div>
-    </div>
-    <div class="profil-row d-flex">
-        <div class="profil-nama">Tahun Awal Masuk</div>
-        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->academicYear->tahun_akademik }} - {{ $data->academicYear->semester }}</div>
+        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->status_masuk }}</div>
     </div>
     <div class="profil-row d-flex">
         <div class="profil-nama">Angkatan</div>
         <div class="profil-isi"><span class="pr-2">:</span>{{ $data->angkatan }}</div>
     </div>
+
 </div>

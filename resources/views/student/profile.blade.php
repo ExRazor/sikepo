@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Detail Data Dosen')
+@section('title', 'Detail Data Mahasiswa')
 
 @section('content')
 <div class="br-pageheader">
@@ -25,6 +25,18 @@
             </div>
         </div><!-- card-body -->
     </div>
+    <div class="row pd-x-35 pd-t-20">
+        <div class="col-lg-12">
+            @if (session()->has('flash.message'))
+            <div class="alert alert-{{ session('flash.class') }}" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ session('flash.message') }}
+                </div>
+            @endif
+        </div>
+    </div>
     <div class="row br-profile-body">
         <div class="col-lg-3">
             <div class="card shadow-base bd-0 profil-kiri">
@@ -34,7 +46,7 @@
                         <img src="{{isset($data->foto) ? route('download.avatar','type=student&id='.encrypt($data->foto)): route('download.avatar','type=avatar&id='.encrypt($avatar))}}">
                     </div>
                     <div class="profil-status mg-t-20 d-flex justify-content-center">
-                        <span class="{{ $data->status_button }}">{{ $data->status }}</span>
+                        <span class="{{ $status->status_button }}">{{ $status->status }}</span>
                     </div>
                 </div>
                 <div class="profil-tombol">
@@ -62,16 +74,20 @@
                     <div class="card shadow-base">
                         <div class="card-header">
                             <div class="tab-header d-flex">
-                                <h4>Biodata Mahasiswa</h4>
+                                <h4>-</h4>
                                 <div class="ml-auto">
                                     <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
-                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Profil Mahasiswa</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Biodata Mahasiswa</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body">
-                            @include('student.tab-profile')
+                            <div class="tab-content">
+                                @include('student.tab-profile')
+                                @include('student.tab-status')
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,6 +96,7 @@
     </div>
 </div>
 @include('student.form-photo')
+@include('student.form-status')
 @endsection
 
 @section('js')

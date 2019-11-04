@@ -33,7 +33,6 @@ class StudentSeeder extends Seeder
             $jenis_seleksi  = $seleksi_jenis[array_rand($seleksi_jenis)];
             $count_jalur    = count($seleksi_jalur[$jenis_seleksi])-1;
             $jalur_seleksi  = $seleksi_jalur[$jenis_seleksi][rand(0,$count_jalur)];
-            $ta             = AcademicYear::all()->random();
 
             DB::table('students')->insert([
                 'nim'                   => rand(000000000, 999999999),
@@ -44,16 +43,13 @@ class StudentSeeder extends Seeder
                 'agama'                 => $agama[array_rand($agama)],
                 'alamat'                => $faker->address,
                 'kewarganegaraan'       => $kewarganegaraan[array_rand($kewarganegaraan)],
-                'kd_prodi'              => StudyProgram::all()->random()->kd_prodi,
+                'kd_prodi'              => StudyProgram::where('kd_jurusan','57401')->inRandomOrder()->first()->kd_prodi,
                 'kelas'                 => $kelas[array_rand($kelas)],
                 'tipe'                  => $tipe[array_rand($tipe)],
                 'program'               => $program[array_rand($program)],
                 'seleksi_jenis'         => $jenis_seleksi,
                 'seleksi_jalur'         => $jalur_seleksi,
-                'masuk_status'          => $masuk_status[array_rand($masuk_status)],
-                'masuk_ta'              => $ta->id,
-                'status'                => $status[array_rand($status)],
-                'angkatan'              => $ta->tahun_akademik,
+                'status_masuk'          => $masuk_status[array_rand($masuk_status)],
                 'created_at'            => now()
             ]);
         }

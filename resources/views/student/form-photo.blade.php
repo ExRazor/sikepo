@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content bd-0 tx-14 modal-form">
                 <div class="modal-header pd-y-20 pd-x-25">
-                    <h6 class="tx-16 mg-b-0 tx-uppercase tx-inverse tx-bold"><span class="title-action"></span> Ganti Foto Profil</h6>
+                    <h6 class="tx-16 mg-b-0 tx-uppercase tx-inverse tx-bold">Ganti Foto Profil</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>

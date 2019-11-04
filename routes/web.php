@@ -86,11 +86,14 @@ Route::prefix('ajax')->group(function () {
     //Teacher
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
 
+    //Student Quota
+    Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
+
     //Student
     Route::post('student/get_by_filter','StudentController@get_by_filter')->name('ajax.student.filter');
 
-    //Student Quota
-    Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
+    //Student - Status
+    Route::get('student/status/{id}','StudentStatusController@edit')->name('student.status.edit');
 
     //Funding Category
     Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
@@ -137,6 +140,13 @@ Route::post('/ajax/ewmp','EwmpController@store')->name('ewmp.store');
 Route::put('/ajax/ewmp','EwmpController@update')->name('ewmp.update');
 Route::delete('/ajax/ewmp','EwmpController@destroy')->name('ewmp.delete');
 
+//Students - Quota
+Route::get('student/quota','StudentQuotaController@index')->name('student.quota');
+Route::get('student/quota/add','StudentQuotaController@create')->name('student.quota.add');
+Route::post('student/quota','StudentQuotaController@store')->name('student.quota.store');
+Route::put('student/quota','StudentQuotaController@update')->name('student.quota.update');
+Route::delete('student/quota','StudentQuotaController@destroy')->name('student.quota.delete');
+
 //Students
 Route::get('student',function(){
     return redirect(route('student'));
@@ -150,12 +160,11 @@ Route::post('student/list','StudentController@store')->name('student.store');
 Route::put('student/list','StudentController@update')->name('student.update');
 Route::delete('student/list','StudentController@destroy')->name('student.delete');
 
-//Students - Quota
-Route::get('student/quota','StudentQuotaController@index')->name('student.quota');
-Route::get('student/quota/add','StudentQuotaController@create')->name('student.quota.add');
-Route::post('student/quota','StudentQuotaController@store')->name('student.quota.store');
-Route::put('student/quota','StudentQuotaController@update')->name('student.quota.update');
-Route::delete('student/quota','StudentQuotaController@destroy')->name('student.quota.delete');
+//Students - Status
+Route::post('student/status','StudentStatusController@store')->name('student.status.store');
+Route::put('student/status','StudentStatusController@update')->name('student.status.update');
+Route::delete('student/status','StudentStatusController@destroy')->name('student.status.delete');
+
 
 //Funding
 Route::get('funding',function(){

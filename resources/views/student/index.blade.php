@@ -110,6 +110,7 @@
                             <th class="text-center defaultSort">Angkatan</th>
                             <th class="text-center">Kelas</th>
                             <th class="text-center">Program</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center no-sort">Aksi</th>
                         </tr>
                     </thead>
@@ -124,6 +125,7 @@
                             <td>{{$d->angkatan}}</td>
                             <td>{{$d->kelas}}</td>
                             <td class="text-center">{{$d->program}}</td>
+                            <td class="text-center">{{$d->latestStatus->status}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
