@@ -44,16 +44,11 @@
         </ul>
     </li>
     <li class="br-menu-item">
-        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'funding') ? 'active' : '' }}">
-            <i class="menu-item-icon fa fa-balance-scale"></i>
-            <span class="menu-item-label">Keuangan</span>
+        <a href="{{ route('research') }}" class="br-menu-link {{ (request()->segment(1) == 'research') ? 'active' : '' }}">
+          <i class="menu-item-icon fa fa-handshake"></i>
+          <span class="menu-item-label">Penelitian</span>
         </a><!-- br-menu-link -->
-        <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Kategori</a></li>
-            <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Keuangan Fakultas</a></li>
-            <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Keuangan Program Studi</a></li>
-        </ul>
-    </li>
+      </li>
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'master') ? 'active' : '' }}">
             <i class="menu-item-icon icon ion-ios-briefcase-outline tx-22"></i>

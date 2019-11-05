@@ -20,7 +20,6 @@ class StudentController extends Controller
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $faculty      = Faculty::all();
         $angkatan     = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
         $status       = StudentStatus::groupBy('status')->get('status');
         $data         = Student::whereHas(
@@ -270,15 +269,7 @@ class StudentController extends Controller
         if($request->ajax()) {
 
             $students = Student::all();
-            $status   =
             $q        = Student::with(['studyProgram.department.faculty','latestStatus']);
-
-            if($request->kd_jurusan) {
-                $q->whereHas(
-                    'studyProgram', function($query) use($request) {
-                        $query->where('kd_jurusan',$request->kd_jurusan);
-                    });
-            }
 
             if($request->kd_prodi){
                 $q->where('kd_prodi',$request->kd_prodi);

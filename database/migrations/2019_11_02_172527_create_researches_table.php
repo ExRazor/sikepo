@@ -14,12 +14,15 @@ class CreateResearchesTable extends Migration
     public function up()
     {
         Schema::create('researches', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->char('nidn',9);
             $table->string('tema_penelitian');
             $table->string('judul_penelitian');
+            $table->string('tahun_penelitian');
             $table->string('sumber_biaya');
             $table->timestamps();
+
+            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

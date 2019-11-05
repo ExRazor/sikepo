@@ -50,7 +50,7 @@ class Encryption {
      * @param string key The key.
      * @return string Return decrypted string.
      */
-    decrypt_id(encryptedString, key) {
+    decrypt(encryptedString, key) {
         var json = JSON.parse(CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encryptedString)));
 
         var salt = CryptoJS.enc.Hex.parse(json.salt);
@@ -80,7 +80,7 @@ class Encryption {
      * @param string key The key.
      * @return string Return encrypted string.
      */
-    encrypt_id(string, key) {
+    encrypt(string, key) {
         var iv = CryptoJS.lib.WordArray.random(16);// the reason to be 16, please read on `encryptMethod` property.
 
         var salt = CryptoJS.lib.WordArray.random(256);

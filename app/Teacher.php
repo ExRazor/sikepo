@@ -46,4 +46,9 @@ class Teacher extends Model
     {
         return $this->hasMany('App\TeacherAchievement','nidn');
     }
+
+    public function research()
+    {
+        return $this->hasMany('App\Research','nidn');
+    }
 }

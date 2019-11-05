@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Research;
+use App\StudyProgram;
 use Illuminate\Http\Request;
 
 class ResearchController extends Controller
@@ -14,7 +15,17 @@ class ResearchController extends Controller
      */
     public function index()
     {
-        //
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $penelitian = Research::whereHas(
+            'teacher.studyProgram.department', function($query) {
+                $query->where('kd_jurusan',setting('app_department_id'));
+            })
+        ->with('researchStudents.student','teacher.studyProgram')
+        ->get();
+
+        // dd($penelitian);
+
+        return view('research.index',compact(['penelitian','studyProgram']));
     }
 
     /**
@@ -24,7 +35,8 @@ class ResearchController extends Controller
      */
     public function create()
     {
-        //
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        return view('research.form',compact(['studyProgram']));
     }
 
     /**

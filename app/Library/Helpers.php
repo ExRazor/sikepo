@@ -1,6 +1,7 @@
 <?php
 
 use App\Setting;
+use App\Library\Encryption;
 
 if (!function_exists('setting')) {
     /**
@@ -21,7 +22,7 @@ if (!function_exists('setting')) {
     }
 }
 
-if (!function_exists('encode_url')) {
+if (!function_exists('encode_id')) {
 
     /**
      * description
@@ -30,11 +31,16 @@ if (!function_exists('encode_url')) {
      * @return
      */
     function encode_id($string) {
+        // $enkripsi = new Encryption();
+        $key      = "KfqUsXXhY0nhhqrmovEx5qQZ";
+        $string   = $key.$string;
+
+        // return $enkripsi->encrypt($string,$key);
         return str_replace(['+','/','='], ['-','_',''], base64_encode($string));
     }
 }
 
-if (!function_exists('decode_url')) {
+if (!function_exists('decode_id')) {
 
     /**
      * description
@@ -42,8 +48,13 @@ if (!function_exists('decode_url')) {
      * @param
      * @return
      */
-    function decode_id($string) {
-        return base64_decode(str_replace(['-','_'], ['+','/'], $string));
+    function decode_id($encrypted) {
+        // $enkripsi = new Encryption();
+        $key       = "KfqUsXXhY0nhhqrmovEx5qQZ";
+        $decrypt   = base64_decode(str_replace(['-','_'], ['+','/'], $encrypted));
+
+        // return $enkripsi->decrypt($encrypted, $key);
+        return str_replace($key,'',$decrypt);
     }
 }
 

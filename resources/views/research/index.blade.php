@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Mahasiswa')
+@section('title', 'Data Penelitian')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('student') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('research') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,20 +20,13 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-user-graduate"></i>
+    <i class="icon fa fa-book-reader"></i>
     <div>
-        <h4>Data Mahasiswa</h4>
-        <p class="mg-b-0">Olah Data Mahasiswa</p>
+        <h4>Data Penelitian</h4>
+        <p class="mg-b-0">Olah Data Penelitian</p>
     </div>
     <div class="ml-auto">
-        <div class="row">
-            <div class="col-6 pr-1">
-                <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
-            </div>
-            <div class="col-6 pl-1">
-                <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-b-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a>
-            </div>
-        </div>
+        <a href="{{ route('research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
     </div>
 </div>
 
@@ -58,22 +51,6 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" name="angkatan" style="width:200px">
-                            <option value="">- Pilih Angkatan -</option>
-                            @foreach($angkatan as $a)
-                            <option value="{{$a->tahun_akademik}}">{{$a->tahun_akademik}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" name="status" style="width:200px">
-                            <option value="">- Pilih Status -</option>
-                            @foreach($status as $s)
-                                <option value="{{$s->status}}">{{$s->status}}</option>
-                            @endforeach
-                        </select>
-                    </div>
                     <div>
                         <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
                     </div>
@@ -87,40 +64,49 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
+                <table id="table_teacher" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center">Nama / NIM</th>
-                            <th class="text-center">Tanggal Lahir</th>
-                            <th class="text-center">Program Studi</th>
-                            <th class="text-center defaultSort">Angkatan</th>
-                            <th class="text-center">Kelas</th>
-                            <th class="text-center">Program</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center no-sort">Aksi</th>
+                            <th class="text-center all" width="250">Nama Dosen</th>
+                            <th class="text-center all" width="600">Judul Penelitian</th>
+                            <th class="text-center none">Tema Penelitian</th>
+                            <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
+                            <th class="text-center none">Nama Mahasiswa</th>
+                            <th class="text-center none">Sumber Biaya</th>
+                            <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $d)
+                        @foreach ($penelitian as $p)
                         <tr>
-                            <td><a href="{{ route('student.profile',encode_id($d->nim)) }}">{{$d->nama}}<br><small>NIM. {{$d->nim}}</small></a></td>
-                            <td>{{$d->tgl_lhr}}</td>
                             <td>
-                                {{$d->studyProgram->nama}}
+                                {{ $p->teacher->nama }}<br>
+                                <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
                             </td>
-                            <td>{{$d->angkatan}}</td>
-                            <td>{{$d->kelas}}</td>
-                            <td class="text-center">{{$d->program}}</td>
-                            <td class="text-center">{{$d->latestStatus->status}}</td>
+                            <td>{{ $p->judul_penelitian }}</td>
+                            <td>{{ $p->tema_penelitian }}</td>
+                            <td class="text-center">{{ $p->tahun_penelitian }}</td>
+                            <td>
+                                @if($p->researchStudents->count())
+                                <ol>
+                                    @foreach ($p->researchStudents as $rs)
+                                    <li>{{$rs->student->nama}} ({{$rs->student->nim}})</li>
+                                    @endforeach
+                                </ol>
+                                @else
+                                -
+                                @endif
+                            </td>
+                            <td>{{ $p->sumber_biaya }}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('student.edit',encode_id($d->nim)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('student.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
-                                            <input type="hidden" value="{{encode_id($d->nim)}}" name="id">
+                                            <input type="hidden" value="{{encode_id($p->id)}}" name="id">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('student.delete') }}">Hapus</button>
                                         </form>
                                     </div>

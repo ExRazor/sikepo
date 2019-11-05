@@ -7,8 +7,13 @@
  * @returns {String} the URL friendly encoded String
  */
 function encode_id(str){
-    str         = btoa(str);
+    var key  = 'KfqUsXXhY0nhhqrmovEx5qQZ';
+    // let encryption = new Encryption();
+    // var encrypted = encryption.encrypt(str, key);
+
+    str         = btoa(key+str);
     replace     = str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+
     return replace
 }
 
@@ -21,7 +26,15 @@ function encode_id(str){
  * @returns {String} the URL friendly encoded String
  */
 function decode_id(str){
+    var key  = 'KfqUsXXhY0nhhqrmovEx5qQZ';
+    // let encryption = new Encryption();
+    // var decrypted = encryption.decrypt(encrypted, key);
+
+    // return decrypted;
+
     str     = (str + '===').slice(0, str.length + (str.length % 4));
     replace = str.replace(/-/g, '+').replace(/_/g, '/');
-    return atob(str);
+    decrypt = atob(str);
+
+    return decrypt.replace(key, '');
 }

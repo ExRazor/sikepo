@@ -118,6 +118,22 @@ Breadcrumbs::for('funding-studyProgram-edit', function ($trail,$data) {
     $trail->push('Sunting Keuangan Program Studi');
 });
 
+//Keuangan - Program Studi
+Breadcrumbs::for('research', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Penelitian', route('research'));
+});
+
+Breadcrumbs::for('research-add', function ($trail) {
+    $trail->parent('research');
+    $trail->push('Tambah Data Penelitian', route('research.add'));
+});
+
+Breadcrumbs::for('research-edit', function ($trail,$data) {
+    $trail->parent('research-show',$data);
+    $trail->push('Sunting Data Penelitian');
+});
+
 // Dashboard > Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');

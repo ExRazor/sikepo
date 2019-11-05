@@ -98,6 +98,10 @@ table.dataTable thead th.sorting::after, table.dataTable thead th.sorting_asc::a
     width:275px;
 }
 
+table.dataTable tbody td {
+    word-break: break-word;
+  }
+
 /* ----------------------------------------------- */
 /* ############### PARSLEY CUSTOM ############### */
 /* ----------------------------------------------- */
@@ -128,9 +132,6 @@ select.parsley-success:focus {
 /* ----------------------------------------------- */
 /* ############### PROFILE ############### */
 /* ----------------------------------------------- */
-.profil-kiri .profil-avatar {
-
-}
 
 .profil-kiri .profil-avatar img {
     width: 100%;

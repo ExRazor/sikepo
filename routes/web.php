@@ -195,6 +195,15 @@ Route::post('funding/study-program','FundingStudyProgramController@store')->name
 Route::put('funding/study-program','FundingStudyProgramController@update')->name('funding.study-program.update');
 Route::delete('funding/study-program','FundingStudyProgramController@destroy')->name('funding.study-program.delete');
 
+//Research
+Route::get('research','ResearchController@index')->name('research');
+Route::get('research/add','ResearchController@create')->name('research.add');
+Route::get('research/{id}','ResearchController@show')->name('research.show');
+Route::get('research/{id}/edit','ResearchController@edit')->name('research.edit');
+Route::post('research','ResearchController@store')->name('research.store');
+Route::put('research','ResearchController@update')->name('research.update');
+Route::delete('research','ResearchController@destroy')->name('research.delete');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');
