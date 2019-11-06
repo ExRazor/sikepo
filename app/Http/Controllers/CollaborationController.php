@@ -25,6 +25,13 @@ class CollaborationController extends Controller
             $collab[$sp->kd_prodi] = Collaboration::where('kd_prodi',$sp->kd_prodi)->get();
         }
 
+        $collab = Collaboration::whereHas(
+                                    'studyProgram', function($query) {
+                                        $query->where('kd_jurusan',setting('app_department_id'));
+                                    }
+                                )
+                                ->get();
+
         return view('collaboration/index',compact(['studyProgram','collab']));
     }
 
@@ -93,7 +100,7 @@ class CollaborationController extends Controller
      */
     public function edit($id)
     {
-        $id = decrypt($id);
+        $id = decode_id($id);
         $data = Collaboration::find($id);
 
         $academicYear = AcademicYear::all();
@@ -161,7 +168,7 @@ class CollaborationController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()){
-            $id = decrypt($request->id);
+            $id = decode_id($request->id);
 
             $q = Collaboration::destroy($id);
             if(!$q) {
@@ -184,7 +191,7 @@ class CollaborationController extends Controller
 
     public function download($filename)
     {
-        $file = decrypt($filename);
+        $file = decode_id($filename);
         $storagePath = 'upload/collaboration/'.$file;
         if( ! File::exists($storagePath)) {
             abort(404);
@@ -196,6 +203,32 @@ class CollaborationController extends Controller
             );
 
             return response(file_get_contents($storagePath), 200, $headers);
+        }
+    }
+
+    public function get_by_filter(Request $request)
+    {
+        if($request->ajax()) {
+
+            $q   = Collaboration::with('studyProgram','academicYear')
+                            ->whereHas(
+                                'studyProgram', function($query) {
+                                    $query->where('kd_jurusan',setting('app_department_id'));
+                                }
+                            );
+
+            if($request->kd_prodi){
+                $q->whereHas(
+                    'studyProgram', function($query) use ($request) {
+                        $query->where('kd_prodi',$request->kd_prodi);
+                });
+            }
+
+            $data = $q->orderBy('waktu','desc')->get();
+
+            return response()->json($data);
+        } else {
+            abort(404);
         }
     }
 }

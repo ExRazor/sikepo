@@ -672,6 +672,95 @@ $(document).ready(function() {
 
     /*********************************************************************************/
 
+    /******************************* DATA KERJA SAMA *********************************/
+    $('form#filter-collaboration').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_collaboration');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html  = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id              = val.id;
+                        var tahun_akademik  = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
+                        var prodi           = val.study_program.nama;
+                        var lembaga         = val.nama_lembaga;
+                        var tingkat         = val.tingkat;
+                        var judul           = val.judul_kegiatan;
+                        var manfaat         = val.manfaat_kegiatan;
+                        var waktu           = val.waktu;
+                        var durasi          = val.durasi;
+
+                        html +='<tr>'+
+                                    '<td>'+tahun_akademik+'</td>'+
+                                    '<td>'+prodi+'</td>'+
+                                    '<td>'+lembaga+'</td>'+
+                                    '<td class="text-capitalize">'+tingkat+'</td>'+
+                                    '<td>'+judul+'</td>'+
+                                    '<td>'+manfaat+'</td>'+
+                                    '<td>'+waktu+'</td>'+
+                                    '<td>'+durasi+'</td>'+
+                                    '<td class="text-center" width="75">'+
+                                        '<a href="/download/collab/'+encode_id(id)+'" target="_blank"><div><i class="fa fa-download"></i></div></a>'+
+                                    '</td>'+
+                                    '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="/collaboration/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<a href="#" class="dropdown-item btn-delete" data-dest="/collaboration">Hapus</a>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
+    /*********************************************************************************/
+
     /********************************* DATA DOSEN *********************************/
 
     $('#foto_profil').change(function(){
@@ -1252,5 +1341,95 @@ $(document).ready(function() {
             form.trigger('reset');
             form.find('select[name=id_parent]').trigger('change')
         }).end()
+    /****************************************************************************************/
+
+    /********************************* DATA PENELITIAN DTPS *********************************/
+
+    $('form#filter-research').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_research');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id          = val.id;
+                        var nidn        = val.teacher.nidn;
+                        var nama_dsn    = val.teacher.nama;
+                        var prodi       = val.teacher.study_program.singkatan;
+                        var judul       = val.judul_penelitian;
+                        var tema        = val.tema_penelitian;
+                        var tahun       = val.tahun_penelitian;
+                        var sumber      = val.sumber_biaya;
+                        var daftar      = "";
+
+                        if(val.research_students.length > 0) {
+                            $.each(val.research_students, function(i,mhs){
+
+                                daftar += '<li>'+mhs.student.nama+'('+mhs.student.nim+')</li>';
+                            })
+                        } else {
+                            daftar = '-';
+                        }
+                        console.log(daftar);
+                        var mahasiswa = '<ol>'+daftar+'</ol>';
+
+                        html +='<tr>'+
+                                '<td>'+
+                                    nama_dsn+'<br>'+
+                                    '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
+                                '</td>'+
+                                '<td>'+judul+'</td>'+
+                                '<td>'+tema+'</td>'+
+                                '<td class="text-center">'+tahun+'</td>'+
+                                '<td>'+mahasiswa+'</td>'+
+                                '<td>'+sumber+'</td>'+
+                                '<td class="text-center" width="50">'+
+                                    '<div class="btn-group" role="group">'+
+                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                            '<div><span class="fa fa-caret-down"></span></div>'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                            '<a class="dropdown-item" href="/research/+'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                '<button class="dropdown-item btn-delete" data-dest="/research">Hapus</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</td>'+
+                            '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
     /****************************************************************************************/
 });

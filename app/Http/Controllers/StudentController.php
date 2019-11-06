@@ -268,8 +268,12 @@ class StudentController extends Controller
     {
         if($request->ajax()) {
 
-            $students = Student::all();
-            $q        = Student::with(['studyProgram.department.faculty','latestStatus']);
+            $q  = Student::with('studyProgram.department.faculty','latestStatus')
+                        ->whereHas(
+                            'studyProgram.department', function($query) {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        );
 
             if($request->kd_prodi){
                 $q->where('kd_prodi',$request->kd_prodi);

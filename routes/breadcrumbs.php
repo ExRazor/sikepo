@@ -118,7 +118,7 @@ Breadcrumbs::for('funding-studyProgram-edit', function ($trail,$data) {
     $trail->push('Sunting Keuangan Program Studi');
 });
 
-//Keuangan - Program Studi
+//Penelitian Dosen
 Breadcrumbs::for('research', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Penelitian', route('research'));

@@ -83,6 +83,9 @@ Route::prefix('ajax')->group(function () {
     Route::post('study-program/show','StudyProgramController@show' );
     Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('ajax.study-program.filter');
 
+    //Kerja Sama
+    Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('ajax.collaboration.filter');
+
     //Teacher
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
 
@@ -98,6 +101,10 @@ Route::prefix('ajax')->group(function () {
     //Funding Category
     Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
     Route::get('funding/category/select/{id}','FundingCategoryController@get_jenis')->name('funding.category.select');
+
+    //Research
+    Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('ajax.research.filter');
+
 });
 
 //Collaboration

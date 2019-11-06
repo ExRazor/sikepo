@@ -41,7 +41,7 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.student.filter')}}" id="filter-student" method="POST">
+            <form action="{{route('ajax.research.filter')}}" id="filter-research" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <select class="form-control" name="kd_prodi">
@@ -64,7 +64,7 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center all" width="250">Nama Dosen</th>
@@ -104,10 +104,10 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('student.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('research.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('student.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('research.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>

@@ -90,8 +90,50 @@ class ResearchController extends Controller
      * @param  \App\Research  $research
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Research $research)
+    public function destroy(Request $request)
     {
-        //
+        if($request->ajax()) {
+            $id = decode_id($request->id);
+            $q  = Research::find($id)->delete();
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
+        }
+    }
+
+    public function get_by_filter(Request $request)
+    {
+        if($request->ajax()) {
+
+            $q   = Research::with(['teacher.studyProgram','researchStudents.student'])
+                            ->whereHas(
+                                'teacher.studyProgram.department', function($query) {
+                                    $query->where('kd_jurusan',setting('app_department_id'));
+                                }
+                            );
+
+            if($request->kd_prodi){
+                $q->whereHas(
+                    'teacher.studyProgram', function($query) use ($request) {
+                        $query->where('kd_prodi',$request->kd_prodi);
+                });
+            }
+
+            $data = $q->orderBy('tahun_penelitian','desc')->get();
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 }
