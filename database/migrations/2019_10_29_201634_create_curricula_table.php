@@ -16,16 +16,16 @@ class CreateCurriculaTable extends Migration
         Schema::create('curricula', function (Blueprint $table) {
             $table->string('kd_matkul',12)->primary();
             $table->char('kd_prodi',5);
+            $table->integer('versi');
             $table->string('nama');
             $table->integer('semester');
             $table->string('jenis');
-            $table->integer('versi');
             $table->integer('sks_teori')->default(0);
-            $table->integer('sks_seminar')->default(0);
-            $table->integer('sks_praktikum')->default(0);
-            $table->string('capaian');
+            $table->integer('sks_seminar')->nullable();
+            $table->integer('sks_praktikum')->nullable();
+            $table->string('capaian')->nullable();
             $table->string('dokumen_nama')->nullable();
-            $table->string('dokumen_file')->nullable();
+            $table->timestamps();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });

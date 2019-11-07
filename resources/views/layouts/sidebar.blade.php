@@ -39,13 +39,13 @@
             <span class="menu-item-label">Pendidikan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ url('academic/course') }}" class="sub-link {{ (request()->segment(2) == 'course') ? 'active' : '' }}">Mata Kuliah</a></li>
+            <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->segment(2) == 'curriculum') ? 'active' : '' }}">Kurikulum</a></li>
             <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(2) == 'minithesis') ? 'active' : '' }}">Tugas Akhir</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
         <a href="{{ route('research') }}" class="br-menu-link {{ (request()->segment(1) == 'research') ? 'active' : '' }}">
-          <i class="menu-item-icon fa fa-handshake"></i>
+          <i class="menu-item-icon fa fa-book-reader"></i>
           <span class="menu-item-label">Penelitian</span>
         </a><!-- br-menu-link -->
       </li>

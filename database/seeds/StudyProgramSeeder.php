@@ -31,7 +31,7 @@ class StudyProgramSeeder extends Seeder
             [
                 'kd_prodi' => 53242,
                 'kd_jurusan' => 57401,
-                'nama' => 'Pendidikan Teknologi dan Informasi',
+                'nama' => 'Pendidikan Teknologi Informasi',
                 'singkatan' => 'PTI',
                 'jenjang' => 'S1',
                 'no_sk' => 'PTN/32/2008/1034567/INFOR/UNG',

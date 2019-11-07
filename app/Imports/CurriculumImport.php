@@ -2,12 +2,12 @@
 
 namespace App\Imports;
 
-use App\Student;
+use App\Curriculum;
 use App\StudyProgram;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class StudentImport implements ToModel, WithStartRow
+class CurriculumImport implements ToModel, WithStartRow
 {
     /**
     * @param array $row
@@ -16,12 +16,12 @@ class StudentImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
-        $kd_prodi = StudyProgram::where('nama',$row[0])->first()->kd_prodi;
+        $prodi = StudyProgram::where('nama',$row[0])->first();
 
-        // dd($row);
-        return new Student([
+        // dd($prodi);
+        return new Curriculum([
             'kd_matkul'     => $row[1],
-            'kd_prodi'      => $kd_prodi,
+            'kd_prodi'      => $prodi->kd_prodi,
             'nama'          => $row[2],
             'versi'         => $row[3],
             'jenis'         => $row[4],
