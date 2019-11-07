@@ -328,4 +328,16 @@ class TeacherController extends Controller
             abort(404);
         }
     }
+
+    public function get_by_studyProgram(Request $request)
+    {
+        if($request->ajax()) {
+
+            $data = Teacher::where('kd_prodi',$request->kd_prodi)->select('nidn','nama')->get();
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
 }

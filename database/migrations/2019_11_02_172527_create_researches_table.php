@@ -20,6 +20,7 @@ class CreateResearchesTable extends Migration
             $table->string('judul_penelitian');
             $table->string('tahun_penelitian');
             $table->string('sumber_biaya');
+            $table->string('sumber_biaya_nama')->nullable();
             $table->timestamps();
 
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');

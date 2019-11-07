@@ -238,6 +238,62 @@ $(document).ready(function() {
         })
     })
 
+    //btn-delete GET
+    $(document).on('click','.btn-delget',function(e){
+        e.preventDefault();
+
+        var id   = $(this).data('id');
+        var url  = $(this).data('dest');
+        var redir= $(this).data('redir');
+
+        Swal.fire({
+            title: 'Yakin menghapus?',
+            text: "Datanya tidak dapat dikembalikan!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    data: {id:id},
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.showLoading()
+                    },
+                    success: function (state) {
+                        if(state.type=='success') {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                                onClose: () => {
+                                    if(redir) {
+                                        window.location.replace(redir);
+                                    } else {
+                                        location.reload();
+                                    }
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                            });
+                        }
+                    },
+                });
+            }
+        })
+    })
+
     /***********************************************************************************/
 
     /********************************* DATA TABLE *********************************/
@@ -283,7 +339,108 @@ $(document).ready(function() {
         //replace the "Choose a file" label
         $(this).next('.custom-file-label').html(fileName);
     });
+
+    $(document).on('input','.number',function(){
+        replace = $(this).val().replace(/[^0-9]/g,'');
+        $(this).val(replace);
+    })
     /******************************************************************************/
+
+    /***************************** SELECT / COMBO BOX ****************************/
+    $(document).on('change','.select-jurusan',function(){
+        var cont    = $(this);
+        var target  = $('.select-prodi');
+        var id      = cont.val();
+
+        target.find('option').remove();
+
+        $.ajax({
+            url: base_url+'/ajax/study-program/get_by_department',
+            data: {kd_jurusan:id},
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function() {
+                if(cont.data('type') == 'form') {
+                    target.prop('disabled',true);
+                }
+            },
+            success: function (data) {
+
+                var html = '';
+
+                if(data.length > 0) {
+                    html += '<option value="">- Pilih Program Studi -</option>';
+                    $.each(data,function(i){
+                        html += '<option value="'+data[i].kd_prodi+'">'+data[i].nama+'</option>';
+                    })
+
+                    if(cont.data('type') == 'form') {
+                        target.prop('disabled',false);
+                        target.prop('required',true);
+                        cont.prop('required',false);
+                    }
+
+                } else {
+                    html = '<option value="">- Pilih Program Studi -</option>';
+                    if(cont.data('type') == 'form') {
+                        target.prop('disabled',true);
+                        target.prop('required',false);
+                        cont.prop('required',true);
+                    }
+                }
+
+                target.append(html);
+            }
+        })
+    })
+
+    $('.select-prodi').select2({
+        language: "id",
+        minimumInputLength: 5,
+        allowClear: true,
+        placeholder: 'Masukkan nama program studi',
+        ajax: {
+            dataType: 'json',
+            url: '/ajax/study-program/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
+
+    function load_select_prodi(selectElementObj) {
+        selectElementObj.select2({
+            language: "id",
+            minimumInputLength: 5,
+            allowClear: true,
+            placeholder: 'Masukkan nama program studi',
+            ajax: {
+                dataType: 'json',
+                url: '/ajax/study-program/loadData',
+                delay: 800,
+                data: function(params) {
+                    return {
+                        cari: params.term
+                    }
+                },
+                processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                },
+            }
+        });
+    }
+
+    /****************************************************************************/
 
     /********************************* TAHUN AKADEMIK *********************************/
     $('#tahunAkademik').mask('9999');
@@ -615,10 +772,7 @@ $(document).ready(function() {
                 } else {
                     html = '<option value="">- BELUM ADA DATA -</option>';
                 }
-
                 target.append(html);
-
-
             }
         })
     })
@@ -967,7 +1121,7 @@ $(document).ready(function() {
         $(this).find('select[name=nidn]').prop('disabled',true);
     })
 
-    $('.btn-edit-acv').click(function(e){
+    $('#table_teacher_acv').on('click','.btn-edit',function(e){
         e.preventDefault();
 
         var id  = $(this).data('id');
@@ -1353,6 +1507,15 @@ $(document).ready(function() {
         var tabel   = $('#table_research');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
 
         $.ajax({
             url: url,
@@ -1377,18 +1540,25 @@ $(document).ready(function() {
                         var tema        = val.tema_penelitian;
                         var tahun       = val.tahun_penelitian;
                         var sumber      = val.sumber_biaya;
-                        var daftar      = "";
+                        var sumber_nama = val.sumber_biaya_nama;
+                        var daftar      = '';
 
                         if(val.research_students.length > 0) {
                             $.each(val.research_students, function(i,mhs){
 
-                                daftar += '<li>'+mhs.student.nama+'('+mhs.student.nim+')</li>';
+                                daftar += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
                             })
                         } else {
                             daftar = '-';
                         }
                         console.log(daftar);
                         var mahasiswa = '<ol>'+daftar+'</ol>';
+
+                        if(sumber_nama) {
+                            var sumber_biaya = sumber+' ('+sumber_nama+' )';
+                        } else {
+                            var sumber_biaya = sumber;
+                        }
 
                         html +='<tr>'+
                                 '<td>'+
@@ -1399,14 +1569,14 @@ $(document).ready(function() {
                                 '<td>'+tema+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td>'+mahasiswa+'</td>'+
-                                '<td>'+sumber+'</td>'+
+                                '<td>'+sumber_biaya+'</td>'+
                                 '<td class="text-center" width="50">'+
                                     '<div class="btn-group" role="group">'+
                                         '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                             '<div><span class="fa fa-caret-down"></span></div>'+
                                         '</button>'+
                                         '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="/research/+'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<a class="dropdown-item" href="/research/'+encode_id(id)+'/edit">Sunting</a>'+
                                             '<form method="POST">'+
                                                 '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
                                                 '<button class="dropdown-item btn-delete" data-dest="/research">Hapus</button>'+
@@ -1430,6 +1600,98 @@ $(document).ready(function() {
                 btn.html('Cari');
             }
         });
+    });
+
+
+    $('#research_form')
+        .on('change','#prodi_dosen',function(){
+            var cont    = $(this);
+            var target  = $('#select-dosen');
+            var id      = cont.val();
+
+            target.find('option').remove();
+
+            $.ajax({
+                url: base_url+'/ajax/teacher/get_by_studyProgram',
+                data: {kd_prodi:id},
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+
+                    var html = '';
+
+                    if(data.length > 0) {
+                        html += '<option value="">- Pilih Dosen -</option>';
+                        $.each(data,function(i){
+                            html += '<option value="'+data[i].nidn+'">'+data[i].nama+'</option>';
+                        })
+
+                    } else {
+                        html = '<option value="">- Pilih Dosen -</option>';
+                    }
+
+                    target.append(html);
+                }
+            })
+        })
+        .on('change','#sumber_biaya_select',function(){
+            var value = $(this).val();
+
+            alert
+
+            if(value=='Lembaga Dalam Negeri' || value=='Lembaga Luar Negeri') {
+                $('#sumber_biaya_input').prop('disabled',false);
+                $('#sumber_biaya_input').prop('required',true);
+            } else {
+                $('#sumber_biaya_input').val('');
+                $('#sumber_biaya_input').prop('required',false);
+                $('#sumber_biaya_input').prop('disabled',true);
+            }
+        })
+
+    $('a.add-mahasiswa').on('click', function (){
+        var panel = $('div#panelMahasiswa'); /* target untuk menampilkan form */
+        var hitung = panel.attr('data-jumlah');
+        var jumlah = parseInt(hitung) + 1;
+
+        /* menampilkan form */
+        var sintakshtml = $('<div class="row mb-3 align-items-center row-mahasiswa">'+
+                                '<a class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></a>'+
+                                '<div class="col-2">'+
+                                    '<input class="form-control number" type="text" name="mahasiswa_nim[]" placeholder="NIM" maxlength="9" required>'+
+                                '</div>'+
+                                '<div class="col-5">'+
+                                    '<input class="form-control" type="text" name="mahasiswa_nama[]" placeholder="Nama Mahasiswa" required>'+
+                                '</div>'+
+                                '<div class="col-4">'+
+                                    '<div id="prodi'+jumlah+'" class="parsley-select">'+
+                                        '<select class="form-control select-prodi" name="mahasiswa_prodi[]" data-parsley-class-handler="#prodi'+jumlah+'" data-parsley-errors-container="#errorsProdi'+jumlah+'" required>'+
+                                            '<option value="">- Asal Program Studi -</option>'+
+                                        '</select>'+
+                                    '</div>'+
+                                    '<div id="errorsProdi'+jumlah+'"></div>'+
+                                '</div>'+
+                            '</div>')
+
+        sintakshtml.hide();
+        panel.append(sintakshtml);
+        sintakshtml.fadeIn('slow');
+        panel.attr('data-jumlah',jumlah);
+        load_select_prodi(panel.find('.select-prodi'));
+        return false;
+    })
+
+    $('div#panelMahasiswa').on('click', 'a.remove-box', function() {
+        var panel  = $('div#panelMahasiswa');
+        var hitung = panel.attr('data-jumlah');
+        var jumlah = parseInt(hitung) - 1;
+        var induk = $(this).parents('div.row-mahasiswa');
+
+        induk.fadeOut('slow', function() {
+            $(this).remove();
+            panel.attr('data-jumlah',jumlah);
+        });
+        return false;
     });
     /****************************************************************************************/
 });

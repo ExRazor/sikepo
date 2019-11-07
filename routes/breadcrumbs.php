@@ -130,7 +130,6 @@ Breadcrumbs::for('research-add', function ($trail) {
 });
 
 Breadcrumbs::for('research-edit', function ($trail,$data) {
-    $trail->parent('research-show',$data);
     $trail->push('Sunting Data Penelitian');
 });
 

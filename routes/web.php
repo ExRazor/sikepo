@@ -82,12 +82,14 @@ Route::prefix('ajax')->group(function () {
     //Program Studi
     Route::post('study-program/show','StudyProgramController@show' );
     Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('ajax.study-program.filter');
+    Route::get('study-program/loadData','StudyProgramController@loadData')->name('ajax.study-program.load');
 
     //Kerja Sama
     Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('ajax.collaboration.filter');
 
     //Teacher
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
+    Route::get('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
 
     //Student Quota
     Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
@@ -210,6 +212,7 @@ Route::get('research/{id}/edit','ResearchController@edit')->name('research.edit'
 Route::post('research','ResearchController@store')->name('research.store');
 Route::put('research','ResearchController@update')->name('research.update');
 Route::delete('research','ResearchController@destroy')->name('research.delete');
+Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

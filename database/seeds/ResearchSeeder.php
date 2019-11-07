@@ -16,7 +16,7 @@ class ResearchSeeder extends Seeder
         $sumber_biaya = [
             'Perguruan Tinggi',
             'Mandiri',
-            'Lembaga dalam Negeri',
+            'Lembaga Dalam Negeri',
             'Lembaga Luar Negeri'
         ];
 
@@ -43,12 +43,20 @@ class ResearchSeeder extends Seeder
 
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
+                $random_sumber = $sumber_biaya[array_rand($sumber_biaya)];
+
+                if($random_sumber === 'Lembaga Dalam Negeri' || $random_sumber === 'Lembaga Luar Negeri') {
+                    $nama_lembaga = 'Bank Indonesia';
+                } else {
+                    $nama_lembaga = '';
+                }
                 DB::table('researches')->insert([
                     'nidn'              => $t->nidn,
                     'tema_penelitian'   => 'Analisis dan Perancangan',
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
                     'tahun_penelitian'  => $tahun[array_rand($tahun)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
+                    'sumber_biaya_nama' => $nama_lembaga,
                     'created_at'        => now()
                 ]);
             }

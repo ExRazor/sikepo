@@ -13,6 +13,7 @@ class Research extends Model
         'tahun_penelitian',
         'tahun_penelitian',
         'sumber_biaya',
+        'sumber_nama',
     ];
 
     public function teacher()

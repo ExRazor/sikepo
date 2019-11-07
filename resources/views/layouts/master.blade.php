@@ -33,7 +33,8 @@
     <script src="{{ asset ('assets/lib') }}/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/moment/min/moment.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/peity/jquery.peity.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/select2/js/select2.full.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/select2/js/select2.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/select2/js/i18n/id.js"></script>
     <script src="{{ asset ('assets/lib') }}/alertify/alertify.min.js"></script>
     <script src="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.js"></script>
     <script src="{{ asset('assets/lib') }}/jquery.maskedinput/jquery.maskedinput.js"></script>

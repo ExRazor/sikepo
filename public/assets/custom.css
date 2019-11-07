@@ -43,6 +43,18 @@
     font-size:9pt;
 }
 
+a.btn-transparent:not(:disabled):not(.disabled), a.btn-transparent:hover, a.btn-transparent:active, a.btn-transparent:focus, a.btn-transparent:visited, a.btn-transparent:active:focus {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    cursor:unset;
+    color:transparent;
+}
+
+button.dropdown-item {
+    cursor:pointer;
+}
+
 /* ----------------------------------------------- */
 /* ############### DATA TABLE CUSTOM ############### */
 /* ----------------------------------------------- */

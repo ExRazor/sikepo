@@ -52,7 +52,7 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table class="table table-bordered datatable mb-0" data-sort="desc">
+                <table id="table_teacher_acv" class="table table-bordered datatable mb-0" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle defaultSort" width="100">Tanggal Diperoleh</th>

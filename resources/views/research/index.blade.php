@@ -44,6 +44,7 @@
             <form action="{{route('ajax.research.filter')}}" id="filter-research" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
+                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Pilih Program Studi -</option>
                             @foreach($studyProgram as $sp)
@@ -90,14 +91,14 @@
                                 @if($p->researchStudents->count())
                                 <ol>
                                     @foreach ($p->researchStudents as $rs)
-                                    <li>{{$rs->student->nama}} ({{$rs->student->nim}})</li>
+                                    <li>{{$rs->nama}} ({{$rs->nim}}) ({{$rs->studyProgram->department->nama }} - {{$rs->studyProgram->nama }})</li>
                                     @endforeach
                                 </ol>
                                 @else
                                 -
                                 @endif
                             </td>
-                            <td>{{ $p->sumber_biaya }}</td>
+                            <td>{{ $p->sumber_biaya }} {{ $p->sumber_biaya_nama!='' ? '('.$p->sumber_biaya_nama.')' : ''}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

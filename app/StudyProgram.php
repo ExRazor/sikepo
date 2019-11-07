@@ -50,4 +50,9 @@ class StudyProgram extends Model
     {
         return $this->hasMany('App\Funding','kd_prodi');
     }
+
+    public function researchStudents()
+    {
+        return $this->hasMany('App\ResearchStudents','kd_prodi');
+    }
 }

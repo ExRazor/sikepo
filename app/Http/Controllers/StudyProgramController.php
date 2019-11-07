@@ -102,8 +102,6 @@ class StudyProgramController extends Controller
     {
         $id = $request->kd_prodi;
 
-        // dd($request->all());
-
         $request->validate([
             'kd_jurusan'    => 'required',
             'nama'          => 'required',
@@ -174,6 +172,23 @@ class StudyProgramController extends Controller
             return response()->json($data);
         } else {
             abort(404);
+        }
+    }
+
+    public function loadData(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = StudyProgram::where('nama', 'LIKE', '%'.$cari.'%')->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"=>$d->kd_prodi,
+                    "text"=>$d->nama
+                );
+            }
+            return response()->json($response);
         }
     }
 }

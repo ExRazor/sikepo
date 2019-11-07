@@ -9,6 +9,8 @@ class ResearchStudents extends Model
     protected $fillable = [
         'id_penelitian',
         'nim',
+        'nama',
+        'kd_prodi',
     ];
 
     public function research()
@@ -16,8 +18,8 @@ class ResearchStudents extends Model
         return $this->belongsTo('App\Research','id_penelitian');
     }
 
-    public function student()
+    public function studyProgram()
     {
-        return $this->belongsTo('App\Student','nim');
+        return $this->belongsTo('App\Studyprogram','kd_prodi');
     }
 }
