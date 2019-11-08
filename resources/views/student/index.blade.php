@@ -26,14 +26,12 @@
         <p class="mg-b-0">Olah Data Mahasiswa</p>
     </div>
     <div class="ml-auto">
-        <div class="row">
-            <div class="col-6 pr-1">
+            <div>
                 <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
             </div>
-            <div class="col-6 pl-1">
-                <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-b-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a>
+            <div>
+                <button class="btn btn-primary btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
             </div>
-        </div>
     </div>
 </div>
 
@@ -134,6 +132,7 @@
         </div>
     </div>
 </div>
+@include('student.form-import')
 @endsection
 
 @section('js')

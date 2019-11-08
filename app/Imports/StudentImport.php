@@ -2,40 +2,76 @@
 
 namespace App\Imports;
 
+use App\AcademicYear;
 use App\Student;
+use App\StudentStatus;
 use App\StudyProgram;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class StudentImport implements ToModel, WithStartRow
+class StudentImport implements ToCollection, WithStartRow
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        $kd_prodi = StudyProgram::where('nama',$row[0])->first()->kd_prodi;
+        foreach ($rows as $row)
+        {
+            if($row[12] == 'PEND. TEKNOLOGI INFORMASI') {
+                $row[12] = 'Pendidikan Teknologi Informasi';
+            }
 
-        // dd($row);
-        return new Student([
-            'kd_matkul'     => $row[1],
-            'kd_prodi'      => $kd_prodi,
-            'nama'          => $row[2],
-            'versi'         => $row[3],
-            'jenis'         => $row[4],
-            'semester'      => $row[5],
-            'sks_teori'     => $row[6],
-            'sks_seminar'   => '0',
-            'sks_praktikum' => '0',
-            'capaian'       => 'Pengetahuan',
-            'dokumen_nama'  => 'RPB - 2017'
-        ]);
+            $kd_prodi    = StudyProgram::where('nama',$row[12])->first()->kd_prodi;
+            $smt_awal    = explode('/',$row[18]);
+            $thn_masuk   = AcademicYear::where('tahun_akademik',$smt_awal[0])->where('semester','Ganjil')->first();
+
+            if($row[6] != 0) {
+                $origDate   = Carbon::instance(Date::excelToDateTimeObject($row[6]));
+                $newDate    = date("Y-m-d", strtotime($origDate));
+            } else {
+                $newDate    = date("Y-m-d");
+            }
+
+            if($row[7] == 'L') {
+                $jk = 'Laki-Laki';
+            } else if ($row[7] == 'P') {
+                $jk = 'Perempuan';
+            }
+
+            Student::updateOrCreate(
+                [
+                    'nim'       => $row[4],
+                ],
+                [
+                    'nama'              => $row[5],
+                    'tpt_lhr'           => '',
+                    'tgl_lhr'           => $newDate,
+                    'jk'                => $jk,
+                    'agama'             => $row[8],
+                    'alamat'            => '',
+                    'kewarganegaraan'   => 'WNI',
+                    'kd_prodi'          => $kd_prodi,
+                    'kelas'             => $row[13],
+                    'tipe'              => $row[14],
+                    'program'           => 'Reguler',
+                    'seleksi_jenis'     => $row[15],
+                    'seleksi_jalur'     => $row[16],
+                    'status_masuk'      => $row[17],
+                    'angkatan'          => $row[2],
+                ]
+            );
+
+            StudentStatus::create([
+                'id_ta'     => $thn_masuk->id,
+                'nim'       => $row[4],
+                'status'    => 'Aktif'
+            ]);
+        }
     }
 
     public function startRow() : int
     {
-        return 2;
+        return 3;
     }
 }

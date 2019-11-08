@@ -31,7 +31,7 @@
                 <a href="{{ route('academic.curriculum.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Matkul</a>
             </div>
             <div class="col-6 pl-1">
-                <button class="btn btn-primary btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-academic-curriculum"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
+                <button class="btn btn-primary btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-import-curriculum"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
             </div>
         </div>
     </div>

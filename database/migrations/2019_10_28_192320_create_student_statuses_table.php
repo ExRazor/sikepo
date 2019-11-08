@@ -16,7 +16,7 @@ class CreateStudentStatusesTable extends Migration
         Schema::create('student_statuses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('id_ta');
-            $table->char('nim',9);
+            $table->char('nim',10);
             $table->string('status');
             $table->string('ipk_terakhir')->nullable();
             $table->timestamps();

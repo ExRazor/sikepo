@@ -14,7 +14,7 @@ class CreateStudentsTable extends Migration
     public function up()
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->char('nim',9)->primary();
+            $table->char('nim',10)->primary();
             $table->string('nama');
             $table->string('tpt_lhr')->nulllable();
             $table->date('tgl_lhr');

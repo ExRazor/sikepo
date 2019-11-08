@@ -7,7 +7,9 @@ use App\StudentStatus;
 use App\Faculty;
 use App\StudyProgram;
 use App\AcademicYear;
+use App\Imports\StudentImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use File;
 
 class StudentController extends Controller
@@ -98,6 +100,41 @@ class StudentController extends Controller
 
         return redirect()->route('student')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
+
+    public function import(Request $request)
+	{
+		// Memvalidasi
+		$this->validate($request, [
+			'file' => 'required|mimes:csv,xls,xlsx'
+		]);
+
+		// Menangkap file excel
+		$file = $request->file('file');
+
+		// Mengambil nama file
+        $nama_file = $file->getClientOriginalName();
+
+		// upload ke folder khusus di dalam folder public
+		$file->move('upload/student/excel_import/',$nama_file);
+
+		// import data
+        $q = Excel::import(new StudentImport, public_path('/upload/student/excel_import/'.$nama_file));
+
+        //Validasi jika terjadi error saat mengimpor
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan saat mengimpor',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil diimpor',
+                'type'    => 'success'
+            ]);
+        }
+	}
 
     /**
      * Display the specified resource.

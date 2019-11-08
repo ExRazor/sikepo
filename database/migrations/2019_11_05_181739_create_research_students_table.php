@@ -16,7 +16,7 @@ class CreateResearchStudentsTable extends Migration
         Schema::create('research_students', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_penelitian');
-            $table->char('nim',9);
+            $table->char('nim',10);
             $table->string('nama');
             $table->char('kd_prodi',5);
             $table->timestamps();
