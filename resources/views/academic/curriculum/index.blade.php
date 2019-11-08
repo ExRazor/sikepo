@@ -28,7 +28,7 @@
     <div class="ml-auto">
         <div class="row">
             <div class="col-6 pr-1">
-                <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Matkul</a>
+                <a href="{{ route('academic.curriculum.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Matkul</a>
             </div>
             <div class="col-6 pl-1">
                 <button class="btn btn-primary btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-academic-curriculum"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
@@ -53,10 +53,33 @@
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
+                            <option value="">- Program Studi -</option>
                             @foreach($studyProgram as $sp)
                             <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="mg-r-10">
+                        <select class="form-control" name="kurikulum" style="width:200px;">
+                            <option value="">- Tahun Kurikulum -</option>
+                            @foreach($thn_kurikulum as $tk)
+                            <option>{{$tk->versi}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mg-r-10">
+                        <select class="form-control" name="semester" style="width:150px;">
+                            <option value="">- Semester -</option>
+                            @for($i=1;$i<=8;$i++)
+                            <option>{{$i}}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="mg-r-10">
+                        <select class="form-control" name="jenis" style="width:125px;">
+                            <option value="">- Jenis -</option>
+                            <option>Wajib</option>
+                            <option>Pilihan</option>
                         </select>
                     </div>
                     <div>
@@ -72,7 +95,7 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_curriculum" class="table display responsive" data-sort="asc" style="width:100%">
+                <table id="table_curriculum" class="table display responsive datatable" data-sort="asc" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center all defaultSort" width="50">#</th>
@@ -97,13 +120,13 @@
                                 <td>{{$c->studyProgram->nama}}</td>
                                 <td>{{$c->kd_matkul}}</td>
                                 <td>{{$c->nama}}</td>
-                                <td>{{$c->semester}}</td>
-                                <td>{{$c->jenis}}</td>
+                                <td class="text-center">{{$c->semester}}</td>
+                                <td class="text-center">{{$c->jenis}}</td>
                                 <td>{{$c->versi}}</td>
                                 <td>{{$c->sks_teori}}</td>
                                 <td>{{$c->sks_seminar}}</td>
                                 <td>{{$c->sks_praktikum}}</td>
-                                <td>{{$c->capaian}}</td>
+                                <td>{!! implode(', ',$c->capaian) !!}</td>
                                 <td>{{$c->dokumen_nama}}</td>
                                 <td class="text-center" width="50">
                                     <div class="btn-group" role="group">
@@ -111,9 +134,9 @@
                                             <div><span class="fa fa-caret-down"></span></div>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <a class="dropdown-item" href="{{ route('academic.curriculum.edit',encode_id($c->id)) }}">Sunting</a>
+                                            <a class="dropdown-item" href="{{ route('academic.curriculum.edit',encode_id($c->kd_matkul)) }}">Sunting</a>
                                             <form method="POST">
-                                                <input type="hidden" value="{{encode_id($c->id)}}" name="id">
+                                                <input type="hidden" value="{{encode_id($c->kd_matkul)}}" name="id">
                                                 <button class="dropdown-item btn-delete" data-dest="{{ route('academic.curriculum.delete') }}">Hapus</button>
                                             </form>
                                         </div>
@@ -127,7 +150,7 @@
         </div>
     </div>
 </div>
-@include('academic.curriculum.form')
+@include('academic.curriculum.form-import')
 @endsection
 
 @section('js')

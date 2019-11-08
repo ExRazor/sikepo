@@ -136,16 +136,16 @@ Breadcrumbs::for('research-edit', function ($trail,$data) {
 //Akademik - Kurikulum
 Breadcrumbs::for('academic-curriculum', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Penelitian', route('academic.curriculum'));
+    $trail->push('Data Kurikulum', route('academic.curriculum'));
 });
 
 Breadcrumbs::for('academic-curriculum-add', function ($trail) {
     $trail->parent('academic-curriculum');
-    $trail->push('Tambah Data Penelitian', route('academic.curriculum.add'));
+    $trail->push('Tambah Mata Kuliah', route('academic.curriculum.add'));
 });
 
 Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
-    $trail->push('Sunting Data Penelitian');
+    $trail->push('Sunting Mata Kuliah');
 });
 
 // Dashboard > Data Master

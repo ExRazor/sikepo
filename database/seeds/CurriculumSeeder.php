@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Imports\CurriculumImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CurriculumSeeder extends Seeder
 {
@@ -11,6 +13,6 @@ class CurriculumSeeder extends Seeder
      */
     public function run()
     {
-
+        Excel::import(new CurriculumImport, public_path('/upload/curriculum/excel_import/matakuliah.xlsx'));
     }
 }

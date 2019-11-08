@@ -157,13 +157,14 @@ $(document).ready(function() {
                 cont.removeClass('disabled');
                 $('.btn-cancel').removeClass('disabled');
                 cont.html('Simpan');
+
             },
             statusCode: {
                 500: function(state) {
                     Swal.fire({
-                        title: state.title,
-                        text: state.message,
-                        type: state.type,
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat memproses',
+                        type: 'error',
                         timer: 1500,
                     });
                 }
@@ -232,6 +233,16 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    statusCode: {
+                        500: function(state) {
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: 'Terjadi kesalahan saat memproses',
+                                type: 'error',
+                                timer: 1500,
+                            });
+                        }
+                    },
                 });
                 // console.log(result.value);
             }
@@ -286,6 +297,16 @@ $(document).ready(function() {
                                 text: state.message,
                                 type: state.type,
                                 timer: 2000,
+                            });
+                        }
+                    },
+                    statusCode: {
+                        500: function(state) {
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: 'Terjadi kesalahan saat memproses',
+                                type: 'error',
+                                timer: 1500,
                             });
                         }
                     },
@@ -1694,4 +1715,95 @@ $(document).ready(function() {
         return false;
     });
     /****************************************************************************************/
+
+
+    $('form#filter-curriculum').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_curriculum');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var kd_matkul     = val.kd_matkul;
+                        var prodi         = val.study_program.nama;
+                        var nama          = val.nama;
+                        var semester      = val.semester;
+                        var jenis         = val.jenis;
+                        var versi         = val.versi;
+                        var sks_teori     = val.sks_teori;
+                        var sks_seminar   = val.sks_seminar;
+                        var sks_praktikum = val.sks_praktikum;
+                        var capaian       = val.capaian;
+                        var dokumen       = val.dokumen_nama;
+
+                        html += '<tr>'+
+                                    '<td>'+i+'</td>'+
+                                    '<td>'+prodi+'</td>'+
+                                    '<td>'+kd_matkul+'</td>'+
+                                    '<td>'+nama+'</td>'+
+                                    '<td class="text-center">'+semester+'</td>'+
+                                    '<td class="text-center">'+jenis+'</td>'+
+                                    '<td>'+versi+'</td>'+
+                                    '<td>'+sks_teori+'</td>'+
+                                    '<td>'+sks_seminar+'</td>'+
+                                    '<td>'+sks_praktikum+'</td>'+
+                                    '<td>'+capaian.join(', ')+'</td>'+
+                                    '<td>'+dokumen+'</td>'+
+                                    '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="/academic/curriculum/'+encode_id(kd_matkul)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(kd_matkul)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="/academic/curriculum">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
 });

@@ -17,21 +17,26 @@ class CurriculumImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         $prodi = StudyProgram::where('nama',$row[0])->first();
+        $pengetahuan = 'Pengetahuan, Sikap';
 
         // dd($prodi);
-        return new Curriculum([
-            'kd_matkul'     => $row[1],
-            'kd_prodi'      => $prodi->kd_prodi,
-            'nama'          => $row[2],
-            'versi'         => $row[3],
-            'jenis'         => $row[4],
-            'semester'      => $row[5],
-            'sks_teori'     => $row[6],
-            'sks_seminar'   => '0',
-            'sks_praktikum' => '0',
-            'capaian'       => 'Pengetahuan',
-            'dokumen_nama'  => 'RPB - 2017'
-        ]);
+        return Curriculum::updateOrCreate(
+            [
+                'kd_matkul'     => $row[1],
+            ],
+            [
+                'kd_prodi'      => $prodi->kd_prodi,
+                'nama'          => $row[2],
+                'versi'         => $row[3],
+                'jenis'         => $row[4],
+                'semester'      => $row[5],
+                'sks_teori'     => $row[6],
+                'sks_seminar'   => '0',
+                'sks_praktikum' => '0',
+                'capaian'       => explode(', ',$pengetahuan),
+                'dokumen_nama'  => 'RPB - 2017'
+            ]
+        );
     }
 
     public function startRow() : int

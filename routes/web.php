@@ -108,7 +108,7 @@ Route::prefix('ajax')->group(function () {
     Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('ajax.research.filter');
 
     //Curriculum
-    Route::post('curriculum/get_by_filter','ResearchController@get_by_filter')->name('ajax.curriculum.filter');
+    Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
 });
 
 //Collaboration
