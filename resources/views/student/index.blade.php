@@ -25,13 +25,9 @@
         <h4>Data Mahasiswa</h4>
         <p class="mg-b-0">Olah Data Mahasiswa</p>
     </div>
-    <div class="ml-auto">
-            <div>
-                <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
-            </div>
-            <div>
-                <button class="btn btn-primary btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
-            </div>
+    <div class="ml-auto d-inline-flex">
+            <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-y-10 mg-r-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
+            <button class="btn btn-primary btn-block mg-y-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
     </div>
 </div>
 
@@ -85,7 +81,7 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
+                <table id="table_student" class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center">Nama / NIM</th>

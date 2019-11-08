@@ -1215,7 +1215,7 @@ $(document).ready(function() {
 
         var cont    = $(this);
         var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table_teacher');
+        var tabel   = $('#table_student');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
 
