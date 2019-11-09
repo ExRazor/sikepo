@@ -16,12 +16,9 @@ class StudentImport implements ToCollection, WithStartRow
 {
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row)
+        foreach ($rows as $index => $row)
         {
-            if($row[12] == 'PEND. TEKNOLOGI INFORMASI') {
-                $row[12] = 'Pendidikan Teknologi Informasi';
-            }
-
+            // $substr_nim  = substr($row[4],0,-5);
             $kd_prodi    = StudyProgram::where('nama',$row[12])->first()->kd_prodi;
             $smt_awal    = explode('/',$row[18]);
             $thn_masuk   = AcademicYear::where('tahun_akademik',$smt_awal[0])->where('semester','Ganjil')->first();
@@ -37,6 +34,10 @@ class StudentImport implements ToCollection, WithStartRow
                 $jk = 'Laki-Laki';
             } else if ($row[7] == 'P') {
                 $jk = 'Perempuan';
+            }
+
+            if($row[19] == 'Non-Aktif') {
+                $row[19] = 'Nonaktif';
             }
 
             Student::updateOrCreate(
@@ -67,6 +68,14 @@ class StudentImport implements ToCollection, WithStartRow
                 'nim'       => $row[4],
                 'status'    => 'Aktif'
             ]);
+
+            if($row[19] == 'Nonaktif') {
+                StudentStatus::create([
+                    'id_ta'     => $thn_masuk->id,
+                    'nim'       => $row[4],
+                    'status'    => $row[19]
+                ]);
+            }
         }
     }
 

@@ -16,7 +16,7 @@ class CurriculumImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
-        $prodi = StudyProgram::where('nama',$row[0])->first();
+        $prodi = StudyProgram::where('nama','LIKE','%'.$row[0].'%')->first();
         $pengetahuan = 'Pengetahuan, Sikap';
 
         // dd($prodi);

@@ -46,6 +46,7 @@ class StudyProgramController extends Controller
         $request->validate([
             'kd_prodi'      => 'required|numeric|digits:5',
             'kd_jurusan'    => 'required',
+            'kd_unik'       => 'required|numeric|digits:4',
             'nama'          => 'required',
             'jenjang'       => 'required',
             'thn_menerima'  => 'numeric|digits:4|nullable',
@@ -103,6 +104,7 @@ class StudyProgramController extends Controller
         $id = $request->kd_prodi;
 
         $request->validate([
+            'kd_unik'       => 'required|numeric|digits:4',
             'kd_jurusan'    => 'required',
             'nama'          => 'required',
             'jenjang'       => 'required',
@@ -110,6 +112,8 @@ class StudyProgramController extends Controller
         ]);
 
         $studyProgram = StudyProgram::find($id);
+        $studyProgram->kd_jurusan     = $request->kd_jurusan;
+        $studyProgram->kd_unik        = $request->kd_unik;
         $studyProgram->nama           = $request->nama;
         $studyProgram->jenjang        = $request->jenjang;
         $studyProgram->no_sk          = $request->no_sk;

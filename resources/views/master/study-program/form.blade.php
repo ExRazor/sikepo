@@ -138,10 +138,16 @@
                                 <input class="form-control" type="text" name="nip_kaprodi" value="{{ isset($data) ? $data->nip_kaprodi : Request::old('nip_kaprodi')}}" placeholder="Isikan NIP kepala program studi">
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-6 mg-md-t--1">
+                        <div class="col-md-4 mg-md-t--1">
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Nama Kepala Program Studi:</label>
                                 <input class="form-control" type="text" name="nm_kaprodi" value="{{ isset($data) ? $data->nm_kaprodi : Request::old('nm_kaprodi')}}" placeholder="Isikan nama kepala program studi">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-md-2 mg-md-t--1">
+                            <div class="form-group mg-md-l--1">
+                                <label class="form-control-label">Kode Unik Program Studi: <span class="tx-danger">*</span></label>
+                                <input class="form-control" type="text" name="kode_unik" value="{{ isset($data) ? $data->kode_unik : Request::old('kode_unik')}}" placeholder="Isikan kode unik prodi" required>
                             </div>
                         </div><!-- col-4 -->
 

@@ -16,6 +16,7 @@ class CreateStudyProgramsTable extends Migration
         Schema::create('study_programs', function (Blueprint $table) {
             $table->char('kd_prodi',5)->primary();
             $table->char('kd_jurusan',5);
+            $table->char('kd_unik',4)->unique();
             $table->string('nama');
             $table->string('singkatan')->nullable();
             $table->string('jenjang');

@@ -11,6 +11,7 @@ use App\Imports\StudentImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use File;
+use DataTables;
 
 class StudentController extends Controller
 {
@@ -147,8 +148,8 @@ class StudentController extends Controller
         $id = decode_id($id);
 
         $data       = Student::with('studyProgram','academicYear')->where('nim',$id)->first();
-        $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->first();
-        $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','asc')->get();
+        $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
+        $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
         if($status->status == 'Aktif') {

@@ -17,6 +17,7 @@ class StudyProgramSeeder extends Seeder
             [
                 'kd_prodi' => 57201,
                 'kd_jurusan' => 57401,
+                'kd_unik' => 5314,
                 'nama' => 'Sistem Informasi',
                 'singkatan' => 'SISFO',
                 'jenjang' => 'S1',
@@ -29,9 +30,10 @@ class StudyProgramSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'kd_prodi' => 53242,
+                'kd_prodi' => 83207,
                 'kd_jurusan' => 57401,
-                'nama' => 'Pendidikan Teknologi Informasi',
+                'kd_unik' => 5324,
+                'nama' => 'Pend. Teknologi Informasi',
                 'singkatan' => 'PTI',
                 'jenjang' => 'S1',
                 'no_sk' => 'PTN/32/2008/1034567/INFOR/UNG',
@@ -48,10 +50,12 @@ class StudyProgramSeeder extends Seeder
         $jenjang = ['D3','S1','S2','S3'];
 
         for($i = 0; $i < 20; $i++){
+            $kd_prodi = rand(22222, 59999);
             DB::table('study_programs')->insert([
                 [
-                    'kd_prodi'      => rand(22222, 59999),
+                    'kd_prodi'      => $kd_prodi,
                     'kd_jurusan'    => Department::all()->random()->kd_jurusan,
+                    'kd_unik'       => substr($kd_prodi, 0, -1),
                     'nama'          => 'Program Studi Random '.$i,
                     'singkatan'     => 'PSR'.$i,
                     'jenjang'       => $jenjang[array_rand($jenjang)],
