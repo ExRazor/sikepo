@@ -81,17 +81,17 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_student" class="table display responsive">
+                <table id="table_student" class="table display responsive" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center">Nama / NIM</th>
                             <th class="text-center">Tanggal Lahir</th>
                             <th class="text-center">Program Studi</th>
-                            <th class="text-center">Angkatan</th>
+                            <th class="text-center defaultSort">Angkatan</th>
                             <th class="text-center">Kelas</th>
                             <th class="text-center">Program</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center">Aksi</th>
+                            <th class="text-center no-sort">Aksi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -130,6 +130,7 @@
                     "targets": 7,
                     "orderable": false
                     } ],
+        pageLength: 25,
         responsive: true,
         autoWidth: false,
         language: {

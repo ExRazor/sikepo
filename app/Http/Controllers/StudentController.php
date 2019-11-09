@@ -340,27 +340,11 @@ class StudentController extends Controller
     public function datatable(Request $request)
     {
         if($request->ajax()) {
-            $q     = Student::whereHas(
+            $students     = Student::whereHas(
                             'studyProgram', function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
-                            });
-
-            if($request->kd_prodi){
-                $q->where('kd_prodi',$request->kd_prodi);
-            }
-
-            if($request->angkatan) {
-                $q->where('angkatan',$request->angkatan);
-            }
-
-            if($request->status) {
-                $q->whereHas(
-                    'latestStatus', function($query) use ($request) {
-                        $query->where('status',$request->status);
-                });
-            }
-
-            $students = $q->orderBy('created_at','desc')->get();
+                            })
+                            ->get();
 
             return DataTables::of($students)
                                 ->editColumn('nama', function($d) {
