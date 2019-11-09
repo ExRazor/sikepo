@@ -95,6 +95,7 @@ Route::prefix('ajax')->group(function () {
     Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
 
     //Student
+    Route::get('student/datatable','StudentController@datatable')->name('ajax.student.datatable');
     Route::post('student/get_by_filter','StudentController@get_by_filter')->name('ajax.student.filter');
 
     //Student - Status

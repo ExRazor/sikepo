@@ -25,12 +25,13 @@ class StudentController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $angkatan     = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
         $status       = StudentStatus::groupBy('status')->get('status');
-        $data         = Student::whereHas(
+        $students     = Student::whereHas(
                             'studyProgram', function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
                             })
                         ->get();
 
+        $data = datatables()->of($students)->make(true);
         return view('student.index',compact(['studyProgram','faculty','angkatan','status','data']));
     }
 
@@ -333,6 +334,49 @@ class StudentController extends Controller
             return response()->json($data);
         } else {
             abort(404);
+        }
+    }
+
+    public function datatable(Request $request)
+    {
+        if($request->ajax()) {
+            $q     = Student::whereHas(
+                            'studyProgram', function($query) {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            });
+
+            if($request->kd_prodi){
+                $q->where('kd_prodi',$request->kd_prodi);
+            }
+
+            if($request->angkatan) {
+                $q->where('angkatan',$request->angkatan);
+            }
+
+            if($request->status) {
+                $q->whereHas(
+                    'latestStatus', function($query) use ($request) {
+                        $query->where('status',$request->status);
+                });
+            }
+
+            $students = $q->orderBy('created_at','desc')->get();
+
+            return DataTables::of($students)
+                                ->editColumn('nama', function($d) {
+                                    return '<a href="'.route("student.profile",encode_id($d->nim)).'">'.$d->nama.'<br><small>NIM. '.$d->nim.'</small></a>';
+                                })
+                                ->editColumn('study_program', function($d){
+                                    return '<td>'.$d->studyProgram->nama.'<br><small>'.$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama.'</small></td>';
+                                })
+                                ->addColumn('status', function($d) {
+                                    return $d->latestStatus->status;
+                                })
+                                ->addColumn('aksi', function($d) {
+                                    return view('student.table-button', compact('d'))->render();
+                                })
+                                ->escapeColumns([])
+                                ->make(true);
         }
     }
 }

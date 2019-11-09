@@ -81,48 +81,20 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_student" class="table display responsive nowrap datatable" data-sort="desc">
+                <table id="table_student" class="table display responsive">
                     <thead>
                         <tr>
                             <th class="text-center">Nama / NIM</th>
                             <th class="text-center">Tanggal Lahir</th>
                             <th class="text-center">Program Studi</th>
-                            <th class="text-center defaultSort">Angkatan</th>
+                            <th class="text-center">Angkatan</th>
                             <th class="text-center">Kelas</th>
                             <th class="text-center">Program</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center no-sort">Aksi</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($data as $d)
-                        <tr>
-                            <td><a href="{{ route('student.profile',encode_id($d->nim)) }}">{{$d->nama}}<br><small>NIM. {{$d->nim}}</small></a></td>
-                            <td>{{$d->tgl_lhr}}</td>
-                            <td>
-                                {{$d->studyProgram->nama}}
-                            </td>
-                            <td>{{$d->angkatan}}</td>
-                            <td>{{$d->kelas}}</td>
-                            <td class="text-center">{{$d->program}}</td>
-                            <td class="text-center">{{$d->latestStatus->status}}</td>
-                            <td class="text-center" width="50">
-                                <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div><span class="fa fa-caret-down"></span></div>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('student.edit',encode_id($d->nim)) }}">Sunting</a>
-                                        <form method="POST">
-                                            <input type="hidden" value="{{encode_id($d->nim)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('student.delete') }}">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div><!-- card-body -->
         </div>
@@ -135,4 +107,49 @@
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
+<script>
+    $('#table_student').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('ajax.student.datatable') }}",
+        columns: [
+                    { data: 'nama', },
+                    { data: 'tgl_lhr', },
+                    { data: 'study_program', },
+                    { data: 'angkatan', },
+                    { data: 'kelas', },
+                    { data: 'program', },
+                    { data: 'status', },
+                    { data: 'aksi', }
+                ],
+        order: [[3, 'desc']],
+        columnDefs: [ {
+                    "targets": 7,
+                    "orderable": false
+                    } ],
+        responsive: true,
+        autoWidth: false,
+        language: {
+            "sProcessing":   "Sedang proses...",
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+            'searchPlaceholder': 'Cari...',
+            'sSearch': '',
+            "sUrl":          "",
+            "oPaginate": {
+                "sFirst":    "Awal",
+                "sPrevious": "Balik",
+                "sNext":     "Lanjut",
+                "sLast":     "Akhir"
+            }
+        }
+    })
+</script>
 @endsection

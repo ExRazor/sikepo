@@ -76,6 +76,6 @@
     </div>
     <!-- END: CONTENT -->
 
-
+    @yield('custom-js')
   </body>
 </html>
