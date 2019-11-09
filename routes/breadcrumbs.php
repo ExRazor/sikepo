@@ -133,6 +133,21 @@ Breadcrumbs::for('research-edit', function ($trail,$data) {
     $trail->push('Sunting Data Penelitian');
 });
 
+//Pengabdian Dosen
+Breadcrumbs::for('community-service', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Pengabdian', route('academic.curriculum'));
+});
+
+Breadcrumbs::for('community-service-add', function ($trail) {
+    $trail->parent('community-service');
+    $trail->push('Tambah Data Pengabdian', route('academic.curriculum.add'));
+});
+
+Breadcrumbs::for('community-service-edit', function ($trail,$data) {
+    $trail->push('Sunting Data Pengabdian');
+});
+
 //Akademik - Kurikulum
 Breadcrumbs::for('academic-curriculum', function ($trail) {
     $trail->parent('dashboard');

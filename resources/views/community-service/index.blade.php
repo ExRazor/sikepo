@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Penelitian')
+@section('title', 'Data Pengabdian')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('research') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('community-service') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,13 +20,13 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-book-reader"></i>
+    <i class="icon fa fa-american-sign-language-interpreting"></i>
     <div>
-        <h4>Data Penelitian</h4>
-        <p class="mg-b-0">Olah Data Penelitian</p>
+        <h4>Data Pengabdian</h4>
+        <p class="mg-b-0">Olah Data Pengabdian</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+        <a href="{{ route('community-service.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Pengabdian</a>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.research.filter')}}" id="filter-research" method="POST">
+            <form action="{{route('ajax.community-service.filter')}}" id="filter-communityService" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
@@ -65,33 +65,33 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_communityService" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center all" width="250">Nama Dosen</th>
-                            <th class="text-center all" width="600">Judul Penelitian</th>
-                            <th class="text-center none">Tema Penelitian</th>
-                            <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
+                            <th class="text-center all" width="600">Judul Pengabdian</th>
+                            <th class="text-center none">Tema Pengabdian</th>
+                            <th class="text-center defaultSort all" width="100">Tahun Pengabdian</th>
                             <th class="text-center none">Nama Mahasiswa</th>
                             <th class="text-center none">Sumber Biaya</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($penelitian as $p)
+                        @foreach ($pengabdian as $p)
                         <tr>
                             <td>
                                 {{ $p->teacher->nama }}<br>
                                 <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
                             </td>
-                            <td>{{ $p->judul_penelitian }}</td>
-                            <td>{{ $p->tema_penelitian }}</td>
-                            <td class="text-center">{{ $p->tahun_penelitian }}</td>
+                            <td>{{ $p->judul_pengabdian }}</td>
+                            <td>{{ $p->tema_pengabdian }}</td>
+                            <td class="text-center">{{ $p->tahun_pengabdian }}</td>
                             <td>
-                                @if($p->researchStudents->count())
+                                @if($p->communityServiceStudent->count())
                                 <ol>
-                                    @foreach ($p->researchStudents as $rs)
-                                    <li>{{$rs->nama}} - NIM.{{$rs->nim}} ({{$rs->studyProgram->department->nama }} - {{$rs->studyProgram->nama }})</li>
+                                    @foreach ($p->communityServiceStudent as $cs)
+                                    <li>{{$cs->nama}} - NIM.{{$cs->nim}} ({{$cs->studyProgram->department->nama }} - {{$cs->studyProgram->nama }})</li>
                                     @endforeach
                                 </ol>
                                 @else
@@ -105,10 +105,10 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('research.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('community-service.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('research.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('community-service.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>

@@ -108,6 +108,9 @@ Route::prefix('ajax')->group(function () {
     //Research
     Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('ajax.research.filter');
 
+    //Community Service
+    Route::post('community-service/get_by_filter','CommunityServiceController@get_by_filter')->name('ajax.community-service.filter');
+
     //Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
 });
@@ -178,7 +181,6 @@ Route::post('student/status','StudentStatusController@store')->name('student.sta
 Route::put('student/status','StudentStatusController@update')->name('student.status.update');
 Route::delete('student/status','StudentStatusController@destroy')->name('student.status.delete');
 
-
 //Funding
 Route::get('funding',function(){
     return redirect(route('student'));
@@ -217,6 +219,16 @@ Route::post('research','ResearchController@store')->name('research.store');
 Route::put('research','ResearchController@update')->name('research.update');
 Route::delete('research','ResearchController@destroy')->name('research.delete');
 Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
+
+//Community Service
+Route::get('community-service','CommunityServiceController@index')->name('community-service');
+Route::get('community-service/add','CommunityServiceController@create')->name('community-service.add');
+Route::get('community-service/{id}','CommunityServiceController@show')->name('community-service.show');
+Route::get('community-service/{id}/edit','CommunityServiceController@edit')->name('community-service.edit');
+Route::post('community-service','CommunityServiceController@store')->name('community-service.store');
+Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
+Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
+Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
 //Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');

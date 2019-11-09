@@ -50,6 +50,12 @@
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
+        <a href="{{ route('research') }}" class="br-menu-link {{ (request()->segment(1) == 'community-service') ? 'active' : '' }}">
+          <i class="menu-item-icon fa fa-american-sign-language-interpreting"></i>
+          <span class="menu-item-label">Pengabdian</span>
+        </a><!-- br-menu-link -->
+    </li>
+    <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'funding') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-balance-scale"></i>
             <span class="menu-item-label">Funding</span>

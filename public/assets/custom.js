@@ -1625,7 +1625,7 @@ $(document).ready(function() {
     });
 
 
-    $('#research_form')
+    $('#research_form, #communityService_form')
         .on('change','#prodi_dosen',function(){
             var cont    = $(this);
             var target  = $('#select-dosen');
@@ -1717,7 +1717,112 @@ $(document).ready(function() {
     });
     /****************************************************************************************/
 
+    /************************************ PENGABDIAN ****************************************/
+    $('form#filter-communityService').submit(function(e){
+        e.preventDefault();
 
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_communityService');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id          = val.id;
+                        var nidn        = val.teacher.nidn;
+                        var nama_dsn    = val.teacher.nama;
+                        var prodi       = val.teacher.study_program.singkatan;
+                        var judul       = val.judul_pengabdian;
+                        var tema        = val.tema_pengabdian;
+                        var tahun       = val.tahun_pengabdian;
+                        var sumber      = val.sumber_biaya;
+                        var sumber_nama = val.sumber_biaya_nama;
+                        var daftar      = '';
+
+                        if(val.community_service_student.length > 0) {
+                            $.each(val.community_service_student, function(i,mhs){
+
+                                daftar += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
+                            })
+                        } else {
+                            daftar = '-';
+                        }
+                        console.log(daftar);
+                        var mahasiswa = '<ol>'+daftar+'</ol>';
+
+                        if(sumber_nama) {
+                            var sumber_biaya = sumber+' ('+sumber_nama+' )';
+                        } else {
+                            var sumber_biaya = sumber;
+                        }
+
+                        html +='<tr>'+
+                                '<td>'+
+                                    nama_dsn+'<br>'+
+                                    '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
+                                '</td>'+
+                                '<td>'+judul+'</td>'+
+                                '<td>'+tema+'</td>'+
+                                '<td class="text-center">'+tahun+'</td>'+
+                                '<td>'+mahasiswa+'</td>'+
+                                '<td>'+sumber_biaya+'</td>'+
+                                '<td class="text-center" width="50">'+
+                                    '<div class="btn-group" role="group">'+
+                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                            '<div><span class="fa fa-caret-down"></span></div>'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                            '<a class="dropdown-item" href="/community-service/'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                '<button class="dropdown-item btn-delete" data-dest="/community-service">Hapus</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</td>'+
+                            '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
+    /****************************************************************************************/
+
+    /************************************* KURIKULUM ****************************************/
     $('form#filter-curriculum').submit(function(e){
         e.preventDefault();
 
@@ -1807,4 +1912,5 @@ $(document).ready(function() {
             }
         });
     });
+    /****************************************************************************************/
 });

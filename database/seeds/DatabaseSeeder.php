@@ -31,5 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FundStudyProgramSeeder::class);
         $this->call(ResearchSeeder::class);
         $this->call(ResearchStudentsSeeder::class);
+        $this->call(CommunityServiceSeeder::class);
+        $this->call(CommunityServiceStudentsSeeder::class);
     }
 }
