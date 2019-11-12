@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data EWMP Dosen')
+@section('title', 'Data Prestasi Dosen')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -23,8 +23,8 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-medal"></i>
     <div>
-        <h4>Import</h4>
-        <p class="mg-b-0">Import Data Dosen</p>
+        <h4>Prestasi Dosen</h4>
+        <p class="mg-b-0">Daftar Prestasi Dosen di Jurusan {{setting('app_department_name')}}</p>
     </div>
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
@@ -44,6 +44,26 @@
         </ul>
     </div>
     @endif
+    <div class="row">
+        <div class="col-12">
+            <form action="{{route('ajax.teacherAcv.filter')}}" id="filter-teacherAcv" method="POST">
+                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    <div class="mg-r-10">
+                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
+                        <select class="form-control" name="kd_prodi">
+                            <option value="">- Pilih Program Studi -</option>
+                            @foreach($studyProgram as $sp)
+                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header">
@@ -52,14 +72,13 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher_acv" class="table table-bordered datatable mb-0" data-sort="desc">
+                <table id="table_teacherAcv" class="table table-bordered mb-0 datatable" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle defaultSort" width="100">Tanggal Diperoleh</th>
                             <th class="text-center align-middle">Nama Dosen</th>
-                            <th class="text-center align-middle" width="150">Program Studi</th>
                             <th class="text-center align-middle">Prestasi</th>
-                            <th class="text-center align-middle">Tingkat Prestasi</th>
+                            <th class="text-center align-middle">Tingkat</th>
                             <th class="text-center align-middle no-sort">Bukti<br>Pendukung</th>
                             <th class="text-center align-middle no-sort">Aksi</th>
                         </tr>
@@ -68,12 +87,14 @@
                         @forelse ($achievement as $acv)
                         <tr>
                             <td class="text-center">{{ $acv->tanggal }}</td>
-                            <td>{{ $acv->teacher->nama }}</td>
-                            <td>{{ $acv->teacher->studyProgram->nama }}</td>
+                            <td>
+                                {{ $acv->teacher->nama }}<br>
+                                <small>NIDN.{{$acv->teacher->nidn}} / {{$acv->teacher->studyProgram->singkatan}}</small>
+                            </td>
                             <td>{{ $acv->prestasi }}</td>
                             <td>{{ $acv->tingkat_prestasi }}</td>
                             <td class="text-center align-middle">
-                                <a href="{{route('teacher.achievement.download',encrypt($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
+                                <a href="{{route('teacher.achievement.download',encode_id($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
                             </td>
                             <td width="50" class="text-center">
                                 <div class="btn-group" role="group">
@@ -81,11 +102,11 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item btn-edit btn-edit-acv" href="#" data-id="{{ encrypt($acv->id) }}">Sunting</a>
+                                        <a class="dropdown-item btn-edit" href="#" data-id="{{ encode_id($acv->id) }}">Sunting</a>
                                         <form method="POST">
                                             @method('delete')
                                             @csrf
-                                            <input type="hidden" value="{{encrypt($acv->id)}}" name="_id">
+                                            <input type="hidden" value="{{encode_id($acv->id)}}" name="_id">
                                             <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.delete') }}">Hapus</a>
                                         </form>
                                     </div>
@@ -110,4 +131,7 @@
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
 @endsection

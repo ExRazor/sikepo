@@ -9,11 +9,6 @@ use File;
 
 class TeacherAchievementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $achievement    = TeacherAchievement::whereHas(
@@ -27,22 +22,7 @@ class TeacherAchievementController extends Controller
         return view('teacher-achievement.index',compact(['achievement','studyProgram']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         if(request()->ajax()) {
@@ -86,27 +66,10 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\TeacherAchievement  $teacherAchievement
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TeacherAchievement $teacherAchievement)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\TeacherAchievement  $teacherAchievement
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         if(request()->ajax()) {
-            $id = decrypt($id);
+            $id = decode_id($id);
             $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram')->first();
 
             return response()->json($data);
@@ -115,17 +78,10 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\TeacherAchievement  $teacherAchievement
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         if(request()->ajax()) {
-            $id  = decrypt($request->_id);
+            $id  = decode_id($request->_id);
 
             $request->validate([
                 'prestasi'              => 'required',
@@ -171,16 +127,10 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\TeacherAchievement  $teacherAchievement
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decrypt($request->_id);
+            $id = decode_id($request->_id);
 
             $q = TeacherAchievement::destroy($id);
             if(!$q) {
@@ -203,7 +153,7 @@ class TeacherAchievementController extends Controller
 
     public function download($filename)
     {
-        $file = decrypt($filename);
+        $file = decode_id($filename);
 
         $storagePath = 'upload/teacher-achievement/'.$file;
         if( ! File::exists($storagePath)) {
@@ -217,5 +167,32 @@ class TeacherAchievementController extends Controller
 
             return response(file_get_contents($storagePath), 200, $headers);
         }
+    }
+
+    public function get_by_filter(Request $request)
+    {
+        if($request->ajax()) {
+
+            $q   = TeacherAchievement::with(['teacher.studyProgram.department'])
+                            ->whereHas(
+                                'teacher.studyProgram', function($query) {
+                                    $query->where('kd_jurusan',setting('app_department_id'));
+                                }
+                            );
+
+            if($request->kd_prodi){
+                $q->whereHas(
+                    'teacher.studyProgram', function($query) use ($request) {
+                        $query->where('kd_prodi',$request->kd_prodi);
+                });
+            }
+
+            $data = $q->orderBy('tanggal','desc')->get();
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+
     }
 }

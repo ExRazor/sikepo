@@ -136,16 +136,37 @@ Breadcrumbs::for('research-edit', function ($trail,$data) {
 //Pengabdian Dosen
 Breadcrumbs::for('community-service', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Pengabdian', route('academic.curriculum'));
+    $trail->push('Data Pengabdian', route('community-service'));
 });
 
 Breadcrumbs::for('community-service-add', function ($trail) {
     $trail->parent('community-service');
-    $trail->push('Tambah Data Pengabdian', route('academic.curriculum.add'));
+    $trail->push('Tambah Data Pengabdian', route('community-service.add'));
 });
 
 Breadcrumbs::for('community-service-edit', function ($trail,$data) {
     $trail->push('Sunting Data Pengabdian');
+});
+
+//Publikasi
+Breadcrumbs::for('publication', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Publikasi', route('publication'));
+});
+
+Breadcrumbs::for('publication-add', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Tambah Data Publikasi', route('publication.add'));
+});
+
+Breadcrumbs::for('publication-edit', function ($trail,$data) {
+    $trail->push('Sunting Data Publikasi');
+});
+
+//Publikasi Kategori
+Breadcrumbs::for('publication-category', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Kategori Jenis Publikasi', route('publication.category'));
 });
 
 //Akademik - Kurikulum

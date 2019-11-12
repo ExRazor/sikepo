@@ -2,42 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\FundingCategory;
+use App\PublicationCategory;
 use Illuminate\Http\Request;
 
-class FundingCategoryController extends Controller
+class PublicationCategoryController extends Controller
 {
-
     public function index()
     {
-        $category = FundingCategory::with('children')->orderBy('id','asc')->whereNull('id_parent')->get();
+        $category = PublicationCategory::orderBy('id','asc')->get();
 
-        return view('funding/category/index',compact(['category']));
+        return view('publication/category/index',compact(['category']));
     }
 
     public function store(Request $request)
     {
         if(request()->ajax()) {
 
-            if(!$request->id_parent) {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                    'jenis'      => 'required',
-                ]);
-            } else {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                ]);
-            }
+            $request->validate([
+                'nama'       => 'required',
+                'deskripsi'  => 'nullable',
+            ]);
 
-            $data               = new FundingCategory;
-            $data->id_parent    = $request->id_parent;
+            $data               = new PublicationCategory;
             $data->nama         = $request->nama;
-            $data->jenis        = $request->jenis;
             $data->deskripsi    = $request->deskripsi;
             $q = $data->save();
 
@@ -61,7 +48,7 @@ class FundingCategoryController extends Controller
     {
         if(request()->ajax()) {
             $id = decrypt($id);
-            $data = FundingCategory::find($id);
+            $data = PublicationCategory::find($id);
             return response()->json($data);
         } else {
             abort(404);
@@ -74,25 +61,13 @@ class FundingCategoryController extends Controller
 
             $id = decrypt($request->_id);
 
-            if(!$request->id_parent) {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                    'jenis'      => 'required',
-                ]);
-            } else {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                ]);
-            }
+            $request->validate([
+                'nama'       => 'required',
+                'deskripsi'  => 'nullable',
+            ]);
 
-            $data               = FundingCategory::find($id);
-            $data->id_parent    = $request->id_parent;
+            $data               = PublicationCategory::find($id);
             $data->nama         = $request->nama;
-            $data->jenis        = $request->jenis;
             $data->deskripsi    = $request->deskripsi;
             $q = $data->save();
 
@@ -116,7 +91,7 @@ class FundingCategoryController extends Controller
     {
         if(request()->ajax()) {
             $id = decrypt($request->_id);
-            $q  = FundingCategory::destroy($id);
+            $q  = PublicationCategory::destroy($id);
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -130,16 +105,6 @@ class FundingCategoryController extends Controller
                     'type'    => 'success'
                 ]);
             }
-        }
-    }
-
-    public function get_jenis($id)
-    {
-        if(request()->ajax()) {
-
-            $data  = FundingCategory::where('id',$id)->first()->jenis;
-
-            return response()->json($data);
         }
     }
 }

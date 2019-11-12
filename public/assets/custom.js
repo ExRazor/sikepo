@@ -321,6 +321,25 @@ $(document).ready(function() {
     if($().DataTable) {
         var direction = $('table').data('sort');
 
+        var bahasa = {
+            "sProcessing":   "Sedang proses...",
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+            'searchPlaceholder': 'Cari...',
+            'sSearch': '',
+            "sUrl":          "",
+            "oPaginate": {
+                "sFirst":    "Awal",
+                "sPrevious": "Balik",
+                "sNext":     "Lanjut",
+                "sLast":     "Akhir"
+            }
+         };
+
         var datatable_opt = {
                                 order: [[$('th.defaultSort').index(), direction]],
                                 responsive: true,
@@ -329,24 +348,7 @@ $(document).ready(function() {
                                     "targets"  : 'no-sort',
                                     "orderable": false,
                                 }],
-                                language: {
-                                    "sProcessing":   "Sedang proses...",
-                                    "sLengthMenu":   "Tampilan _MENU_ entri",
-                                    "sZeroRecords":  "Tidak ditemukan data",
-                                    "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
-                                    "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
-                                    "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                                    "sInfoPostFix":  "",
-                                    'searchPlaceholder': 'Cari...',
-                                    'sSearch': '',
-                                    "sUrl":          "",
-                                    "oPaginate": {
-                                        "sFirst":    "Awal",
-                                        "sPrevious": "Balik",
-                                        "sNext":     "Lanjut",
-                                        "sLast":     "Akhir"
-                                    }
-                                 }
+                                language: bahasa
                             }
         $('.datatable').DataTable(datatable_opt)
     };
@@ -1032,6 +1034,64 @@ $(document).ready(function() {
         });
     });
 
+    $('#selectProdi').on('change',function(){
+        var prodi = $(this).val();
+        var url   = base_url+'/ajax/teacher/show_by_prodi';
+        var nidn  = $(this).attr('data-nidn');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {kd_prodi:prodi},
+            dataType:"json",
+            success:function(data){
+
+                var opsi;
+                var cont = $('#modal-teach-acv').find('select[name=nidn]');
+
+                cont.prop('disabled',false);
+                cont.children('option:not(:first)').remove();
+
+                $.each(data, function(i){
+                    cont.append('<option value="'+data[i].nidn+'" '+((data[i].nidn == nidn) ? "selected" : "")+'>'+data[i].nama+'</option>');
+                });
+
+            }
+        });
+    })
+
+    $('#research_form, #communityService_form, #publication_form')
+        .on('change','#prodi_dosen',function(){
+            var cont    = $(this);
+            var target  = $('#select-dosen');
+            var id      = cont.val();
+
+            target.find('option').remove();
+
+            $.ajax({
+                url: base_url+'/ajax/teacher/get_by_studyProgram',
+                data: {kd_prodi:id},
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+
+                    var html = '';
+
+                    if(data.length > 0) {
+                        html += '<option value="">- Pilih Dosen -</option>';
+                        $.each(data,function(i){
+                            html += '<option value="'+data[i].nidn+'">'+data[i].nama+'</option>';
+                        })
+
+                    } else {
+                        html = '<option value="">- Pilih Dosen -</option>';
+                    }
+
+                    target.append(html);
+                }
+            })
+        })
+
     /*****************************************************************************/
 
     /********************************* DATA EWMP DOSEN *********************************/
@@ -1142,11 +1202,11 @@ $(document).ready(function() {
         $(this).find('select[name=nidn]').prop('disabled',true);
     })
 
-    $('#table_teacher_acv').on('click','.btn-edit',function(e){
+    $('#table_teacherAcv').on('click','.btn-edit',function(e){
         e.preventDefault();
 
         var id  = $(this).data('id');
-        var url = '/ajax/teacher-achievement/'+id;
+        var url = base_url+'/teacher-achievement/'+id;
 
         $.ajax({
             url: url,
@@ -1180,32 +1240,90 @@ $(document).ready(function() {
         });
     });
 
-    $('#selectProdi').on('change',function(){
-        var prodi = $(this).val();
-        var url   = base_url+'/ajax/teacher/show_by_prodi';
-        var nidn  = $(this).attr('data-nidn');
+    $('form#filter-teacherAcv').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_teacherAcv');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
 
         $.ajax({
             url: url,
+            data: datacon,
             type: 'POST',
-            data: {kd_prodi:prodi},
-            dataType:"json",
-            success:function(data){
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
 
-                var opsi;
-                var cont = $('#modal-teach-acv').find('select[name=nidn]');
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id          = val.id;
+                        var nidn        = val.teacher.nidn;
+                        var nama_dsn    = val.teacher.nama;
+                        var prodi       = val.teacher.study_program.singkatan;
+                        var tanggal     = val.tanggal;
+                        var prestasi    = val.prestasi;
+                        var tingkat     = val.tingkat_prestasi;
+                        var bukti       = bukti_pendukung;
 
-                cont.prop('disabled',false);
-                cont.children('option:not(:first)').remove();
+                        html +='<tr>'+
+                                '<td>'+tanggal+'</td>'+
+                                '<td>'+
+                                    nama_dsn+'<br>'+
+                                    '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
+                                '</td>'+
+                                '<td>'+prestasi+'</td>'+
+                                '<td>'+tingkat+'</td>'+
+                                '<td class="text-center align-middle">'+
+                                    '<a href="'+base_url+'/download/teacher-achievement/'+encode_id(bukti)+'" target="_blank"><div><i class="fa fa-download"></i></div></a>'+
+                                '</td>'+
+                                '<td class="text-center" width="50">'+
+                                    '<div class="btn-group" role="group">'+
+                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                            '<div><span class="fa fa-caret-down"></span></div>'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                            '<a class="dropdown-item" href="'+base_url+'/'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/community-service">Hapus</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</td>'+
+                            '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
 
-                $.each(data, function(i){
-                    cont.append('<option value="'+data[i].nidn+'" '+((data[i].nidn == nidn) ? "selected" : "")+'>'+data[i].nama+'</option>');
-                });
-
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
             }
         });
-    })
-
+    });
 
     /***********************************************************************************/
 
@@ -1625,37 +1743,7 @@ $(document).ready(function() {
     });
 
 
-    $('#research_form, #communityService_form')
-        .on('change','#prodi_dosen',function(){
-            var cont    = $(this);
-            var target  = $('#select-dosen');
-            var id      = cont.val();
-
-            target.find('option').remove();
-
-            $.ajax({
-                url: base_url+'/ajax/teacher/get_by_studyProgram',
-                data: {kd_prodi:id},
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-
-                    var html = '';
-
-                    if(data.length > 0) {
-                        html += '<option value="">- Pilih Dosen -</option>';
-                        $.each(data,function(i){
-                            html += '<option value="'+data[i].nidn+'">'+data[i].nama+'</option>';
-                        })
-
-                    } else {
-                        html = '<option value="">- Pilih Dosen -</option>';
-                    }
-
-                    target.append(html);
-                }
-            })
-        })
+    $('#research_form')
         .on('change','#sumber_biaya_select',function(){
             var value = $(this).val();
 
@@ -1770,7 +1858,7 @@ $(document).ready(function() {
                         } else {
                             daftar = '-';
                         }
-                        console.log(daftar);
+
                         var mahasiswa = '<ol>'+daftar+'</ol>';
 
                         if(sumber_nama) {
@@ -1896,6 +1984,142 @@ $(document).ready(function() {
                                         '</div>'+
                                     '</td>'+
                                 '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
+    /****************************************************************************************/
+
+    /********************************* DATA KATEGORI PUBLIKASI *********************************/
+    $('#table-publishCat').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = '/ajax/publication/category/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#form-publishCat')
+                    .find('input[name=_id]').val(id).end()
+                    .find('input[name=nama]').val(data.nama).end()
+                    .find('textarea[name=deskripsi]').text(data.deskripsi).end()
+            }
+        });
+    })
+
+    $('#form-publishCat')
+        .on('click','.btn-add',function(e){
+            var form  = $('#form-publishCat')
+            form.trigger('reset');
+        }).end()
+
+    $('form#filter-publication').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_publication');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id          = val.id;
+                        var nidn        = val.teacher.nidn;
+                        var nama_dsn    = val.teacher.nama;
+                        var prodi       = val.teacher.study_program.singkatan;
+                        var judul       = val.judul;
+                        var kategori    = val.publication_category.nama;
+                        var penerbit    = val.penerbit;
+                        var tahun       = val.tahun;
+                        var jurnal      = val.jurnal;
+                        var sitasi      = val.sitasi;
+                        var akreditasi  = val.akreditasi;
+                        var tautan      = val.tautan;
+                        var daftar      = '';
+
+                        if(val.publication_students.length > 0) {
+                            $.each(val.publication_students, function(i,mhs){
+
+                                daftar += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
+                            })
+                        } else {
+                            daftar = '-';
+                        }
+                        var mahasiswa = '<ol>'+daftar+'</ol>';
+
+                        if(val.tautan) {
+                            var tautan = '<a href="'+val.tautan+'" target="_blank"><div><i class="fa fa-download"></i></div></a>';
+                        } else {
+                            var tautan = '-';
+                        }
+
+
+                        html +='<tr>'+
+                                '<td>'+
+                                    nama_dsn+'<br>'+
+                                    '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
+                                '</td>'+
+                                '<td>'+judul+'</td>'+
+                                '<td>'+kategori+'</td>'+
+                                '<td class="text-center">'+tahun+'</td>'+
+                                '<td>'+penerbit+'</td>'+
+                                '<td>'+jurnal+'</td>'+
+                                '<td>'+akreditasi+'</td>'+
+                                '<td>'+sitasi+'</td>'+
+                                '<td>'+mahasiswa+'</td>'+
+                                '<td>'+tautan+'</td>'+
+                                '<td class="text-center" width="50">'+
+                                    '<div class="btn-group" role="group">'+
+                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                            '<div><span class="fa fa-caret-down"></span></div>'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                            '<a class="dropdown-item" href="'+base_url+'/publication/list/'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/publication/list">Hapus</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</td>'+
+                            '</tr>';
                     })
                 }
                 // tabel.dataTable().fnDestroy();

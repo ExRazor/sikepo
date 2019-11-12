@@ -91,6 +91,9 @@ Route::prefix('ajax')->group(function () {
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
     Route::get('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
 
+    //Teacher Achievement
+    Route::post('teacher-acv/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacherAcv.filter');
+
     //Student Quota
     Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
 
@@ -110,6 +113,12 @@ Route::prefix('ajax')->group(function () {
 
     //Community Service
     Route::post('community-service/get_by_filter','CommunityServiceController@get_by_filter')->name('ajax.community-service.filter');
+
+    //Publication Category
+    Route::get('publication/category/{id}','PublicationCategoryController@edit')->name('publication.category.edit');
+
+    //Publication
+    Route::post('publication/get_by_filter','PublicationController@get_by_filter')->name('ajax.publication.filter');
 
     //Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
@@ -141,10 +150,10 @@ Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->na
 
 //Teacher Achievement
 Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher.achievement');
-Route::get('/ajax/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
-Route::post('/ajax/teacher-achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
-Route::put('/ajax/teacher-achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
-Route::delete('/ajax/teacher-achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
+Route::get('/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
+Route::post('/teacher-achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
+Route::put('/teacher-achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
+Route::delete('/teacher-achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
 Route::get('/download/teacher-achievement/{filename}','TeacherAchievementController@download')->name('teacher.achievement.download');
 
 //EWMP
@@ -229,6 +238,24 @@ Route::post('community-service','CommunityServiceController@store')->name('commu
 Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
 Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
 Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
+
+//Publication Category
+Route::get('publication/category','PublicationCategoryController@index')->name('publication.category');
+Route::post('publication/category','PublicationCategoryController@store')->name('publication.category.store');
+Route::put('publication/category','PublicationCategoryController@update')->name('publication.category.update');
+Route::delete('publication/category','PublicationCategoryController@destroy')->name('publication.category.delete');
+
+//Publication List
+Route::get('publication/list','PublicationController@index')->name('publication');
+Route::get('publication/list/add','PublicationController@create')->name('publication.add');
+Route::get('publication/list/{id}','PublicationController@show')->name('publication.show');
+Route::get('publication/list/{id}/edit','PublicationController@edit')->name('publication.edit');
+Route::post('publication/list','PublicationController@store')->name('publication.store');
+Route::put('publication/list','PublicationController@update')->name('publication.update');
+Route::delete('publication/list','PublicationController@destroy')->name('publication.delete');
+Route::get('publication/list/delete_student/{id}','PublicationController@destroy_students')->name('publication.students.delete');
+
+
 
 //Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');

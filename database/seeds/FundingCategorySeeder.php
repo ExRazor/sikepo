@@ -54,7 +54,6 @@ class FundingCategorySeeder extends Seeder
         }
 
         foreach($jenis_child as $i => $value){
-
             DB::table('funding_categories')->insert([
                 'id_parent'  => FundingCategory::where('nama','Biaya Operasional Pendidikan')->first()->id,
                 'nama'       => $value,
