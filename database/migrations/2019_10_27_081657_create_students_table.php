@@ -20,7 +20,7 @@ class CreateStudentsTable extends Migration
             $table->date('tgl_lhr');
             $table->string('jk');
             $table->string('agama');
-            $table->string('alamat');
+            $table->string('alamat')->nullable();
             $table->string('kewarganegaraan');
             $table->char('kd_prodi',5);
             $table->string('kelas');

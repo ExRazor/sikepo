@@ -119,8 +119,8 @@
                                     <select class="form-control" name="agama" required>
                                         <option value="">- Pilih Agama -</option>
                                         <option value="Islam" {{ (isset($data) && ($data->agama=='Islam') || Request::old('agama')=='Islam') ? 'selected' : ''}}>Islam</option>
-                                        <option value="Kristen" {{ (isset($data) && ($data->agama=='Kristen') || Request::old('agama')=='Kristen') ? 'selected' : ''}}>Kristen</option>
-                                        <option value="Katholik" {{ (isset($data) && ($data->agama=='Katholik') || Request::old('agama')=='Katholik') ? 'selected' : ''}}>Katholik</option>
+                                        <option value="Kristen Protestan" {{ (isset($data) && ($data->agama=='Kristen Protestan') || Request::old('agama')=='Kristen Protestan') ? 'selected' : ''}}>Kristen Protestan</option>
+                                        <option value="Kristen Katholik" {{ (isset($data) && ($data->agama=='Kristen Katholik') || Request::old('agama')=='Kristen Katholik') ? 'selected' : ''}}>Kristen Katholik</option>
                                         <option value="Buddha" {{ (isset($data) && ($data->agama=='Buddha') || Request::old('agama')=='Buddha') ? 'selected' : ''}}>Buddha</option>
                                         <option value="Hindu" {{ (isset($data) && ($data->agama=='Hindu') || Request::old('agama')=='Hindu') ? 'selected' : ''}}>Hindu</option>
                                         <option value="Kong Hu Cu" {{ (isset($data) && ($data->agama=='Kong Hu Cu') || Request::old('agama')=='Kong Hu Cu') ? 'selected' : ''}}>Kong Hu Cu</option>
@@ -132,7 +132,7 @@
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-6">
-                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir" required>
+                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
                                         </div>
                                         <div class="col-6">
                                             <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir" required>
@@ -214,12 +214,7 @@
                                             </select>
                                         </div>
                                         <div class="col-6">
-                                            <select class="form-control" name="seleksi_jalur" required>
-                                                <option value="">- Pilih Jalur Seleksi -</option>
-                                                <option value="SNMPTN" {{ (isset($data) && ($data->seleksi_jalur=='SNMPTN') || Request::old('seleksi_jalur')=='SNMPTN') ? 'selected' : ''}}>SNMPTN</option>
-                                                <option value="SBMPTN" {{ (isset($data) && ($data->seleksi_jalur=='SBMPTN') || Request::old('seleksi_jalur')=='SBMPTN') ? 'selected' : ''}}>SBMPTN</option>
-                                                <option value="Mandiri" {{ (isset($data) && ($data->seleksi_jalur=='Mandiri') || Request::old('seleksi_jalur')=='Mandiri') ? 'selected' : ''}}>Mandiri</option>
-                                            </select>
+                                            <input class="form-control" name="seleksi_jalur" type="text" value="{{ isset($data) ? $data->seleksi_jalur : Request::old('seleksi_jalur')}}" placeholder="Masukkan jalur seleksi">
                                         </div>
                                     </div>
                                 </div>
