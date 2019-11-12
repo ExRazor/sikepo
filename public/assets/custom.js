@@ -90,7 +90,7 @@ $(document).ready(function() {
         $('span.title-action').text('Tambah');
         $('.btn-save').val('post');
 
-        $('.alert-danger').remove();
+        $('.alert-danger').hide();
         $('.is-invalid').removeClass('is-invalid');
     });
 

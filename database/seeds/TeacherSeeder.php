@@ -21,6 +21,7 @@ class TeacherSeeder extends Seeder
         $ikatan = ['Dosen Tetap','Dosen Tidak Tetap','Dosen Honorer PTN'];
         $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
         $sesuai = ['Ya','Tidak'];
+        $bidang_ahli = ['PHP','Photoshop','Elektronika','OOP','Office'];
 
     	for($i = 0; $i < 50; $i++){
                 // insert data ke table pegawai menggunakan Faker
@@ -38,7 +39,7 @@ class TeacherSeeder extends Seeder
                 'email'                 => $faker->email,
                 'pend_terakhir_jenjang' => $pend[array_rand($pend)],
                 'pend_terakhir_jurusan' => $jurusan[array_rand($jurusan)],
-                'bidang_ahli'           => 'Apa saja',
+                'bidang_ahli'           => json_encode($bidang_ahli),
                 'ikatan_kerja'          => $ikatan[array_rand($ikatan)],
                 'jabatan_akademik'      => $jabatan[array_rand($jabatan)],
                 'sertifikat_pendidik'   => 'hehe',

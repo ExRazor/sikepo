@@ -199,7 +199,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Bidang Keahlian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Masukkan Bidang Keahlian" required>
+                                    <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Jika lebih dari satu, pisahkan dengan tanda koma." required>
                                 </div>
                             </div>
                             <div class="row mb-3">

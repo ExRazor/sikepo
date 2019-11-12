@@ -72,6 +72,8 @@ class TeacherController extends Controller
             'sesuai_bidang_ps'      => 'required',
         ]);
 
+        $bidang_ahli = explode(", ",$request->bidang_ahli);
+
         $Teacher                            = new Teacher;
         $Teacher->nidn                      = $request->nidn;
         $Teacher->kd_prodi                  = $request->kd_prodi;
@@ -86,7 +88,7 @@ class TeacherController extends Controller
         $Teacher->email                     = $request->email;
         $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
         $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
-        $Teacher->bidang_ahli               = $request->bidang_ahli;
+        $Teacher->bidang_ahli               = json_encode($bidang_ahli);
         $Teacher->ikatan_kerja              = $request->ikatan_kerja;
         $Teacher->jabatan_akademik          = $request->jabatan_akademik;
         $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
@@ -126,18 +128,13 @@ class TeacherController extends Controller
      */
     public function show($nip)
     {
-        $nip            = decode_id($nip);
-        $data           = Teacher::where('nip',$nip)->first();
+        $nip               = decode_id($nip);
+        $data              = Teacher::where('nip',$nip)->first();
+        $data->bidang_ahli = json_decode($data->bidang_ahli);
 
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
-        $ayExist        = array();
 
-        foreach($ewmp as $e) {
-            $ayExist[] = $e->id_ta;
-        }
-
-        $academicYear   = AcademicYear::whereNotIn('id',$ayExist)->orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-
+        $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('tanggal','desc')->get();
 
         return view('teacher/profile',compact(['data','academicYear','ewmp','achievement']));
@@ -162,6 +159,9 @@ class TeacherController extends Controller
         $data         = Teacher::where('nip',$nip)->first();
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
+
+        $bidang = json_decode($data->bidang_ahli);
+        $data->bidang_ahli   = implode(', ',$bidang);
 
         return view('teacher/form',compact(['data','faculty','studyProgram']));
     }
@@ -194,6 +194,8 @@ class TeacherController extends Controller
             'sesuai_bidang_ps'      => 'required',
         ]);
 
+        $bidang_ahli = explode(", ",$request->bidang_ahli);
+
         $Teacher                            = Teacher::find($id);
         $Teacher->kd_prodi                  = $request->kd_prodi;
         $Teacher->nip                       = $request->nip;
@@ -207,7 +209,7 @@ class TeacherController extends Controller
         $Teacher->email                     = $request->email;
         $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
         $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
-        $Teacher->bidang_ahli               = $request->bidang_ahli;
+        $Teacher->bidang_ahli               = json_encode($bidang_ahli);
         $Teacher->ikatan_kerja              = $request->ikatan_kerja;
         $Teacher->jabatan_akademik          = $request->jabatan_akademik;
         $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;

@@ -85,14 +85,9 @@
 
                     <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-5">Bidang Keahlian</label>
                     <ul class="list-unstyled profile-skills">
-                    <li><span>html</span></li>
-                    <li><span>css</span></li>
-                    <li><span>javascript</span></li>
-                    <li><span>php</span></li>
-                    <li><span>photoshop</span></li>
-                    <li><span>java</span></li>
-                    <li><span>angular</span></li>
-                    <li><span>wordpress</span></li>
+                        @foreach($data->bidang_ahli as $ahli)
+                        <li><span>{{$ahli}}</span></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>

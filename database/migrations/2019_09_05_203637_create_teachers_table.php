@@ -27,7 +27,7 @@ class CreateTeachersTable extends Migration
             $table->string('email');
             $table->string('pend_terakhir_jenjang');
             $table->string('pend_terakhir_jurusan');
-            $table->string('bidang_ahli');
+            $table->text('bidang_ahli');
             $table->string('ikatan_kerja');
             $table->string('jabatan_akademik');
             $table->string('sertifikat_pendidik')->nullable();

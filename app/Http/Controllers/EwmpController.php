@@ -8,6 +8,7 @@ use App\AcademicYear;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class EwmpController extends Controller
 {
@@ -38,9 +39,16 @@ class EwmpController extends Controller
      */
     public function store(Request $request)
     {
+        $nidn = decrypt($request->nidn);
+
         if(request()->ajax()) {
             $request->validate([
-                'id_ta'                 => 'required',
+                'id_ta'             => [
+                    'required',
+                    Rule::unique('ewmps')->where(function ($query) use($nidn) {
+                        return $query->where('nidn', $nidn);
+                    }),
+                ],
                 'ps_intra'              => 'required|numeric',
                 'ps_lain'               => 'required|numeric',
                 'ps_luar'               => 'required|numeric',
@@ -50,7 +58,7 @@ class EwmpController extends Controller
             ]);
 
             $ewmp                   = new Ewmp;
-            $ewmp->nidn             = decrypt($request->nidn);
+            $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
             $ewmp->ps_intra         = $request->ps_intra;
             $ewmp->ps_lain          = $request->ps_lain;
@@ -162,11 +170,19 @@ class EwmpController extends Controller
      * @param  \App\Ewmp  $ewmp
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Ewmp $ewmp)
+    public function update(Request $request)
     {
         if(request()->ajax()) {
+            $id   = decrypt($request->_id);
+            $nidn = decrypt($request->nidn);
+
             $request->validate([
-                'id_ta'                 => 'required',
+                'id_ta'             => [
+                    'required',
+                    Rule::unique('ewmps')->where(function ($query) use($nidn) {
+                        return $query->where('nidn', $nidn);
+                    })->ignore($id,'id'),
+                ],
                 'ps_intra'              => 'required|numeric',
                 'ps_lain'               => 'required|numeric',
                 'ps_luar'               => 'required|numeric',
@@ -175,10 +191,8 @@ class EwmpController extends Controller
                 'tugas_tambahan'        => 'required|numeric',
             ]);
 
-            $id = decrypt($request->_id);
-
             $ewmp                   = Ewmp::find($id);
-            $ewmp->nidn             = decrypt($request->nidn);
+            $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
             $ewmp->ps_intra         = $request->ps_intra;
             $ewmp->ps_lain          = $request->ps_lain;
