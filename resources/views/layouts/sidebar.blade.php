@@ -66,6 +66,16 @@
         </ul>
     </li>
     <li class="br-menu-item">
+            <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'output-activity') ? 'active' : '' }}">
+                <i class="menu-item-icon fa fa-boxes"></i>
+                <span class="menu-item-label">Luaran Kegiatan</span>
+            </a><!-- br-menu-link -->
+            <ul class="br-menu-sub">
+                <li class="sub-item"><a href="{{ route('output-activity.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Kategori Luaran</a></li>
+                <li class="sub-item"><a href="{{ route('output-activity') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Data Luaran</a></li>
+            </ul>
+        </li>
+    <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'funding') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-balance-scale"></i>
             <span class="menu-item-label">Keuangan</span>

@@ -61,6 +61,7 @@ class CommunityServiceController extends Controller
         $community->tahun_pengabdian  = $request->tahun_pengabdian;
         $community->sumber_biaya      = $request->sumber_biaya;
         $community->sumber_biaya_nama = $request->sumber_biaya_nama;
+        $community->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
         $community->save();
 
 
@@ -126,6 +127,7 @@ class CommunityServiceController extends Controller
         $community->tahun_pengabdian  = $request->tahun_pengabdian;
         $community->sumber_biaya      = $request->sumber_biaya;
         $community->sumber_biaya_nama = $request->sumber_biaya_nama;
+        $community->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
         $community->save();
 
 

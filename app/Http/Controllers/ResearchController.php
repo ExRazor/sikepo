@@ -65,6 +65,7 @@ class ResearchController extends Controller
         $research->tahun_penelitian  = $request->tahun_penelitian;
         $research->sumber_biaya      = $request->sumber_biaya;
         $research->sumber_biaya_nama = $request->sumber_biaya_nama;
+        $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
         $research->save();
 
 
@@ -129,6 +130,7 @@ class ResearchController extends Controller
         $research->tahun_penelitian  = $request->tahun_penelitian;
         $research->sumber_biaya      = $request->sumber_biaya;
         $research->sumber_biaya_nama = $request->sumber_biaya_nama;
+        $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
         $research->save();
 
 

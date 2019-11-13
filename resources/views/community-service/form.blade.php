@@ -117,6 +117,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label">Jumlah Biaya: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                            Rp
+                                            </div>
+                                        </div>
+                                        <input class="form-control rupiah" type="text" name="jumlah_biaya" value="{{ isset($data) ? $data->jumlah_biaya : Request::old('jumlah_biaya')}}" placeholder="Masukkan jumlah biaya untuk pengabdian" required>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr>

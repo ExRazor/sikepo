@@ -21,6 +21,7 @@ class CreateCommunityServicesTable extends Migration
             $table->string('tahun_pengabdian');
             $table->string('sumber_biaya');
             $table->string('sumber_biaya_nama')->nullable();
+            $table->integer('jumlah_biaya');
             $table->timestamps();
 
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');

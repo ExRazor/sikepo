@@ -120,6 +120,12 @@ Route::prefix('ajax')->group(function () {
     //Publication
     Route::post('publication/get_by_filter','PublicationController@get_by_filter')->name('ajax.publication.filter');
 
+    //Output Activity Category
+    Route::get('output-activity/category/{id}','PublicationCategoryController@edit')->name('output-activity.category.edit');
+
+    //Output Activity
+    Route::post('output-activity/get_by_filter','PublicationController@get_by_filter')->name('ajax.output-activity.filter');
+
     //Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
 });
@@ -255,7 +261,20 @@ Route::put('publication/list','PublicationController@update')->name('publication
 Route::delete('publication/list','PublicationController@destroy')->name('publication.delete');
 Route::get('publication/list/delete_student/{id}','PublicationController@destroy_students')->name('publication.students.delete');
 
+//Output Activity Category
+Route::get('output-activity/category','OutputActivityCategoryController@index')->name('output-activity.category');
+Route::post('output-activity/category','OutputActivityCategoryController@store')->name('output-activity.category.store');
+Route::put('output-activity/category','OutputActivityCategoryController@update')->name('output-activity.category.update');
+Route::delete('output-activity/category','OutputActivityCategoryController@destroy')->name('output-activity.category.delete');
 
+//Output Activity
+Route::get('output-activity/list','OutputActivityController@index')->name('output-activity');
+Route::get('output-activity/list/add','OutputActivityController@create')->name('output-activity.add');
+Route::get('output-activity/list/{id}','OutputActivityController@show')->name('output-activity.show');
+Route::get('output-activity/list/{id}/edit','OutputActivityController@edit')->name('output-activity.edit');
+Route::post('output-activity/list','OutputActivityController@store')->name('output-activity.store');
+Route::put('output-activity/list','OutputActivityController@update')->name('output-activity.update');
+Route::delete('output-activity/list','OutputActivityController@destroy')->name('output-activity.delete');
 
 //Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');

@@ -169,6 +169,27 @@ Breadcrumbs::for('publication-category', function ($trail) {
     $trail->push('Kategori Jenis Publikasi', route('publication.category'));
 });
 
+//Luaran
+Breadcrumbs::for('output-activity', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Luaran', route('output-activity'));
+});
+
+Breadcrumbs::for('output-activity-add', function ($trail) {
+    $trail->parent('output-activity');
+    $trail->push('Tambah Data Luaran', route('output-activity.add'));
+});
+
+Breadcrumbs::for('output-activity-edit', function ($trail,$data) {
+    $trail->push('Sunting Data Luaran');
+});
+
+//Luaran Kategori
+Breadcrumbs::for('output-activity-category', function ($trail) {
+    $trail->parent('output-activity');
+    $trail->push('Kategori Luaran', route('output-activity.category'));
+});
+
 //Akademik - Kurikulum
 Breadcrumbs::for('academic-curriculum', function ($trail) {
     $trail->parent('dashboard');

@@ -51,6 +51,9 @@ class CommunityServiceSeeder extends Seeder
                 } else {
                     $nama_lembaga = '';
                 }
+
+                $nominal = rand(1000, 50000).'000';
+
                 DB::table('community_services')->insert([
                     'nidn'              => $t->nidn,
                     'tema_pengabdian'   => 'Analisis dan Perancangan',
@@ -58,6 +61,7 @@ class CommunityServiceSeeder extends Seeder
                     'tahun_pengabdian'  => $tahun[array_rand($tahun)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
+                    'jumlah_biaya'      => $nominal,
                     'created_at'        => now()
                 ]);
             }

@@ -15,7 +15,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-balance-scale"></i>
+    <i class="icon fa fa-paperclip"></i>
     <div>
         <h4>Kategori Pendanaan</h4>
         <p class="mg-b-0">Olah Kategori Pendanaan</p>

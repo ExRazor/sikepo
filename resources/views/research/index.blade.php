@@ -74,6 +74,7 @@
                             <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
                             <th class="text-center none">Nama Mahasiswa</th>
                             <th class="text-center none">Sumber Biaya</th>
+                            <th class="text-center none">Nominal Biaya</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
@@ -99,6 +100,7 @@
                                 @endif
                             </td>
                             <td>{{ $p->sumber_biaya }} {{ $p->sumber_biaya_nama!='' ? '('.$p->sumber_biaya_nama.')' : ''}}</td>
+                            <td>{{rupiah($p->jumlah_biaya)}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

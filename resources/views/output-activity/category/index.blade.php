@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Kategori Jenis Publikasi')
+@section('title', 'Kategori Luaran Kegiatan')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('publication-category') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('output-activity-category') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -17,8 +17,8 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-paperclip"></i>
     <div>
-        <h4>Kategori Jenis Publikasi</h4>
-        <p class="mg-b-0">Olah Data Kategori Jenis Publikasi</p>
+        <h4>Kategori Luaran Kegiatan</h4>
+        <p class="mg-b-0">Olah Data Kategori Luaran Kegiatan</p>
     </div>
 </div>
 
@@ -28,8 +28,8 @@
             <span aria-hidden="true">&times;</span>
         </button>
         <strong class="d-block d-sm-inline-block-force">Hati-Hati!</strong><br>
-        Data jenis publikasi yang disunting atau pun dihapus akan berdampak langung pada Data Publikasi.<br>
-        Jika data jenis kategori dihapus, maka data publikasi yang berkaitan dengan jenis kategori tersebut akan ikut terhapus.<br>
+        Data kategori luaran yang disunting atau pun dihapus akan berdampak langung pada Data Luaran.<br>
+        Jika kategori dihapus, maka data luaran yang berkaitan dengan kategori tersebut akan ikut terhapus.<br>
     </div>
     @if (session()->has('flash.message'))
         <div class="alert alert-{{ session('flash.class') }}" role="alert">
@@ -43,14 +43,14 @@
         <div class="col-8">
             <div class="card shadow-base">
                 <div class="card-header">
-                        <h6 class="card-title">Daftar Jenis Publikasi</span></h6>
+                        <h6 class="card-title">Kategori Luaran Kegiatan</span></h6>
                     </div>
                 <div class="card-body bd-color-gray-lighter">
                     <table id="table-publishCat" class="table table-striped">
                         <thead>
                             <tr>
                                 <th width="25">#</th>
-                                <th width="350">Jenis Publikasi</th>
+                                <th width="350">Kategori</th>
                                 <th class="text-center" width="150">Aksi</th>
                             </tr>
                         </thead>
@@ -59,9 +59,9 @@
                                 <tr>
                                     <th scope="row" style="vertical-align:middle">{{ $loop->iteration }}</th>
                                     <td>
-                                        {{$c->nama}}
+                                        <strong>{{$c->nama}}</strong>
                                         @isset($c->deskripsi)
-                                        <br><small>{{$c->deskripsi}}</small>
+                                        <br><p>{{$c->deskripsi}}</p>
                                         @endisset
                                     </td>
                                     <td class="text-center">

@@ -50,6 +50,8 @@ class ResearchSeeder extends Seeder
                 } else {
                     $nama_lembaga = '';
                 }
+
+                $nominal = rand(1000, 50000).'000';
                 DB::table('researches')->insert([
                     'nidn'              => $t->nidn,
                     'tema_penelitian'   => 'Analisis dan Perancangan',
@@ -57,6 +59,7 @@ class ResearchSeeder extends Seeder
                     'tahun_penelitian'  => $tahun[array_rand($tahun)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
+                    'jumlah_biaya'      => $nominal,
                     'created_at'        => now()
                 ]);
             }
