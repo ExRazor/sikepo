@@ -130,9 +130,9 @@
                             <div class="col-sm-9 mg-t-10 mg-sm-t-0">
                                 <select class="form-control" name="jenis" required>
                                     <option value="">- Pilih Jenis Dana -</option>
-                                    <option>Operasional Akademik</option>
-                                    <option>Pengabdian kepada Masyarakat</option>
-                                    <option>Sarana dan Prasarana</option>
+                                    <option>Operasional</option>
+                                    <option>Penelitian dan Pengabdian</option>
+                                    <option>Investasi dan Sarana</option>
                                 </select>
                                 <input type="hidden" name="jenis" disabled>
                             </div>
