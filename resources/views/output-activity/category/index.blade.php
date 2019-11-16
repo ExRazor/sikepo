@@ -61,7 +61,7 @@
                                     <td>
                                         <strong>{{$c->nama}}</strong>
                                         @isset($c->deskripsi)
-                                        <br><p>{{$c->deskripsi}}</p>
+                                        <br><p>{!!$c->deskripsi!!}</p>
                                         @endisset
                                     </td>
                                     <td class="text-center">
