@@ -50,9 +50,9 @@
                         <tr>
                             <th class="text-center align-middle">Program Studi</th>
                             <th class="text-center align-middle defaultSort">Tahun Akademik</th>
-                            <th class="text-center">Total Biaya<br>Operasional Akademik</th>
-                            <th class="text-center">Total Biaya<br>Pengabdian kepada Masyarakat</th>
-                            <th class="text-center">Total Biaya<br>Sarana Prasarana</th>
+                            <th class="text-center">Total Biaya<br>Operasional</th>
+                            <th class="text-center">Total Biaya<br>Penelitian dan Pengabdian</th>
+                            <th class="text-center">Total Biaya<br>Investasi dan Sarana</th>
                             <th class="text-center align-middle">Total Semua Biaya</th>
                         </tr>
                     </thead>

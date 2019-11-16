@@ -57,7 +57,7 @@ class FundingCategorySeeder extends Seeder
             DB::table('funding_categories')->insert([
                 'id_parent'  => FundingCategory::where('nama','Biaya Operasional Pendidikan')->first()->id,
                 'nama'       => $value,
-                'jenis'      => 'Operasional Akademik',
+                'jenis'      => FundingCategory::where('nama','Biaya Operasional Pendidikan')->first()->jenis,
                 'deskripsi'  => $jenis_child_desc[$i],
                 'created_at' => now()
             ]);
