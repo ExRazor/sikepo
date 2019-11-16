@@ -16,7 +16,7 @@ class EwmpSeeder extends Seeder
         for($i = 0; $i < 100; $i++){
 
             $id   = AcademicYear::all()->random()->id;
-            $nidn = Teacher::inRandomOrder()->where('ikatan_kerja','Dosen Tetap')->first()->nidn;
+            $nidn = Teacher::inRandomOrder()->where('ikatan_kerja','Dosen Tetap PS')->first()->nidn;
 
 
             Ewmp::updateOrCreate(

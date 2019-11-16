@@ -148,7 +148,7 @@ class StudentController extends Controller
     {
         $id = decode_id($id);
 
-        $data       = Student::with('studyProgram','academicYear')->where('nim',$id)->first();
+        $data       = Student::with('studyProgram','studentForeign')->where('nim',$id)->first();
         $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
         $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
@@ -361,6 +361,27 @@ class StudentController extends Controller
                                 })
                                 ->escapeColumns([])
                                 ->make(true);
+        }
+    }
+
+    public function loadData(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = Student::where('nama', 'LIKE', '%'.$cari.'%')->get();
+
+            if($data->count() == 0) {
+                $data = Student::where('nim', 'LIKE', '%'.$cari.'%')->get();
+            }
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->nim,
+                    "text"  => $d->nama
+                );
+            }
+            return response()->json($response);
         }
     }
 }

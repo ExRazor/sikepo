@@ -64,6 +64,12 @@ Breadcrumbs::for('student-edit', function ($trail,$data) {
     $trail->push('Sunting Data Mahasiswa');
 });
 
+//Mahasiswa Asing
+Breadcrumbs::for('student-foreign', function ($trail) {
+    $trail->parent('student');
+    $trail->push('Data Mahasiswa Asing', route('student.foreign'));
+});
+
 //Keuangan
 Breadcrumbs::for('funding', function ($trail) {
     $trail->parent('dashboard');

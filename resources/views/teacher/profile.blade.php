@@ -38,7 +38,7 @@
         <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">
             <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
-                @if($data->ikatan_kerja=='Dosen Tetap')
+                @if($data->ikatan_kerja=='Dosen Tetap PS')
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                 @endif
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#" role="tab">Favorites</a></li>
@@ -49,7 +49,7 @@
             <div class="col-lg-9">
                 <div class="tab-content">
                     @include('teacher.tab-achievement')
-                    @if($data->ikatan_kerja=='Dosen Tetap')
+                    @if($data->ikatan_kerja=='Dosen Tetap PS')
                         @include('teacher.tab-ewmp')
                     @endif
                 </div>

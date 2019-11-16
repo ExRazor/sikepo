@@ -149,6 +149,10 @@ select.parsley-success:focus {
     box-shadow: 0 0 0 0.2rem rgba(35, 191, 8, 0.25);
 }
 
+.select2-selection.is-invalid {
+    border-color: #DC3545 !important;
+}
+
 /* ----------------------------------------------- */
 /* ############### PROFILE ############### */
 /* ----------------------------------------------- */

@@ -207,9 +207,9 @@
                                 <div class="col-8">
                                     <select class="form-control" name="ikatan_kerja" required>
                                         <option value="">- Pilih Ikatan Kerja -</option>
-                                        <option value="Dosen Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap' || Request::old('ikatan_kerja')=='Dosen Tetap') ? 'selected' : ''}}>Dosen Tetap</option>
+                                        <option value="Dosen Tetap PS" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PS' || Request::old('ikatan_kerja')=='Dosen Tetap PS') ? 'selected' : ''}}>Dosen Tetap PS</option>
                                         <option value="Dosen Tidak Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tidak Tetap' || Request::old('ikatan_kerja')=='Dosen Tidak Tetap') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
-                                        <option value="Dosen Honorer PTN" {{ isset($data) && ($data->ikatan_kerja=='Dosen Honorer PTN' || Request::old('ikatan_kerja')=='Dosen Honorer PTN') ? 'selected' : ''}}>Dosen Honorer PTN</option>
+                                        <option value="Dosen Tetap PT" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PT' || Request::old('ikatan_kerja')=='Dosen Tetap PT') ? 'selected' : ''}}>Dosen Tetap PT</option>
                                     </select>
                                 </div>
                             </div>

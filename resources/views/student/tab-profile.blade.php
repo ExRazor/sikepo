@@ -33,7 +33,7 @@
     </div>
     <div class="profil-row d-flex">
         <div class="profil-nama">Kewarganegaraan</div>
-        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->kewarganegaraan }}</div>
+        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->kewarganegaraan }} {{$data->kewarganegaraan=='WNA' ? ' - '.$data->studentForeign->asal_negara : ''}}</div>
     </div>
 
     <div class="profil-judul mg-t-30">

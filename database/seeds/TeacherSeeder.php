@@ -18,7 +18,7 @@ class TeacherSeeder extends Seeder
         $agama = ['Islam','Kristen','Katholik','Buddha','Hindu','Kong Hu Cu'];
         $pend = ['D3','S1','S2','S3'];
         $jurusan = ['Informatika','Ilmu Komputer','Elektro','Industri'];
-        $ikatan = ['Dosen Tetap','Dosen Tidak Tetap','Dosen Honorer PTN'];
+        $ikatan = ['Dosen Tetap PS','Dosen Tidak Tetap','Dosen Tetap PT'];
         $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
         $sesuai = ['Ya','Tidak'];
         $bidang_ahli = ['PHP','Photoshop','Elektronika','OOP','Office'];

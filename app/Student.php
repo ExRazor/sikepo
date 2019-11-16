@@ -33,9 +33,9 @@ class Student extends Model
         return $this->belongsTo('App\StudyProgram','kd_prodi');
     }
 
-    public function academicYear()
+    public function studentForeign()
     {
-        return $this->belongsTo('App\AcademicYear','masuk_ta');
+        return $this->hasOne('App\StudentForeign','nim');
     }
 
     public function studentStatus()

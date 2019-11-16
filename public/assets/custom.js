@@ -131,6 +131,8 @@ $(document).ready(function() {
             },
             success: function (state) {
 
+                cont.html('Tersimpan');
+
                 modal.modal('toggle');
 
                 Swal.fire({
@@ -152,6 +154,7 @@ $(document).ready(function() {
                     $('.alert-danger').show();
                     $('.alert-danger').append('<span>'+value+'</span><br>');
                     $('[name='+key+']').addClass('is-invalid');
+                    $('[aria-labelledby*=select2-'+key+']').addClass('is-invalid');
                 });
 
                 cont.removeClass('disabled');
@@ -462,6 +465,28 @@ $(document).ready(function() {
             }
         });
     }
+
+    $('.select-mhs').select2({
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan nama mahasiswa',
+        ajax: {
+            dataType: 'json',
+            url: '/ajax/student/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
 
     /****************************************************************************/
 
@@ -2120,6 +2145,118 @@ $(document).ready(function() {
                                     '</div>'+
                                 '</td>'+
                             '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
+    /****************************************************************************************/
+
+    /********************************* DATA MAHASISWA ASING *********************************/
+    $('#table-studentForeign').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/student/foreign/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var option = $("<option selected></option>").val(data.nim).text(data.student.nama);
+
+                $('#form-studentForeign')
+                    .find('input[name=_id]').val(id).end()
+                    .find('select[name=nim]').append(option).trigger('change').end()
+                    .find('input[name=asal_negara]').val(data.asal_negara).end()
+                    .find('select[name=durasi]').val(data.durasi).end()
+
+            }
+        });
+    })
+
+    $('#form-studentForeign')
+        .on('click','.btn-add',function(e){
+            var form  = $('#form-studentForeign')
+            form.trigger('reset');
+            $('.select-mhs').val(null).trigger('change');
+        }).end()
+
+    $('form#filter-studentForeign').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table-studentForeign');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title-table').text(teks);
+        } else {
+            $('h6.card-title-table').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id          = val.id;
+                        var nim         = val.nim;
+                        var nama        = val.student.nama;
+                        var prodi       = val.student.study_program.singkatan;
+                        var asal_negara = val.asal_negara;
+                        var durasi      = val.durasi;
+
+                        html += '<tr>'+
+                                    '<td>'+
+                                        '<a href="'+base_url+'/student/list/'+encode_id(nim)+'">'+
+                                            nama+'<br>'+
+                                            '<small>NIM.'+nim+' / '+prodi+'</small>'+
+                                        '</a>'+
+                                    '</td>'+
+                                    '<td class="text-center">'+asal_negara+'</td>'+
+                                    '<td class="text-center">'+durasi+'</td>'+
+                                    '<td class="text-center">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<button class="dropdown-item btn-edit" data-id="'+encode_id(id)+'">Sunting</button>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="_id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/student/foreign">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>'
                     })
                 }
                 // tabel.dataTable().fnDestroy();

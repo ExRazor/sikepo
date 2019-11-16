@@ -99,10 +99,14 @@ Route::prefix('ajax')->group(function () {
 
     //Student
     Route::get('student/datatable','StudentController@datatable')->name('ajax.student.datatable');
+    Route::get('student/loadData','StudentController@loadData')->name('ajax.student.loadData');
     Route::post('student/get_by_filter','StudentController@get_by_filter')->name('ajax.student.filter');
 
     //Student - Status
     Route::get('student/status/{id}','StudentStatusController@edit')->name('student.status.edit');
+
+    //Student Foreign
+    Route::post('student/foreign/get_by_filter','StudentForeignController@get_by_filter')->name('ajax.student.foreign.filter');
 
     //Funding Category
     Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
@@ -195,6 +199,14 @@ Route::delete('student/list','StudentController@destroy')->name('student.delete'
 Route::post('student/status','StudentStatusController@store')->name('student.status.store');
 Route::put('student/status','StudentStatusController@update')->name('student.status.update');
 Route::delete('student/status','StudentStatusController@destroy')->name('student.status.delete');
+
+//Students Foreign
+Route::get('student/foreign','StudentForeignController@index')->name('student.foreign');
+Route::get('student/foreign/add','StudentForeignController@create')->name('student.foreign.add');
+Route::get('student/foreign/{id}','StudentForeignController@edit')->name('student.foreign.edit');
+Route::post('student/foreign','StudentForeignController@store')->name('student.foreign.store');
+Route::put('student/foreign','StudentForeignController@update')->name('student.foreign.update');
+Route::delete('student/foreign','StudentForeignController@destroy')->name('student.foreign.delete');
 
 //Funding
 Route::get('funding',function(){
