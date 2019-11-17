@@ -1,11 +1,11 @@
 <?php
 
-// Dashboard
+// Beranda
 Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Beranda', route('dashboard'));
 });
 
-//Collaboration
+// Kerja Sama
 Breadcrumbs::for('collaboration', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Kerja Sama', route('collaboration'));
@@ -21,7 +21,7 @@ Breadcrumbs::for('collaboration-edit', function ($trail) {
     $trail->push('Sunting Kerja Sama');
 });
 
-//Dosen
+// Dosen
 Breadcrumbs::for('teacher', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Dosen', route('teacher'));
@@ -43,7 +43,7 @@ Breadcrumbs::for('teacher-ewmp', function ($trail) {
     $trail->push('Daftar EWMP Dosen', route('teacher.ewmp'));
 });
 
-//Mahasiswa
+// Mahasiswa
 Breadcrumbs::for('student', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Mahasiswa', route('student'));
@@ -64,19 +64,19 @@ Breadcrumbs::for('student-edit', function ($trail,$data) {
     $trail->push('Sunting Data Mahasiswa');
 });
 
-//Mahasiswa Asing
+// Mahasiswa > Mahasiswa Asing
 Breadcrumbs::for('student-foreign', function ($trail) {
     $trail->parent('student');
     $trail->push('Data Mahasiswa Asing', route('student.foreign'));
 });
 
-//Keuangan
+// Keuangan
 Breadcrumbs::for('funding', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Keuangan');
 });
 
-//Keuangan - Fakultas
+// Keuangan > Fakultas
 Breadcrumbs::for('funding-faculty', function ($trail) {
     $trail->parent('funding');
     $trail->push('Keuangan Fakultas', route('funding.faculty'));
@@ -100,7 +100,7 @@ Breadcrumbs::for('funding-faculty-edit', function ($trail,$data) {
     $trail->push('Sunting Keuangan Fakultas');
 });
 
-//Keuangan - Program Studi
+// Keuangan > Program Studi
 Breadcrumbs::for('funding-studyProgram', function ($trail) {
     $trail->parent('funding');
     $trail->push('Keuangan Program Studi', route('funding.study-program'));
@@ -169,13 +169,13 @@ Breadcrumbs::for('publication-edit', function ($trail,$data) {
     $trail->push('Sunting Data Publikasi');
 });
 
-//Publikasi Kategori
+//Publikasi > Kategori
 Breadcrumbs::for('publication-category', function ($trail) {
     $trail->parent('publication');
     $trail->push('Kategori Jenis Publikasi', route('publication.category'));
 });
 
-//Luaran
+// Luaran
 Breadcrumbs::for('output-activity', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Luaran', route('output-activity'));
@@ -190,15 +190,21 @@ Breadcrumbs::for('output-activity-edit', function ($trail,$data) {
     $trail->push('Sunting Data Luaran');
 });
 
-//Luaran Kategori
+// Luaran > Kategori
 Breadcrumbs::for('output-activity-category', function ($trail) {
     $trail->parent('output-activity');
     $trail->push('Kategori Luaran', route('output-activity.category'));
 });
 
-//Akademik - Kurikulum
-Breadcrumbs::for('academic-curriculum', function ($trail) {
+// Akademik
+Breadcrumbs::for('academic', function ($trail) {
     $trail->parent('dashboard');
+    $trail->push('Akademik');
+});
+
+// Akademik > Kurikulum
+Breadcrumbs::for('academic-curriculum', function ($trail) {
+    $trail->parent('academic');
     $trail->push('Data Kurikulum', route('academic.curriculum'));
 });
 
@@ -211,19 +217,34 @@ Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
     $trail->push('Sunting Mata Kuliah');
 });
 
-// Dashboard > Data Master
+// Akademik > Jadwal
+Breadcrumbs::for('academic-schedule', function ($trail) {
+    $trail->parent('academic');
+    $trail->push('Jadwal Mengajar', route('academic.schedule'));
+});
+
+Breadcrumbs::for('academic-schedule-add', function ($trail) {
+    $trail->parent('academic-schedule');
+    $trail->push('Tambah Jadwal Mengajar', route('academic.schedule.add'));
+});
+
+Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
+    $trail->push('Sunting Jadwal Mengajar');
+});
+
+// Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Master');
 });
 
-// Home > About
+// Data Master > Tahun Akademik
 Breadcrumbs::for('academic-year', function ($trail) {
     $trail->parent('master');
     $trail->push('Tahun Akademik', route('master.academic-year'));
 });
 
-//Program Studi
+// Data Master > Program Studi
 Breadcrumbs::for('study-program', function ($trail) {
     $trail->parent('master');
     $trail->push('Program Studi', route('master.study-program'));
@@ -239,23 +260,25 @@ Breadcrumbs::for('study-program-edit', function ($trail) {
     $trail->push('Sunting Program Studi');
 });
 
-//Jurusan
+// Data Master > Jurusan
 Breadcrumbs::for('department', function ($trail) {
     $trail->parent('master');
     $trail->push('Jurusan', route('master.department'));
 });
 
-//Fakultas
+// Data Master > Fakultas
 Breadcrumbs::for('faculty', function ($trail) {
     $trail->parent('master');
     $trail->push('Fakultas', route('master.faculty'));
 });
 
+// Setelan
 Breadcrumbs::for('setting', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Setelan');
 });
 
+// Setelan > Umum
 Breadcrumbs::for('setting-general', function ($trail) {
     $trail->parent('setting');
     $trail->push('Setelan Umum');

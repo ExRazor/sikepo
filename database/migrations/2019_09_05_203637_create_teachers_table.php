@@ -28,10 +28,10 @@ class CreateTeachersTable extends Migration
             $table->string('pend_terakhir_jenjang');
             $table->string('pend_terakhir_jurusan');
             $table->text('bidang_ahli');
+            $table->enum('sesuai_bidang_ps',['Ya','Tidak']);
             $table->string('ikatan_kerja');
             $table->string('jabatan_akademik');
             $table->string('sertifikat_pendidik')->nullable();
-            $table->enum('sesuai_bidang_ps',['Ya','Tidak']);
             $table->string('foto')->nullable();
             $table->timestamps();
 

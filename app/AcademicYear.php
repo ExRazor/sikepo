@@ -22,6 +22,11 @@ class AcademicYear extends Model
         return $this->hasMany('App\Ewmp','id_ta');
     }
 
+    public function teacherSchedule()
+    {
+        return $this->hasMany('App\TeacherSchedule','id_ta');
+    }
+
     public function student()
     {
         return $this->hasMany('App\Student','masuk_ta');

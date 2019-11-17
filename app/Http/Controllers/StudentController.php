@@ -22,6 +22,7 @@ class StudentController extends Controller
      */
     public function index()
     {
+        $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $angkatan     = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
         $status       = StudentStatus::groupBy('status')->get('status');
@@ -313,6 +314,13 @@ class StudentController extends Controller
                                 $query->where('kd_jurusan',setting('app_department_id'));
                             }
                         );
+
+            if($request->kd_jurusan) {
+                $q->whereHas(
+                    'studyProgram', function($query) use($request) {
+                        $query->where('kd_jurusan',$request->kd_jurusan);
+                    });
+            }
 
             if($request->kd_prodi){
                 $q->where('kd_prodi',$request->kd_prodi);

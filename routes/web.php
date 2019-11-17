@@ -288,7 +288,7 @@ Route::post('output-activity/list','OutputActivityController@store')->name('outp
 Route::put('output-activity/list','OutputActivityController@update')->name('output-activity.update');
 Route::delete('output-activity/list','OutputActivityController@destroy')->name('output-activity.delete');
 
-//Curriculum
+//Academic - Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');
 Route::get('academic/curriculum/add','CurriculumController@create')->name('academic.curriculum.add');
 Route::get('academic/curriculum/{id}','CurriculumController@show')->name('academic.curriculum.show');
@@ -297,6 +297,13 @@ Route::post('academic/curriculum_import','CurriculumController@import')->name('a
 Route::post('academic/curriculum','CurriculumController@store')->name('academic.curriculum.store');
 Route::put('academic/curriculum','CurriculumController@update')->name('academic.curriculum.update');
 Route::delete('academic/curriculum','CurriculumController@destroy')->name('academic.curriculum.delete');
+
+//Academic - Teacher Schedule
+Route::get('academic/schedule','TeacherScheduleController@index')->name('academic.schedule');
+Route::get('academic/schedule/{nidn}','TeacherScheduleController@edit')->name('academic.schedule.edit');
+Route::post('academic/schedule','TeacherScheduleController@store')->name('academic.schedule.store');
+Route::put('academic/schedule','TeacherScheduleController@update')->name('academic.schedule.update');
+Route::delete('academic/schedule','TeacherScheduleController@destroy')->name('academic.schedule.delete');
 
 
 Route::get('/home', 'HomeController@index')->name('home');

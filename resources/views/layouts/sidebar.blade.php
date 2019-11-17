@@ -19,8 +19,8 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
           <li class="sub-item"><a href="{{ route('teacher') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Profil Dosen</a></li>
-          <li class="sub-item"><a href="{{ route('teacher.ewmp') }}" class="sub-link {{ (request()->segment(2) == 'ewmp') ? 'active' : '' }}">EWMP</a></li>
           <li class="sub-item"><a href="{{ route('teacher.achievement') }}" class="sub-link {{ (request()->segment(2) == 'achievement') ? 'active' : '' }}">Prestasi</a></li>
+          <li class="sub-item"><a href="{{ route('teacher.ewmp') }}" class="sub-link {{ (request()->segment(2) == 'ewmp') ? 'active' : '' }}">EWMP</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -41,7 +41,7 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->segment(2) == 'curriculum') ? 'active' : '' }}">Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ url('academic/minithesis') }}" class="sub-link {{ (request()->segment(2) == 'minithesis') ? 'active' : '' }}">Tugas Akhir</a></li>
+            <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->segment(2) == 'schedule') ? 'active' : '' }}">Jadwal Mengajar</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

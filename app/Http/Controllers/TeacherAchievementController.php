@@ -19,7 +19,7 @@ class TeacherAchievementController extends Controller
                                             ->orderBy('tanggal','desc')->get();
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        return view('teacher-achievement.index',compact(['achievement','studyProgram']));
+        return view('teacher.achievement.index',compact(['achievement','studyProgram']));
     }
 
 

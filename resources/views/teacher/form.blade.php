@@ -203,6 +203,23 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
+                                <label class="col-3 form-control-label">Sesuai Bidang PS? <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <div id="sesuai_bidang_ps" class="radio">
+                                        <label class="rdiobox rdiobox-inline mb-0">
+                                            <input name="sesuai_bidang_ps" type="radio" value="Ya" {{ isset($data) && ($data->sesuai_bidang_ps=='Ya' || Request::old('sesuai_bidang_ps')=='Ya') ? 'checked' : ''}} data-parsley-class-handler="#sesuai_bidang_ps"
+                                            data-parsley-errors-container="#errorsBD" required>
+                                            <span>Ya</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </label>
+                                        <label class="rdiobox rdiobox-inline mb-0">
+                                            <input name="sesuai_bidang_ps" type="radio" value="Tidak" {{ isset($data) && ($data->sesuai_bidang_ps=='Tidak' || Request::old('sesuai_bidang_ps')=='Tidak') ? 'checked' : ''}}>
+                                            <span>Tidak</span>
+                                        </label>
+                                    </div>
+                                    <div id="errorsBD"></div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label class="col-3 form-control-label">Ikatan Kerja: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <select class="form-control" name="ikatan_kerja" required>
@@ -230,23 +247,6 @@
                                 <label class="col-3 form-control-label">No. Sertifikat Pendidik:</label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="sertifikat_pendidik" value="{{ isset($data) ? $data->sertifikat_pendidik : Request::old('sertifikat_pendidik')}}" placeholder="Masukkan No. Sertifikat Pendidik">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-3 form-control-label">Sesuai Bidang PS? <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    <div id="sesuai_bidang_ps" class="radio">
-                                        <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="sesuai_bidang_ps" type="radio" value="Ya" {{ isset($data) && ($data->sesuai_bidang_ps=='Ya' || Request::old('sesuai_bidang_ps')=='Ya') ? 'checked' : ''}} data-parsley-class-handler="#sesuai_bidang_ps"
-                                            data-parsley-errors-container="#errorsBD" required>
-                                            <span>Ya</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </label>
-                                        <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="sesuai_bidang_ps" type="radio" value="Tidak" {{ isset($data) && ($data->sesuai_bidang_ps=='Tidak' || Request::old('sesuai_bidang_ps')=='Tidak') ? 'checked' : ''}}>
-                                            <span>Tidak</span>
-                                        </label>
-                                    </div>
-                                    <div id="errorsBD"></div>
                                 </div>
                             </div>
                             <div class="row mb-3">
