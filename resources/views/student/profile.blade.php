@@ -45,9 +45,11 @@
                         <?php $avatar = ($data->jk=='Laki-Laki' ? 'student_male.png' : 'student_female.png') ?>
                         <img src="{{isset($data->foto) ? route('download.avatar','type=student&id='.encrypt($data->foto)): route('download.avatar','type=avatar&id='.encrypt($avatar))}}">
                     </div>
+                    @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                     <div class="profil-status mg-t-20 d-flex justify-content-center">
                         <span class="{{ $status->status_button }}">{{ $status->status }}</span>
                     </div>
+                    @endif
                 </div>
                 <div class="profil-tombol">
                     <ul class="profil-menu">
@@ -78,7 +80,9 @@
                                 <div class="ml-auto">
                                     <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Biodata Mahasiswa</a></li>
+                                        @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -86,7 +90,9 @@
                         <div class="card-body">
                             <div class="tab-content">
                                 @include('student.tab-profile')
+                                @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                 @include('student.tab-status')
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -96,7 +102,9 @@
     </div>
 </div>
 @include('student.form-photo')
+@if($data->studyProgram->kd_jurusan == setting('app_department_id'))
 @include('student.form-status')
+@endif
 @endsection
 
 @section('js')

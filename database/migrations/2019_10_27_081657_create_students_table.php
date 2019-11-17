@@ -16,19 +16,19 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->char('nim',10)->primary();
             $table->string('nama');
-            $table->string('tpt_lhr')->nulllable();
-            $table->date('tgl_lhr');
+            $table->string('tpt_lhr')->nullable();
+            $table->date('tgl_lhr')->nullable();
             $table->string('jk');
-            $table->string('agama');
+            $table->string('agama')->nullable();
             $table->string('alamat')->nullable();
             $table->string('kewarganegaraan');
             $table->char('kd_prodi',5);
-            $table->string('kelas');
-            $table->string('tipe');
-            $table->string('program');
-            $table->string('seleksi_jenis');
-            $table->string('seleksi_jalur');
-            $table->string('status_masuk');
+            $table->string('kelas')->nullable();
+            $table->string('tipe')->nullable();
+            $table->string('program')->nullable();
+            $table->string('seleksi_jenis')->nullable();
+            $table->string('seleksi_jalur')->nullable();
+            $table->string('status_masuk')->nullable();
             $table->char('angkatan',4)->nullable();
             $table->string('foto')->nullable();
             $table->timestamps();

@@ -33,16 +33,21 @@
     </div>
     <div class="profil-row d-flex">
         <div class="profil-nama">Kewarganegaraan</div>
-        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->kewarganegaraan }} {{$data->kewarganegaraan=='WNA' ? ' - '.$data->studentForeign->asal_negara : ''}}</div>
+        <div class="profil-isi"><span class="pr-2">:</span>{{ $data->kewarganegaraan }} {{$data->kewarganegaraan=='WNA' && $data->studentForeign ? ' - '.$data->studentForeign->asal_negara : ''}}</div>
     </div>
 
     <div class="profil-judul mg-t-30">
         Akademik Kampus
     </div>
     <div class="profil-row d-flex">
+            <div class="profil-nama">Jurusan</div>
+            <div class="profil-isi"><span class="pr-2">:</span>{{ $data->studyProgram->department->faculty->singkatan.' - '.$data->studyProgram->department->nama }}</div>
+        </div>
+    <div class="profil-row d-flex">
         <div class="profil-nama">Program Studi</div>
         <div class="profil-isi"><span class="pr-2">:</span>{{ $data->studyProgram->nama }}</div>
     </div>
+    @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
     <div class="profil-row d-flex">
         <div class="profil-nama">Kelas Mahasiswa</div>
         <div class="profil-isi"><span class="pr-2">:</span>{{ $data->kelas }}</div>
@@ -63,6 +68,7 @@
         <div class="profil-nama">Status Awal Masuk</div>
         <div class="profil-isi"><span class="pr-2">:</span>{{ $data->status_masuk }}</div>
     </div>
+    @endif
     <div class="profil-row d-flex">
         <div class="profil-nama">Angkatan</div>
         <div class="profil-isi"><span class="pr-2">:</span>{{ $data->angkatan }}</div>

@@ -12,6 +12,11 @@ $(document).ready(function() {
         }
     });
 
+    //Check Null
+    function null_check (value) {
+        return (value == null) ? "" : value
+    }
+
     //Datepicker
     $('.datepicker').datepicker({
         dateFormat: 'yy-mm-dd'
@@ -1381,18 +1386,22 @@ $(document).ready(function() {
 
                 if(data.length > 0) {
                     $.each(data, function(i,val){
-                        var status      = val.latest_status.status;
+                        if(val.latest_status) {
+                            var status      = null_check(val.latest_status.status);
+                        } else {
+                            var status = 'Aktif';
+                        }
 
                         if(status_filter == status || status_filter == '') {
-                            var nim         = val.nim;
-                            var nama        = val.nama;
-                            var tgl_lhr     = val.tgl_lhr;
-                            var prodi       = val.study_program.nama;
-                            var jurusan     = val.study_program.department.nama;
-                            var fakultas    = val.study_program.department.faculty.singkatan;
-                            var angkatan    = val.angkatan;
-                            var kelas       = val.kelas;
-                            var program     = val.program;
+                            var nim         = null_check(val.nim);
+                            var nama        = null_check(val.nama);
+                            var tgl_lhr     = null_check(val.tgl_lhr);
+                            var prodi       = null_check(val.study_program.nama);
+                            var jurusan     = null_check(val.study_program.department.nama);
+                            var fakultas    = null_check(val.study_program.department.faculty.singkatan);
+                            var angkatan    = null_check(val.angkatan);
+                            var kelas       = null_check(val.kelas);
+                            var program     = null_check(val.program);
 
 
                             html += '<tr>'+

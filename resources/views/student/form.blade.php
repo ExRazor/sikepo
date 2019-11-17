@@ -59,13 +59,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="kd_jurusan" data-type="form" disabled>
+                                    <select class="form-control" name="kd_jurusan" data-type="form">
                                         <option value="">- Pilih Jurusan -</option>
                                         @foreach($faculty as $f)
                                             @if($f->department->count())
                                             <optgroup label="{{$f->nama}}">
                                                 @foreach($f->department as $d)
-                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) || $d->kd_jurusan==setting('app_department_id') ? 'selected': ''}}>{{$d->nama}}</option>
+                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan)  ? 'selected': ''}}>{{$d->nama}}</option>
                                                 @endforeach
                                             </optgroup>
                                             @endif
@@ -78,9 +78,11 @@
                                 <div class="col-8">
                                     <select class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
-                                        @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                        @endforeach
+                                        @isset($data)
+                                            @foreach($studyProgram as $sp)
+                                            <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                            @endforeach
+                                        @endisset
                                     </select>
                                 </div>
                             </div>
@@ -90,7 +92,7 @@
                                     <input class="form-control" type="text" name="nim" value="{{ isset($data) ? $data->nim : Request::old('nim')}}" placeholder="Masukkan NIM" {{ isset($data) ? 'disabled' : ''}} maxlength="9" required>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div id="mhs_nama" class="row mb-3">
                                 <label class="col-3 form-control-label">Nama Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan Nama Dosen" required>
@@ -114,9 +116,9 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Agama: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Agama:</label>
                                 <div class="col-8">
-                                    <select class="form-control" name="agama" required>
+                                    <select class="form-control" name="agama">
                                         <option value="">- Pilih Agama -</option>
                                         <option value="Islam" {{ (isset($data) && ($data->agama=='Islam') || Request::old('agama')=='Islam') ? 'selected' : ''}}>Islam</option>
                                         <option value="Kristen Protestan" {{ (isset($data) && ($data->agama=='Kristen Protestan') || Request::old('agama')=='Kristen Protestan') ? 'selected' : ''}}>Kristen Protestan</option>
@@ -128,14 +130,14 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tempat Tanggal Lahir: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Tempat Tanggal Lahir:</label>
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-6">
                                             <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
                                         </div>
                                         <div class="col-6">
-                                            <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir" required>
+                                            <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +165,7 @@
                                     <div id="errorsKWNG"></div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 mhs-opsional">
                                 <label class="col-3 form-control-label">Kelas Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <select class="form-control" name="kelas" required>
@@ -173,7 +175,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 mhs-opsional">
                                 <label class="col-3 form-control-label">Tipe Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div class="row">
@@ -192,7 +194,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 mhs-opsional">
                                 <label class="col-3 form-control-label">Program: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <select class="form-control" name="program" required>
@@ -202,7 +204,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 mhs-opsional">
                                 <label class="col-3 form-control-label">Jalur Seleksi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div class="row">
@@ -223,7 +225,7 @@
                                 <label class="col-3 form-control-label">Status Masuk: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-6 mhs-opsional">
                                             <select class="form-control" name="status_masuk" required>
                                                 <option value="">- Pilih Status Awal Masuk -</option>
                                                 <option value="Baru" {{ (isset($data) && ($data->status_masuk=='Baru') || Request::old('status_masuk')=='Baru') ? 'selected' : ''}}>Baru</option>
@@ -261,5 +263,31 @@
 </div>
 @endsection
 
-@section('js')
+@section('custom-js')
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var value = $('select[name=kd_jurusan]').val()
+    cek(value);
+});
+
+$('#student_form').on('change','select[name=kd_jurusan]',function(){
+    var value = $(this).val();
+
+    cek(value);
+
+});
+
+function cek(value) {
+    if(value!={{setting('app_department_id')}}) {
+        $('.mhs-opsional').find('input').prop('required',false);
+        $('.mhs-opsional').find('select').prop('required',false);
+        $('.mhs-opsional').hide();
+    } else {
+        $('.mhs-opsional').find('input').prop('required',true);
+        $('.mhs-opsional').find('select').prop('required',true);
+        $('.mhs-opsional').show();
+    }
+}
+</script>
 @endsection

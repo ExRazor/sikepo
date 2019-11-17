@@ -63,24 +63,25 @@ class StudentController extends Controller
             'kd_prodi'          => 'required',
             'nama'              => 'required',
             'tpt_lhr'           => 'nullable',
-            'tgl_lhr'           => 'required',
+            'tgl_lhr'           => 'nullable',
             'jk'                => 'required',
-            'agama'             => 'required',
+            'agama'             => 'nullable',
             'alamat'            => 'nullable',
             'kewarganegaraan'   => 'required',
-            'kelas'             => 'required',
-            'tipe'              => 'required',
-            'seleksi_jenis'     => 'required',
-            'seleksi_jalur'     => 'required',
-            'status_masuk'      => 'required',
+            'kelas'             => 'nullable',
+            'tipe'              => 'nullable',
+            'program'           => 'nullable',
+            'seleksi_jenis'     => 'nullable',
+            'seleksi_jalur'     => 'nullable',
+            'status_masuk'      => 'nullable',
             'tahun_masuk'       => 'required',
-            'status'            => 'required',
         ]);
 
         $query                  = new Student;
         $query->kd_prodi        = $request->kd_prodi;
         $query->nim             = $request->nim;
         $query->nama            = $request->nama;
+        $query->tpt_lhr         = $request->tpt_lhr;
         $query->tgl_lhr         = $request->tgl_lhr;
         $query->jk              = $request->jk;
         $query->agama           = $request->agama;
@@ -93,10 +94,10 @@ class StudentController extends Controller
         $query->seleksi_jalur   = $request->seleksi_jalur;
         $query->status_masuk    = $request->status_masuk;
         $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
-        $query->status          = $request->status;
         $query->save();
 
         $status         = new StudentStatus;
+        $status->nim    = $request->nim;
         $status->id_ta  = $request->tahun_masuk;
         $status->status = 'Aktif';
         $status->save();
@@ -154,12 +155,14 @@ class StudentController extends Controller
         $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
-        if($status->status == 'Aktif') {
-            $status->setAttribute('status_button','btn-success');
-        } else if($status->status=='Lulus') {
-            $status->setAttribute('status_button','btn-pink');
-        } else {
-            $status->setAttribute('status_button','btn-danger');
+        if($status){
+            if($status->status == 'Aktif') {
+                $status->setAttribute('status_button','btn-success');
+            } else if($status->status=='Lulus') {
+                $status->setAttribute('status_button','btn-pink');
+            } else {
+                $status->setAttribute('status_button','btn-danger');
+            }
         }
 
         return view('student.profile',compact(['data','status','statusList','academicYear']));
@@ -198,23 +201,24 @@ class StudentController extends Controller
             'kd_prodi'          => 'required',
             'nama'              => 'required',
             'tpt_lhr'           => 'nullable',
-            'tgl_lhr'           => 'required',
+            'tgl_lhr'           => 'nullable',
             'jk'                => 'required',
             'agama'             => 'required',
             'alamat'            => 'nullable',
             'kewarganegaraan'   => 'required',
-            'kelas'             => 'required',
-            'tipe'              => 'required',
-            'program'           => 'required',
-            'seleksi_jenis'     => 'required',
-            'seleksi_jalur'     => 'required',
-            'status_masuk'      => 'required',
+            'kelas'             => 'nullable',
+            'tipe'              => 'nullable',
+            'program'           => 'nullable',
+            'seleksi_jenis'     => 'nullable',
+            'seleksi_jalur'     => 'nullable',
+            'status_masuk'      => 'nullable',
             'tahun_masuk'       => 'required',
         ]);
 
         $query                  = Student::find($id);
         $query->kd_prodi        = $request->kd_prodi;
         $query->nama            = $request->nama;
+        $query->tpt_lhr         = $request->tpt_lhr;
         $query->tgl_lhr         = $request->tgl_lhr;
         $query->jk              = $request->jk;
         $query->agama           = $request->agama;
@@ -308,12 +312,7 @@ class StudentController extends Controller
     {
         if($request->ajax()) {
 
-            $q  = Student::with('studyProgram.department.faculty','latestStatus')
-                        ->whereHas(
-                            'studyProgram.department', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            }
-                        );
+            $q  = Student::with('studyProgram.department.faculty','latestStatus');
 
             if($request->kd_jurusan) {
                 $q->whereHas(
@@ -337,7 +336,7 @@ class StudentController extends Controller
                 });
             }
 
-            $data = $q->orderBy('created_at','desc')->get();
+            $data = $q->orderBy('nim','asc')->get();
 
             return response()->json($data);
         } else {
