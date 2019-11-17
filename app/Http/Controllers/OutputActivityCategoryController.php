@@ -14,69 +14,97 @@ class OutputActivityCategoryController extends Controller
         return view('output-activity/category/index',compact(['category']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        if(request()->ajax()) {
+
+            $request->validate([
+                'nama'       => 'required',
+                'deskripsi'  => 'nullable',
+            ]);
+
+            $data               = new OutputActivityCategory;
+            $data->nama         = $request->nama;
+            $data->deskripsi    = $request->deskripsi;
+            $q = $data->save();
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\OutputActivityCategory  $outputActivityCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(OutputActivityCategory $outputActivityCategory)
+    public function edit($id)
     {
-        //
+        if(request()->ajax()) {
+            $id   = decrypt($id);
+            $data = OutputActivityCategory::find($id);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\OutputActivityCategory  $outputActivityCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(OutputActivityCategory $outputActivityCategory)
+    public function update(Request $request)
     {
-        //
+        if(request()->ajax()) {
+
+            $id = decrypt($request->_id);
+
+            $request->validate([
+                'nama'       => 'required',
+                'deskripsi'  => 'nullable',
+            ]);
+
+            $data               = OutputActivityCategory::find($id);
+            $data->nama         = $request->nama;
+            $data->deskripsi    = $request->deskripsi;
+            $q = $data->save();
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menyimpan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil diubah',
+                    'type'    => 'success'
+                ]);
+            }
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\OutputActivityCategory  $outputActivityCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, OutputActivityCategory $outputActivityCategory)
+    public function destroy(Request $request)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\OutputActivityCategory  $outputActivityCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(OutputActivityCategory $outputActivityCategory)
-    {
-        //
+        if(request()->ajax()) {
+            $id = decrypt($request->_id);
+            $q  = OutputActivityCategory::destroy($id);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
+        }
     }
 }

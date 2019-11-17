@@ -46,7 +46,7 @@
                         <h6 class="card-title">Kategori Luaran Kegiatan</span></h6>
                     </div>
                 <div class="card-body bd-color-gray-lighter">
-                    <table id="table-publishCat" class="table table-striped">
+                    <table id="table-outputCat" class="table table-striped">
                         <thead>
                             <tr>
                                 <th width="25">#</th>
@@ -69,7 +69,7 @@
                                             <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit" data-id="{{ encrypt($c->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encrypt($c->id)}}" name="_id">
-                                                <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('publication.category.delete') }}">
+                                                <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('output-activity.category.delete') }}">
                                                     <div><i class="fa fa-trash"></i></div>
                                                 </button>
                                             </form>
@@ -88,7 +88,7 @@
                     <h6 class="card-title"><span class="title-action">Tambah</span> Kategori</h6>
                 </div>
                 <div class="card-body bd-color-gray-lighter">
-                    <form id="form-publishCat" enctype="multipart/form-data">
+                    <form id="form-outputCat" enctype="multipart/form-data">
                         <div class="alert alert-danger" style="display:none">
                             @foreach ($errors->all() as $error)
                                 {{ $error }}
@@ -109,7 +109,7 @@
                         </div>
                         <div class="row mg-t-20">
                             <div class="offset-sm-3 col-sm-9 mg-t-10 mg-sm-t-0">
-                                <button type="submit" class="btn btn-info mr-2 btn-save" value="post" data-dest="{{route('publication.category.store')}}">Simpan</button>
+                                <button type="submit" class="btn btn-info mr-2 btn-save" value="post" data-dest="{{route('output-activity.category.store')}}">Simpan</button>
                                 <button class="btn btn-secondary btn-add">Reset</button>
                             </div>
                         </div>

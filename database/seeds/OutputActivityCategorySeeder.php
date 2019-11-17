@@ -19,8 +19,8 @@ class OutputActivityCategorySeeder extends Seeder
         ];
 
         $deskripsi = [
-            'a) Paten,<br/>b) Paten Sederhana',
-            'a) Hak Cipta, <br/>b) Desain Produk Industri, <br/>c) Perlindungan Varietas Tanaman (Sertifikat Perlindungan Varietas Tanaman, Sertifikat Pelepasan Varietas, Sertifikat Pendaftaran Varietas), <br/>d) Desain Tata Letak Sirkuit Terpadu, <br/>e) dll.',
+            'Paten, Paten Sederhana',
+            'Hak Cipta, Desain Produk Industri, Perlindungan Varietas Tanaman (Sertifikat Perlindungan Varietas Tanaman, Sertifikat Pelepasan Varietas, Sertifikat Pendaftaran Varietas), Desain Tata Letak Sirkuit Terpadu, dll.',
             'Termasuk di antaranya produk terstandarisasi, produk tersertifikasi, karya seni, serta rekayasa sosial',
             'Buku ber-ISBN, Book Chapter'
         ];

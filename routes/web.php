@@ -125,7 +125,7 @@ Route::prefix('ajax')->group(function () {
     Route::post('publication/get_by_filter','PublicationController@get_by_filter')->name('ajax.publication.filter');
 
     //Output Activity Category
-    Route::get('output-activity/category/{id}','PublicationCategoryController@edit')->name('output-activity.category.edit');
+    Route::get('output-activity/category/{id}','OutputActivityCategoryController@edit')->name('output-activity.category.edit');
 
     //Output Activity
     Route::post('output-activity/get_by_filter','PublicationController@get_by_filter')->name('ajax.output-activity.filter');

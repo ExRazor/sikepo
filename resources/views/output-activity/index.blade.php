@@ -65,55 +65,44 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_publication" class="table display responsive" data-sort="desc" style="width:100%">
+                <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center" width="50">No</th>
                             <th class="text-center" width="500">Judul Luaran</th>
                             <th class="text-center" width="150">Jenis Kegiatan</th>
+                            <th class="text-center" width="150">Kategori</th>
                             <th class="text-center" width="300">Judul Luaran</th>
                             <th class="text-center defaultSort" width="75">Tahun</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($outputCat as $cat)
+                        @foreach ($outputActivity as $activity)
                         <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td colspan="4">
-                                <strong>{{ $cat->nama }}</strong><br>
-                                <small>{!! $cat->deskripsi!!}</small>
+                            @if($activity->kegiatan=='Penelitian')
+                            <td>{{$activity->research->judul_penelitian}}</td>
+                            @else
+                            <td>{{$activity->communityService->judul_pengabdian}}</td>
+                            @endif
+                            <td class="text-center">{{$activity->kegiatan}}</td>
+                            <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
+                            <td>{{$activity->judul_luaran}}</td>
+                            <td class="text-center">{{$activity->tahun_luaran}}</td>
+                            <td class="text-center" width="50">
+                                <div class="btn-group" role="group">
+                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div><span class="fa fa-caret-down"></span></div>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
+                                        <a class="dropdown-item" href="{{ route('output-activity.edit',encode_id($activity->id)) }}">Sunting</a>
+                                        <form method="POST">
+                                            <input type="hidden" value="{{encode_id($activity->id)}}" name="id">
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('output-activity.delete') }}">Hapus</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
-                        @if($cat->outputActivity)
-                            @foreach($cat->outputActivity as $activity)
-                            <tr>
-                                <td></td>
-                                @if($activity->kegiatan=='Penelitian')
-                                <td>{{$activity->research->judul_penelitian}}</td>
-                                @else
-                                <td>{{$activity->communityService->judul_pengabdian}}</td>
-                                @endif
-                                <td class="text-center">{{$activity->kegiatan}}</td>
-                                <td>{{$activity->judul_luaran}}</td>
-                                <td class="text-center">{{$activity->tahun_luaran}}</td>
-                                <td class="text-center" width="50">
-                                    <div class="btn-group" role="group">
-                                        <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div><span class="fa fa-caret-down"></span></div>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <a class="dropdown-item" href="{{ route('output-activity.edit',encode_id($activity->id)) }}">Sunting</a>
-                                            <form method="POST">
-                                                <input type="hidden" value="{{encode_id($activity->id)}}" name="id">
-                                                <button class="dropdown-item btn-delete" data-dest="{{ route('output-activity.delete') }}">Hapus</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        @endif
                         @endforeach
                     </tbody>
                 </table>

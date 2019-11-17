@@ -11,10 +11,10 @@ class OutputActivityController extends Controller
 {
     public function index()
     {
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $outputCat    = OutputActivityCategory::all();
+        $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $outputActivity = OutputActivity::all();
 
-        return view('output-activity.index',compact(['outputCat','studyProgram']));
+        return view('output-activity.index',compact(['outputActivity','studyProgram']));
     }
 
     /**
