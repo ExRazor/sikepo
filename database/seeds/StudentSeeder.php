@@ -34,12 +34,14 @@ class StudentSeeder extends Seeder
         Excel::import(new StudentImport, public_path('/upload/student/excel_import/DATA MAHASISWA JURUSAN TEKNIK INFORMATIKA - GANJIL 2019-2020.xls'));
 
     	for($i = 0; $i < 50; $i++){
+            $nim            = rand(000000000, 999999999);
+            $tahun          = AcademicYear::all()->random();
             $jenis_seleksi  = $seleksi_jenis[array_rand($seleksi_jenis)];
             $count_jalur    = count($seleksi_jalur[$jenis_seleksi])-1;
             $jalur_seleksi  = $seleksi_jalur[$jenis_seleksi][rand(0,$count_jalur)];
 
             DB::table('students')->insert([
-                'nim'                   => rand(000000000, 999999999),
+                'nim'                   => $nim,
                 'nama'                  => $faker->name,
                 'tpt_lhr'               => $faker->city,
                 'tgl_lhr'               => $faker->date($format = 'Y-m-d', $max = '2001-12-31'),
@@ -54,7 +56,14 @@ class StudentSeeder extends Seeder
                 'seleksi_jenis'         => $jenis_seleksi,
                 'seleksi_jalur'         => $jalur_seleksi,
                 'status_masuk'          => $masuk_status[array_rand($masuk_status)],
+                'angkatan'              => $tahun->tahun_akademik,
                 'created_at'            => now()
+            ]);
+
+            DB::table('student_statuses')->insert([
+                'id_ta'     => $tahun->id,
+                'nim'       => $nim,
+                'status'    => 'Aktif'
             ]);
         }
 

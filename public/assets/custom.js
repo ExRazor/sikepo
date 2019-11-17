@@ -1016,7 +1016,6 @@ $(document).ready(function() {
                         var fakultas    = data[i].study_program.department.faculty.singkatan;
                         var ikatan      = data[i].ikatan_kerja;
                         var jabatan     = data[i].jabatan_akademik;
-                        var pend        = data[i].pend_terakhir_jenjang;
 
 
                         html += '<tr>'+
@@ -1031,7 +1030,6 @@ $(document).ready(function() {
                                     '</td>'+
                                     '<td>'+ikatan+'</td>'+
                                     '<td>'+jabatan+'</td>'+
-                                    '<td class="text-center">'+pend+'</td>'+
                                     '<td class="text-center no-sort" width="50">'+
                                         '<div class="btn-group" role="group">'+
                                             '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+

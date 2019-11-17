@@ -54,7 +54,7 @@ class StudyProgramSeeder extends Seeder
             DB::table('study_programs')->insert([
                 [
                     'kd_prodi'      => $kd_prodi,
-                    'kd_jurusan'    => Department::all()->random()->kd_jurusan,
+                    'kd_jurusan'    => Department::where('kd_jurusan','!=',setting('app_department_id'))->inRandomOrder()->first()->kd_jurusan,
                     'kd_unik'       => substr($kd_prodi, 0, -1),
                     'nama'          => 'Program Studi Random '.$i,
                     'singkatan'     => 'PSR'.$i,

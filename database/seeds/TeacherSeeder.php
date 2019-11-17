@@ -18,16 +18,22 @@ class TeacherSeeder extends Seeder
         $agama = ['Islam','Kristen','Katholik','Buddha','Hindu','Kong Hu Cu'];
         $pend = ['D3','S1','S2','S3'];
         $jurusan = ['Informatika','Ilmu Komputer','Elektro','Industri'];
-        $ikatan = ['Dosen Tetap PS','Dosen Tidak Tetap','Dosen Tetap PT'];
         $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
         $sesuai = ['Ya','Tidak'];
         $bidang_ahli = ['PHP','Photoshop','Elektronika','OOP','Office'];
 
     	for($i = 0; $i < 50; $i++){
-                // insert data ke table pegawai menggunakan Faker
+            $studyProgram = StudyProgram::all()->random();
+
+            if($studyProgram->kd_jurusan == setting('app_department_id')) {
+                $ikatan = ['Dosen Tetap PS'];
+            } else {
+                $ikatan = ['Dosen Tidak Tetap','Dosen Tetap PT'];
+            }
+
             DB::table('teachers')->insert([
                 'nidn'                  => rand(000000000, 999999999),
-                'kd_prodi'              => StudyProgram::all()->random()->kd_prodi,
+                'kd_prodi'              => $studyProgram->kd_prodi,
                 'nip'                   => rand(197201011982010101, 199001012000010101),
                 'nama'                  => $faker->name,
                 'jk'                    => $jk[array_rand($jk)],

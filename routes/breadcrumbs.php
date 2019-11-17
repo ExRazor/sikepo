@@ -32,10 +32,17 @@ Breadcrumbs::for('teacher-add', function ($trail) {
     $trail->push('Tambah Data Dosen', route('teacher.add'));
 });
 
-Breadcrumbs::for('teacher-edit', function ($trail) {
+Breadcrumbs::for('teacher-profile', function ($trail,$data) {
     $trail->parent('teacher');
+    $trail->push($data->nidn.' : '.$data->nama,route('teacher.profile',encode_id($data->nidn)));
+});
+
+Breadcrumbs::for('teacher-edit', function ($trail,$data) {
+    $trail->parent('teacher-profile',$data);
     $trail->push('Sunting Data Dosen');
 });
+
+
 
 //Dosen > EWMP
 Breadcrumbs::for('teacher-ewmp', function ($trail) {

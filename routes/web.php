@@ -150,7 +150,7 @@ Route::get('/teacher',function(){
 Route::get('/teacher/list','TeacherController@index')->name('teacher');
 Route::get('/teacher/list/add','TeacherController@create')->name('teacher.add');
 Route::get('/teacher/list/import','TeacherController@import')->name('teacher.import');
-Route::get('/teacher/list/{id}','TeacherController@show')->name('teacher.show');
+Route::get('/teacher/list/{id}','TeacherController@profile')->name('teacher.profile');
 Route::get('/teacher/list/{id}/edit','TeacherController@edit')->name('teacher.edit');
 Route::post('/teacher/list','TeacherController@store')->name('teacher.store');
 Route::put('/teacher/list','TeacherController@update')->name('teacher.update');

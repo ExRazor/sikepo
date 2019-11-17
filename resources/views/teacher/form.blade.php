@@ -5,13 +5,10 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'teacher-edit' : 'teacher-add' ) as $breadcrumb)
+            @foreach (Breadcrumbs::generate('teacher-edit',$data) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
-                @isset($data)
-                <a href="{{route('teacher.show',encode_id($data->nip))}}" class="breadcrumb-item">{{$data->nidn}} : {{$data->nama}}</a>
-                @endisset
                 <span class="breadcrumb-item">{{ $breadcrumb->title }}</span>
             @endif
         @endforeach
@@ -77,7 +74,7 @@
                                             @if($f->department->count())
                                             <optgroup label="{{$f->nama}}">
                                                 @foreach($f->department as $d)
-                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) || $d->kd_jurusan==setting('app_department_id') ? 'selected': ''}}>{{$d->nama}}</option>
+                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) ? 'selected': ''}}>{{$d->nama}}</option>
                                                 @endforeach
                                             </optgroup>
                                             @endif
@@ -132,9 +129,9 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Agama: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Agama:</label>
                                 <div class="col-8">
-                                    <select class="form-control" name="agama" required>
+                                    <select class="form-control" name="agama">
                                         <option value="">- Pilih Agama -</option>
                                         <option value="Islam" {{ (isset($data) && ($data->agama=='Islam') || Request::old('agama')=='Islam') ? 'selected' : ''}}>Islam</option>
                                         <option value="Kristen" {{ (isset($data) && ($data->agama=='Kristen') || Request::old('agama')=='Kristen') ? 'selected' : ''}}>Kristen</option>
@@ -146,14 +143,14 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tempat/Tanggal Lahir: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Tempat/Tanggal Lahir:</label>
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-4">
-                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir" required>
+                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
                                         </div>
                                         <div class="col-8">
-                                            <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir" required>
+                                            <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +173,7 @@
                                     <input class="form-control" type="email" name="email" value="{{ isset($data) ? $data->email : Request::old('email')}}" placeholder="Masukkan Email Aktif">
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 form-opsional">
                                 <label class="col-3 form-control-label">Pendidikan Terakhir: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div class="row">
@@ -196,13 +193,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 form-opsional">
                                 <label class="col-3 form-control-label">Bidang Keahlian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Jika lebih dari satu, pisahkan dengan tanda koma." required>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-3 form-opsional">
                                 <label class="col-3 form-control-label">Sesuai Bidang PS? <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div id="sesuai_bidang_ps" class="radio">
@@ -225,8 +222,8 @@
                                     <select class="form-control" name="ikatan_kerja" required>
                                         <option value="">- Pilih Ikatan Kerja -</option>
                                         <option value="Dosen Tetap PS" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PS' || Request::old('ikatan_kerja')=='Dosen Tetap PS') ? 'selected' : ''}}>Dosen Tetap PS</option>
-                                        <option value="Dosen Tidak Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tidak Tetap' || Request::old('ikatan_kerja')=='Dosen Tidak Tetap') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
                                         <option value="Dosen Tetap PT" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PT' || Request::old('ikatan_kerja')=='Dosen Tetap PT') ? 'selected' : ''}}>Dosen Tetap PT</option>
+                                        <option value="Dosen Tidak Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tidak Tetap' || Request::old('ikatan_kerja')=='Dosen Tidak Tetap') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
                                     </select>
                                 </div>
                             </div>
@@ -279,5 +276,31 @@
 </div>
 @endsection
 
-@section('js')
+@section('custom-js')
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var value = $('select[name=kd_jurusan]').val()
+    cek(value);
+});
+
+$('#teacher_form').on('change','select[name=kd_jurusan]',function(){
+    var value = $(this).val();
+
+    cek(value);
+
+});
+
+function cek(value) {
+    if(value!={{setting('app_department_id')}}) {
+        $('.form-opsional').find('input').prop('required',false);
+        $('.form-opsional').find('select').prop('required',false);
+        $('.form-opsional').hide();
+    } else {
+        $('.form-opsional').find('input').prop('required',true);
+        $('.form-opsional').find('select').prop('required',true);
+        $('.form-opsional').show();
+    }
+}
+</script>
 @endsection

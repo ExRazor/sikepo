@@ -93,14 +93,13 @@
                             <th class="text-center">Program Studi</th>
                             <th class="text-center">Ikatan Kerja</th>
                             <th class="text-center">Jabatan<br>Akademik</th>
-                            <th class="text-center">Pend<br>Tertinggi</th>
                             <th class="text-center no-sort">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.show',encode_id($d->nip)) }}">{{$d->nidn}}</a></td>
+                            <td><a href="{{ route('teacher.profile',encode_id($d->nip)) }}">{{$d->nidn}}</a></td>
                             <td>
                                 {{$d->nama}}<br>
                                 <small>NIP. {{$d->nip}}</small>
@@ -110,7 +109,6 @@
                             </td>
                             <td>{{$d->ikatan_kerja}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
-                            <td class="text-center">{{$d->pend_terakhir_jenjang}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

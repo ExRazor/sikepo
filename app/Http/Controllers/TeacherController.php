@@ -60,16 +60,16 @@ class TeacherController extends Controller
             'nip'                   => 'required|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
-            'agama'                 => 'required',
-            'tpt_lhr'               => 'required',
-            'tgl_lhr'               => 'required',
+            'agama'                 => 'nullable',
+            'tpt_lhr'               => 'nullable',
+            'tgl_lhr'               => 'nullable',
             'email'                 => 'email|nullable',
-            'pend_terakhir_jenjang' => 'required',
-            'pend_terakhir_jurusan' => 'required',
-            'bidang_ahli'           => 'required',
+            'pend_terakhir_jenjang' => 'nullable',
+            'pend_terakhir_jurusan' => 'nullable',
+            'bidang_ahli'           => 'nullable',
+            'sesuai_bidang_ps'      => 'nullable',
             'ikatan_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
-            'sesuai_bidang_ps'      => 'required',
         ]);
 
         $bidang_ahli = explode(", ",$request->bidang_ahli);
@@ -126,7 +126,7 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function show($nip)
+    public function profile($nip)
     {
         $nip               = decode_id($nip);
         $data              = Teacher::where('nip',$nip)->first();
@@ -182,16 +182,16 @@ class TeacherController extends Controller
             'nip'                   => 'required|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
-            'agama'                 => 'required',
-            'tpt_lhr'               => 'required',
-            'tgl_lhr'               => 'required',
+            'agama'                 => 'nullable',
+            'tpt_lhr'               => 'nullable',
+            'tgl_lhr'               => 'nullable',
             'email'                 => 'email|nullable',
-            'pend_terakhir_jenjang' => 'required',
-            'pend_terakhir_jurusan' => 'required',
-            'bidang_ahli'           => 'required',
+            'pend_terakhir_jenjang' => 'nullable',
+            'pend_terakhir_jurusan' => 'nullable',
+            'bidang_ahli'           => 'nullable',
+            'sesuai_bidang_ps'      => 'nullable',
             'ikatan_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
-            'sesuai_bidang_ps'      => 'required',
         ]);
 
         $bidang_ahli = explode(", ",$request->bidang_ahli);
@@ -232,7 +232,7 @@ class TeacherController extends Controller
         $Teacher->save();
 
 
-        return redirect()->route('teacher.show',encode_id($Teacher->nip))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.profile',encode_id($Teacher->nip))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**
