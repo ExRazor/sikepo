@@ -375,11 +375,7 @@ class StudentController extends Controller
     {
         if($request->has('cari')){
             $cari = $request->cari;
-            $data = Student::where('nama', 'LIKE', '%'.$cari.'%')->get();
-
-            if($data->count() == 0) {
-                $data = Student::where('nim', 'LIKE', '%'.$cari.'%')->get();
-            }
+            $data = Student::where('nama', 'LIKE', '%'.$cari.'%')->orWhere('nim','LIKE','%'.$cari.'%')->get();
 
             $response = array();
             foreach($data as $d){

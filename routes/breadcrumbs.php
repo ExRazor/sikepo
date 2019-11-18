@@ -42,8 +42,6 @@ Breadcrumbs::for('teacher-edit', function ($trail,$data) {
     $trail->push('Sunting Data Dosen');
 });
 
-
-
 //Dosen > EWMP
 Breadcrumbs::for('teacher-ewmp', function ($trail) {
     $trail->parent('teacher');

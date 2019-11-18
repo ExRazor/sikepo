@@ -32,7 +32,10 @@ class TeacherScheduleController extends Controller
      */
     public function create()
     {
-        //
+        $faculty      = Faculty::all();
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+
+        return view('teacher.schedule.form',compact(['faculty','academicYear']));
     }
 
     /**
@@ -89,7 +92,7 @@ class TeacherScheduleController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decrypt($request->id);
+            $id = decode_id($request->id);
             dd($id);
             $q  = TeacherSchedule::destroy($id);
             if(!$q) {

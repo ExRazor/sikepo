@@ -183,7 +183,7 @@ class StudyProgramController extends Controller
     {
         if($request->has('cari')){
             $cari = $request->cari;
-            $data = StudyProgram::where('nama', 'LIKE', '%'.$cari.'%')->get();
+            $data = StudyProgram::where('kd_prodi', 'LIKE', '%'.$cari.'%')->orWhere('nama', 'LIKE', '%'.$cari.'%')->get();
 
             $response = array();
             foreach($data as $d){

@@ -342,4 +342,21 @@ class TeacherController extends Controller
             abort(404);
         }
     }
+
+    public function loadData(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = Teacher::where('nidn', 'LIKE', '%'.$cari.'%')->orWhere('nama', 'LIKE', '%'.$cari.'%')->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->nidn,
+                    "text"  => $d->nama
+                );
+            }
+            return response()->json($response);
+        }
+    }
 }

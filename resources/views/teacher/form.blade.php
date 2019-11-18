@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-            @foreach (Breadcrumbs::generate('teacher-edit',$data) as $breadcrumb)
+            @foreach (Breadcrumbs::generate( isset($data) ? 'teacher-edit' : 'teacher-add', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else

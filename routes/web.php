@@ -70,6 +70,8 @@ Route::prefix('ajax')->group(function () {
     //Tahun Akademik
     Route::post('academic-year/edit', 'AcademicYearController@edit');
     Route::post('academic-year/status','AcademicYearController@setStatus');
+    Route::get('academic-year/loadData','AcademicYearController@loadData')->name('ajax.academic-year.load');
+
 
     //Fakultas
     Route::post('faculty/edit','FacultyController@edit' );
@@ -89,7 +91,7 @@ Route::prefix('ajax')->group(function () {
 
     //Teacher
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
-    Route::get('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
+    Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
 
     //Teacher Achievement
     Route::post('teacher-acv/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacherAcv.filter');
@@ -132,6 +134,7 @@ Route::prefix('ajax')->group(function () {
 
     //Academic - Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
+    Route::get('curriculum/loadData','CurriculumController@loadData')->name('ajax.curriculum.loadData');
 
     //Academic - Schedule
     Route::post('schedule/get_by_filter','TeacherScheduleController@get_by_filter')->name('ajax.schedule.filter');

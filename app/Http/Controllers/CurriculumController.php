@@ -234,4 +234,21 @@ class CurriculumController extends Controller
             abort(404);
         }
     }
+
+    public function loadData(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = Curriculum::where('kd_matkul', 'LIKE', '%'.$cari.'%')->orWhere('nama', 'LIKE', '%'.$cari.'%')->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->kd_matkul,
+                    "text"  => $d->nama.' - '.$d->studyProgram->singkatan.' ('.$d->versi.')'
+                );
+            }
+            return response()->json($response);
+        }
+    }
 }

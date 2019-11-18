@@ -161,4 +161,21 @@ class AcademicYearController extends Controller
             }
         }
     }
+
+    public function loadData(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = AcademicYear::where('tahun_akademik', 'LIKE', '%'.$cari.'%')->orWhere('semester','LIKE','%'.$cari.'%')->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->id,
+                    "text"  => $d->tahun_akademik.' - '.$d->semester
+                );
+            }
+            return response()->json($response);
+        }
+    }
 }
