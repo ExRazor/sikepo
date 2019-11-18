@@ -130,8 +130,11 @@ Route::prefix('ajax')->group(function () {
     //Output Activity
     Route::post('output-activity/get_by_filter','PublicationController@get_by_filter')->name('ajax.output-activity.filter');
 
-    //Curriculum
+    //Academic - Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
+
+    //Academic - Schedule
+    Route::get('schedule/get_by_filter','TeacherScheduleController@get_by_filter')->name('ajax.schedule.filter');
 });
 
 //Collaboration
@@ -300,7 +303,8 @@ Route::delete('academic/curriculum','CurriculumController@destroy')->name('acade
 
 //Academic - Teacher Schedule
 Route::get('academic/schedule','TeacherScheduleController@index')->name('academic.schedule');
-Route::get('academic/schedule/{nidn}','TeacherScheduleController@edit')->name('academic.schedule.edit');
+Route::get('academic/schedule/add','TeacherScheduleController@create')->name('academic.schedule.add');
+Route::get('academic/schedule/{nidn}/edit','TeacherScheduleController@edit')->name('academic.schedule.edit');
 Route::post('academic/schedule','TeacherScheduleController@store')->name('academic.schedule.store');
 Route::put('academic/schedule','TeacherScheduleController@update')->name('academic.schedule.update');
 Route::delete('academic/schedule','TeacherScheduleController@destroy')->name('academic.schedule.delete');

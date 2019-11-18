@@ -19,7 +19,7 @@
         <div class="card shadow-base bd-0 rounded-0 widget-4">
             <div class="card-body">
                 <div class="card-profile-img" style="background-image: url('{{isset($data->foto) ? route('teacher.download',encrypt($data->foto)): route('teacher.download',encrypt('avatar.png'))}}')"></div>
-                <h4 class="tx-bold tx-roboto">{{$data->nama}}</h4>
+                <h4 class="tx-bold tx-roboto tx-white">{{$data->nama}}</h4>
                 <p class="mg-b-1">NIDN. {{$data->nidn}}</p>
                 <p class="mg-b-25">NIP. {{$data->nip}}</p>
 

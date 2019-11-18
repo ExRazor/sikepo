@@ -17,19 +17,16 @@ class CreateTeacherSchedulesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('id_ta');
             $table->char('nidn',10);
-            $table->char('kd_matkul',10)->nullable();
-            $table->string('nm_matkul')->nullable();
-            $table->char('kd_prodi',10)->nullable();
-            $table->char('sesuai_prodi',1)->nullable();
+            $table->char('kd_matkul',10);
+            $table->char('sesuai_prodi',1);
             $table->char('sesuai_bidang',1);
             $table->timestamps();
 
-            $table->unique(['id_ta','nidn']);
+            $table->unique(['id_ta','nidn','kd_matkul']);
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('kd_matkul')->references('kd_matkul')->on('curricula')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
