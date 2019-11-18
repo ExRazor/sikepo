@@ -27,6 +27,13 @@ class AcademicYear extends Model
         return $this->hasMany('App\TeacherSchedule','id_ta');
     }
 
+    // public function scopeScheduleCurriculumProdi($query, $prodi)
+    // {
+    //    return $query->with(['teacherSchedule.curriculum' => function($q) use ($prodi) {
+    //         $q->where('kd_prodi', $prodi);
+    //    }]);
+    // }
+
     public function student()
     {
         return $this->hasMany('App\Student','masuk_ta');

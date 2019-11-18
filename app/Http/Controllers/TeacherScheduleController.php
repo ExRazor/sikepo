@@ -110,42 +110,40 @@ class TeacherScheduleController extends Controller
 
     public function get_by_filter(Request $request)
     {
-        // if($request->ajax()) {
+        if($request->ajax()) {
+            $q  = AcademicYear::with(
+                                    'teacherSchedule.academicYear',
+                                    'teacherSchedule.curriculum.studyProgram.department',
+                                    'teacherSchedule.teacher.studyProgram.department'
+                                );
 
-            $q  = AcademicYear::whereHas(
-                                'teacherSchedule.curriculum', function($query) use($request) {
-                                    $query->where('kd_prodi','83207');
-                                })
-                                ->with('teacherSchedule.curriculum')
-                                ->get();
+            if($request->has('kd_jurusan')) {
+                $callback = function($query) use($request) {
+                    $query->where('kd_jurusan',$request->kd_jurusan);
+                };
 
-            // $data = $q->get();
+                $q->whereHas(
+                    'teacherSchedule.curriculum.studyProgram', $callback);
+            }
 
-            return response()->json($q);
+            if($request->has('kd_prodi')){
 
+                $callback = function ($query) use ($request) {
+                    $query->curriculumProdi($request->kd_prodi);
+                };
 
-            // ->with(
-                // 'teacherSchedule.academicYear',
-                // 'teacherSchedule.curriculum'
-                // 'teacherSchedule.curriculum.studyProgram.department',
-                // 'teacherSchedule.teacher.studyProgram.department'
-            // );
-            // dd($data);
+                $q->with(['teacherSchedule' => $callback]);
 
-            // if($request->has('kd_jurusan')) {
-            //     $q->whereHas(
-            //         'teacherSchedule.curriculum.studyProgram', function($query) use($request) {
-            //             $query->where('kd_jurusan',$request->kd_jurusan);
-            //         });
-            // }
+                // $q->scheduleCurriculumProdi($request->kd_prodi);
 
-            // if($request->has('kd_prodi')){
+            }
 
-            // }
+            $data = $q->get();
 
+            return response()->json($data);
 
-        // } else {
-        //     abort(404);
-        // }
+        } else {
+            abort(404);
+        }
     }
 }

@@ -31,6 +31,12 @@ class TeacherSchedule extends Model
         return $this->belongsTo('App\Curriculum','kd_matkul');
     }
 
+    public function scopeCurriculumProdi($query, $prodi)
+    {
+       return $query->whereHas('curriculum', function($q) use ($prodi) {
+            $q->where('kd_prodi', $prodi);
+       });
+    }
     public function studyProgram()
     {
         return $this->belongsTo('App\StudyProgram','kd_prodi');

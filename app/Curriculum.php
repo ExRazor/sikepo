@@ -28,4 +28,9 @@ class Curriculum extends Model
     {
         return $this->belongsTo('App\StudyProgram','kd_prodi');
     }
+
+    public function teacherSchedule()
+    {
+        return $this->hasMany('App\TeacherSchedule','kd_matkul');
+    }
 }

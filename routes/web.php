@@ -134,7 +134,7 @@ Route::prefix('ajax')->group(function () {
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
 
     //Academic - Schedule
-    Route::get('schedule/get_by_filter','TeacherScheduleController@get_by_filter')->name('ajax.schedule.filter');
+    Route::post('schedule/get_by_filter','TeacherScheduleController@get_by_filter')->name('ajax.schedule.filter');
 });
 
 //Collaboration
