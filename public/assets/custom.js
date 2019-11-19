@@ -1217,7 +1217,30 @@ $(document).ready(function() {
     /*****************************************************************************/
 
     /********************************* DATA EWMP DOSEN *********************************/
-    $('.btn-edit-ewmp').click(function(e){
+    $('#modal-teach-ewmp').on('change','select[name=id_ta]',function(e){
+
+        e.preventDefault();
+        var cont   = $('#modal-teach-ewmp');
+        var nidn   = cont.find('input[name=nidn]').val();
+        var id_ta  = $(this).val();
+        var url    = base_url+'/ajax/ewmp/countsks';
+
+        $.ajax({
+            url: url,
+            data: {
+                nidn:nidn,
+                id_ta:id_ta
+            },
+            type: 'GET',
+            dataType: 'json',
+            success: function (count) {
+                cont.find('input[name=ps_intra]').val(count.schedule_ps);
+                cont.find('input[name=ps_lain]').val(count.schedule_pt);
+            }
+        });
+    });
+
+    $('#ewmp').on('click','.btn-edit',function(e){
         e.preventDefault();
         var id  = $(this).data('id');
         var url = '/ajax/ewmp/'+id;

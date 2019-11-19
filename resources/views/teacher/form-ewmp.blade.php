@@ -19,11 +19,8 @@
                         <div class="col-sm-8">
                             <input type="hidden" name="_id">
                             <input type="hidden" name="nidn" value="{{encrypt($data->nidn)}}">
-                            <select class="form-control" name="id_ta">
+                            <select class="form-control select-academicYear" name="id_ta">
                                 <option value="">= Pilih Tahun Akademik =</option>
-                                @foreach ($academicYear as $ay)
-                                    <option value="{{$ay->id}}">{{$ay->tahun_akademik.' - '.$ay->semester}}</option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -32,10 +29,10 @@
                         <div class="col-sm-8">
                             <div class="row">
                                 <div class="col-4 pr-1">
-                                    <input type="text" class="form-control" name="ps_intra" placeholder="Dalam PS" required>
+                                    <input type="text" class="form-control disabled" name="ps_intra" placeholder="Dalam PS" readonly>
                                 </div>
                                 <div class="col-4 px-1">
-                                    <input type="text" class="form-control" name="ps_lain" placeholder="PS Lain dalam PT" required>
+                                    <input type="text" class="form-control disabled" name="ps_lain" placeholder="PS Lain dalam PT" readonly>
                                 </div>
                                 <div class="col-4 pl-1">
                                     <input type="text" class="form-control" name="ps_luar" placeholder="PS Lain luar PT"required>

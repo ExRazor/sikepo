@@ -93,6 +93,10 @@ Route::prefix('ajax')->group(function () {
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
     Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
 
+    //Teacher EWMP
+    Route::get('ewmp/countsks','EwmpController@countSKS')->name('ajax.ewmp.countsks');
+
+
     //Teacher Achievement
     Route::post('teacher-acv/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacherAcv.filter');
 

@@ -16,6 +16,7 @@
                             <tr>
                                 <th class="text-center align-middle">Tahun Akademik</th>
                                 <th class="text-center align-middle">Mata Kuliah</th>
+                                <th class="text-center align-middle">SKS</th>
                                 <th class="text-center align-middle">Sesuai Prodi</th>
                                 <th class="text-center align-middle">Sesuai Bidang</th>
                                 <th class="text-center align-middle">Aksi</th>
@@ -26,12 +27,15 @@
                             <tr>
                                 <td>{{ $s->academicYear->tahun_akademik.' - '.$s->academicYear->semester }}</td>
                                 <td>{{ $s->curriculum->nama.' - '.$s->curriculum->studyProgram->singkatan.' ('.$s->curriculum->versi.')' }}</td>
-                                <td>
+                                <td class="text-center">
+                                    {{ $s->curriculum->sks_teori + $s->curriculum->sks_seminar + $s->curriculum->sks_praktikum }}
+                                </td>
+                                <td class="text-center">
                                     @isset($s->sesuai_prodi)
                                     <i class="fa fa-check"></i>
                                     @endisset
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     @isset($s->sesuai_bidang)
                                     <i class="fa fa-check"></i>
                                     @endisset
