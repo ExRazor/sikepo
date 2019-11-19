@@ -10,8 +10,6 @@ class CurriculumSchedule extends Model
         'id_ta',
         'nidn',
         'kd_matkul',
-        'nm_matkul',
-        'kd_prodi',
         'sesuai_prodi',
         'sesuai_bidang',
     ];

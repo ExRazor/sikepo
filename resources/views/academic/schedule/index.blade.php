@@ -112,14 +112,14 @@
                                     </a>
                                 </td>
                                 <td class="text-center">
-                                    @if($schedule->sesuai_prodi)
+                                    @isset($schedule->sesuai_prodi)
                                     <i class="fa fa-check"></i>
-                                    @endif
+                                    @endisset
                                 </td>
                                 <td class="text-center">
-                                    @if($schedule->sesuai_bidang)
+                                    @isset($schedule->sesuai_bidang)
                                     <i class="fa fa-check"></i>
-                                    @endif
+                                    @endisset
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">

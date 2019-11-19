@@ -59,9 +59,11 @@
                     <div class="row">
                         <div class="col-9 mx-auto">
                             @csrf
+                            <input type="hidden" name="url_current" value="{{ url()->current() }}">
+                            <input type="hidden" name="url_previous" value="{{ url()->previous() }}">
                             @if(isset($data))
                                 @method('put')
-                                <input type="hidden" name="id" value="{{encrypt($data->id)}}">
+                                <input type="hidden" name="id" value="{{encode_id($data->id)}}">
                             @else
                                 @method('post')
                             @endif

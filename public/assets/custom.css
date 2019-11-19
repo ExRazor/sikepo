@@ -94,8 +94,6 @@ button.dropdown-item {
     background-size: cover;
 }
 
-.ui-datepicker{z-index:1151 !important;}
-
 /* ----------------------------------------------- */
 /* ############### DATA TABLE CUSTOM ############### */
 /* ----------------------------------------------- */
@@ -258,6 +256,18 @@ select.parsley-success:focus {
 
 
 /* ----------------------------------------------- */
+/* ############### CUSTOM PLUGIN ############### */
+/* ----------------------------------------------- */
+.select2-close-mask{
+    z-index: 2099 !important;
+}
+.select2-dropdown{
+    z-index: 3051 !important;
+}
+
+.ui-datepicker{z-index:1151 !important;}
+
+/* ----------------------------------------------- */
 /* ############### MEDIA ############### */
 /* ----------------------------------------------- */
 
@@ -266,4 +276,3 @@ select.parsley-success:focus {
         padding: 20px;
     }
 }
-

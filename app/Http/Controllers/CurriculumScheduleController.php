@@ -9,6 +9,7 @@ use App\AcademicYear;
 use App\Faculty;
 use App\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CurriculumScheduleController extends Controller
 {
@@ -30,10 +31,28 @@ class CurriculumScheduleController extends Controller
 
     public function store(Request $request)
     {
+        $url_current  = $request->url_current;
+        $url_previous = $request->url_previous;
+
         $request->validate([
-            'id_ta'          => 'required',
-            'nidn'           => 'required',
-            'kd_matkul'      => 'required',
+            'id_ta'      => [
+                                'required',
+                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
+                                    return $query->where('nidn', $request->nidn)->where('kd_matkul',$request->kd_matkul);
+                                }),
+                            ],
+            'nidn'       => [
+                                'required',
+                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
+                                    return $query->where('id_ta', $request->id_ta)->where('kd_matkul',$request->kd_matkul);
+                                }),
+                            ],
+            'kd_matkul'  => [
+                                'required',
+                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
+                                    return $query->where('id_ta', $request->id_ta)->where('nidn',$request->nidn);
+                                }),
+                            ],
             'sesuai_bidang'  => 'nullable',
         ]);
 
@@ -54,28 +73,71 @@ class CurriculumScheduleController extends Controller
         $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
         $query->save();
 
-        return redirect()->route('academic.schedule')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        if($url_current != $url_previous) {
+            $url_tujuan = $request->url_previous;
+        } else {
+            $url_tujuan = route('academic.schedule');
+        }
+
+        if(request()->ajax()) {
+            if(!$query) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
+        } else {
+            return redirect($url_tujuan)->with('flash.message', 'Data jadwal kurikulum berhasil ditambahkan!')->with('flash.class', 'success');
+        }
     }
 
     public function edit($id)
     {
         $id             = decode_id($id);
         $faculty        = Faculty::all();
-        $data           = CurriculumSchedule::find($id);
+        $data           = CurriculumSchedule::with('teacher.studyProgram','curriculum','academicYear')->where('id',$id)->first();
         $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->studyProgram->kd_jurusan)->get();
         $teacher        = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
 
-        return view('academic.schedule.form',compact(['faculty','data','studyProgram','teacher']));
+        if(request()->ajax()) {
+            return response()->json($data);
+        } else {
+            return view('academic.schedule.form',compact(['faculty','data','studyProgram','teacher']));
+        }
     }
 
     public function update(Request $request)
     {
-        $id = decrypt($request->id);
+        $id  = decode_id($request->id);
+        $url_current  = $request->url_current;
+        $url_previous = $request->url_previous;
 
         $request->validate([
-            'id_ta'          => 'required',
-            'nidn'           => 'required',
-            'kd_matkul'      => 'required',
+            'id_ta'      => [
+                                'required',
+                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
+                                    return $query->where('nidn', $request->nidn)->where('kd_matkul',$request->kd_matkul);
+                                })->ignore($id,'id'),
+                            ],
+            'nidn'       => [
+                                'required',
+                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
+                                    return $query->where('id_ta', $request->id_ta)->where('kd_matkul',$request->kd_matkul);
+                                })->ignore($id,'id'),
+                            ],
+            'kd_matkul'  => [
+                                'required',
+                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
+                                    return $query->where('id_ta', $request->id_ta)->where('nidn',$request->nidn);
+                                })->ignore($id,'id'),
+                            ],
             'sesuai_bidang'  => 'nullable',
         ]);
 
@@ -96,14 +158,35 @@ class CurriculumScheduleController extends Controller
         $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
         $query->save();
 
-        return redirect()->route('academic.schedule')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        if($url_current != $url_previous) {
+            $url_tujuan = $request->url_previous;
+        } else {
+            $url_tujuan = route('academic.schedule');
+        }
+
+        if(request()->ajax()) {
+            if(!$query) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
+        } else {
+            return redirect($url_tujuan)->with('flash.message', 'Data jadwal kurikulum berhasil disunting!')->with('flash.class', 'success');
+        }
     }
 
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
             $id = decode_id($request->id);
-            dd($id);
             $q  = CurriculumSchedule::destroy($id);
             if(!$q) {
                 return response()->json([

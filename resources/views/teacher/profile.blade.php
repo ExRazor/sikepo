@@ -38,9 +38,10 @@
         <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">
             <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-                    <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
+                    <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#schedule" role="tab">Mata Kuliah</a></li>
                     @if($data->ikatan_kerja=='Dosen Tetap PS')
-                    <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
+                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
+                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                     @endif
                 @endif
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#" role="tab">Favorites</a></li>
@@ -50,9 +51,18 @@
         <div class="row br-profile-body">
             <div class="col-lg-9">
                 <div class="tab-content">
+                    @if (session()->has('flash.message'))
+                    <div class="alert alert-{{ session('flash.class') }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ session('flash.message') }}
+                    </div>
+                    @endif
                     @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-                        @include('teacher.tab-achievement')
+                        @include('teacher.tab-schedule')
                         @if($data->ikatan_kerja=='Dosen Tetap PS')
+                            @include('teacher.tab-achievement')
                             @include('teacher.tab-ewmp')
                         @endif
                     @endif

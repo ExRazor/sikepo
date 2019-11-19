@@ -50,7 +50,7 @@
                                             <div><span class="fa fa-caret-down"></span></div>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <a class="dropdown-item btn-edit btn-edit-ewmp" href="#" data-id="{{encrypt($e->id)}}">Sunting</a>
+                                            <button class="dropdown-item btn-edit btn-edit-ewmp" data-id="{{encrypt($e->id)}}">Sunting</button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encrypt($e->id)}}" name="_id">
                                                 <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('ewmp.delete') }}">Hapus</a>

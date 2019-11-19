@@ -8,7 +8,7 @@ use App\StudyProgram;
 use App\AcademicYear;
 use App\Ewmp;
 use App\Faculty;
-use App\Department;
+use App\CurriculumSchedule;
 use App\TeacherAchievement;
 use File;
 
@@ -132,12 +132,12 @@ class TeacherController extends Controller
         $data              = Teacher::where('nip',$nip)->first();
         $data->bidang_ahli = json_decode($data->bidang_ahli);
 
-        $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
-
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
+        $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('tanggal','desc')->get();
 
-        return view('teacher/profile',compact(['data','academicYear','ewmp','achievement']));
+        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement']));
     }
 
     public function show_by_prodi(Request $request)

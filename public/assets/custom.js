@@ -566,6 +566,7 @@ $(document).ready(function() {
     }
 
     $('.select-academicYear').select2({
+        width: "100%",
         language: "id",
         minimumInputLength: 3,
         allowClear: true,
@@ -588,6 +589,7 @@ $(document).ready(function() {
     });
 
     $('.select-mhs').select2({
+        width: "100%",
         language: "id",
         minimumInputLength: 3,
         allowClear: true,
@@ -610,6 +612,7 @@ $(document).ready(function() {
     });
 
     $('.select-curriculum').select2({
+        width: "100%",
         language: "id",
         minimumInputLength: 3,
         allowClear: true,
@@ -2353,6 +2356,44 @@ $(document).ready(function() {
             }
         });
     });
+
+    // JADWAL DI PROFIL DOSEN
+    $('#schedule').on('click','.btn-add',function(){
+        var form  = $('#modal-teach-schedule form');
+        form.trigger('reset');
+
+        form.find('select[name=id_ta] option').remove().trigger('change');
+        form.find('select[name=kd_matkul] option').remove().trigger('change');
+    })
+
+    $('#schedule').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/academic/schedule/'+id+'/edit';
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var cont          = $('#modal-teach-schedule');
+                var option_ta     = $("<option selected></option>").val(data.id_ta).text(data.academic_year.tahun_akademik+' - '+data.academic_year.semester);
+                var option_matkul = $("<option selected></option>").val(data.kd_matkul).text(data.curriculum.nama);
+
+                cont.find('input[name=id]').val(id);
+                cont.find('input[name=nidn]').val(data.nidn);
+                cont.find('select[name=id_ta]').append(option_ta).trigger('change');
+                cont.find('select[name=kd_matkul]').append(option_matkul).trigger('change');
+
+                if(data.sesuai_bidang) {
+                    cont.find('input[name=sesuai_bidang]').prop('checked',true);
+                }
+
+                cont.modal('toggle');
+
+            }
+        });
+    })
     /*************************************************************************************************/
 
     /********************************* DATA KATEGORI PUBLIKASI *********************************/
