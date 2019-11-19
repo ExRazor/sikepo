@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TeacherSchedule extends Model
+class CurriculumSchedule extends Model
 {
     protected $fillable = [
         'id_ta',

@@ -22,9 +22,9 @@ class AcademicYear extends Model
         return $this->hasMany('App\Ewmp','id_ta');
     }
 
-    public function teacherSchedule()
+    public function curriculumSchedule()
     {
-        return $this->hasMany('App\TeacherSchedule','id_ta');
+        return $this->hasMany('App\CurriculumSchedule','id_ta');
     }
 
     // public function scopeScheduleCurriculumProdi($query, $prodi)

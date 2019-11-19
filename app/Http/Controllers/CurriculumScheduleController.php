@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\TeacherSchedule;
+use App\CurriculumSchedule;
 use App\Teacher;
 use App\AcademicYear;
 use App\Faculty;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 
-class TeacherScheduleController extends Controller
+class CurriculumScheduleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,9 +20,9 @@ class TeacherScheduleController extends Controller
     {
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $academicYear = AcademicYear::has('teacherSchedule')->orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $academicYear = AcademicYear::has('curriculumSchedule')->orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
-        return view('teacher.schedule.index',compact(['faculty','studyProgram','academicYear']));
+        return view('academic.schedule.index',compact(['faculty','studyProgram','academicYear']));
     }
 
     /**
@@ -35,7 +35,7 @@ class TeacherScheduleController extends Controller
         $faculty      = Faculty::all();
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
-        return view('teacher.schedule.form',compact(['faculty','academicYear']));
+        return view('academic.schedule.form',compact(['faculty','academicYear']));
     }
 
     /**
@@ -52,10 +52,10 @@ class TeacherScheduleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\TeacherSchedule  $teacherSchedule
+     * @param  \App\CurriculumSchedule  $curriculumSchedule
      * @return \Illuminate\Http\Response
      */
-    public function show(TeacherSchedule $teacherSchedule)
+    public function show(CurriculumSchedule $curriculumSchedule)
     {
         //
     }
@@ -63,10 +63,10 @@ class TeacherScheduleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\TeacherSchedule  $teacherSchedule
+     * @param  \App\CurriculumSchedule  $curriculumSchedule
      * @return \Illuminate\Http\Response
      */
-    public function edit(TeacherSchedule $teacherSchedule)
+    public function edit(CurriculumSchedule $curriculumSchedule)
     {
         //
     }
@@ -75,10 +75,10 @@ class TeacherScheduleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\TeacherSchedule  $teacherSchedule
+     * @param  \App\CurriculumSchedule  $curriculumSchedule
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TeacherSchedule $teacherSchedule)
+    public function update(Request $request, CurriculumSchedule $curriculumSchedule)
     {
         //
     }
@@ -86,7 +86,7 @@ class TeacherScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\TeacherSchedule  $teacherSchedule
+     * @param  \App\CurriculumSchedule  $curriculumSchedule
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
@@ -94,7 +94,7 @@ class TeacherScheduleController extends Controller
         if(request()->ajax()) {
             $id = decode_id($request->id);
             dd($id);
-            $q  = TeacherSchedule::destroy($id);
+            $q  = CurriculumSchedule::destroy($id);
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -115,27 +115,27 @@ class TeacherScheduleController extends Controller
     {
         if($request->ajax()) {
             $q  = AcademicYear::with(
-                                    'teacherSchedule.academicYear',
-                                    'teacherSchedule.curriculum.studyProgram.department',
-                                    'teacherSchedule.teacher.studyProgram.department'
+                                    'curriculumSchedule.academicYear',
+                                    'curriculumSchedule.curriculum.studyProgram.department',
+                                    'curriculumSchedule.teacher.studyProgram.department'
                                 );
 
-            if($request->has('kd_jurusan')) {
+            if($request->kd_jurusan) {
                 $callback = function($query) use($request) {
                     $query->where('kd_jurusan',$request->kd_jurusan);
                 };
 
                 $q->whereHas(
-                    'teacherSchedule.curriculum.studyProgram', $callback);
+                    'curriculumSchedule.curriculum.studyProgram', $callback);
             }
 
-            if($request->has('kd_prodi')){
+            if($request->kd_prodi){
 
                 $callback = function ($query) use ($request) {
                     $query->curriculumProdi($request->kd_prodi);
                 };
 
-                $q->with(['teacherSchedule' => $callback]);
+                $q->with(['curriculumSchedule' => $callback]);
 
                 // $q->scheduleCurriculumProdi($request->kd_prodi);
 

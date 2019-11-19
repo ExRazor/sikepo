@@ -47,9 +47,9 @@ class Teacher extends Model
         return $this->hasMany('App\TeacherAchievement','nidn');
     }
 
-    public function schedule()
+    public function curriculumSchedule()
     {
-        return $this->hasMany('App\TeacherSchedule','nidn');
+        return $this->hasMany('App\CurriculumSchedule','nidn');
     }
 
     public function research()

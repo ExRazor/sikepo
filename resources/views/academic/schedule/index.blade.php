@@ -97,7 +97,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($ay->teacherSchedule as $schedule)
+                            @foreach ($ay->curriculumSchedule as $schedule)
                             <tr>
                                 <td>{{$schedule->kd_matkul}}</td>
                                 <td>

@@ -4,10 +4,10 @@ use App\AcademicYear;
 use App\Curriculum;
 use App\StudyProgram;
 use Illuminate\Database\Seeder;
-use App\TeacherSchedule;
+use App\CurriculumSchedule;
 use App\Teacher;
 
-class TeacherScheduleSeeder extends Seeder
+class CurriculumScheduleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,7 +16,6 @@ class TeacherScheduleSeeder extends Seeder
      */
     public function run()
     {
-
         for($j = 0; $j < 100; $j++){
 
             $max_tahun = Curriculum::max('versi');
@@ -28,7 +27,7 @@ class TeacherScheduleSeeder extends Seeder
 
             $sesuai = ($teacher->kd_prodi==$curriculum->kd_prodi ? '1' : '0');
 
-            TeacherSchedule::updateOrCreate(
+            CurriculumSchedule::updateOrCreate(
                 [
                     'id_ta'          => $tahun_akademik->id,
                     'nidn'           => $teacher->nidn,
@@ -42,9 +41,5 @@ class TeacherScheduleSeeder extends Seeder
             );
 
         }
-
-
-
-
     }
 }

@@ -472,7 +472,7 @@ $(document).ready(function() {
         })
     })
 
-    $('select[name=kd_prodi]').change(function(){
+    $('#select-prodi-dsn').change(function(){
         var cont    = $(this);
         var target  = $('select[name=nidn]');
         var id      = cont.val();
@@ -2275,7 +2275,7 @@ $(document).ready(function() {
                         var tabel   = $('#table-schedule-'+ay.id);
                         html    = '';
 
-                        $.each(ay.teacher_schedule, function(indexschedule,schedule){
+                        $.each(ay.curriculum_schedule, function(indexschedule,schedule){
                             // if(schedule.curriculum.kd_prodi == opsi_prodi.val() || opsi_prodi.val() == '') {
                                 var id            = schedule.id;
                                 var kd_matkul     = schedule.kd_matkul;

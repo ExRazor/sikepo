@@ -85,7 +85,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="kd_prodi" required>
+                                    <select id="select-prodi-dsn" class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
                                     </select>
                                 </div>

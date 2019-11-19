@@ -29,8 +29,8 @@ class Curriculum extends Model
         return $this->belongsTo('App\StudyProgram','kd_prodi');
     }
 
-    public function teacherSchedule()
+    public function curriculumSchedule()
     {
-        return $this->hasMany('App\TeacherSchedule','kd_matkul');
+        return $this->hasMany('App\CurriculumSchedule','kd_matkul');
     }
 }
