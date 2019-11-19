@@ -41,7 +41,7 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->segment(2) == 'curriculum') ? 'active' : '' }}">Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->segment(2) == 'schedule') ? 'active' : '' }}">Jadwal Mengajar</a></li>
+            <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->segment(2) == 'schedule') ? 'active' : '' }}">Jadwal Kurikulum</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

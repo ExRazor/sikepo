@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Jadwal Mata Kuliah')
+@section('title', 'Jadwal Kurikulum')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -22,8 +22,8 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-chalkboard-teacher"></i>
     <div>
-        <h4>Jadwal Mata Kuliah</h4>
-        <p class="mg-b-0">Olah Data Jadwal Mata Kuliah</p>
+        <h4>Jadwal Kurikulum</h4>
+        <p class="mg-b-0">Olah Data Jadwal Kurikulum</p>
     </div>
     <div class="ml-auto">
         <a href="{{ route('academic.schedule.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Jadwal Matkul</a>
@@ -112,12 +112,12 @@
                                     </a>
                                 </td>
                                 <td class="text-center">
-                                    @if($schedule->sesuai_prodi=='1')
+                                    @if($schedule->sesuai_prodi)
                                     <i class="fa fa-check"></i>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if($schedule->sesuai_bidang=='1')
+                                    @if($schedule->sesuai_bidang)
                                     <i class="fa fa-check"></i>
                                     @endif
                                 </td>

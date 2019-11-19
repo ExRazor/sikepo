@@ -18,8 +18,8 @@ class CreateCurriculumSchedulesTable extends Migration
             $table->unsignedInteger('id_ta');
             $table->char('nidn',10);
             $table->char('kd_matkul',10);
-            $table->char('sesuai_prodi',1);
-            $table->char('sesuai_bidang',1);
+            $table->char('sesuai_prodi',1)->nullable();
+            $table->char('sesuai_bidang',1)->nullable();
             $table->timestamps();
 
             $table->unique(['id_ta','nidn','kd_matkul']);

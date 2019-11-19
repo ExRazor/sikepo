@@ -225,16 +225,16 @@ Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
 // Akademik > Jadwal
 Breadcrumbs::for('academic-schedule', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Jadwal Mengajar', route('academic.schedule'));
+    $trail->push('Jadwal Kurikulum', route('academic.schedule'));
 });
 
 Breadcrumbs::for('academic-schedule-add', function ($trail) {
     $trail->parent('academic-schedule');
-    $trail->push('Tambah Jadwal Mengajar', route('academic.schedule.add'));
+    $trail->push('Tambah Jadwal Kurikulum', route('academic.schedule.add'));
 });
 
 Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
-    $trail->push('Sunting Jadwal Mengajar');
+    $trail->push('Sunting Jadwal Kurikulum');
 });
 
 // Data Master

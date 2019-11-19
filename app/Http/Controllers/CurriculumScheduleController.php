@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CurriculumSchedule;
+use App\Curriculum;
 use App\Teacher;
 use App\AcademicYear;
 use App\Faculty;
@@ -11,11 +12,6 @@ use Illuminate\Http\Request;
 
 class CurriculumScheduleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $faculty      = Faculty::all();
@@ -25,70 +21,84 @@ class CurriculumScheduleController extends Controller
         return view('academic.schedule.index',compact(['faculty','studyProgram','academicYear']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $faculty      = Faculty::all();
-        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
-        return view('academic.schedule.form',compact(['faculty','academicYear']));
+        return view('academic.schedule.form',compact(['faculty']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id_ta'          => 'required',
+            'nidn'           => 'required',
+            'kd_matkul'      => 'required',
+            'sesuai_bidang'  => 'nullable',
+        ]);
+
+        $dosen  = Teacher::find($request->nidn)->kd_prodi;
+        $matkul = Curriculum::find($request->kd_matkul)->kd_prodi;
+
+        if($dosen==$matkul){
+            $sesuai_prodi = '1';
+        } else {
+            $sesuai_prodi = null;
+        }
+
+        $query                  = new CurriculumSchedule;
+        $query->id_ta           = $request->id_ta;
+        $query->nidn            = $request->nidn;
+        $query->kd_matkul       = $request->kd_matkul;
+        $query->sesuai_prodi    = $sesuai_prodi;
+        $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
+        $query->save();
+
+        return redirect()->route('academic.schedule')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\CurriculumSchedule  $curriculumSchedule
-     * @return \Illuminate\Http\Response
-     */
-    public function show(CurriculumSchedule $curriculumSchedule)
+    public function edit($id)
     {
-        //
+        $id             = decode_id($id);
+        $faculty        = Faculty::all();
+        $data           = CurriculumSchedule::find($id);
+        $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->studyProgram->kd_jurusan)->get();
+        $teacher        = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+
+        return view('academic.schedule.form',compact(['faculty','data','studyProgram','teacher']));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\CurriculumSchedule  $curriculumSchedule
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(CurriculumSchedule $curriculumSchedule)
+    public function update(Request $request)
     {
-        //
+        $id = decrypt($request->id);
+
+        $request->validate([
+            'id_ta'          => 'required',
+            'nidn'           => 'required',
+            'kd_matkul'      => 'required',
+            'sesuai_bidang'  => 'nullable',
+        ]);
+
+        $dosen  = Teacher::find($request->nidn)->kd_prodi;
+        $matkul = Curriculum::find($request->kd_matkul)->kd_prodi;
+
+        if($dosen==$matkul){
+            $sesuai_prodi = '1';
+        } else {
+            $sesuai_prodi = null;
+        }
+
+        $query                  = CurriculumSchedule::find($id);
+        $query->id_ta           = $request->id_ta;
+        $query->nidn            = $request->nidn;
+        $query->kd_matkul       = $request->kd_matkul;
+        $query->sesuai_prodi    = $sesuai_prodi;
+        $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
+        $query->save();
+
+        return redirect()->route('academic.schedule')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CurriculumSchedule  $curriculumSchedule
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, CurriculumSchedule $curriculumSchedule)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\CurriculumSchedule  $curriculumSchedule
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if(request()->ajax()) {

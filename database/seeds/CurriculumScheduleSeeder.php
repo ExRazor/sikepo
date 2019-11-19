@@ -19,13 +19,13 @@ class CurriculumScheduleSeeder extends Seeder
         for($j = 0; $j < 100; $j++){
 
             $max_tahun = Curriculum::max('versi');
-            $bidang = ['1','0'];
+            $bidang = ['1',''];
             $tahun_akademik = AcademicYear::where('tahun_akademik','>',$max_tahun)->inRandomOrder()->first();
 
             $teacher = Teacher::all()->random();
             $curriculum = Curriculum::all()->random();
 
-            $sesuai = ($teacher->kd_prodi==$curriculum->kd_prodi ? '1' : '0');
+            $sesuai = ($teacher->kd_prodi==$curriculum->kd_prodi ? '1' : null);
 
             CurriculumSchedule::updateOrCreate(
                 [
