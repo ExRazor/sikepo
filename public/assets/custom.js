@@ -611,6 +611,29 @@ $(document).ready(function() {
         }
     });
 
+    $('.select-dsn').select2({
+        width: "100%",
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan nidn/nama dosen',
+        ajax: {
+            dataType: 'json',
+            url: base_url+'/ajax/student/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
+
     $('.select-curriculum').select2({
         width: "100%",
         language: "id",
@@ -1944,8 +1967,8 @@ $(document).ready(function() {
                         var sumber_nama = val.sumber_biaya_nama;
                         var daftar      = '';
 
-                        if(val.research_students.length > 0) {
-                            $.each(val.research_students, function(i,mhs){
+                        if(val.research_student.length > 0) {
+                            $.each(val.research_student, function(i,mhs){
 
                                 daftar += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
                             })

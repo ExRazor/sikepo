@@ -92,6 +92,7 @@ Route::prefix('ajax')->group(function () {
     //Teacher
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
     Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
+    Route::post('teacher/loadData','TeacherController@loadData')->name('ajax.teacher.loadData');
 
     //Teacher EWMP
     Route::get('ewmp/countsks','EwmpController@countSKS')->name('ajax.ewmp.countsks');

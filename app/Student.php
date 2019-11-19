@@ -52,4 +52,9 @@ class Student extends Model
     {
         return $this->hasOne('App\StudentStatus','nim')->orderBy('id_ta','desc')->orderBy('id','desc')->limit(1);
     }
+
+    public function student()
+    {
+        return $this->hasMany('App\ResearchStudent','nim');
+    }
 }

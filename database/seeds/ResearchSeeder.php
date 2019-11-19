@@ -41,6 +41,8 @@ class ResearchSeeder extends Seeder
 
         $tahun = ['2013','2014','2015','2016','2017','2018','2019'];
 
+        $sks_penelitian = [3,4,5,6];
+
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
                 $random_sumber = $sumber_biaya[array_rand($sumber_biaya)];
@@ -53,10 +55,10 @@ class ResearchSeeder extends Seeder
 
                 $nominal = rand(1000, 50000).'000';
                 DB::table('researches')->insert([
-                    'nidn'              => $t->nidn,
                     'tema_penelitian'   => 'Analisis dan Perancangan',
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
                     'tahun_penelitian'  => $tahun[array_rand($tahun)],
+                    'sks_penelitian'    => $sks_penelitian[array_rand($sks_penelitian)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
                     'jumlah_biaya'      => $nominal,

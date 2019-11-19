@@ -68,11 +68,12 @@
                 <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="250">Nama Dosen</th>
                             <th class="text-center all" width="600">Judul Penelitian</th>
-                            <th class="text-center none">Tema Penelitian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
-                            <th class="text-center none">Nama Mahasiswa</th>
+                            <th class="text-center all" width="250">Penanggung Jawab</th>
+                            <th class="text-center none">Tema Penelitian</th>
+                            <th class="text-center none">Dosen Terlibat</th>
+                            <th class="text-center none">Mahasiswa Terlibat</th>
                             <th class="text-center none">Sumber Biaya</th>
                             <th class="text-center none">Nominal Biaya</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
@@ -81,13 +82,25 @@
                     <tbody>
                         @foreach ($penelitian as $p)
                         <tr>
+                            <td>{{ $p->judul_penelitian }}</td>
+                            <td class="text-center">{{ $p->tahun_penelitian }}</td>
                             <td>
                                 {{ $p->teacher->nama }}<br>
                                 <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
                             </td>
-                            <td>{{ $p->judul_penelitian }}</td>
+                            <td>{{ $p->KetuaPenelitian->nama }}</td>
                             <td>{{ $p->tema_penelitian }}</td>
-                            <td class="text-center">{{ $p->tahun_penelitian }}</td>
+                            <td>
+                                @if($p->AnggotaPenelitian->count())
+                                <ol>
+                                    @foreach ($p->AnggotaPenelitian as $ap)
+                                    <li>{{$ap->nama}} - NIM.{{$ap->nim}} ({{$ap->studyProgram->department->nama }} - {{$ap->studyProgram->nama }})</li>
+                                    @endforeach
+                                </ol>
+                                @else
+                                -
+                                @endif
+                            </td>
                             <td>
                                 @if($p->researchStudents->count())
                                 <ol>

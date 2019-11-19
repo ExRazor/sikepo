@@ -6,8 +6,9 @@ use App\Research;
 use App\StudyProgram;
 use App\Faculty;
 use App\Teacher;
-use App\ResearchStudents;
+use App\ResearchStudent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ResearchController extends Controller
 {
@@ -19,12 +20,43 @@ class ResearchController extends Controller
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $penelitian = Research::whereHas(
-            'teacher.studyProgram.department', function($query) {
-                $query->where('kd_jurusan',setting('app_department_id'));
-            })
-        ->with('researchStudents.studyProgram.department.faculty','teacher.studyProgram')
-        ->get();
+        // $penelitian   = Research::whereHas(
+        //                     'researchKetua.teacher.studyProgram', function($query) {
+        //                         return $query->where('kd_jurusan',setting('app_department_id'));
+        //                     }
+        //                 )
+        //                 ->get();
+        // $penelitian   = Research::with([
+        //                                 'researchTeacher' => function($query) {
+        //                                     return $query->where('status','Ketua');
+        //                                 },
+        //                                 'researchTeacher.teacher.studyProgram.department' => function($query1) {
+        //                                     return $query1->where('kd_jurusan',setting('app_department_id'));
+        //                                 }
+        //                         ])
+        //                         ->get();
+
+        $penelitian = DB::table('researches as r')
+                        ->join('research_teachers as rt','rt.id_penelitian','=','r.id')
+                        ->join('teachers as t_ketua','t.nidn','=','rt.nidn','','rt.status = Ketua')
+                        ->join('study_programs as sp','sp.kd_prodi','=','t.kd_prodi')
+                        ->join('departments as dp','dp.kd_jurusan','=','sp.kd_jurusan')
+                        ->select(
+                            'r.*','rt.nidn as nidn_anggota',
+                            'rt.id as id_anggota',
+                            't.nama as nama_anggota',
+                            'rt.status as status_anggota',
+                            'sp.kd_prodi as kode_prodi',
+                            'sp.nama as nama_prodi',
+                            'dp.kd_jurusan as kode_jurusan',
+                            'dp.nama as nama_jurusan'
+                        )
+                        ->where('dp.kd_jurusan','=',setting('app_department_id'))
+                        ->orderBy('r.id','asc')
+                        ->get();
+
+        return response()->json($penelitian);die;
+
 
         return view('research.index',compact(['penelitian','studyProgram']));
     }
@@ -54,8 +86,10 @@ class ResearchController extends Controller
             'tema_penelitian'   => 'required',
             'judul_penelitian'  => 'required',
             'tahun_penelitian'  => 'required|numeric|digits:4',
+            'sks_penelitian'    => 'required|numeric',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
+            'jumlah_biaya'      => 'required',
         ]);
 
         $research                    = new Research;
@@ -72,7 +106,7 @@ class ResearchController extends Controller
         $hitungMhs = count($request->mahasiswa_nim);
         for($i=0;$i<$hitungMhs;$i++) {
 
-            ResearchStudents::updateOrCreate(
+            ResearchStudent::updateOrCreate(
                 [
                     'id_penelitian' => $research->id,
                     'nim'           => $request->mahasiswa_nim[$i],
@@ -120,7 +154,10 @@ class ResearchController extends Controller
             'tema_penelitian'   => 'required',
             'judul_penelitian'  => 'required',
             'tahun_penelitian'  => 'required|numeric|digits:4',
+            'sks_penelitian'    => 'required|numeric',
             'sumber_biaya'      => 'required',
+            'sumber_biaya_nama' => 'nullable',
+            'jumlah_biaya'      => 'required',
         ]);
 
         $research                    = Research::find($id);
@@ -137,7 +174,7 @@ class ResearchController extends Controller
         $hitungMhs = count($request->mahasiswa_nim);
         for($i=0;$i<$hitungMhs;$i++) {
 
-            ResearchStudents::updateOrCreate(
+            ResearchStudent::updateOrCreate(
                 [
                     'id_penelitian' => $id,
                     'nim'           => $request->mahasiswa_nim[$i],
@@ -183,7 +220,7 @@ class ResearchController extends Controller
     {
         if($request->ajax()) {
             $id = decrypt($request->id);
-            $q  = ResearchStudents::find($id)->delete();
+            $q  = ResearchStudent::find($id)->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',

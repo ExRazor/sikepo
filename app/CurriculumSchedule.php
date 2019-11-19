@@ -35,6 +35,7 @@ class CurriculumSchedule extends Model
             $q->where('kd_prodi', $prodi);
        });
     }
+
     public function studyProgram()
     {
         return $this->belongsTo('App\StudyProgram','kd_prodi');

@@ -95,7 +95,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Tahun Penelitian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control number" type="text" name="tahun_penelitian" value="{{ isset($data) ? $data->tahun_penelitian : Request::old('tahun_penelitian')}}" placeholder="Masukkan Tahun Penelitian" maxlength="4" required>
+                                    <input class="form-control number" type="text" name="tahun_penelitian" value="{{ isset($data) ? $data->tahun_penelitian : Request::old('tahun_penelitian')}}" placeholder="Masukkan tahun penelitian" maxlength="4" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label">Jumlah SKS: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <input class="form-control number" type="text" name="sks_penelitian" value="{{ isset($data) ? $data->sks_penelitian : Request::old('sks_penelitian')}}" placeholder="Masukkan jumlah SKS" value="3" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -135,25 +141,54 @@
                     <hr>
                     <div class="row">
                         <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Daftar Mahasiswa</h3>
+                            <h3 class="text-center mb-3">Anggota Dosen</h3>
+                            @isset($data)
+                            <div id="daftarDosen">
+                                @foreach ($data->researchTeacher as $i => $rt)
+                                <div class="row mb-3 align-items-center">
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('research.teacher.delete',encode_id($data->id)) }}" data-id="{{encrypt($rt->id)}}"><i class="fa fa-times"></i></button>
+                                    <div class="col-5">
+                                        <div id="pilihDosen{{$i}}" class="parsley-select">
+                                            <select class="form-control select-prodi" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="dosen_nidn[]" required>
+                                                <option value="{{$rt->nidn}}">{{$rt->teacher->nama}}</option>
+                                            </select>
+                                        </div>
+                                        <div id="errorsPilihDosen{{$i}}"></div>
+                                    </div>
+                                    <div class="col-5">
+                                        <select class="form-control" name="dosen_status[]" required>
+                                            <option value="Ketua" {{$rt->status=='Ketua' ? 'selected': ''}}>Ketua</option>
+                                            <option value="Anggota" {{$rt->status=='Anggota' ? 'selected': ''}}>Peneliti</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endisset
+                            <div id="panelDosen" data-jumlah="0"></div>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                <a class="add-dosen btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-9 mx-auto">
+                            <h3 class="text-center mb-3">Mahasiwa yang Terlibat</h3>
                             @isset($data)
                             <div id="daftarMahasiswa">
                                 @foreach ($data->researchStudents as $i => $rs)
                                 <div class="row mb-3 align-items-center">
                                     <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('research.students.delete',encode_id($data->id)) }}" data-id="{{encrypt($rs->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-2">
-                                        <input class="form-control number" type="text" name="mahasiswa_nim[]" value="{{ $rs->nim }}" placeholder="NIM" maxlength="9" readonly>
-                                    </div>
-                                    <div class="col-5">
-                                        <input class="form-control" type="text" name="mahasiswa_nama[]" value="{{ $rs->nama }}" placeholder="Nama Mahasiswa" required>
-                                    </div>
-                                    <div class="col-4">
-                                        <div id="prodiMhs{{$i}}" class="parsley-select">
-                                            <select class="form-control select-prodi" data-parsley-class-handler="#prodiMhs{{$i}}" data-parsley-errors-container="#errorsProdiMhs{{$i}}" name="mahasiswa_prodi[]" required>
+                                    <div class="col-9">
+                                        <div id="pilihMhs{{$i}}" class="parsley-select">
+                                            <select class="form-control select-mhs" data-parsley-class-handler="#pilihMhs{{$i}}" data-parsley-errors-container="#errorsPilihMhs{{$i}}" name="mahasiswa_nim[]" required>
                                                 <option value="{{$rs->kd_prodi}}">{{$rs->studyProgram->nama}}</option>
                                             </select>
                                         </div>
-                                        <div id="errorsProdiMhs{{$i}}"></div>
+                                        <div id="errorsPilihMhs{{$i}}"></div>
                                     </div>
                                 </div>
                                 @endforeach
