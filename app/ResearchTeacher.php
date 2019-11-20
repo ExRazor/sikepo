@@ -24,13 +24,13 @@ class ResearchTeacher extends Model
         return $this->belongsTo('App\Teacher','nidn');
     }
 
-    public function researchKetua()
+    public function scopeJurusanKetua($query, $jurusan)
     {
-        return $this->hasOne('App\ResearchTeacher','nidn')->where('status','Ketua');
-    }
-
-    public function researchAnggota()
-    {
-        return $this->hasMany('App\ResearchTeacher','nidn')->where('status','Anggota');
+        return $query->whereHas(
+                                'teacher.studyProgram.department', function($q1) use($jurusan) {
+                                    $q1->where('kd_jurusan',$jurusan);
+                                }
+                        )
+                      ->where('status','Ketua');
     }
 }

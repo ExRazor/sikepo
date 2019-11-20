@@ -26,36 +26,29 @@ class ResearchController extends Controller
         //                     }
         //                 )
         //                 ->get();
-        // $penelitian   = Research::with([
-        //                                 'researchTeacher' => function($query) {
-        //                                     return $query->where('status','Ketua');
-        //                                 },
-        //                                 'researchTeacher.teacher.studyProgram.department' => function($query1) {
-        //                                     return $query1->where('kd_jurusan',setting('app_department_id'));
-        //                                 }
-        //                         ])
-        //                         ->get();
+        $penelitian   = Research::researchKetua(setting('app_department_id'))->get();
 
-        $penelitian = DB::table('researches as r')
-                        ->join('research_teachers as rt','rt.id_penelitian','=','r.id')
-                        ->join('teachers as t_ketua','t.nidn','=','rt.nidn','','rt.status = Ketua')
-                        ->join('study_programs as sp','sp.kd_prodi','=','t.kd_prodi')
-                        ->join('departments as dp','dp.kd_jurusan','=','sp.kd_jurusan')
-                        ->select(
-                            'r.*','rt.nidn as nidn_anggota',
-                            'rt.id as id_anggota',
-                            't.nama as nama_anggota',
-                            'rt.status as status_anggota',
-                            'sp.kd_prodi as kode_prodi',
-                            'sp.nama as nama_prodi',
-                            'dp.kd_jurusan as kode_jurusan',
-                            'dp.nama as nama_jurusan'
-                        )
-                        ->where('dp.kd_jurusan','=',setting('app_department_id'))
-                        ->orderBy('r.id','asc')
-                        ->get();
+        // $penelitian = DB::table('researches as r')
+        //                 ->join('research_teachers as rt','rt.id_penelitian','=','r.id')
+        //                 ->join('teachers as t_ketua','t.nidn','=','rt.nidn','','rt.status = Ketua')
+        //                 ->join('study_programs as sp','sp.kd_prodi','=','t.kd_prodi')
+        //                 ->join('departments as dp','dp.kd_jurusan','=','sp.kd_jurusan')
+        //                 ->select(
+        //                     'r.*','rt.nidn as nidn_anggota',
+        //                     'rt.id as id_anggota',
+        //                     't.nama as nama_anggota',
+        //                     'rt.status as status_anggota',
+        //                     'sp.kd_prodi as kode_prodi',
+        //                     'sp.nama as nama_prodi',
+        //                     'dp.kd_jurusan as kode_jurusan',
+        //                     'dp.nama as nama_jurusan'
+        //                 )
+        //                 ->where('dp.kd_jurusan','=',setting('app_department_id'))
+        //                 ->orderBy('r.id','asc')
+        //                 ->get();
 
-        return response()->json($penelitian);die;
+        // return response()->json($penelitian);die;
+        // dd($penelitian);
 
 
         return view('research.index',compact(['penelitian','studyProgram']));

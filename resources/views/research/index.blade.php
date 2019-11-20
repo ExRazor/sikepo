@@ -85,10 +85,9 @@
                             <td>{{ $p->judul_penelitian }}</td>
                             <td class="text-center">{{ $p->tahun_penelitian }}</td>
                             <td>
-                                {{ $p->teacher->nama }}<br>
-                                <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
+                                {{ $p->researchTeacher->teacher->nama }}<br>
+                                <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->researchTeacher->teacher->studyProgram->singkatan }}</small>
                             </td>
-                            <td>{{ $p->KetuaPenelitian->nama }}</td>
                             <td>{{ $p->tema_penelitian }}</td>
                             <td>
                                 @if($p->AnggotaPenelitian->count())

@@ -52,8 +52,15 @@ class Teacher extends Model
         return $this->hasMany('App\CurriculumSchedule','nidn');
     }
 
-    public function research()
+    public function researchTeacher()
     {
-        return $this->hasMany('App\Research','nidn');
+        return $this->hasMany('App\ResearchTeacher','nidn');
+    }
+
+    public function scopeJurusan($query, $jurusan)
+    {
+       return $query->whereHas('studyProgram', function($q) use ($jurusan) {
+            $q->where('kd_jurusan', $jurusan);
+       });
     }
 }

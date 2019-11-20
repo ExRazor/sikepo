@@ -31,9 +31,14 @@ class Research extends Model
         return $this->hasMany('App\ResearchStudents','id_penelitian');
     }
 
-    public function researchKetua()
+    public function scopeResearchKetua($query, $jurusan)
     {
-        return $this->hasOne('App\ResearchTeacher','nidn')->where('status','Ketua');
+        return $query->with([
+                                'researchTeacher' => function($q) use($jurusan) {
+                                    $q->jurusanKetua($jurusan);
+                                },
+                                'researchTeacher.teacher.studyProgram.department'
+                            ]);
     }
 
     public function researchAnggota()
