@@ -38,4 +38,14 @@ class ResearchTeacher extends Model
                         )
                       ->where('status','Ketua');
     }
+
+    public function scopeProdiKetua($query, $prodi)
+    {
+        return $query->whereHas(
+                                'teacher', function($q1) use($prodi) {
+                                    $q1->where('kd_prodi',$prodi);
+                                }
+                        )
+                      ->where('status','Ketua');
+    }
 }
