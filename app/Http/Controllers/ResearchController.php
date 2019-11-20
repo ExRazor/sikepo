@@ -26,7 +26,21 @@ class ResearchController extends Controller
         //                     }
         //                 )
         //                 ->get();
-        $penelitian   = Research::researchKetua(setting('app_department_id'))->get();
+        $penelitian   = Research::with([
+                                        'researchTeacher' => function($q) {
+                                            $q->jurusanKetua(setting('app_department_id'));
+                                        },
+                                        'researchTeacher.teacher.studyProgram.department',
+                                        'researchKetua',
+                                        'researchAnggota',
+                                        'researchStudent'
+                                    ])
+                                    ->whereHas(
+                                        'researchTeacher', function($q) {
+                                            $q->jurusanKetua(setting('app_department_id'));
+                                        }
+                                    )
+                                    ->get();
 
         // $penelitian = DB::table('researches as r')
         //                 ->join('research_teachers as rt','rt.id_penelitian','=','r.id')

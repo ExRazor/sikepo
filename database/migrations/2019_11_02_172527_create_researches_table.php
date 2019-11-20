@@ -15,14 +15,17 @@ class CreateResearchesTable extends Migration
     {
         Schema::create('researches', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('id_ta');
             $table->string('tema_penelitian');
             $table->string('judul_penelitian');
-            $table->string('tahun_penelitian');
             $table->integer('sks_penelitian');
             $table->string('sumber_biaya');
             $table->string('sumber_biaya_nama')->nullable();
             $table->integer('jumlah_biaya');
             $table->timestamps();
+
+            $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
+
         });
     }
 

@@ -1259,6 +1259,7 @@ $(document).ready(function() {
             success: function (count) {
                 cont.find('input[name=ps_intra]').val(count.schedule_ps);
                 cont.find('input[name=ps_lain]').val(count.schedule_pt);
+                cont.find('input[name=penelitian]').val(count.penelitian);
             }
         });
     });

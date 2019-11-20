@@ -1,5 +1,6 @@
 <?php
 
+use App\AcademicYear;
 use Illuminate\Database\Seeder;
 use App\Teacher;
 
@@ -39,8 +40,6 @@ class ResearchSeeder extends Seeder
             'Dna Barcoding Jagung Lokal Sulawesi Utara Berdasarkan Gen Matk'
         ];
 
-        $tahun = ['2013','2014','2015','2016','2017','2018','2019'];
-
         $sks_penelitian = [3,4,5,6];
 
         foreach($teacher as $t) {
@@ -55,9 +54,9 @@ class ResearchSeeder extends Seeder
 
                 $nominal = rand(1000, 50000).'000';
                 DB::table('researches')->insert([
+                    'id_ta'             => AcademicYear::all()->random()->id,
                     'tema_penelitian'   => 'Analisis dan Perancangan',
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
-                    'tahun_penelitian'  => $tahun[array_rand($tahun)],
                     'sks_penelitian'    => $sks_penelitian[array_rand($sks_penelitian)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,

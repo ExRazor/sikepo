@@ -7,14 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Research extends Model
 {
     protected $fillable = [
-        'tema_penelitian',
+        'id_ta',
         'judul_penelitian',
+        'tema_penelitian',
         'tahun_penelitian',
         'tahun_penelitian',
         'sumber_biaya',
         'sumber_nama',
         'jumlah_biaya',
     ];
+
+    public function academicYear()
+    {
+        return $this->belongsTo('App\AcademicYear','id_ta');
+    }
 
     public function teacher()
     {
@@ -26,24 +32,19 @@ class Research extends Model
         return $this->hasMany('App\ResearchTeacher','id_penelitian');
     }
 
-    public function researchStudents()
+    public function researchStudent()
     {
         return $this->hasMany('App\ResearchStudents','id_penelitian');
     }
 
-    public function scopeResearchKetua($query, $jurusan)
+    public function researchKetua()
     {
-        return $query->with([
-                                'researchTeacher' => function($q) use($jurusan) {
-                                    $q->jurusanKetua($jurusan);
-                                },
-                                'researchTeacher.teacher.studyProgram.department'
-                            ]);
+        return $this->hasOne('App\ResearchTeacher','id_penelitian')->where('status','Ketua');
     }
 
     public function researchAnggota()
     {
-        return $this->hasMany('App\ResearchTeacher','nidn')->where('status','Anggota');
+        return $this->hasMany('App\ResearchTeacher','id_penelitian')->where('status','Anggota');
     }
 
     // public function scopeKetuaPenelitian($query, $jurusan = null)

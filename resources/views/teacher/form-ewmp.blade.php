@@ -44,7 +44,7 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> SKS Penelitian:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="penelitian" placeholder="Jumlah SKS pada Bidang Penelitian" required>
+                            <input type="text" class="form-control disabled" name="penelitian" placeholder="Jumlah SKS pada Bidang Penelitian" readonly>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
