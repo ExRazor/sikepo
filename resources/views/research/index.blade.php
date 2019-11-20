@@ -44,7 +44,20 @@
             <form action="{{route('ajax.research.filter')}}" id="filter-research" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
+                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                            <option value="0">Semua Jurusan</option>
+                            @foreach($faculty as $f)
+                                @if($f->department->count())
+                                <optgroup label="{{$f->nama}}">
+                                    @foreach($f->department as $d)
+                                    <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
+                                    @endforeach
+                                </optgroup>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mg-r-10">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Pilih Program Studi -</option>
                             @foreach($studyProgram as $sp)
@@ -73,6 +86,7 @@
                             <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
                             <th class="text-center all" width="250">Penanggung Jawab</th>
                             <th class="text-center none">Tema Penelitian</th>
+                            <th class="text-center none">SKS Penelitian</th>
                             <th class="text-center none">Dosen Terlibat</th>
                             <th class="text-center none">Mahasiswa Terlibat</th>
                             <th class="text-center none">Sumber Biaya</th>
@@ -91,6 +105,7 @@
                                 <small>NIDN.{{ $p->researchKetua->teacher->nidn }} / {{ $p->researchKetua->teacher->studyProgram->singkatan }}</small>
                             </td>
                             <td>{{ $p->tema_penelitian }}</td>
+                            <td class="text-center">{{ $p->sks_penelitian }}</td>
                             <td>
                                 @if($p->researchAnggota->count())
                                 <ol>

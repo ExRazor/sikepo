@@ -12,6 +12,7 @@ class ResearchTeacher extends Model
         'id_penelitian',
         'nidn',
         'status',
+        'sks',
     ];
 
     public function research()

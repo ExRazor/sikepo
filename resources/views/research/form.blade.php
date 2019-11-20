@@ -57,33 +57,23 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select id="prodi_dosen" class="form-control" name="kd_prodi" required>
-                                        <option value="">- Pilih Prodi -</option>
-                                        @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->teacher->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    <select id="select-dosen" class="form-control" name="nidn" required>
-                                        <option value="">- Pilih Dosen -</option>
+                                    <select class="form-control select-academicYear" name="id_ta" required>
                                         @isset($data)
-                                        @foreach ($teacher as $t)
-                                            <option value="{{$t->nidn}}" {{$data->nidn == $t->nidn ? 'selected':''}}>{{$t->nama}}</option>
-                                        @endforeach
+                                        <option value="{{$data->id_ta}}">{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</option>
                                         @endisset
                                     </select>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tema Penelitian: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Dosen Penanggung Jawab: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="tema_penelitian" value="{{ isset($data) ? $data->tema_penelitian : Request::old('tema_penelitian')}}" placeholder="Masukkan tema penelitian sesuai roadmap" required>
+                                    <select class="form-control select-dsn" name="ketua_nidn" required>
+                                        @isset($data)
+                                        <option value="{{$data->researchKetua->nidn}}">{{$data->researchKetua->teacher->nama.' ('.$data->researchKetua->nidn.')'}}</option>
+                                        @endisset
+                                    </select>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -93,9 +83,9 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tahun Penelitian: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Tema Penelitian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control number" type="text" name="tahun_penelitian" value="{{ isset($data) ? $data->tahun_penelitian : Request::old('tahun_penelitian')}}" placeholder="Masukkan tahun penelitian" maxlength="4" required>
+                                    <input class="form-control" type="text" name="tema_penelitian" value="{{ isset($data) ? $data->tema_penelitian : Request::old('tema_penelitian')}}" placeholder="Masukkan tema penelitian sesuai roadmap" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -144,22 +134,16 @@
                             <h3 class="text-center mb-3">Anggota Dosen</h3>
                             @isset($data)
                             <div id="daftarDosen">
-                                @foreach ($data->researchTeacher as $i => $rt)
-                                <div class="row mb-3 align-items-center">
+                                @foreach ($data->researchAnggota as $i => $rt)
+                                <div class="row mb-3 justify-content-center align-items-center">
                                     <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('research.teacher.delete',encode_id($data->id)) }}" data-id="{{encrypt($rt->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-5">
+                                    <div class="col-7">
                                         <div id="pilihDosen{{$i}}" class="parsley-select">
-                                            <select class="form-control select-prodi" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="dosen_nidn[]" required>
-                                                <option value="{{$rt->nidn}}">{{$rt->teacher->nama}}</option>
+                                            <select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_nidn[]" required>
+                                                <option value="{{$rt->nidn}}">{{$rt->teacher->nama.' ('.$rt->teacher->nidn.')'}}</option>
                                             </select>
                                         </div>
                                         <div id="errorsPilihDosen{{$i}}"></div>
-                                    </div>
-                                    <div class="col-5">
-                                        <select class="form-control" name="dosen_status[]" required>
-                                            <option value="Ketua" {{$rt->status=='Ketua' ? 'selected': ''}}>Ketua</option>
-                                            <option value="Anggota" {{$rt->status=='Anggota' ? 'selected': ''}}>Peneliti</option>
-                                        </select>
                                     </div>
                                 </div>
                                 @endforeach
@@ -179,13 +163,13 @@
                             <h3 class="text-center mb-3">Mahasiwa yang Terlibat</h3>
                             @isset($data)
                             <div id="daftarMahasiswa">
-                                @foreach ($data->researchStudents as $i => $rs)
-                                <div class="row mb-3 align-items-center">
+                                @foreach ($data->researchStudent as $i => $rs)
+                                <div class="row mb-3 justify-content-center align-items-center">
                                     <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('research.students.delete',encode_id($data->id)) }}" data-id="{{encrypt($rs->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-9">
+                                    <div class="col-7">
                                         <div id="pilihMhs{{$i}}" class="parsley-select">
                                             <select class="form-control select-mhs" data-parsley-class-handler="#pilihMhs{{$i}}" data-parsley-errors-container="#errorsPilihMhs{{$i}}" name="mahasiswa_nim[]" required>
-                                                <option value="{{$rs->kd_prodi}}">{{$rs->studyProgram->nama}}</option>
+                                                <option value="{{$rs->nim}}">{{$rs->student->nama.' ('.$rs->student->nim.')'}}</option>
                                             </select>
                                         </div>
                                         <div id="errorsPilihMhs{{$i}}"></div>

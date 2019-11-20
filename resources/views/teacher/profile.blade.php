@@ -37,15 +37,14 @@
         </div>
         <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">
             <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
+                <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#schedule" role="tab">Mata Kuliah</a></li>
                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-                    <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#schedule" role="tab">Mata Kuliah</a></li>
                     @if($data->ikatan_kerja=='Dosen Tetap PS')
                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                     @endif
                 @endif
-                <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#" role="tab">Favorites</a></li>
-                <li class="nav-item hidden-xs-down"><a class="nav-link" data-toggle="tab" href="#" role="tab">Settings</a></li>
+                <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
             </ul>
         </div>
         <div class="row br-profile-body">
@@ -59,13 +58,14 @@
                         {{ session('flash.message') }}
                     </div>
                     @endif
+                    @include('teacher.tab-schedule')
                     @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-                        @include('teacher.tab-schedule')
                         @if($data->ikatan_kerja=='Dosen Tetap PS')
                             @include('teacher.tab-achievement')
                             @include('teacher.tab-ewmp')
                         @endif
                     @endif
+                    @include('teacher.tab-research')
                 </div>
             </div>
             <div class="col-lg-3 mg-t-30 mg-lg-t-0">

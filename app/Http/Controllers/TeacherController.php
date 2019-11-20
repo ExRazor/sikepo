@@ -10,6 +10,7 @@ use App\Ewmp;
 use App\Faculty;
 use App\CurriculumSchedule;
 use App\TeacherAchievement;
+use App\Research;
 use File;
 
 class TeacherController extends Controller
@@ -137,7 +138,23 @@ class TeacherController extends Controller
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('tanggal','desc')->get();
 
-        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement']));
+        $research       = Research::with([
+                                        'researchTeacher' => function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'researchTeacher', function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        // dd($research);
+        // return response()->json($research);die;
+
+        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research']));
     }
 
     public function show_by_prodi(Request $request)
@@ -353,7 +370,7 @@ class TeacherController extends Controller
             foreach($data as $d){
                 $response[] = array(
                     "id"    => $d->nidn,
-                    "text"  => $d->nama
+                    "text"  => $d->nama.' ('.$d->nidn.')'
                 );
             }
             return response()->json($response);

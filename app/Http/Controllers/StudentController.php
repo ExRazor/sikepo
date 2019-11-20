@@ -381,7 +381,7 @@ class StudentController extends Controller
             foreach($data as $d){
                 $response[] = array(
                     "id"    => $d->nim,
-                    "text"  => $d->nama
+                    "text"  => $d->nama.' ('.$d->nim.')'
                 );
             }
             return response()->json($response);

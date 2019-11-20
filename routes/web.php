@@ -72,7 +72,6 @@ Route::prefix('ajax')->group(function () {
     Route::post('academic-year/status','AcademicYearController@setStatus');
     Route::get('academic-year/loadData','AcademicYearController@loadData')->name('ajax.academic-year.load');
 
-
     //Fakultas
     Route::post('faculty/edit','FacultyController@edit' );
 
@@ -92,11 +91,10 @@ Route::prefix('ajax')->group(function () {
     //Teacher
     Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
     Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
-    Route::post('teacher/loadData','TeacherController@loadData')->name('ajax.teacher.loadData');
+    Route::get('teacher/loadData','TeacherController@loadData')->name('ajax.teacher.loadData');
 
     //Teacher EWMP
     Route::get('ewmp/countsks','EwmpController@countSKS')->name('ajax.ewmp.countsks');
-
 
     //Teacher Achievement
     Route::post('teacher-acv/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacherAcv.filter');
@@ -257,6 +255,7 @@ Route::post('research','ResearchController@store')->name('research.store');
 Route::put('research','ResearchController@update')->name('research.update');
 Route::delete('research','ResearchController@destroy')->name('research.delete');
 Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
+Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
 
 //Community Service
 Route::get('community-service','CommunityServiceController@index')->name('community-service');

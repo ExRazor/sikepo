@@ -281,8 +281,6 @@ class EwmpController extends Controller
             $count_pt[] = $pt->curriculum->sks_teori + $pt->curriculum->sks_seminar + $pt->curriculum->sks_praktikum;
         }
 
-        // dd($penelitian);
-
         foreach($penelitian as $p) {
             $count_penelitian[] = $p->researchTeacher[0]->sks;
         }

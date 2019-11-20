@@ -34,7 +34,7 @@ class Research extends Model
 
     public function researchStudent()
     {
-        return $this->hasMany('App\ResearchStudents','id_penelitian');
+        return $this->hasMany('App\ResearchStudent','id_penelitian');
     }
 
     public function researchKetua()
