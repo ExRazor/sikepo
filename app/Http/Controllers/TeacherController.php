@@ -11,6 +11,7 @@ use App\Faculty;
 use App\CurriculumSchedule;
 use App\TeacherAchievement;
 use App\Research;
+use App\CommunityService;
 use File;
 
 class TeacherController extends Controller
@@ -151,10 +152,23 @@ class TeacherController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
+        $service        = CommunityService::with([
+                                        'serviceTeacher' => function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'serviceTeacher', function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
         // dd($research);
         // return response()->json($research);die;
 
-        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research']));
+        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research','service']));
     }
 
     public function show_by_prodi(Request $request)

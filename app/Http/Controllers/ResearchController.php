@@ -54,12 +54,13 @@ class ResearchController extends Controller
             'ketua_nidn'        => 'required',
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
-            'sks_penelitian'    => 'required',
+            'sks_penelitian'    => 'required|numeric',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
         ]);
 
+        //Simpan Data Penelitian
         $research                    = new Research;
         $research->id_ta             = $request->id_ta;
         $research->judul_penelitian  = $request->judul_penelitian;
@@ -82,11 +83,9 @@ class ResearchController extends Controller
         $ketua->sks             = $sks_ketua;
         $ketua->save();
 
-
         //Tambah Anggota Dosen
         $hitungDsn = count($request->anggota_nidn);
         for($i=0;$i<$hitungDsn;$i++) {
-
             ResearchTeacher::updateOrCreate(
                 [
                     'id_penelitian' => $research->id,
@@ -102,7 +101,6 @@ class ResearchController extends Controller
         //Tambah Mahasiswa
         $hitungMhs = count($request->mahasiswa_nim);
         for($i=0;$i<$hitungMhs;$i++) {
-
             ResearchStudent::updateOrCreate(
                 [
                     'id_penelitian' => $research->id,
@@ -119,12 +117,9 @@ class ResearchController extends Controller
         $id   = decode_id($id);
 
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $data         = Research::with('researchTeacher.teacher','researchStudent.student')->where('id',$id)->first();
+        $data         = Research::where('id',$id)->first();
 
-        // return response()->json($data);die;
-
-
-        return view('research.form',compact(['data','studyProgram','teacher']));
+        return view('research.form',compact(['data','studyProgram']));
     }
 
     public function update(Request $request)
@@ -138,7 +133,7 @@ class ResearchController extends Controller
             // 'ketua_nidn'        => 'required|unique:research_teachers,nidn,'.$id.',id_penelitian',
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
-            'sks_penelitian'    => 'required',
+            'sks_penelitian'    => 'required|numeric',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
@@ -209,12 +204,6 @@ class ResearchController extends Controller
         return redirect()->route('research')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Research  $research
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if($request->ajax()) {
@@ -282,18 +271,6 @@ class ResearchController extends Controller
     {
         if($request->ajax()) {
 
-            $penelitian   = Research::with([
-                'researchKetua',
-                'researchAnggota',
-                'researchStudent'
-            ])
-            ->whereHas(
-                'researchTeacher', function($q) {
-                    $q->jurusanKetua(setting('app_department_id'));
-                }
-            )
-            ->get();
-
             $q   = Research::with([
                                     'academicYear',
                                     'researchKetua.teacher.studyProgram',
@@ -311,8 +288,8 @@ class ResearchController extends Controller
 
             if($request->kd_prodi){
                 $q->whereHas(
-                    'researchTeacher', function($query) use ($request) {
-                        $query->prodiKetua($request->kd_prodi);
+                    'researchTeacher', function($q) use ($request) {
+                        $q->prodiKetua($request->kd_prodi);
                     }
                 );
             }

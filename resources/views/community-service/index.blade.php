@@ -43,15 +43,28 @@
         <div class="col-12">
             <form action="{{route('ajax.community-service.filter')}}" id="filter-communityService" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="mg-r-10">
+                            <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                                <option value="0">Semua Jurusan</option>
+                                @foreach($faculty as $f)
+                                    @if($f->department->count())
+                                    <optgroup label="{{$f->nama}}">
+                                        @foreach($f->department as $d)
+                                        <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mg-r-10">
+                            <select class="form-control" name="kd_prodi">
+                                <option value="">- Pilih Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     <div>
                         <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
                     </div>
@@ -68,31 +81,49 @@
                 <table id="table_communityService" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="250">Nama Dosen</th>
+                            <th class="text-center all" width="50">ID</th>
                             <th class="text-center all" width="600">Judul Pengabdian</th>
-                            <th class="text-center none">Tema Pengabdian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Pengabdian</th>
-                            <th class="text-center none">Nama Mahasiswa</th>
+                            <th class="text-center all" width="250">Penanggung Jawab</th>
+                            <th class="text-center none">Tema Pengabdian</th>
+                            <th class="text-center none">SKS Pengabdian</th>
+                            <th class="text-center none">Dosen Terlibat</th>
+                            <th class="text-center none">Mahasiswa Terlibat</th>
                             <th class="text-center none">Sumber Biaya</th>
-                            <th class="text-center none">Jumlah Biaya</th>
+                            <th class="text-center none">Nominal Biaya</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($pengabdian as $p)
                         <tr>
-                            <td>
-                                {{ $p->teacher->nama }}<br>
-                                <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
-                            </td>
+                            <td>{{ $p->id }}</td>
                             <td>{{ $p->judul_pengabdian }}</td>
-                            <td>{{ $p->tema_pengabdian }}</td>
-                            <td class="text-center">{{ $p->tahun_pengabdian }}</td>
+                            <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
                             <td>
-                                @if($p->communityServiceStudent->count())
+                                <a href="{{route('teacher.profile',encode_id($p->serviceKetua->teacher->nip))}}#community-service">
+                                    {{ $p->serviceKetua->teacher->nama }}<br>
+                                    <small>NIDN.{{ $p->serviceKetua->teacher->nidn }} / {{ $p->serviceKetua->teacher->studyProgram->singkatan }}</small>
+                                </a>
+                            </td>
+                            <td>{{ $p->tema_pengabdian }}</td>
+                            <td class="text-center">{{ $p->sks_pengabdian }}</td>
+                            <td>
+                                @if($p->serviceAnggota->count())
                                 <ol>
-                                    @foreach ($p->communityServiceStudent as $cs)
-                                    <li>{{$cs->nama}} - NIM.{{$cs->nim}} ({{$cs->studyProgram->department->nama }} - {{$cs->studyProgram->nama }})</li>
+                                    @foreach ($p->serviceAnggota as $ap)
+                                    <li>{{$ap->teacher->nama}} - NIDN.{{$ap->teacher->nidn}} ({{$ap->teacher->studyProgram->department->nama }} - {{$ap->teacher->studyProgram->nama }})</li>
+                                    @endforeach
+                                </ol>
+                                @else
+                                -
+                                @endif
+                            </td>
+                            <td>
+                                @if($p->serviceStudent->count())
+                                <ol>
+                                    @foreach ($p->serviceStudent as $mp)
+                                    <li>{{$mp->student->nama}} - NIM.{{$mp->student->nim}} ({{$mp->student->studyProgram->department->nama }} - {{$mp->student->studyProgram->nama }})</li>
                                     @endforeach
                                 </ol>
                                 @else

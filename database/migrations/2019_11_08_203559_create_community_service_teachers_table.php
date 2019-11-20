@@ -15,7 +15,13 @@ class CreateCommunityServiceTeachersTable extends Migration
     {
         Schema::create('community_service_teachers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->unsignedInteger('id_pengabdian');
+            $table->string('status');
+            $table->float('sks');
+            $table->char('nidn',10);
+
+            $table->foreign('id_pengabdian')->references('id')->on('community_services')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -50,7 +50,7 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> SKS Pengabdian:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="pkm" placeholder="Jumlah SKS pada Bidang Pengabdian/PKM" required>
+                            <input type="text" class="form-control disabled" name="pkm" placeholder="Jumlah SKS pada Bidang Pengabdian/PKM" readonly>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">

@@ -45,6 +45,7 @@
                     @endif
                 @endif
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
+                <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#community-service" role="tab">Pengabdian</a></li>
             </ul>
         </div>
         <div class="row br-profile-body">
@@ -66,6 +67,7 @@
                         @endif
                     @endif
                     @include('teacher.tab-research')
+                    @include('teacher.tab-service')
                 </div>
             </div>
             <div class="col-lg-3 mg-t-30 mg-lg-t-0">

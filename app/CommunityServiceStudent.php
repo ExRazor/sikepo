@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommunityServiceStudent extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'id_pengabdian',
         'nim',
-        'nama',
-        'kd_prodi',
     ];
 
     public function communityService()
@@ -18,8 +18,8 @@ class CommunityServiceStudent extends Model
         return $this->belongsTo('App\CommunityService','id_pengabdian');
     }
 
-    public function studyProgram()
+    public function student()
     {
-        return $this->belongsTo('App\Studyprogram','kd_prodi');
+        return $this->belongsTo('App\Student','nim');
     }
 }

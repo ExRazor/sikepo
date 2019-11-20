@@ -254,8 +254,8 @@ Route::get('research/{id}/edit','ResearchController@edit')->name('research.edit'
 Route::post('research','ResearchController@store')->name('research.store');
 Route::put('research','ResearchController@update')->name('research.update');
 Route::delete('research','ResearchController@destroy')->name('research.delete');
-Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
 Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
+Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
 
 //Community Service
 Route::get('community-service','CommunityServiceController@index')->name('community-service');
@@ -265,6 +265,7 @@ Route::get('community-service/{id}/edit','CommunityServiceController@edit')->nam
 Route::post('community-service','CommunityServiceController@store')->name('community-service.store');
 Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
 Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
+Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
 Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
 //Publication Category

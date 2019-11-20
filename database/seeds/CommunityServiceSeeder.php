@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Teacher;
+use App\AcademicYear;
 
 class CommunityServiceSeeder extends Seeder
 {
@@ -40,7 +41,7 @@ class CommunityServiceSeeder extends Seeder
             'Pendampingan ASI ekslusif dan makanan pendamping ASI'
         ];
 
-        $tahun = ['2013','2014','2015','2016','2017','2018','2019'];
+        $sks = [3,4,5,6];
 
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
@@ -55,10 +56,10 @@ class CommunityServiceSeeder extends Seeder
                 $nominal = rand(1000, 50000).'000';
 
                 DB::table('community_services')->insert([
-                    'nidn'              => $t->nidn,
+                    'id_ta'             => AcademicYear::all()->random()->id,
                     'tema_pengabdian'   => 'Analisis dan Perancangan',
                     'judul_pengabdian'  => $judul[array_rand($judul)],
-                    'tahun_pengabdian'  => $tahun[array_rand($tahun)],
+                    'sks_pengabdian'    => $sks[array_rand($sks)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
                     'jumlah_biaya'      => $nominal,

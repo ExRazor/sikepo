@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Ewmp;
-use App\Teacher;
 use App\AcademicYear;
 use App\CurriculumSchedule;
 use App\Research;
-use App\ResearchTeacher;
+use App\CommunityService;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -270,9 +269,23 @@ class EwmpController extends Controller
                                     )
                                     ->get();
 
-        $count_ps[] = 0;
-        $count_pt[] = 0;
-        $count_penelitian[] = 0;
+        $pengabdian     = CommunityService::where('id_ta',$request->id_ta)
+                                    ->with([
+                                        'serviceTeacher' => function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'serviceTeacher', function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    )
+                                    ->get();
+
+        $count_ps = array(0);
+        $count_pt = array(0);
+        $count_penelitian = array(0);
+        $count_pengabdian = array(0);
 
         foreach($curriculum_ps as $ps) {
             $count_ps[] = $ps->curriculum->sks_teori + $ps->curriculum->sks_seminar + $ps->curriculum->sks_praktikum;
@@ -285,12 +298,16 @@ class EwmpController extends Controller
             $count_penelitian[] = $p->researchTeacher[0]->sks;
         }
 
+        foreach($pengabdian as $p) {
+            $count_pengabdian[] = $p->serviceTeacher[0]->sks;
+        }
+
         $data = array(
             'schedule_ps'   => array_sum($count_ps),
             'schedule_pt'   => array_sum($count_pt),
-            'penelitian'    => array_sum($count_penelitian)
+            'penelitian'    => array_sum($count_penelitian),
+            'pengabdian'    => array_sum($count_pengabdian)
         );
-
 
         if($request->ajax()) {
             return response()->json($data);

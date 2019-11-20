@@ -25,15 +25,10 @@ class ResearchTeacher extends Model
         return $this->belongsTo('App\Teacher','nidn');
     }
 
-    public function scopeKetua($query)
-    {
-        return $query->where('status','Ketua')->limit(1);
-    }
-
     public function scopeJurusanKetua($query, $jurusan)
     {
         return $query->whereHas(
-                                'teacher.studyProgram.department', function($q1) use($jurusan) {
+                                'teacher.studyProgram', function($q1) use($jurusan) {
                                     $q1->where('kd_jurusan',$jurusan);
                                 }
                         )

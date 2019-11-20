@@ -10,8 +10,7 @@ class Research extends Model
         'id_ta',
         'judul_penelitian',
         'tema_penelitian',
-        'tahun_penelitian',
-        'tahun_penelitian',
+        'sks_penelitian',
         'sumber_biaya',
         'sumber_nama',
         'jumlah_biaya',
@@ -22,19 +21,9 @@ class Research extends Model
         return $this->belongsTo('App\AcademicYear','id_ta');
     }
 
-    public function teacher()
-    {
-        return $this->belongsTo('App\Teacher','nidn');
-    }
-
     public function researchTeacher()
     {
         return $this->hasMany('App\ResearchTeacher','id_penelitian');
-    }
-
-    public function researchStudent()
-    {
-        return $this->hasMany('App\ResearchStudent','id_penelitian');
     }
 
     public function researchKetua()
@@ -45,6 +34,11 @@ class Research extends Model
     public function researchAnggota()
     {
         return $this->hasMany('App\ResearchTeacher','id_penelitian')->where('status','Anggota');
+    }
+
+    public function researchStudent()
+    {
+        return $this->hasMany('App\ResearchStudent','id_penelitian');
     }
 
     // public function scopeKetuaPenelitian($query, $jurusan = null)

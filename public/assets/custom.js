@@ -83,6 +83,7 @@ $(document).ready(function() {
         $('.alert-danger').hide();
         $('input, select').removeClass('is-invalid');
         $(this).find('input[name^=_id]').removeAttr('value');
+        $('select').val(null).trigger('change');
     })
 
     function rupiah(bilangan){
@@ -1317,6 +1318,7 @@ $(document).ready(function() {
                 cont.find('input[name=ps_intra]').val(count.schedule_ps);
                 cont.find('input[name=ps_lain]').val(count.schedule_pt);
                 cont.find('input[name=penelitian]').val(count.penelitian);
+                cont.find('input[name=pkm]').val(count.pengabdian);
             }
         });
     });
@@ -2017,6 +2019,7 @@ $(document).ready(function() {
                         var id          = val.id;
                         var tahun       = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
                         var ketua_nidn  = val.research_ketua.teacher.nidn;
+                        var ketua_nip   = val.research_ketua.teacher.nip;
                         var ketua_nm    = val.research_ketua.teacher.nama;
                         var ketua_prodi = val.research_ketua.teacher.study_program.singkatan;
                         var judul       = val.judul_penelitian;
@@ -2061,8 +2064,10 @@ $(document).ready(function() {
                                 '<td>'+judul+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td>'+
-                                    ketua_nm+'<br>'+
-                                    '<small>NIDN.'+ketua_nidn+' / '+ketua_prodi+'</small>'+
+                                    '<a href="'+base_url+'/teacher/list/'+encode_id(ketua_nip)+'#research">'+
+                                        ketua_nm+'<br>'+
+                                        '<small>NIDN.'+ketua_nidn+' / '+ketua_prodi+'</small>'+
+                                    '</a>'+
                                 '</td>'+
                                 '<td>'+tema+'</td>'+
                                 '<td class="text-center">'+sks+'</td>'+
@@ -2237,50 +2242,71 @@ $(document).ready(function() {
                 if(data.length > 0) {
                     $.each(data, function(i,val){
                         var id          = val.id;
-                        var nidn        = val.teacher.nidn;
-                        var nama_dsn    = val.teacher.nama;
-                        var prodi       = val.teacher.study_program.singkatan;
+                        var tahun       = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
+                        var ketua_nidn  = val.service_ketua.teacher.nidn;
+                        var ketua_nip   = val.service_ketua.teacher.nip;
+                        var ketua_nm    = val.service_ketua.teacher.nama;
+                        var ketua_prodi = val.service_ketua.teacher.study_program.singkatan;
                         var judul       = val.judul_pengabdian;
                         var tema        = val.tema_pengabdian;
-                        var tahun       = val.tahun_pengabdian;
+                        var sks         = val.sks_pengabdian;
                         var sumber      = val.sumber_biaya;
                         var sumber_nama = val.sumber_biaya_nama;
-                        var daftar      = '';
+                        var jumlah_biaya = val.jumlah_biaya;
+                        var daftar_dsn  = '';
+                        var daftar_mhs  = '';
 
-                        if(val.community_service_student.length > 0) {
-                            $.each(val.community_service_student, function(i,mhs){
-
-                                daftar += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
+                        //Daftar Dosen Anggota
+                        if(val.service_anggota.length > 0) {
+                            $.each(val.service_anggota, function(i,dsn){
+                                daftar_dsn += '<li>'+dsn.teacher.nama+'('+dsn.teacher.nidn+') ('+dsn.teacher.study_program.department.nama+' - '+dsn.teacher.study_program.nama+')</li>';
                             })
                         } else {
-                            daftar = '-';
+                            daftar_dsn = '-';
                         }
+                        var dosen = '<ol>'+daftar_dsn+'</ol>';
 
-                        var mahasiswa = '<ol>'+daftar+'</ol>';
+                        //Daftar Mahasiswa Terlibat
+                        if(val.service_student.length > 0) {
+                            $.each(val.service_student, function(i,mhs){
+                                daftar_mhs += '<li>'+mhs.student.nama+'('+mhs.student.nim+') ('+mhs.student.study_program.department.nama+' - '+mhs.student.study_program.nama+')</li>';
+                            })
+                        } else {
+                            daftar_mhs = '-';
+                        }
+                        var mahasiswa = '<ol>'+daftar_mhs+'</ol>';
 
+                        //Sumber Biaya
                         if(sumber_nama) {
                             var sumber_biaya = sumber+' ('+sumber_nama+' )';
                         } else {
                             var sumber_biaya = sumber;
                         }
 
+                        //Draw tabel
                         html +='<tr>'+
-                                '<td>'+
-                                    nama_dsn+'<br>'+
-                                    '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
-                                '</td>'+
+                                '<td>'+id+'</td>'+
                                 '<td>'+judul+'</td>'+
-                                '<td>'+tema+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
+                                '<td>'+
+                                    '<a href="'+base_url+'/teacher/list/'+encode_id(ketua_nip)+'#community-service">'+
+                                        ketua_nm+'<br>'+
+                                        '<small>NIDN.'+ketua_nidn+' / '+ketua_prodi+'</small>'+
+                                    '</a>'+
+                                '</td>'+
+                                '<td>'+tema+'</td>'+
+                                '<td class="text-center">'+sks+'</td>'+
+                                '<td>'+dosen+'</td>'+
                                 '<td>'+mahasiswa+'</td>'+
                                 '<td>'+sumber_biaya+'</td>'+
+                                '<td>'+rupiah(jumlah_biaya)+'</td>'+
                                 '<td class="text-center" width="50">'+
                                     '<div class="btn-group" role="group">'+
                                         '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                             '<div><span class="fa fa-caret-down"></span></div>'+
                                         '</button>'+
                                         '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="/community-service/'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<a class="dropdown-item" href="'+base_url+'/community-service/'+encode_id(id)+'/edit">Sunting</a>'+
                                             '<form method="POST">'+
                                                 '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
                                                 '<button class="dropdown-item btn-delete" data-dest="/community-service">Hapus</button>'+
@@ -2291,6 +2317,7 @@ $(document).ready(function() {
                             '</tr>';
                     })
                 }
+
                 // tabel.dataTable().fnDestroy();
                 tabel.DataTable().clear().destroy();
                 tabel.find('tbody').html(html);

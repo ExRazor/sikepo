@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingSeeder::class);
         $this->call(CollaborationSeeder::class);
         $this->call(TeacherSeeder::class);
-        $this->call(EwmpSeeder::class);
         $this->call(TeacherAchievementSeeder::class);
         $this->call(CurriculumSeeder::class);
         $this->call(CurriculumScheduleSeeder::class);
@@ -34,7 +33,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ResearchTeacherSeeder::class);
         $this->call(ResearchStudentsSeeder::class);
         $this->call(CommunityServiceSeeder::class);
+        $this->call(CommunityServiceTeacherSeeder::class);
         $this->call(CommunityServiceStudentsSeeder::class);
+        $this->call(EwmpSeeder::class);
         $this->call(PublicationCategoriesSeeder::class);
         $this->call(PublicationSeeder::class);
         $this->call(PublicationStudentsSeeder::class);

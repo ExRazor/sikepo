@@ -7,20 +7,36 @@ use Illuminate\Database\Eloquent\Model;
 class CommunityService extends Model
 {
     protected $fillable = [
-        'nidn',
-        'tema_pengabdian',
+        'id_ta',
         'judul_pengabdian',
-        'tahun_pengabdian',
+        'tema_pengabdian',
+        'sks_pengabdian',
         'sumber_biaya',
         'sumber_nama',
+        'jumlah_biaya',
     ];
 
-    public function teacher()
+    public function academicYear()
     {
-        return $this->belongsTo('App\Teacher','nidn');
+        return $this->belongsTo('App\AcademicYear','id_ta');
     }
 
-    public function communityServiceStudent()
+    public function serviceTeacher()
+    {
+        return $this->hasMany('App\CommunityServiceTeacher','id_pengabdian');
+    }
+
+    public function serviceKetua()
+    {
+        return $this->hasOne('App\CommunityServiceTeacher','id_pengabdian')->where('status','Ketua');
+    }
+
+    public function serviceAnggota()
+    {
+        return $this->hasMany('App\CommunityServiceTeacher','id_pengabdian')->where('status','Anggota');
+    }
+
+    public function serviceStudent()
     {
         return $this->hasMany('App\CommunityServiceStudent','id_pengabdian');
     }
