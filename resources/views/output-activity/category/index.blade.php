@@ -24,9 +24,6 @@
 
 <div class="br-pagebody">
     <div class="alert alert-warning" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
         <strong class="d-block d-sm-inline-block-force">Hati-Hati!</strong><br>
         Data kategori luaran yang disunting atau pun dihapus akan berdampak langung pada Data Luaran.<br>
         Jika kategori dihapus, maka data luaran yang berkaitan dengan kategori tersebut akan ikut terhapus.<br>

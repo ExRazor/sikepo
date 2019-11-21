@@ -98,7 +98,11 @@
                         @foreach ($pengabdian as $p)
                         <tr>
                             <td>{{ $p->id }}</td>
-                            <td>{{ $p->judul_pengabdian }}</td>
+                            <td>
+                                <a href="{{route('community-service.show',encode_id($p->id))}}">
+                                    {{ $p->judul_pengabdian }}
+                                </a>
+                            </td>
                             <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
                             <td>
                                 <a href="{{route('teacher.profile',encode_id($p->serviceKetua->teacher->nip))}}#community-service">

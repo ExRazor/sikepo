@@ -45,12 +45,14 @@ class CommunityServiceController extends Controller
         return view('community-service.form',compact(['studyProgram','faculty']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function show($id)
+    {
+        $id   = decode_id($id);
+        $data = CommunityService::where('id',$id)->first();
+
+        return view('community-service.show',compact(['data','studyProgram']));
+    }
+
     public function store(Request $request)
     {
         $request->validate([

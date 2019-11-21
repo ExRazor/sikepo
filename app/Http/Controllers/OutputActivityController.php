@@ -13,8 +13,9 @@ class OutputActivityController extends Controller
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $outputActivity = OutputActivity::all();
+        $category       = OutputActivityCategory::all();
 
-        return view('output-activity.index',compact(['outputActivity','studyProgram']));
+        return view('output-activity.index',compact(['outputActivity','category','studyProgram']));
     }
 
     /**

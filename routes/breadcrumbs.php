@@ -140,7 +140,13 @@ Breadcrumbs::for('research-add', function ($trail) {
     $trail->push('Tambah Data Penelitian', route('research.add'));
 });
 
+Breadcrumbs::for('research-show', function ($trail,$data) {
+    $trail->parent('research');
+    $trail->push('Data Penelitian: '.$data->judul_penelitian, route('research.show',encode_id($data->id)));
+});
+
 Breadcrumbs::for('research-edit', function ($trail,$data) {
+    $trail->parent('research-show',$data);
     $trail->push('Sunting Data Penelitian');
 });
 
@@ -155,7 +161,13 @@ Breadcrumbs::for('community-service-add', function ($trail) {
     $trail->push('Tambah Data Pengabdian', route('community-service.add'));
 });
 
+Breadcrumbs::for('community-service-show', function ($trail,$data) {
+    $trail->parent('community-service');
+    $trail->push('Data Pengabdian: '.$data->judul_pengabdian, route('community-service.show',encode_id($data->id)));
+});
+
 Breadcrumbs::for('community-service-edit', function ($trail,$data) {
+    $trail->parent('community-service-show',$data);
     $trail->push('Sunting Data Pengabdian');
 });
 

@@ -31,6 +31,14 @@
 </div>
 
 <div class="br-pagebody">
+    <div class="alert alert-warning" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong class="d-block d-sm-inline-block-force">Hati-Hati!</strong><br>
+        Data kategori luaran yang disunting atau pun dihapus akan berdampak langung pada Data Luaran.<br>
+        Jika kategori dihapus, maka data luaran yang berkaitan dengan kategori tersebut akan ikut terhapus.<br>
+    </div>
     @if (session()->has('flash.message'))
         <div class="alert alert-{{ session('flash.class') }}" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -80,12 +88,22 @@
                         @foreach ($outputActivity as $activity)
                         <tr>
                             @if($activity->kegiatan=='Penelitian')
-                            <td>{{$activity->research->judul_penelitian}}</td>
+                            <td>
+                                <a href="{{route('research.show',encode_id($activity->research->id))}}">
+                                    {{$activity->research->judul_penelitian}}
+                                </a>
+                            </td>
                             @else
-                            <td>{{$activity->communityService->judul_pengabdian}}</td>
+                            <td>
+                                <a href="{{route('community-service.show',encode_id($activity->communityService->id))}}">
+                                    {{$activity->communityService->judul_pengabdian}}
+                                </a>
+                            </td>
                             @endif
                             <td class="text-center">{{$activity->kegiatan}}</td>
-                            <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
+                            <td class="text-center">
+                                {{$activity->outputActivityCategory->nama}}
+                            </td>
                             <td>{{$activity->judul_luaran}}</td>
                             <td class="text-center">{{$activity->tahun_luaran}}</td>
                             <td class="text-center" width="50">

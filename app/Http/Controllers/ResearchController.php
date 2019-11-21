@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
-
 class ResearchController extends Controller
 {
     /**
@@ -38,6 +37,14 @@ class ResearchController extends Controller
                                     ->get();
 
         return view('research.index',compact(['penelitian','studyProgram','faculty']));
+    }
+
+    public function show($id)
+    {
+        $id   = decode_id($id);
+        $data         = Research::where('id',$id)->first();
+
+        return view('research.show',compact(['data','studyProgram']));
     }
 
     public function create()
