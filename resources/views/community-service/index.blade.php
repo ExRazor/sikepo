@@ -43,28 +43,28 @@
         <div class="col-12">
             <form action="{{route('ajax.community-service.filter')}}" id="filter-communityService" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                        <div class="mg-r-10">
-                            <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                                <option value="0">Semua Jurusan</option>
-                                @foreach($faculty as $f)
-                                    @if($f->department->count())
-                                    <optgroup label="{{$f->nama}}">
-                                        @foreach($f->department as $d)
-                                        <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
-                                        @endforeach
-                                    </optgroup>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mg-r-10">
-                            <select class="form-control" name="kd_prodi">
-                                <option value="">- Pilih Program Studi -</option>
-                                @foreach($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                    <div class="mg-r-10">
+                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                            <option value="0">Semua Jurusan</option>
+                            @foreach($faculty as $f)
+                                @if($f->department->count())
+                                <optgroup label="{{$f->nama}}">
+                                    @foreach($f->department as $d)
+                                    <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
+                                    @endforeach
+                                </optgroup>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mg-r-10">
+                        <select class="form-control" name="kd_prodi">
+                            <option value="">- Pilih Program Studi -</option>
+                            @foreach($studyProgram as $sp)
+                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div>
                         <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
                     </div>

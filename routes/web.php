@@ -118,9 +118,11 @@ Route::prefix('ajax')->group(function () {
     Route::get('funding/category/select/{id}','FundingCategoryController@get_jenis')->name('funding.category.select');
 
     //Research
+    Route::get('research/get_by_department','ResearchController@get_by_department')->name('ajax.research.get_by_department');
     Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('ajax.research.filter');
 
     //Community Service
+    Route::get('community-service/get_by_department','CommunityServiceController@get_by_department')->name('ajax.community-service.get_by_department');
     Route::post('community-service/get_by_filter','CommunityServiceController@get_by_filter')->name('ajax.community-service.filter');
 
     //Publication Category

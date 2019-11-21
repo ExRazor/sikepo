@@ -203,7 +203,13 @@ Breadcrumbs::for('output-activity-add', function ($trail) {
     $trail->push('Tambah Data Luaran', route('output-activity.add'));
 });
 
+Breadcrumbs::for('output-activity-show', function ($trail,$data) {
+    $trail->parent('output-activity');
+    $trail->push('Luaran Penelitian: '.$data->judul_luaran, route('output-activity.show',encode_id($data->id)));
+});
+
 Breadcrumbs::for('output-activity-edit', function ($trail,$data) {
+    $trail->parent('output-activity-show',$data);
     $trail->push('Sunting Data Luaran');
 });
 

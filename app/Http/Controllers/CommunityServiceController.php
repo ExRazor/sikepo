@@ -21,17 +21,12 @@ class CommunityServiceController extends Controller
     {
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $pengabdian   = CommunityService::with([
-                                        'serviceKetua',
-                                        'serviceAnggota',
-                                        'serviceStudent'
-                                    ])
-                                    ->whereHas(
-                                        'serviceTeacher', function($q) {
-                                            $q->jurusanKetua(setting('app_department_id'));
-                                        }
-                                    )
-                                    ->get();
+        $pengabdian   = CommunityService::whereHas(
+                                            'serviceTeacher', function($q) {
+                                                $q->jurusanKetua(setting('app_department_id'));
+                                            }
+                                        )
+                                        ->get();
 
         // return response()->json($pengabdian);die;
 
@@ -50,7 +45,7 @@ class CommunityServiceController extends Controller
         $id   = decode_id($id);
         $data = CommunityService::where('id',$id)->first();
 
-        return view('community-service.show',compact(['data','studyProgram']));
+        return view('community-service.show',compact(['data']));
     }
 
     public function store(Request $request)
@@ -322,6 +317,30 @@ class CommunityServiceController extends Controller
             return response()->json($data);
         } else {
             abort(404);
+        }
+    }
+
+    public function get_by_department(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = CommunityService::whereHas(
+                                        'serviceTeacher', function($q) {
+                                            $q->jurusanKetua(setting('app_department_id'));
+                                        }
+                                    )
+                                    ->where('judul_pengabdian', 'LIKE', '%'.$cari.'%')
+                                    ->orWhere('id','LIKE','%'.$cari.'%')
+                                    ->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->id,
+                    "text"  => $d->judul_pengabdian.' ('.$d->academicYear->tahun_akademik.')'
+                );
+            }
+            return response()->json($response);
         }
     }
 }

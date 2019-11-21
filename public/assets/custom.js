@@ -83,7 +83,7 @@ $(document).ready(function() {
         $('.alert-danger').hide();
         $('input, select').removeClass('is-invalid');
         $(this).find('input[name^=_id]').removeAttr('value');
-        $('select').val(null).trigger('change');
+        $(this).find('select').val(null).trigger('change');
     })
 
     function rupiah(bilangan){
@@ -2743,5 +2743,67 @@ $(document).ready(function() {
             form.trigger('reset');
         }).end()
     /****************************************************************************************/
+
+    /********************************* DATA LUARAN PENELITIAN *********************************/
+
+    $('#communityService_form').on('change','select[name=kegiatan]', function(){
+        load_select_activity()
+    })
+
+    if($('#communityService_form').length) {
+        load_select_activity()
+    }
+
+    function load_select_activity() {
+        var cont        = $('#communityService_form');
+        var select_src  = cont.find('select[name=kegiatan]');
+        var select      = cont.find('.select-activity');
+        var value       = select_src.val();
+
+        if(value=="Penelitian") {
+            var url_select2 = base_url+'/ajax/research/get_by_department';
+            var placeholder = 'Masukkan nama penelitian';
+
+            select.attr('name','id_penelitian');
+            select.prop('disabled',false)
+        } else if(value=="Pengabdian") {
+            var url_select2 = base_url+'/ajax/community-service/get_by_department';
+            var placeholder = 'Masukkan nama pengabdian';
+
+            select.attr('name','id_pengabdian');
+            select.prop('disabled',false)
+        } else {
+            select.removeAttr('name');
+            select.prop('disabled',true)
+        }
+
+        if(value!='' || value!=null) {
+            select.select2({
+                language: "id",
+                minimumInputLength: 5,
+                allowClear: true,
+                placeholder: placeholder,
+                ajax: {
+                    dataType: 'json',
+                    url: url_select2,
+                    delay: 800,
+                    data: function(params) {
+                        return {
+                            cari: params.term
+                        }
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                }
+            });
+        }
+    }
+
+
+    /******************************************************************************************/
+
 
 });

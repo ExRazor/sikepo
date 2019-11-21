@@ -24,12 +24,7 @@ class ResearchController extends Controller
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        $penelitian   = Research::with([
-                                        'researchKetua',
-                                        'researchAnggota',
-                                        'researchStudent'
-                                    ])
-                                    ->whereHas(
+        $penelitian   = Research::whereHas(
                                         'researchTeacher', function($q) {
                                             $q->jurusanKetua(setting('app_department_id'));
                                         }
@@ -44,7 +39,7 @@ class ResearchController extends Controller
         $id   = decode_id($id);
         $data         = Research::where('id',$id)->first();
 
-        return view('research.show',compact(['data','studyProgram']));
+        return view('research.show',compact(['data']));
     }
 
     public function create()
@@ -306,6 +301,30 @@ class ResearchController extends Controller
             return response()->json($data);
         } else {
             abort(404);
+        }
+    }
+
+    public function get_by_department(Request $request)
+    {
+        if($request->has('cari')){
+            $cari = $request->cari;
+            $data = Research::whereHas(
+                                'researchTeacher', function($q) {
+                                    $q->jurusanKetua(setting('app_department_id'));
+                                }
+                            )
+                            ->where('judul_penelitian', 'LIKE', '%'.$cari.'%')
+                            ->orWhere('id','LIKE','%'.$cari.'%')
+                            ->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->id,
+                    "text"  => $d->judul_penelitian.' ('.$d->academicYear->tahun_akademik.')'
+                );
+            }
+            return response()->json($response);
         }
     }
 }

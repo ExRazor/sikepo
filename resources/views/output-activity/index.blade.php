@@ -31,13 +31,16 @@
 </div>
 
 <div class="br-pagebody">
-    <div class="alert alert-warning" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong class="d-block d-sm-inline-block-force">Hati-Hati!</strong><br>
-        Data kategori luaran yang disunting atau pun dihapus akan berdampak langung pada Data Luaran.<br>
-        Jika kategori dihapus, maka data luaran yang berkaitan dengan kategori tersebut akan ikut terhapus.<br>
+    <div class="alert alert-info">
+        <h5>KATEGORI LUARAN</h5>
+        <hr>
+        @foreach($category as $c)
+        <strong class="d-block d-sm-inline-block-force">{{$loop->iteration.'. '.$c->nama}}</strong><br>
+        {{$c->deskripsi}}
+        @if (!$loop->last)
+            <br><br>
+        @endif
+        @endforeach
     </div>
     @if (session()->has('flash.message'))
         <div class="alert alert-{{ session('flash.class') }}" role="alert">
@@ -49,10 +52,9 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.output-activity.filter')}}" id="filter-publication" method="POST">
+            <form action="{{route('ajax.output-activity.filter')}}" id="filter-outputActivity" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Pilih Program Studi -</option>
                             @foreach($studyProgram as $sp)
@@ -76,22 +78,36 @@
                 <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center" width="500">Judul Luaran</th>
-                            <th class="text-center" width="150">Jenis Kegiatan</th>
-                            <th class="text-center" width="150">Kategori</th>
-                            <th class="text-center" width="300">Judul Luaran</th>
-                            <th class="text-center defaultSort" width="75">Tahun</th>
+                            <th class="text-center all" width="500">Judul Luaran</th>
+                            <th class="text-center all" width="300">Kategori</th>
+                            <th class="text-center all defaultSort" width="150">Tahun</th>
+                            <th class="text-center none">Jenis Kegiatan</th>
+                            <th class="text-center none">Judul Kegiatan</th>
+                            <th class="text-center none">Asal Program Studi</th>
+                            <th class="text-center none">Keterangan</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($outputActivity as $activity)
                         <tr>
+                            <td>
+                                <a href="{{route('output-activity.show',encode_id($activity->id))}}">
+                                    {{$activity->judul_luaran}}
+                                </a>
+                            </td>
+                            <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
+                            <td class="text-center">{{$activity->tahun_luaran}}</td>
+                            <td class="text-center">{{$activity->kegiatan}}</td>
                             @if($activity->kegiatan=='Penelitian')
                             <td>
                                 <a href="{{route('research.show',encode_id($activity->research->id))}}">
                                     {{$activity->research->judul_penelitian}}
                                 </a>
+                            </td>
+                            <td>
+                                {{$activity->research->researchKetua->teacher->studyProgram->nama}}
+                                ({{$activity->research->researchKetua->teacher->studyProgram->department->nama}} - {{$activity->research->researchKetua->teacher->studyProgram->department->faculty->singkatan}})
                             </td>
                             @else
                             <td>
@@ -99,13 +115,12 @@
                                     {{$activity->communityService->judul_pengabdian}}
                                 </a>
                             </td>
-                            @endif
-                            <td class="text-center">{{$activity->kegiatan}}</td>
-                            <td class="text-center">
-                                {{$activity->outputActivityCategory->nama}}
+                            <td>
+                                {{$activity->communityService->serviceKetua->teacher->studyProgram->nama}}
+                                ({{$activity->communityService->serviceKetua->teacher->studyProgram->department->nama}} - {{$activity->communityService->serviceKetua->teacher->studyProgram->department->faculty->singkatan}})
                             </td>
-                            <td>{{$activity->judul_luaran}}</td>
-                            <td class="text-center">{{$activity->tahun_luaran}}</td>
+                            @endif
+                            <td>{{$activity->keterangan}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
