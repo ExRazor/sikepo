@@ -7,6 +7,8 @@ use App\StudentStatus;
 use App\Faculty;
 use App\StudyProgram;
 use App\AcademicYear;
+use App\Research;
+use App\CommunityService;
 use App\Imports\StudentImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -15,11 +17,6 @@ use DataTables;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $faculty      = Faculty::all();
@@ -36,11 +33,6 @@ class StudentController extends Controller
         return view('student.index',compact(['studyProgram','faculty','angkatan','status','data']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $faculty      = Faculty::all();
@@ -50,12 +42,6 @@ class StudentController extends Controller
         return view('student/form',compact(['faculty','studyProgram','academicYear']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -165,7 +151,23 @@ class StudentController extends Controller
             }
         }
 
-        return view('student.profile',compact(['data','status','statusList','academicYear']));
+        $research       = Research::whereHas(
+                                        'researchStudent', function($q1) use ($data) {
+                                            $q1->where('nim',$data->nim);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        $service        = CommunityService::whereHas(
+                                        'serviceStudent', function($q1) use ($data) {
+                                            $q1->where('nim',$data->nim);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        return view('student.profile',compact(['data','status','statusList','academicYear','research','service']));
     }
 
     /**

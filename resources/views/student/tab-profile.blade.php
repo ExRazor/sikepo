@@ -41,7 +41,7 @@
     </div>
     <div class="profil-row d-flex">
             <div class="profil-nama">Jurusan</div>
-            <div class="profil-isi"><span class="pr-2">:</span>{{ $data->studyProgram->department->faculty->singkatan.' - '.$data->studyProgram->department->nama }}</div>
+            <div class="profil-isi"><span class="pr-2">:</span>{{ $data->studyProgram->department->nama.' - '.$data->studyProgram->department->faculty->singkatan }}</div>
         </div>
     <div class="profil-row d-flex">
         <div class="profil-nama">Program Studi</div>

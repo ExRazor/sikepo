@@ -83,6 +83,8 @@
                                         @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
                                         @endif
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#community-service" role="tab">Pengabdian</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -93,6 +95,8 @@
                                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                 @include('student.tab-status')
                                 @endif
+                                @include('student.tab-research')
+                                @include('student.tab-service')
                             </div>
                         </div>
                     </div>

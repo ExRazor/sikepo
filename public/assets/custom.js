@@ -2060,7 +2060,6 @@ $(document).ready(function() {
 
                         //Draw tabel
                         html +='<tr>'+
-                                '<td>'+id+'</td>'+
                                 '<td>'+judul+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td>'+
@@ -2285,7 +2284,6 @@ $(document).ready(function() {
 
                         //Draw tabel
                         html +='<tr>'+
-                                '<td>'+id+'</td>'+
                                 '<td>'+judul+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td>'+

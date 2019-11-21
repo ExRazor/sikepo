@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-balance-scale"></i>
+    <i class="icon fa fa-american-sign-language-interpreting"></i>
     <div>
         <h4>Rincian Pengabdian</h4>
         <p class="mg-b-0">Rincian data pengabdian</p>

@@ -81,7 +81,6 @@
                 <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="50">ID</th>
                             <th class="text-center all" width="600">Judul Penelitian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
                             <th class="text-center all" width="250">Penanggung Jawab</th>
@@ -97,7 +96,6 @@
                     <tbody>
                         @foreach ($penelitian as $p)
                         <tr>
-                            <td>{{ $p->id }}</td>
                             <td>
                                 <a href="{{route('research.show',encode_id($p->id))}}">
                                     {{ $p->judul_penelitian }}

@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-balance-scale"></i>
+    <i class="icon fa fa-book-reader"></i>
     <div>
         <h4>Rincian Penelitian</h4>
         <p class="mg-b-0">Rincian data penelitian</p>
