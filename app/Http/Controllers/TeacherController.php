@@ -137,7 +137,7 @@ class TeacherController extends Controller
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
-        $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('tanggal','desc')->get();
+        $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
 
         $research       = Research::with([
                                         'researchTeacher' => function($q1) use ($data) {

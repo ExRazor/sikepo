@@ -48,9 +48,10 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Tanggal dicapai:</label>
+                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Tahun Diperoleh:</label>
                         <div class="col-sm-8">
-                            <input class="form-control datepicker" type="text" name="tanggal_dicapai" value="{{Request::old('tanggal')}}" placeholder="Tuliskan tanggal prestasi dicapai" required>
+                            <select class="form-control select-academicYear" name="id_ta" required>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">

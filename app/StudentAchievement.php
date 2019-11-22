@@ -4,19 +4,20 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TeacherAchievement extends Model
+class StudentAchievement extends Model
 {
     protected $fillable = [
-        'nidn',
+        'nim',
         'id_ta',
+        'kegiatan_nama',
+        'kegiatan_tingkat',
         'prestasi',
-        'tingkat_prestasi',
-        'bukti_pendukung',
+        'prestasi_jenis',
     ];
 
-    public function teacher()
+    public function student()
     {
-        return $this->belongsTo('App\Teacher','nidn');
+        return $this->belongsTo('App\Student','nim');
     }
 
     public function academicYear()

@@ -48,6 +48,12 @@ Breadcrumbs::for('teacher-ewmp', function ($trail) {
     $trail->push('Daftar EWMP Dosen', route('teacher.ewmp'));
 });
 
+//Dosen > Prestasi
+Breadcrumbs::for('teacher-achievement', function ($trail) {
+    $trail->parent('teacher');
+    $trail->push('Daftar Prestasi Dosen', route('teacher.achievement'));
+});
+
 // Mahasiswa
 Breadcrumbs::for('student', function ($trail) {
     $trail->parent('dashboard');
@@ -73,6 +79,12 @@ Breadcrumbs::for('student-edit', function ($trail,$data) {
 Breadcrumbs::for('student-foreign', function ($trail) {
     $trail->parent('student');
     $trail->push('Data Mahasiswa Asing', route('student.foreign'));
+});
+
+// Mahasiswa > Prestasi
+Breadcrumbs::for('student-achievement', function ($trail) {
+    $trail->parent('student');
+    $trail->push('Daftar Prestasi Mahasiswa', route('student.achievement'));
 });
 
 // Keuangan

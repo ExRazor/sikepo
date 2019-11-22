@@ -93,11 +93,11 @@ Route::prefix('ajax')->group(function () {
     Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
     Route::get('teacher/loadData','TeacherController@loadData')->name('ajax.teacher.loadData');
 
-    //Teacher EWMP
+    //Teacher - EWMP
     Route::get('ewmp/countsks','EwmpController@countSKS')->name('ajax.ewmp.countsks');
 
-    //Teacher Achievement
-    Route::post('teacher-acv/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacherAcv.filter');
+    //Teacher - Achievement
+    Route::post('teacher/achievement/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacher.achievement.filter');
 
     //Student Quota
     Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
@@ -105,13 +105,17 @@ Route::prefix('ajax')->group(function () {
     //Student
     Route::get('student/datatable','StudentController@datatable')->name('ajax.student.datatable');
     Route::get('student/loadData','StudentController@loadData')->name('ajax.student.loadData');
+    Route::get('student/select_by_studyProgram','StudentController@select_by_studyProgram')->name('ajax.student.studyProgram');
     Route::post('student/get_by_filter','StudentController@get_by_filter')->name('ajax.student.filter');
 
     //Student - Status
     Route::get('student/status/{id}','StudentStatusController@edit')->name('student.status.edit');
 
-    //Student Foreign
+    //Student - Foreign
     Route::post('student/foreign/get_by_filter','StudentForeignController@get_by_filter')->name('ajax.student.foreign.filter');
+
+    //Student - Achievement
+    Route::post('student/achievement/get_by_filter','StudentAchievementController@get_by_filter')->name('ajax.student.achievement.filter');
 
     //Funding Category
     Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
@@ -167,15 +171,14 @@ Route::post('/teacher/list','TeacherController@store')->name('teacher.store');
 Route::put('/teacher/list','TeacherController@update')->name('teacher.update');
 Route::delete('/teacher/list','TeacherController@destroy')->name('teacher.delete');
 Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
-Route::post('/ajax/teacher/show_by_prodi','TeacherController@show_by_prodi')->name('teacher.show_by_prodi');
 
 //Teacher Achievement
 Route::get('/teacher/achievement','TeacherAchievementController@index')->name('teacher.achievement');
-Route::get('/teacher-achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
-Route::post('/teacher-achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
-Route::put('/teacher-achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
-Route::delete('/teacher-achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
-Route::get('/download/teacher-achievement/{filename}','TeacherAchievementController@download')->name('teacher.achievement.download');
+Route::get('/teacher/achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
+Route::post('/teacher/achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
+Route::put('/teacher/achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
+Route::delete('/teacher/achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
+Route::get('/download/teacher/achievement/{filename}','TeacherAchievementController@download')->name('teacher.achievement.download');
 
 //EWMP
 Route::get('/teacher/ewmp', 'EwmpController@index')->name('teacher.ewmp');
@@ -211,13 +214,20 @@ Route::post('student/status','StudentStatusController@store')->name('student.sta
 Route::put('student/status','StudentStatusController@update')->name('student.status.update');
 Route::delete('student/status','StudentStatusController@destroy')->name('student.status.delete');
 
-//Students Foreign
+//Students - Foreign
 Route::get('student/foreign','StudentForeignController@index')->name('student.foreign');
 Route::get('student/foreign/add','StudentForeignController@create')->name('student.foreign.add');
 Route::get('student/foreign/{id}','StudentForeignController@edit')->name('student.foreign.edit');
 Route::post('student/foreign','StudentForeignController@store')->name('student.foreign.store');
 Route::put('student/foreign','StudentForeignController@update')->name('student.foreign.update');
 Route::delete('student/foreign','StudentForeignController@destroy')->name('student.foreign.delete');
+
+//Student Achievement
+Route::get('/student/achievement','StudentAchievementController@index')->name('student.achievement');
+Route::get('/student/achievement/{nidn}','StudentAchievementController@edit')->name('student.achievement.edit');
+Route::post('/student/achievement','StudentAchievementController@store')->name('student.achievement.store');
+Route::put('/student/achievement','StudentAchievementController@update')->name('student.achievement.update');
+Route::delete('/student/achievement','StudentAchievementController@destroy')->name('student.achievement.delete');
 
 //Funding
 Route::get('funding',function(){

@@ -16,7 +16,7 @@
                             <tr>
                                 <th class="text-center align-middle">Prestasi</th>
                                 <th class="text-center align-middle">Tingkat Prestasi</th>
-                                <th class="text-center align-middle">Tanggal Diperoleh</th>
+                                <th class="text-center align-middle">Tahun Diperoleh</th>
                                 <th class="text-center align-middle">Bukti Pendukung</th>
                                 <th class="text-center align-middle">Aksi</th>
                             </tr>
@@ -26,7 +26,7 @@
                             <tr>
                                 <td>{{ $acv->prestasi }}</td>
                                 <td>{{ $acv->tingkat_prestasi }}</td>
-                                <td>{{ $acv->tanggal }}</td>
+                                <td>{{ $acv->academicYear->tahun_akademik.' - '.$acv->academicYear->semester }}</td>
                                 <td class="text-center align-middle">
                                     <a href="{{route('teacher.achievement.download',encrypt($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
                                 </td>

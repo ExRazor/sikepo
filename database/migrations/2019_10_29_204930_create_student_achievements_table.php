@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTeacherAchievementsTable extends Migration
+class CreateStudentAchievementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateTeacherAchievementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('teacher_achievements', function (Blueprint $table) {
+        Schema::create('student_achievements', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('nidn',10);
+            $table->char('nim',10);
             $table->unsignedInteger('id_ta');
+            $table->string('kegiatan_nama');
+            $table->enum('kegiatan_tingkat',['Wilayah','Nasional','Internasional']);
             $table->string('prestasi');
-            $table->enum('tingkat_prestasi',['Wilayah','Nasional','Internasional']);
-            $table->string('bukti_pendukung');
+            $table->string('prestasi_jenis');
             $table->timestamps();
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -34,6 +35,6 @@ class CreateTeacherAchievementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teacher_achievements');
+        Schema::dropIfExists('student_achievements');
     }
 }

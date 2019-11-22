@@ -10,6 +10,7 @@ use App\AcademicYear;
 use App\Research;
 use App\CommunityService;
 use App\Imports\StudentImport;
+use App\StudentAchievement;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use File;
@@ -126,12 +127,6 @@ class StudentController extends Controller
         }
 	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function profile($id)
     {
         $id = decode_id($id);
@@ -139,6 +134,7 @@ class StudentController extends Controller
         $data       = Student::with('studyProgram','studentForeign')->where('nim',$id)->first();
         $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
         $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
+        $achievement = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
         if($status){
@@ -167,7 +163,7 @@ class StudentController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
-        return view('student.profile',compact(['data','status','statusList','academicYear','research','service']));
+        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','research','service']));
     }
 
     /**
@@ -388,5 +384,35 @@ class StudentController extends Controller
             }
             return response()->json($response);
         }
+    }
+
+    public function select_by_studyProgram(Request $request)
+    {
+        // if($request->ajax()) {
+            $prodi  = $request->prodi;
+            $cari   = $request->cari;
+
+            $query  = Student::where('kd_prodi',$prodi);
+
+            if($cari) {
+                $query->where(function($q) use ($cari) {
+                    $q->where('nama', 'LIKE', '%'.$cari.'%')->orWhere('nim', 'LIKE', '%'.$cari.'%');
+                });
+            }
+
+            $data = $query->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->nim,
+                    "text"  => $d->nama.' ('.$d->nim.')'
+                );
+            }
+
+            return response()->json($response);
+        // } else {
+        //     abort(404);
+        // }
     }
 }

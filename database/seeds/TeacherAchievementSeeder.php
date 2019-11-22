@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Teacher;
+use App\AcademicYear;
 
 class TeacherAchievementSeeder extends Seeder
 {
@@ -33,9 +34,10 @@ class TeacherAchievementSeeder extends Seeder
             for($j = 0; $j < 5; $j++){
                 DB::table('teacher_achievements')->insert([
                     'nidn'                  => $nidn,
+                    'id_ta'                 => AcademicYear::all()->random()->id,
                     'prestasi'              => $prestasi[array_rand($prestasi)],
                     'tingkat_prestasi'      => $tingkat[array_rand($tingkat)],
-                    'tanggal'               => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = 'Asia/Singapore'),
+                    // 'tanggal'               => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = 'Asia/Singapore'),
                     'bukti_pendukung'       => 'hehe.jpg',
                     'created_at' => now()
                 ]);

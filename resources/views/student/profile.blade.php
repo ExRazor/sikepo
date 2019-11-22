@@ -82,6 +82,7 @@
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Biodata Mahasiswa</a></li>
                                         @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
                                         @endif
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#community-service" role="tab">Pengabdian</a></li>
@@ -94,6 +95,7 @@
                                 @include('student.tab-profile')
                                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                 @include('student.tab-status')
+                                @include('student.tab-achievement')
                                 @endif
                                 @include('student.tab-research')
                                 @include('student.tab-service')
@@ -107,7 +109,8 @@
 </div>
 @include('student.form-photo')
 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-@include('student.form-status')
+    @include('student.form-status')
+    @include('student.form-achievement')
 @endif
 @endsection
 
