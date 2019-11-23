@@ -128,10 +128,10 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function profile($nip)
+    public function profile($nidn)
     {
-        $nip               = decode_id($nip);
-        $data              = Teacher::where('nip',$nip)->first();
+        $nidn               = decode_id($nidn);
+        $data              = Teacher::where('nidn',$nidn)->first();
         $data->bidang_ahli = json_decode($data->bidang_ahli);
 
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
@@ -184,10 +184,10 @@ class TeacherController extends Controller
      * @param  \App\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function edit($nip)
+    public function edit($nidn)
     {
-        $nip          = decode_id($nip);
-        $data         = Teacher::where('nip',$nip)->first();
+        $nidn          = decode_id($nidn);
+        $data         = Teacher::where('nidn',$nidn)->first();
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
 
@@ -263,7 +263,7 @@ class TeacherController extends Controller
         $Teacher->save();
 
 
-        return redirect()->route('teacher.profile',encode_id($Teacher->nip))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.profile',encode_id($Teacher->nidn))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**

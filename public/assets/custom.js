@@ -1195,7 +1195,7 @@ $(document).ready(function() {
 
 
                         html += '<tr>'+
-                                    '<td><a href="/teacher/list/'+encode_id(nip)+'">'+nidn+'</a></td>'+
+                                    '<td><a href="/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
                                     '<td>'+
                                         nama+'<br>'+
                                         '<small>NIP. '+nip+'</small>'+
@@ -1212,7 +1212,7 @@ $(document).ready(function() {
                                                 '<div><span class="fa fa-caret-down"></span></div>'+
                                             '</button>'+
                                             '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/teacher/list/'+encode_id(nip)+'/edit">Sunting</a>'+
+                                                '<a class="dropdown-item" href="/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
                                                 '<form method="POST">'+
                                                     '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
                                                     '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+

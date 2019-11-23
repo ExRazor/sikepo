@@ -99,7 +99,7 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.profile',encode_id($d->nip)) }}">{{$d->nidn}}</a></td>
+                            <td><a href="{{ route('teacher.profile',encode_id($d->nidn)) }}">{{$d->nidn}}</a></td>
                             <td>
                                 {{$d->nama}}<br>
                                 <small>NIP. {{$d->nip}}</small>
@@ -115,7 +115,7 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_id($d->nip)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_id($d->nidn)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($d->nidn)}}" name="id">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('teacher.delete') }}">Hapus</button>
