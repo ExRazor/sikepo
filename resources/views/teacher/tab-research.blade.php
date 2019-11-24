@@ -21,7 +21,11 @@
                         <tbody>
                             @foreach ($research as $rs)
                             <tr>
-                                <td>{{ $rs->judul_penelitian }}</td>
+                                <td>
+                                    <a href="{{route('research.show',encode_id($rs->id))}}">
+                                        {{ $rs->judul_penelitian }}
+                                    </a>
+                                </td>
                                 <td class="text-center">{{ $rs->academicYear->tahun_akademik.' - '.$rs->academicYear->semester }}</td>
                                 <td class="text-center">
                                     {{ $rs->sks_penelitian }}

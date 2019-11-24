@@ -267,6 +267,21 @@ Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
     $trail->push('Sunting Jadwal Kurikulum');
 });
 
+// Akademik > Skripsi
+Breadcrumbs::for('academic-minithesis', function ($trail) {
+    $trail->parent('academic');
+    $trail->push('Tugas Akhir', route('academic.minithesis'));
+});
+
+Breadcrumbs::for('academic-minithesis-add', function ($trail) {
+    $trail->parent('academic-minithesis');
+    $trail->push('Tambah Tugas Akhir', route('academic.minithesis.add'));
+});
+
+Breadcrumbs::for('academic-minithesis-edit', function ($trail,$data) {
+    $trail->push('Sunting Tugas Akhir');
+});
+
 // Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');

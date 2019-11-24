@@ -63,4 +63,14 @@ class Teacher extends Model
             $q->where('kd_jurusan', $jurusan);
        });
     }
+
+    public function minithesis_utama()
+    {
+        return $this->hasMany('App\Minithesis','pembimbing_utama');
+    }
+
+    public function minithesis_akademik()
+    {
+        return $this->hasMany('App\Minithesis','pembimbing_akademik');
+    }
 }

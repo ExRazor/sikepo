@@ -21,7 +21,11 @@
                             <tbody>
                                 @foreach ($service as $s)
                                 <tr>
-                                    <td>{{ $s->judul_pengabdian }}</td>
+                                    <td>
+                                        <a href="{{route('community-service.show',encode_id($s->id))}}">
+                                            {{ $s->judul_pengabdian }}
+                                        </a>
+                                    </td>
                                     <td class="text-center">{{ $s->academicYear->tahun_akademik.' - '.$s->academicYear->semester }}</td>
                                     <td class="text-center">
                                         {{ $s->sks_pengabdian }}

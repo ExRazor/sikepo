@@ -39,7 +39,7 @@ class StudentAchievementSeeder extends Seeder
                     'Non Akademik',
                 ];
 
-        for($i = 0; $i < 100; $i++){
+        for($i = 0; $i < 20; $i++){
             $nim = Student::whereHas(
                                 'studyProgram', function($q) {
                                     $q->where('kd_jurusan',setting('app_department_id'));

@@ -12,6 +12,7 @@ use App\CurriculumSchedule;
 use App\TeacherAchievement;
 use App\Research;
 use App\CommunityService;
+use App\Minithesis;
 use File;
 
 class TeacherController extends Controller
@@ -136,6 +137,7 @@ class TeacherController extends Controller
 
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
+        $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_akademik',$data->nidn)->orderBy('id_ta','desc')->get();
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
 
@@ -168,7 +170,7 @@ class TeacherController extends Controller
         // dd($research);
         // return response()->json($research);die;
 
-        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research','service']));
+        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research','service','minithesis']));
     }
 
     public function show_by_prodi(Request $request)

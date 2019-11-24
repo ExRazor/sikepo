@@ -147,6 +147,9 @@ Route::prefix('ajax')->group(function () {
 
     //Academic - Schedule
     Route::post('schedule/get_by_filter','CurriculumScheduleController@get_by_filter')->name('ajax.schedule.filter');
+
+    //Academic - Minithesis
+    Route::post('minithesis/get_by_filter','MinithesisController@get_by_filter')->name('ajax.minithesis.filter');
 });
 
 //Collaboration
@@ -328,6 +331,15 @@ Route::get('academic/schedule/{nidn}/edit','CurriculumScheduleController@edit')-
 Route::post('academic/schedule','CurriculumScheduleController@store')->name('academic.schedule.store');
 Route::put('academic/schedule','CurriculumScheduleController@update')->name('academic.schedule.update');
 Route::delete('academic/schedule','CurriculumScheduleController@destroy')->name('academic.schedule.delete');
+
+//Academic - Minithesis
+Route::get('academic/minithesis','MiniThesisController@index')->name('academic.minithesis');
+Route::get('academic/minithesis/add','MiniThesisController@create')->name('academic.minithesis.add');
+Route::get('academic/minithesis/{nidn}','MiniThesisController@show')->name('academic.minithesis.show');
+Route::get('academic/minithesis/{nidn}/edit','MiniThesisController@edit')->name('academic.minithesis.edit');
+Route::post('academic/minithesis','MiniThesisController@store')->name('academic.minithesis.store');
+Route::put('academic/minithesis','MiniThesisController@update')->name('academic.minithesis.update');
+Route::delete('academic/minithesis','MiniThesisController@destroy')->name('academic.minithesis.delete');
 
 
 Route::get('/home', 'HomeController@index')->name('home');
