@@ -88,7 +88,7 @@
                         <tr>
                             <td class="text-center">{{ $acv->academicYear->tahun_akademik.' - '.$acv->academicYear->semester }}</td>
                             <td>
-                                <a href="{{route('teacher.profile',encode_id($acv->teacher->nip))}}">
+                                <a href="{{route('teacher.profile',encode_id($acv->teacher->nidn))}}">
                                     {{ $acv->teacher->nama }}<br>
                                     <small>NIDN.{{$acv->teacher->nidn}} / {{$acv->teacher->studyProgram->singkatan}}</small>
                                 </a>

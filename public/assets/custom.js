@@ -1545,7 +1545,7 @@ $(document).ready(function() {
                         html +='<tr>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td>'+
-                                    '<a href="'+base_url+'/teacher/list/'+encode_id(val.teacher.nip)+'">'+
+                                    '<a href="'+base_url+'/teacher/list/'+encode_id(val.teacher.nidn)+'">'+
                                         nama_dsn+'<br>'+
                                         '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
                                     '</a>'+
@@ -2796,6 +2796,105 @@ $(document).ready(function() {
         });
     })
     /*************************************************************************************************/
+
+    /************************************* TUGAS AKHIR ****************************************/
+    $('form#filter-minithesis').submit(function(e){
+        e.preventDefault();
+
+        var cont        = $(this);
+        var btn         = cont.find('button[type=submit]');
+        var tabel       = $('#table-minithesis');
+        var datacon     = cont.serializeArray();
+        var url         = cont.attr('action');
+        var opsi_mahasiswa  = cont.find('select[name=prodi_mahasiswa] option:selected');
+        var opsi_pembimbing = cont.find('select[name=prodi_pembimbing] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+
+        if(opsi_mahasiswa.val()) {
+            var teks = 'Prodi Mahasiswa: '+opsi_mahasiswa.text();
+            $('h6.card-title').text(teks);
+        } else if(opsi_mahasiswa.val()) {
+            var teks = 'Prodi Pembimbing Utama: '+opsi_pembimbing.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+                        var id               = val.id;
+                        var judul            = val.judul;
+                        var nama_mhs         = val.student.nama;
+                        var nim_mhs          = val.student.nim;
+                        var prodi_mhs        = val.student.study_program.singkatan;
+                        var tahun            = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
+                        var nama_utama       = val.pembimbing_utama.nama;
+                        var nidn_utama       = val.pembimbing_utama.nidn;
+                        var nama_pendamping  = val.pembimbing_pendamping.nama;
+                        var nidn_pendamping  = val.pembimbing_pendamping.nidn;
+
+                        html += '<tr>'+
+                                    '<td>'+judul+'</td>'+
+                                    '<td>'+
+                                        nama_mhs+'<br>'+
+                                        '<small>NIM. '+nim_mhs+' / '+prodi_mhs+'</small>'+
+                                    '</td>'+
+                                    '<td class="text-center">'+tahun+'</td>'+
+                                    '<td>'+
+                                        '<a href="'+base_url+'/teacher/list/'+encode_id(nidn_utama)+'">'+
+                                            nama_utama+' ('+nidn_utama+')'+
+                                        '</a>'+
+                                    '</td>'+
+                                    '<td>'+
+                                        '<a href="'+base_url+'/teacher/list/'+encode_id(nidn_pendamping)+'">'+
+                                            nama_pendamping+' ('+nidn_pendamping+')'+
+                                        '</a>'+
+                                    '</td>'+
+                                    '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/academic/minithesis/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="encode_id(id)" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/academic/minithesis">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'+
+                                '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
+    /******************************************************************************************/
 
     /********************************* DATA KATEGORI PUBLIKASI *********************************/
     $('#table-publishCat').on('click','.btn-edit',function(){

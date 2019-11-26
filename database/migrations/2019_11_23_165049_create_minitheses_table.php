@@ -18,12 +18,12 @@ class CreateMinithesesTable extends Migration
             $table->char('nim',10);
             $table->string('judul');
             $table->char('pembimbing_utama',10);
-            $table->char('pembimbing_akademik',10)->nullable();
+            $table->char('pembimbing_pendamping',10)->nullable();
             $table->unsignedInteger('id_ta');
             $table->timestamps();
 
             $table->foreign('pembimbing_utama')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('pembimbing_akademik')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('pembimbing_pendamping')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
         });

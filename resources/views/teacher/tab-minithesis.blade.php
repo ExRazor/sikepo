@@ -20,11 +20,7 @@
                             <tbody>
                                 @foreach ($minithesis as $m)
                                 <tr>
-                                    <td>
-                                        <a href="{{route('academic.minithesis.show',encode_id($m->id))}}">
-                                            {{ $m->judul }}
-                                        </a>
-                                    </td>
+                                    <td>{{ $m->judul }}</td>
                                     <td class="text-center">{{ $m->academicYear->tahun_akademik.' - '.$m->academicYear->semester }}</td>
                                     <td>
                                         <a href="{{route('student.profile',encode_id($m->nim))}}">
@@ -35,7 +31,7 @@
                                         @if($m->pembimbingUtama->nidn == $data->nidn)
                                         Utama
                                         @else
-                                        Akademik
+                                        Pendamping
                                         @endif
                                     </td>
                                 </tr>

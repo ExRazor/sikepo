@@ -26,7 +26,7 @@
         <p class="mg-b-0">Olah Data Tugas Akhir atau Skripsi Mahasiswa</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('output-activity.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
+        <a href="{{ route('academic.minithesis.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tugas Akhir</a>
     </div>
 </div>
 
@@ -41,11 +41,19 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.output-activity.filter')}}" id="filter-outputActivity" method="POST">
+            <form action="{{route('ajax.minithesis.filter')}}" id="filter-minithesis" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Program Studi Mahasiswa -</option>
+                        <select class="form-control" name="prodi_mahasiswa">
+                            <option value="">- Prodi Mahasiswa -</option>
+                            @foreach($studyProgram as $sp)
+                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mg-r-10">
+                        <select class="form-control" name="prodi_pembimbing">
+                            <option value="">- Prodi Pembimbing Utama -</option>
                             @foreach($studyProgram as $sp)
                             <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                             @endforeach
@@ -64,14 +72,14 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table-minithesis" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center" width="500">Judul Tugas Akhir</th>
                             <th class="text-center" width="300">Nama Mahasiswa</th>
                             <th class="text-center defaultSort" width="150">Tahun Diangkat</th>
                             <th class="text-center none">Pembimbing Utama</th>
-                            <th class="text-center none">Pembimbing Akademik</th>
+                            <th class="text-center none">Pembimbing Pendamping</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
@@ -83,7 +91,7 @@
                             </td>
                             <td>
                                 {{$m->student->nama}}<br>
-                                <small>NIM. {{$m->nim}}</small>
+                                <small>NIM. {{$m->nim}} / {{$m->student->studyProgram->singkatan}}</small>
                             </td>
                             <td class="text-center">{{$m->academicYear->tahun_akademik.' - '.$m->academicYear->semester}}</td>
                             <td>
@@ -92,8 +100,8 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="{{route('teacher.profile',encode_id($m->pembimbingAkademik->nidn))}}">
-                                    {{$m->pembimbingAkademik->nama}} ({{$m->pembimbingAkademik->nidn}})
+                                <a href="{{route('teacher.profile',encode_id($m->pembimbingPendamping->nidn))}}">
+                                    {{$m->pembimbingPendamping->nama}} ({{$m->pembimbingPendamping->nidn}})
                                 </a>
                             </td>
                             <td class="text-center" width="50">

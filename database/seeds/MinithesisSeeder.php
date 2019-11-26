@@ -34,7 +34,7 @@ class MinithesisSeeder extends Seeder
                                         ->inRandomOrder()
                                         ->first();
 
-            $pembimbing_akademik = Teacher::where('nidn','!=',$pembimbing_utama->nidn)
+            $pembimbing_pendamping = Teacher::where('nidn','!=',$pembimbing_utama->nidn)
                                     ->inRandomOrder()
                                     ->first();
 
@@ -49,7 +49,7 @@ class MinithesisSeeder extends Seeder
                 ],
                 [
                     'pembimbing_utama'     => $pembimbing_utama->nidn,
-                    'pembimbing_akademik'  => $pembimbing_akademik->nidn,
+                    'pembimbing_pendamping'=> $pembimbing_pendamping->nidn,
                     'judul'                => $judul[array_rand($judul)],
                     'created_at'           => now()
                 ]

@@ -10,7 +10,7 @@ class Minithesis extends Model
         'nim',
         'judul',
         'pembimbing_utama',
-        'pembimbing_akademik',
+        'pembimbing_pendamping',
         'id_ta',
     ];
 
@@ -29,9 +29,9 @@ class Minithesis extends Model
         return $this->belongsTo('App\Teacher','pembimbing_utama');
     }
 
-    public function pembimbingAkademik()
+    public function pembimbingPendamping()
     {
-        return $this->belongsTo('App\Teacher','pembimbing_akademik');
+        return $this->belongsTo('App\Teacher','pembimbing_pendamping');
     }
 
 }

@@ -137,7 +137,7 @@ class TeacherController extends Controller
 
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
-        $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_akademik',$data->nidn)->orderBy('id_ta','desc')->get();
+        $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_pendamping',$data->nidn)->orderBy('id_ta','desc')->get();
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
 
