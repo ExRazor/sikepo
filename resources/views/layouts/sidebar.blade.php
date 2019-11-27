@@ -7,7 +7,7 @@
     </a><!-- br-menu-link -->
   </li>
   <li class="br-menu-item">
-    <a href="{{ route('collaboration') }}" class="br-menu-link {{ (request()->segment(1) == 'collaboration') ? 'active' : '' }}">
+    <a href="{{ route('collaboration') }}" class="br-menu-link {{ (request()->is('collaboration')) ? 'active' : '' }}">
       <i class="menu-item-icon fa fa-handshake"></i>
       <span class="menu-item-label">Kerja Sama</span>
     </a><!-- br-menu-link -->
@@ -18,9 +18,9 @@
           <span class="menu-item-label">Data Dosen</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-          <li class="sub-item"><a href="{{ route('teacher') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Profil Dosen</a></li>
-          <li class="sub-item"><a href="{{ route('teacher.achievement') }}" class="sub-link {{ (request()->segment(2) == 'achievement') ? 'active' : '' }}">Prestasi</a></li>
-          <li class="sub-item"><a href="{{ route('teacher.ewmp') }}" class="sub-link {{ (request()->segment(2) == 'ewmp') ? 'active' : '' }}">EWMP</a></li>
+          <li class="sub-item"><a href="{{ route('teacher') }}" class="sub-link {{ (request()->is('teacher/list*')) ? 'active' : '' }}">Profil Dosen</a></li>
+          <li class="sub-item"><a href="{{ route('teacher.achievement') }}" class="sub-link {{ (request()->is('teacher/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
+          <li class="sub-item"><a href="{{ route('teacher.ewmp') }}" class="sub-link {{ (request()->is('teacher/ewmp*')) ? 'active' : '' }}">EWMP</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -29,10 +29,10 @@
           <span class="menu-item-label">Data Mahasiswa</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-        <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->segment(2) == 'quota') ? 'active' : '' }}">Kuota Mahasiswa</a></li>
-          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Data Mahasiswa</a></li>
-          <li class="sub-item"><a href="{{ route('student.foreign') }}" class="sub-link {{ (request()->segment(2) == 'foreign') ? 'active' : '' }}">Mahasiswa Asing</a></li>
-          <li class="sub-item"><a href="{{ route('student.achievement') }}" class="sub-link {{ (request()->segment(2) == 'achievement') ? 'active' : '' }}">Prestasi</a></li>
+        <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->is('student/quota*')) ? 'active' : '' }}">Kuota Mahasiswa</a></li>
+          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->is('student/list*')) ? 'active' : '' }}">Data Mahasiswa</a></li>
+          <li class="sub-item"><a href="{{ route('student.foreign') }}" class="sub-link {{ (request()->is('student/foreign*')) ? 'active' : '' }}">Mahasiswa Asing</a></li>
+          <li class="sub-item"><a href="{{ route('student.achievement') }}" class="sub-link {{ (request()->is('student/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -41,9 +41,9 @@
             <span class="menu-item-label">Pendidikan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->segment(2) == 'curriculum') ? 'active' : '' }}">Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->segment(2) == 'schedule') ? 'active' : '' }}">Jadwal Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.minithesis') }}" class="sub-link {{ (request()->segment(2) == 'minithesis') ? 'active' : '' }}">Tugas Akhir</a></li>
+            <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->is('academic/curriculum*')) ? 'active' : '' }}">Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Jadwal Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.minithesis') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -64,8 +64,8 @@
             <span class="menu-item-label">Publikasi</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('publication.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Jenis Publikasi</a></li>
-            <li class="sub-item"><a href="{{ route('publication') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Daftar Publikasi</a></li>
+            <li class="sub-item"><a href="{{ route('publication.category') }}" class="sub-link {{ (request()->is('publication/category*')) ? 'active' : '' }}">Jenis Publikasi</a></li>
+            <li class="sub-item"><a href="{{ route('publication') }}" class="sub-link {{ (request()->is('publication/list*')) ? 'active' : '' }}">Daftar Publikasi</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -74,8 +74,8 @@
                 <span class="menu-item-label">Luaran Kegiatan</span>
             </a><!-- br-menu-link -->
             <ul class="br-menu-sub">
-                <li class="sub-item"><a href="{{ route('output-activity.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Kategori Luaran</a></li>
-                <li class="sub-item"><a href="{{ route('output-activity') }}" class="sub-link {{ (request()->segment(2) == 'list') ? 'active' : '' }}">Data Luaran</a></li>
+                <li class="sub-item"><a href="{{ route('output-activity.category') }}" class="sub-link {{ (request()->is('output-activity/category*')) ? 'active' : '' }}">Kategori Luaran</a></li>
+                <li class="sub-item"><a href="{{ route('output-activity') }}" class="sub-link {{ (request()->is('output-activity/list*')) ? 'active' : '' }}">Data Luaran</a></li>
             </ul>
         </li>
     <li class="br-menu-item">
@@ -84,9 +84,9 @@
             <span class="menu-item-label">Keuangan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->segment(2) == 'category') ? 'active' : '' }}">Kategori Dana</a></li>
-            <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Keuangan Fakultas</a></li>
-            <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Keuangan Program Studi</a></li>
+            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->is('funding/category*')) ? 'active' : '' }}">Kategori Dana</a></li>
+            <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->is('funding/faculty*')) ? 'active' : '' }}">Keuangan Fakultas</a></li>
+            <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->is('funding/study-program*')) ? 'active' : '' }}">Keuangan Program Studi</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -95,10 +95,10 @@
             <span class="menu-item-label">Data Master</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('master.academic-year') }}" class="sub-link {{ (request()->segment(2) == 'academic-year') ? 'active' : '' }}">Tahun Akademik</a></li>
-            <li class="sub-item"><a href="{{ route('master.study-program') }}" class="sub-link {{ (request()->segment(2) == 'study-program') ? 'active' : '' }}">Program Studi</a></li>
-            <li class="sub-item"><a href="{{ route('master.department') }}" class="sub-link {{ (request()->segment(2) == 'department') ? 'active' : '' }}">Jurusan</a></li>
-            <li class="sub-item"><a href="{{ route('master.faculty') }}" class="sub-link {{ (request()->segment(2) == 'faculty') ? 'active' : '' }}">Fakultas</a></li>
+            <li class="sub-item"><a href="{{ route('master.academic-year') }}" class="sub-link {{ (request()->is('master/academic-year*')) ? 'active' : '' }}">Tahun Akademik</a></li>
+            <li class="sub-item"><a href="{{ route('master.study-program') }}" class="sub-link {{ (request()->is('master/study-program*')) ? 'active' : '' }}">Program Studi</a></li>
+            <li class="sub-item"><a href="{{ route('master.department') }}" class="sub-link {{ (request()->is('master/department*')) ? 'active' : '' }}">Jurusan</a></li>
+            <li class="sub-item"><a href="{{ route('master.faculty') }}" class="sub-link {{ (request()->is('master/faculty*')) ? 'active' : '' }}">Fakultas</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -107,8 +107,8 @@
             <span class="menu-item-label">Setelan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{route('setting.general')}}" class="sub-link {{ (request()->segment(2) == 'general') ? 'active' : '' }}">Umum</a></li>
-            <li class="sub-item"><a href="#" class="sub-link {{ (request()->segment(2) == 'users') ? 'active' : '' }}">Pengguna</a></li>
+            <li class="sub-item"><a href="{{route('setting.general')}}" class="sub-link {{ (request()->is('setting/general*')) ? 'active' : '' }}">Umum</a></li>
+            <li class="sub-item"><a href="#" class="sub-link {{ (request()->is('setting/users*')) ? 'active' : '' }}">Pengguna</a></li>
         </ul>
     </li>
 </ul><!-- br-sideleft-menu -->
