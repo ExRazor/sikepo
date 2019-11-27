@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Dosen Penanggung Jawab: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Ketua Peneliti: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <select class="form-control select-dsn" name="ketua_nidn" required>
                                         @isset($data)

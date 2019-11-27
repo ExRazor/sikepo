@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Setting;
 use App\Faculty;
 use App\Department;
+use App\Research;
+use App\ResearchTeacher;
+use App\CommunityService;
+use App\CommunityServiceTeacher;
+
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -39,6 +44,10 @@ class SettingController extends Controller
             'app_department_name' => $jurusan->nama,
             'app_faculty_id'      => $jurusan->faculty->id,
             'app_faculty_name'    => $jurusan->faculty->nama,
+            'research_ratio_chief'      => $request->research_ratio_chief,
+            'research_ratio_members'    => $request->research_ratio_members,
+            'service_ratio_chief'       => $request->service_ratio_chief,
+            'service_ratio_members'     => $request->service_ratio_members,
         );
 
         foreach($data as $key => $value) {
@@ -52,6 +61,44 @@ class SettingController extends Controller
             );
         }
 
+        $this->update_sks();
+
         return redirect()->route('setting.general')->with('flash.message', 'Setelan berhasil diubah!')->with('flash.class', 'success');
+    }
+
+    public function update_sks()
+    {
+        $research = Research::all();
+        $service  = CommunityService::all();
+
+        foreach($research as $rs) {
+            $members = ResearchTeacher::where('id_penelitian',$rs->id)->get();
+
+            $sks_ketua      = floatval($rs->sks_penelitian)*setting('research_ratio_chief')/100;
+            $sks_anggota    = floatval($rs->sks_penelitian)*setting('research_ratio_members')/100;
+            foreach($members as $m) {
+                if($m->status=='Ketua') {
+                    $m->sks = $sks_ketua;
+                } else {
+                    $m->sks = $sks_anggota;
+                }
+                $m->save();
+            }
+        }
+
+        foreach($service as $s) {
+            $members = CommunityServiceTeacher::where('id_pengabdian',$s->id)->get();
+
+            $sks_ketua      = floatval($s->sks_pengabdian)*setting('service_ratio_chief')/100;
+            $sks_anggota    = floatval($s->sks_pengabdian)*setting('service_ratio_members')/100;
+            foreach($members as $m) {
+                if($m->status=='Ketua') {
+                    $m->sks = $sks_ketua;
+                } else {
+                    $m->sks = $sks_anggota;
+                }
+                $m->save();
+            }
+        }
     }
 }

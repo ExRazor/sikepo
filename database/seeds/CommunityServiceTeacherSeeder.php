@@ -28,9 +28,9 @@ class CommunityServiceTeacherSeeder extends Seeder
                 if($status=='Ketua' && $anggota==1) {
                     $sks = $cs->sks_pengabdian;
                 } elseif($status=='Ketua' && $anggota>1) {
-                    $sks = $cs->sks_pengabdian * (60/100);
+                    $sks = $cs->sks_pengabdian * (setting('service_ratio_chief')/100);
                 } else {
-                    $sks = $cs->sks_pengabdian * (40/100);
+                    $sks = $cs->sks_pengabdian * (setting('service_ratio_members')/100);
                 }
 
                 DB::table('community_service_teachers')->insert([

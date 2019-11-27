@@ -73,8 +73,8 @@ class CommunityServiceController extends Controller
         $community->save();
 
         //Jumlah SKS
-        $sks_ketua = floatval($request->sks_pengabdian)*60/100;
-        $sks_anggota = floatval($request->sks_pengabdian)*40/100;
+        $sks_ketua      = floatval($request->sks_pengabdian)*setting('service_ratio_chief')/100;
+        $sks_anggota    = floatval($request->sks_pengabdian)*setting('service_ratio_members')/100;
 
         //Tambah Ketua
         $ketua                  = new CommunityServiceTeacher;
@@ -164,8 +164,8 @@ class CommunityServiceController extends Controller
         $community->save();
 
         //Jumlah SKS
-        $sks_ketua   = floatval($request->sks_pengabdian)*60/100;
-        $sks_anggota = floatval($request->sks_pengabdian)*40/100;
+        $sks_ketua      = floatval($request->sks_pengabdian)*setting('service_ratio_chief')/100;
+        $sks_anggota    = floatval($request->sks_pengabdian)*setting('service_ratio_members')/100;
 
         //Update Ketua
         $ketua = CommunityServiceTeacher::where('id_pengabdian',$id)->where('status','Ketua');

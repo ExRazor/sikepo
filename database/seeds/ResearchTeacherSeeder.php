@@ -28,9 +28,9 @@ class ResearchTeacherSeeder extends Seeder
                 if($status=='Ketua' && $anggota==1) {
                     $sks = $r->sks_penelitian;
                 } elseif($status=='Ketua' && $anggota>1) {
-                    $sks = $r->sks_penelitian * (60/100);
+                    $sks = $r->sks_penelitian * (setting('research_ratio_chief')/100);
                 } else {
-                    $sks = $r->sks_penelitian * (40/100);
+                    $sks = $r->sks_penelitian * (setting('research_ratio_members')/100);
                 }
 
                 DB::table('research_teachers')->insert([

@@ -83,7 +83,7 @@
                         <tr>
                             <th class="text-center all" width="600">Judul Pengabdian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Pengabdian</th>
-                            <th class="text-center all" width="250">Penanggung Jawab</th>
+                            <th class="text-center all" width="250">Ketua Pelaksana</th>
                             <th class="text-center none">Tema Pengabdian</th>
                             <th class="text-center none">SKS Pengabdian</th>
                             <th class="text-center none">Dosen Terlibat</th>

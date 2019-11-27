@@ -48,6 +48,26 @@ class SettingSeeder extends Seeder
             'value'  => 'Fakultas Teknik',
             'created_at' => now()
         ],
+        [
+            'name'   => 'research_ratio_chief',
+            'value'  => '60',
+            'created_at' => now()
+        ],
+        [
+            'name'   => 'research_ratio_members',
+            'value'  => '40',
+            'created_at' => now()
+        ],
+        [
+            'name'   => 'service_ratio_chief',
+            'value'  => '60',
+            'created_at' => now()
+        ],
+        [
+            'name'   => 'service_ratio_members',
+            'value'  => '40',
+            'created_at' => now()
+        ],
         ]);
     }
 }

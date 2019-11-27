@@ -75,6 +75,38 @@
                                     </select>
                                 </div>
                             </div>
+                            <hr>
+                            <h4 class="text-center mb-3">Rasio SKS</h4>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label align-items-start pd-t-12">Penelitian:</label>
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" name="research_ratio_chief" value="{{ isset($data) ? $data['research_ratio_chief'] : Request::old('research_ratio_chief')}}" required>
+                                            <small>Rasio SKS Ketua</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" name="research_ratio_members" value="{{ isset($data) ? $data['research_ratio_members'] : Request::old('research_ratio_members')}}" required>
+                                            <small>Rasio SKS Anggota</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label align-items-start pd-t-12">Penelitian:</label>
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" name="service_ratio_chief" value="{{ isset($data) ? $data['service_ratio_chief'] : Request::old('service_ratio_chief')}}" required>
+                                            <small>Rasio SKS Ketua</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control" type="text" name="service_ratio_members" value="{{ isset($data) ? $data['service_ratio_members'] : Request::old('service_ratio_members')}}" required>
+                                            <small>Rasio SKS Anggota</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div><!-- card-body -->

@@ -74,8 +74,8 @@ class ResearchController extends Controller
         $research->save();
 
         //Jumlah SKS
-        $sks_ketua = floatval($request->sks_penelitian)*60/100;
-        $sks_anggota = floatval($request->sks_penelitian)*40/100;
+        $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
+        $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
 
         //Tambah Ketua
         $ketua                  = new ResearchTeacher;
@@ -153,8 +153,8 @@ class ResearchController extends Controller
         $research->save();
 
         //Jumlah SKS
-        $sks_ketua = floatval($request->sks_penelitian)*60/100;
-        $sks_anggota = floatval($request->sks_penelitian)*40/100;
+        $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
+        $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
 
         //Update Ketua
         $ketua = ResearchTeacher::where('id_penelitian',$id)->where('status','Ketua');

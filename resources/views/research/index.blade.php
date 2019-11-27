@@ -83,7 +83,7 @@
                         <tr>
                             <th class="text-center all" width="600">Judul Penelitian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
-                            <th class="text-center all" width="250">Penanggung Jawab</th>
+                            <th class="text-center all" width="250">Ketua Peneliti</th>
                             <th class="text-center none">Tema Penelitian</th>
                             <th class="text-center none">SKS Penelitian</th>
                             <th class="text-center none">Dosen Terlibat</th>
