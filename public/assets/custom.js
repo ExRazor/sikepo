@@ -2595,6 +2595,7 @@ $(document).ready(function() {
                         var sks_praktikum = val.sks_praktikum;
                         var capaian       = val.capaian;
                         var dokumen       = val.dokumen_nama;
+                        var unit          = val.unit_penyelenggara;
 
                         html += '<tr>'+
                                     '<td>'+i+'</td>'+
@@ -2609,6 +2610,7 @@ $(document).ready(function() {
                                     '<td>'+sks_praktikum+'</td>'+
                                     '<td>'+capaian.join(', ')+'</td>'+
                                     '<td>'+dokumen+'</td>'+
+                                    '<td>'+unit+'</td>'+
                                     '<td class="text-center" width="50">'+
                                         '<div class="btn-group" role="group">'+
                                             '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+

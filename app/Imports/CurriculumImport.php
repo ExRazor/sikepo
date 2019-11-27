@@ -34,7 +34,8 @@ class CurriculumImport implements ToModel, WithStartRow
                 'sks_seminar'   => '0',
                 'sks_praktikum' => '0',
                 'capaian'       => explode(', ',$pengetahuan),
-                'dokumen_nama'  => 'RPB - 2017'
+                'dokumen_nama'  => 'RPB - 2017',
+                'unit_penyelenggara'  => 'Program Studi'
             ]
         );
     }

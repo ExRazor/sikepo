@@ -77,6 +77,7 @@ class CurriculumController extends Controller
             'sks_praktikum'     => 'nullable|numeric',
             'capaian'           => 'required',
             'dokumen_nama'      => 'nullable',
+            'unit_penyelenggara'=> 'required',
         ]);
 
         $query                  = new Curriculum;
@@ -91,6 +92,7 @@ class CurriculumController extends Controller
         $query->sks_praktikum   = intval($request->sks_praktikum);
         $query->capaian         = $request->capaian;
         $query->dokumen_nama    = $request->dokumen_nama;
+        $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();
 
         return redirect()->route('academic.curriculum')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
@@ -154,6 +156,7 @@ class CurriculumController extends Controller
             'sks_praktikum'     => 'nullable|numeric',
             'capaian'           => 'required',
             'dokumen_nama'      => 'nullable',
+            'unit_penyelenggara'=> 'required',
         ]);
 
         $query                  = Curriculum::find($id);
@@ -168,6 +171,7 @@ class CurriculumController extends Controller
         $query->sks_praktikum   = intval($request->sks_praktikum);
         $query->capaian         = $request->capaian;
         $query->dokumen_nama    = $request->dokumen_nama;
+        $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();
 
         return redirect()->route('academic.curriculum')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');

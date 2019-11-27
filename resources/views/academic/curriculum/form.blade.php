@@ -160,6 +160,18 @@
                                     <input class="form-control" type="text" name="dokumen_nama" value="{{ isset($data) ? $data->dokumen_nama : Request::old('dokumen_nama')}}" placeholder="Masukkan nama dokumen rencana pembelajaran">
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label class="col-3 form-control-label">Unit Penyelenggara: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <select class="form-control" name="unit_penyelenggara" required>
+                                        <option value="">- Pilih Unit Penyelenggara -</option>
+                                        <option value="Program Studi" {{ (isset($data) && $data->unit_penyelenggara == 'Program Studi') ? 'selected' : '' }}>Program Studi</option>
+                                        <option value="Jurusan" {{ (isset($data) && $data->unit_penyelenggara == 'Jurusan') ? 'selected' : '' }}>Jurusan</option>
+                                        <option value="Fakultas" {{ (isset($data) && $data->unit_penyelenggara == 'Fakultas') ? 'selected' : '' }}>Fakultas</option>
+                                        <option value="Universitas" {{ (isset($data) && $data->unit_penyelenggara == 'Universitas') ? 'selected' : '' }}>Universitas</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div><!-- card-body -->

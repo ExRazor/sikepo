@@ -110,6 +110,7 @@
                             <th class="text-center none">SKS Praktikum</th>
                             <th class="text-center none">Capaian Pembelajaran</th>
                             <th class="text-center none">Dokumen Rencana Pembelajaran</th>
+                            <th class="text-center none">Unit Penyelenggara</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
@@ -128,6 +129,7 @@
                                 <td>{{$c->sks_praktikum}}</td>
                                 <td>{!! implode(', ',$c->capaian) !!}</td>
                                 <td>{{$c->dokumen_nama}}</td>
+                                <td>{{$c->unit_penyelenggara}}</td>
                                 <td class="text-center" width="50">
                                     <div class="btn-group" role="group">
                                         <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

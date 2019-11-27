@@ -22,6 +22,7 @@ class Curriculum extends Model
         'sks_praktikum',
         'capaian',
         'dokumen_nama',
+        'unit_penyelenggara',
     ];
 
     public function studyProgram()

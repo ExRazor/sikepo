@@ -25,6 +25,7 @@ class CreateCurriculaTable extends Migration
             $table->integer('sks_praktikum')->nullable();
             $table->text('capaian')->nullable();
             $table->string('dokumen_nama')->nullable();
+            $table->string('unit_penyelenggara')->nullable();
             $table->timestamps();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
