@@ -11,7 +11,8 @@ class TeacherAchievement extends Model
         'id_ta',
         'prestasi',
         'tingkat_prestasi',
-        'bukti_pendukung',
+        'bukti_nama',
+        'bukti_file',
     ];
 
     public function teacher()

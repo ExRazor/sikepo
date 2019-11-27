@@ -64,7 +64,8 @@ class CollaborationController extends Controller
             'manfaat_kegiatan'  => 'required',
             'waktu'             => 'required',
             'durasi'            => 'required',
-            'bukti'             => 'required',
+            'bukti_nama'        => 'required',
+            'bukti_file'        => 'required',
         ]);
 
         $collaboration = new Collaboration;
@@ -75,15 +76,16 @@ class CollaborationController extends Controller
         $collaboration->judul_kegiatan   = $request->judul_kegiatan;
         $collaboration->manfaat_kegiatan = $request->manfaat_kegiatan;
         $collaboration->waktu            = $request->waktu;
-        $collaboration->durasi            = $request->durasi;
+        $collaboration->durasi           = $request->durasi;
+        $collaboration->bukti_nama       = $request->bukti_nama;
 
-        if($request->file('bukti')) {
-            $file = $request->file('bukti');
+        if($request->file('bukti_file')) {
+            $file = $request->file('bukti_file');
             $tgl_skrg = date('Y_m_d_H_i_s');
             $tujuan_upload = 'upload/collaboration';
             $filename = $request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
-            $collaboration->bukti = $filename;
+            $collaboration->bukti_file = $filename;
         }
 
         $collaboration->save();
@@ -140,18 +142,19 @@ class CollaborationController extends Controller
         $collaboration->manfaat_kegiatan = $request->manfaat_kegiatan;
         $collaboration->waktu            = $request->waktu;
         $collaboration->durasi           = $request->durasi;
+        $collaboration->bukti_nama       = $request->bukti_nama;
 
         //Upload File
-        $storagePath = 'upload/collaboration/'.$collaboration->bukti;
-        if($request->file('bukti')) {
+        $storagePath = 'upload/collaboration/'.$collaboration->bukti_file;
+        if($request->file('bukti_file')) {
             File::delete($storagePath);
 
-            $file = $request->file('bukti');
+            $file = $request->file('bukti_file');
             $tgl_skrg = date('Y_m_d_H_i_s');
             $tujuan_upload = 'upload/collaboration';
             $filename = $request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
-            $collaboration->bukti = $filename;
+            $collaboration->bukti_file = $filename;
         }
 
         $collaboration->save();

@@ -57,9 +57,19 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Bukti Prestasi:</label>
                         <div class="col-sm-8">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="bukti_pendukung" id="bukti_pendukung" {{ isset($data) ? '' : 'required'}}>
-                                <label class="custom-file-label custom-file-label-primary" for="bukti_pendukung">Pilih fail</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="bukti_nama" placeholder="Tuliskan jenis bukti prestasi" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="bukti_file" id="bukti_file" {{ isset($data) ? '' : 'required'}}>
+                                        <label class="custom-file-label custom-file-label-primary" for="bukti_file">Pilih fail</label>
+                                    </div>
+                                    <small class="w-100">
+                                        Berkas harap dikemas dalam 1 PDF.
+                                    </small>
+                                </div>
                             </div>
                         </div>
                     </div>

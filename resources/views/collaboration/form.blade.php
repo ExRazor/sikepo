@@ -124,25 +124,37 @@
                                 <textarea rows="3" class="form-control" name="manfaat_kegiatan" placeholder="Tuliskan manfaat kegiatan" required>{{ isset($data) ? $data->manfaat_kegiatan : Request::old('manfaat_kegiatan')}}</textarea>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="form-group mg-b-10-force">
+                        <div class="col-lg-6">
+                            <div class="form-group">
                                 <label class="form-control-label">Waktu Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <input class="form-control datepicker" type="text" name="waktu" value="{{ isset($data) ? $data->waktu : Request::old('waktu')}}" placeholder="Tuliskan waktu pelaksanaan" required>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="form-group mg-b-10-force">
+                        <div class="col-lg-6">
+                            <div class="form-group">
                                 <label class="form-control-label">Durasi Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="durasi" value="{{ isset($data) ? $data->durasi : Request::old('durasi')}}" placeholder="Tuliskan lama durasi kegiatan" required>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <div class="form-group mg-b-10-force">
-                                <label class="form-control-label">Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label">Jenis Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <input class="form-control" type="text" name="bukti_nama" value="{{ isset($data) ? $data->bukti_nama : Request::old('bukti_nama')}}" placeholder="Tuliskan lama durasi kegiatan" required>
+                                <small class="w-100">
+                                    Bukti kerja sama dapat berupa Surat Penugasan, Surat Perjanjian Kerja Sama (SPK), bukti-bukti pelaksanaan (laporan, hasil kerja sama, luaran kerja sama), atau bukti lain yang relevan. Dokumen Memorandum of Understanding (MoU), Memorandum of Agreement (MoA) atau dokumen sejenis yang memayungi pelaksanaan kerja sama tidak dapat dijadikan bukti realisasi kerja sama.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">Berkas Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="bukti" {{ isset($data) ? '' : 'required'}}>
+                                    <input type="file" class="custom-file-input" name="bukti_file" {{ isset($data) ? '' : 'required'}}>
                                     <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">Pilih fail</label>
                                 </div>
+                                <small class="w-100">
+                                    Jika berkas bukti lebih dari satu, mohon filenya dirangkum dalam bentuk 1 file PDF kemudian diunggah.
+                                </small>
                             </div>
                         </div>
                     </div>

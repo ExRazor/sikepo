@@ -81,9 +81,9 @@ $(document).ready(function() {
     $('.modal').on('hidden.bs.modal', function () {
         $(this).find('form').trigger('reset');
         $('.alert-danger').hide();
-        $('input, select').removeClass('is-invalid');
         $(this).find('input[name^=_id]').removeAttr('value');
         $(this).find('select').val(null).trigger('change');
+        $('.is-invalid').removeClass('is-invalid');
     })
 
     function rupiah(bilangan){
@@ -1477,6 +1477,7 @@ $(document).ready(function() {
                     .find('input[name=_id]').val(id).end()
                     .find('input[name=prestasi]').val(data.prestasi).end()
                     .find('select[name=id_ta]').append(option_ta).trigger('change').end()
+                    .find('input[name=bukti_nama]').val(data.bukti_nama).end()
 
                 if($('#modal-teach-acv').find('select[name=nidn]').length) {
                     $('#selectProdi').attr('data-nidn',data.nidn);

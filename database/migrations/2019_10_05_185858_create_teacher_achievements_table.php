@@ -19,7 +19,8 @@ class CreateTeacherAchievementsTable extends Migration
             $table->unsignedInteger('id_ta');
             $table->string('prestasi');
             $table->enum('tingkat_prestasi',['Wilayah','Nasional','Internasional']);
-            $table->string('bukti_pendukung');
+            $table->string('bukti_nama');
+            $table->string('bukti_file');
             $table->timestamps();
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');

@@ -92,7 +92,9 @@
                             <td>{{$d->waktu}}</td>
                             <td>{{$d->durasi}}</td>
                             <td class="text-center" width="75">
-                                <a href="{{ route('collaboration.download',encode_id($d->bukti)) }}" target="_blank"><div><i class="fa fa-download"></i></div></a>
+                                <a href="{{ route('collaboration.download',encode_id($d->bukti)) }}" target="_blank">
+                                    {{$d->bukti_nama}}
+                                </a>
                             </td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">

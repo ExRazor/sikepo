@@ -11,7 +11,7 @@
             </div>
             <div class="row">
                 <div class="bd rounded table-responsive">
-                    <table class="table datatable table-bordered mb-0">
+                    <table id="table_teacherAcv" class="table datatable table-bordered mb-0">
                         <thead>
                             <tr>
                                 <th class="text-center align-middle">Prestasi</th>
@@ -28,7 +28,9 @@
                                 <td>{{ $acv->tingkat_prestasi }}</td>
                                 <td>{{ $acv->academicYear->tahun_akademik.' - '.$acv->academicYear->semester }}</td>
                                 <td class="text-center align-middle">
-                                    <a href="{{route('teacher.achievement.download',encrypt($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
+                                    <a href="{{route('teacher.achievement.download',encode_id($acv->bukti_file))}}" target="_blank">
+                                        {{$acv->bukti_nama}}
+                                    </a>
                                 </td>
                                 <td width="50">
                                     <div class="btn-group" role="group">
@@ -36,9 +38,9 @@
                                             <div><span class="fa fa-caret-down"></span></div>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <a class="dropdown-item btn-edit btn-edit-acv" href="#" data-id="{{ encrypt($acv->id) }}">Sunting</a>
+                                            <button class="dropdown-item btn-edit" href="#" data-id="{{ encode_id($acv->id) }}">Sunting</button>
                                             <form method="POST">
-                                                <input type="hidden" value="{{encrypt($acv->id)}}" name="_id">
+                                                <input type="hidden" value="{{encode_id($acv->id)}}" name="_id">
                                                 <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.delete') }}">Hapus</a>
                                             </form>
                                         </div>

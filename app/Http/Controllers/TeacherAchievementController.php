@@ -31,7 +31,8 @@ class TeacherAchievementController extends Controller
                 'id_ta'             => 'required',
                 'prestasi'          => 'required',
                 'tingkat_prestasi'  => 'required',
-                'bukti_pendukung'   => 'required',
+                'bukti_nama'        => 'required',
+                'bukti_file'        => 'required',
             ]);
 
             $acv                    = new TeacherAchievement;
@@ -39,13 +40,14 @@ class TeacherAchievementController extends Controller
             $acv->id_ta             = $request->id_ta;
             $acv->prestasi          = $request->prestasi;
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
+            $acv->bukti_nama        = $request->bukti_nama;
 
-            if($file = $request->file('bukti_pendukung')) {
+            if($file = $request->file('bukti_file')) {
                 $tgl_skrg = date('Y_m_d_H_i_s');
                 $tujuan_upload = 'upload/teacher-achievement';
                 $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
                 $file->move($tujuan_upload,$filename);
-                $acv->bukti_pendukung = $filename;
+                $acv->bukti_file = $filename;
             }
 
             $q = $acv->save();
@@ -87,6 +89,7 @@ class TeacherAchievementController extends Controller
                 'id_ta'             => 'required',
                 'prestasi'          => 'required',
                 'tingkat_prestasi'  => 'required',
+                'bukti_nama'        => 'required',
             ]);
 
             $acv                    = TeacherAchievement::find($id);
@@ -94,9 +97,10 @@ class TeacherAchievementController extends Controller
             $acv->id_ta             = $request->id_ta;
             $acv->prestasi          = $request->prestasi;
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
+            $acv->bukti_nama        = $request->bukti_nama;
 
-            $storagePath = 'upload/teacher-achievement/'.$acv->bukti_pendukung;
-            if($file = $request->file('bukti_pendukung')) {
+            $storagePath = 'upload/teacher-achievement/'.$acv->bukti_file;
+            if($file = $request->file('bukti_file')) {
 
                 if(File::exists($storagePath)) {
                     File::delete($storagePath);
@@ -106,7 +110,7 @@ class TeacherAchievementController extends Controller
                 $tujuan_upload = 'upload/teacher-achievement';
                 $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
                 $file->move($tujuan_upload,$filename);
-                $acv->bukti_pendukung = $filename;
+                $acv->bukti_file = $filename;
             }
 
             $q = $acv->save();

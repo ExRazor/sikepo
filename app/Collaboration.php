@@ -15,7 +15,8 @@ class Collaboration extends Model
                             'manfaat_kegiatan',
                             'waktu',
                             'durasi',
-                            'bukti',
+                            'bukti_nama',
+                            'bukti_file',
                         ];
 
     public function studyProgram()

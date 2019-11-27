@@ -33,13 +33,14 @@ class TeacherAchievementSeeder extends Seeder
             $nidn = Teacher::all()->random()->nidn;
             for($j = 0; $j < 5; $j++){
                 DB::table('teacher_achievements')->insert([
-                    'nidn'                  => $nidn,
-                    'id_ta'                 => AcademicYear::all()->random()->id,
-                    'prestasi'              => $prestasi[array_rand($prestasi)],
-                    'tingkat_prestasi'      => $tingkat[array_rand($tingkat)],
+                    'nidn'              => $nidn,
+                    'id_ta'             => AcademicYear::all()->random()->id,
+                    'prestasi'          => $prestasi[array_rand($prestasi)],
+                    'tingkat_prestasi'  => $tingkat[array_rand($tingkat)],
                     // 'tanggal'               => $faker->dateTimeBetween($startDate = '-5 years', $endDate = 'now', $timezone = 'Asia/Singapore'),
-                    'bukti_pendukung'       => 'hehe.jpg',
-                    'created_at' => now()
+                    'bukti_nama'        => 'Sertifikat',
+                    'bukti_file'        => 'hehe.jpg',
+                    'created_at'        => now()
                 ]);
             }
         }

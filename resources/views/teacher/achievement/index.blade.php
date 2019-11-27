@@ -96,7 +96,9 @@
                             <td>{{ $acv->prestasi }}</td>
                             <td>{{ $acv->tingkat_prestasi }}</td>
                             <td class="text-center align-middle">
-                                <a href="{{route('teacher.achievement.download',encode_id($acv->bukti_pendukung))}}" target="_blank"><div><i class="fa fa-download"></i></div></a>
+                                <a href="{{route('teacher.achievement.download',encode_id($acv->bukti_file))}}" target="_blank">
+                                    {{$acv->bukti_nama}}
+                                </a>
                             </td>
                             <td width="50" class="text-center">
                                 <div class="btn-group" role="group">

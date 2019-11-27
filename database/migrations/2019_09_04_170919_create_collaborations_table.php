@@ -23,7 +23,8 @@ class CreateCollaborationsTable extends Migration
             $table->text('manfaat_kegiatan');
             $table->date('waktu');
             $table->string('durasi');
-            $table->string('bukti');
+            $table->string('bukti_nama');
+            $table->string('bukti_file');
             $table->timestamps();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

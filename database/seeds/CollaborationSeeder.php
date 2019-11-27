@@ -23,7 +23,8 @@ class CollaborationSeeder extends Seeder
                 'manfaat_kegiatan' => 'Pengalaman kerja',
                 'waktu' => '2018/12/15',
                 'durasi' => '45 hari',
-                'bukti' => 'bukti-1.pdf',
+                'bukti_nama' => 'MoU',
+                'bukti_file' => 'bukti-1.pdf',
                 'created_at' => now()
             ],
             [
@@ -35,7 +36,8 @@ class CollaborationSeeder extends Seeder
                 'manfaat_kegiatan' => 'Pengalaman kerja',
                 'waktu' => '2018/07/07',
                 'durasi' => '45 hari',
-                'bukti' => 'bukti-2.pdf',
+                'bukti_nama' => 'Surat Perjanjian Kerjasama',
+                'bukti_file' => 'bukti-2.pdf',
                 'created_at' => now()
             ],
         ]);
