@@ -84,6 +84,7 @@
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
                                         @endif
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Tugas Akhir</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#community-service" role="tab">Pengabdian</a></li>
                                     </ul>
@@ -94,9 +95,10 @@
                             <div class="tab-content">
                                 @include('student.tab-profile')
                                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-                                @include('student.tab-status')
-                                @include('student.tab-achievement')
-                                @endif
+                                    @include('student.tab-status')
+                                    @include('student.tab-achievement')
+                                    @endif
+                                @include('student.tab-minithesis')
                                 @include('student.tab-research')
                                 @include('student.tab-service')
                             </div>

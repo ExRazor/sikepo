@@ -2850,8 +2850,10 @@ $(document).ready(function() {
                         html += '<tr>'+
                                     '<td>'+judul+'</td>'+
                                     '<td>'+
-                                        nama_mhs+'<br>'+
-                                        '<small>NIM. '+nim_mhs+' / '+prodi_mhs+'</small>'+
+                                        '<a href="'+base_url+'/student/list/'+encode_id(nim_mhs)+'">'+
+                                            nama_mhs+'<br>'+
+                                            '<small>NIM. '+nim_mhs+' / '+prodi_mhs+'</small>'+
+                                        '</a>'+
                                     '</td>'+
                                     '<td class="text-center">'+tahun+'</td>'+
                                     '<td>'+

@@ -90,8 +90,10 @@
                                 {{$m->judul}}
                             </td>
                             <td>
-                                {{$m->student->nama}}<br>
-                                <small>NIM. {{$m->nim}} / {{$m->student->studyProgram->singkatan}}</small>
+                                <a href="{{route('student.profile',encode_id($m->student->nim))}}">
+                                    {{$m->student->nama}}<br>
+                                    <small>NIM. {{$m->nim}} / {{$m->student->studyProgram->singkatan}}</small>
+                                </a>
                             </td>
                             <td class="text-center">{{$m->academicYear->tahun_akademik.' - '.$m->academicYear->semester}}</td>
                             <td>

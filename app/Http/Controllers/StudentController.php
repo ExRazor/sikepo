@@ -11,6 +11,7 @@ use App\Research;
 use App\CommunityService;
 use App\Imports\StudentImport;
 use App\StudentAchievement;
+use App\Minithesis;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use File;
@@ -131,11 +132,12 @@ class StudentController extends Controller
     {
         $id = decode_id($id);
 
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $data       = Student::with('studyProgram','studentForeign')->where('nim',$id)->first();
         $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
         $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
         $achievement = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
-        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $minithesis = Minithesis::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
 
         if($status){
             if($status->status == 'Aktif') {
@@ -163,7 +165,7 @@ class StudentController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
-        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','research','service']));
+        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','minithesis','research','service']));
     }
 
     /**
