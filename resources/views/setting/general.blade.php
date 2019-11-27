@@ -93,7 +93,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label align-items-start pd-t-12">Penelitian:</label>
+                                <label class="col-3 form-control-label align-items-start pd-t-12">Pengabdian:</label>
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-6">
