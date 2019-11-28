@@ -7,79 +7,112 @@ use Illuminate\Http\Request;
 
 class SatisfactionCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $category = SatisfactionCategory::orderBy('jenis','desc')->orderBy('id','asc')->get();
+
+        return view('master/satisfaction-category/index',compact(['category']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        if(request()->ajax()) {
+
+            $request->validate([
+                'jenis'      => 'required',
+                'nama'       => 'required',
+                'alias'      => 'nullable',
+                'deskripsi'  => 'nullable',
+            ]);
+
+            $data               = new SatisfactionCategory;
+            $data->jenis        = $request->jenis;
+            $data->nama         = $request->nama;
+            $data->alias        = $request->alias;
+            $data->deskripsi    = $request->deskripsi;
+            $q = $data->save();
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menyimpan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\SatisfactionCategory  $satisfactionCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SatisfactionCategory $satisfactionCategory)
+    public function edit($id)
     {
-        //
+        if(request()->ajax()) {
+            $id   = decrypt($id);
+            $data = SatisfactionCategory::find($id);
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\SatisfactionCategory  $satisfactionCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SatisfactionCategory $satisfactionCategory)
+    public function update(Request $request)
     {
-        //
+        if(request()->ajax()) {
+
+            $id = decrypt($request->id);
+
+            $request->validate([
+                'jenis'      => 'required',
+                'nama'       => 'required',
+                'alias'      => 'nullable',
+                'deskripsi'  => 'nullable',
+            ]);
+
+            $data               = SatisfactionCategory::find($id);
+            $data->jenis        = $request->jenis;
+            $data->nama         = $request->nama;
+            $data->alias        = $request->alias;
+            $data->deskripsi    = $request->deskripsi;
+            $q = $data->save();
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menyimpan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil diubah',
+                    'type'    => 'success'
+                ]);
+            }
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SatisfactionCategory  $satisfactionCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, SatisfactionCategory $satisfactionCategory)
+    public function destroy(Request $request)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\SatisfactionCategory  $satisfactionCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(SatisfactionCategory $satisfactionCategory)
-    {
-        //
+        if(request()->ajax()) {
+            $id = decrypt($request->_id);
+            $q  = SatisfactionCategory::destroy($id);
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
+        }
     }
 }

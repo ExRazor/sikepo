@@ -44,5 +44,6 @@ class DatabaseSeeder extends Seeder
         $this->call(OutputActivitySeeder::class);
         $this->call(MinithesisSeeder::class);
         $this->call(CurriculumIntegrationSeeder::class);
+        $this->call(SatisfactionCategorySeeder::class);
     }
 }

@@ -337,6 +337,22 @@ Breadcrumbs::for('faculty', function ($trail) {
     $trail->push('Fakultas', route('master.faculty'));
 });
 
+// Data Master > Kategori Kepuasan
+Breadcrumbs::for('satisfaction-category', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Aspek Kepuasan', route('master.satisfaction-category'));
+});
+
+Breadcrumbs::for('satisfaction-category-add', function ($trail) {
+    $trail->parent('satisfaction-category');
+    $trail->push('Tambah Aspek Kepuasan');
+});
+
+Breadcrumbs::for('satisfaction-category-edit', function ($trail) {
+    $trail->parent('satisfaction-category');
+    $trail->push('Sunting Aspek Kepuasan');
+});
+
 // Setelan
 Breadcrumbs::for('setting', function ($trail) {
     $trail->parent('dashboard');

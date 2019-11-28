@@ -3123,5 +3123,33 @@ $(document).ready(function() {
         }).end()
     /****************************************************************************************/
 
+    /********************************* DATA KATEGORI LUARAN *********************************/
+    $('#table-satisfactionCategory').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/ajax/satisfaction-category/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#form-satisfactionCategory')
+                    .find('input[name=id]').val(id).end()
+                    .find('select[name=jenis]').val(data.jenis).end()
+                    .find('input[name=nama]').val(data.nama).end()
+                    .find('input[name=alias]').val(data.alias).end()
+                    .find('textarea[name=deskripsi]').val(data.deskripsi).end()
+            }
+        });
+    })
+
+    $('#form-satisfactionCategory')
+        .on('click','.btn-add',function(e){
+            var form  = $('#form-satisfactionCategory')
+            form.trigger('reset');
+        }).end()
+    /****************************************************************************************/
+
 
 });

@@ -15,7 +15,10 @@ class CreateSatisfactionCategoriesTable extends Migration
     {
         Schema::create('satisfaction_categories', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('jenis');
             $table->string('nama');
+            $table->string('alias')->nullable();
+            $table->string('deskripsi')->nullable();
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-boxes"></i>
+    <i class="icon fa fa-journal-whills"></i>
     <div>
         <h4>Tugas Akhir</h4>
         <p class="mg-b-0">Olah Data Tugas Akhir atau Skripsi Mahasiswa</p>

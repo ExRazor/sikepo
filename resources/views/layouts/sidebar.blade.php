@@ -100,6 +100,7 @@
             <li class="sub-item"><a href="{{ route('master.study-program') }}" class="sub-link {{ (request()->is('master/study-program*')) ? 'active' : '' }}">Program Studi</a></li>
             <li class="sub-item"><a href="{{ route('master.department') }}" class="sub-link {{ (request()->is('master/department*')) ? 'active' : '' }}">Jurusan</a></li>
             <li class="sub-item"><a href="{{ route('master.faculty') }}" class="sub-link {{ (request()->is('master/faculty*')) ? 'active' : '' }}">Fakultas</a></li>
+            <li class="sub-item"><a href="{{ route('master.satisfaction-category') }}" class="sub-link {{ (request()->is('master/satisfaction-category*')) ? 'active' : '' }}">Aspek Kepuasan</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

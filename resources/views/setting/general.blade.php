@@ -82,11 +82,21 @@
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-6">
-                                            <input class="form-control" type="text" name="research_ratio_chief" value="{{ isset($data) ? $data['research_ratio_chief'] : Request::old('research_ratio_chief')}}" required>
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="research_ratio_chief" value="{{ isset($data) ? $data['research_ratio_chief'] : Request::old('research_ratio_chief')}}" required>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
                                             <small>Rasio SKS Ketua</small>
                                         </div>
                                         <div class="col-6">
-                                            <input class="form-control" type="text" name="research_ratio_members" value="{{ isset($data) ? $data['research_ratio_members'] : Request::old('research_ratio_members')}}" required>
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="research_ratio_members" value="{{ isset($data) ? $data['research_ratio_members'] : Request::old('research_ratio_members')}}" required>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
                                             <small>Rasio SKS Anggota</small>
                                         </div>
                                     </div>
@@ -97,11 +107,21 @@
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-6">
-                                            <input class="form-control" type="text" name="service_ratio_chief" value="{{ isset($data) ? $data['service_ratio_chief'] : Request::old('service_ratio_chief')}}" required>
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="service_ratio_chief" value="{{ isset($data) ? $data['service_ratio_chief'] : Request::old('service_ratio_chief')}}" required>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
                                             <small>Rasio SKS Ketua</small>
                                         </div>
                                         <div class="col-6">
-                                            <input class="form-control" type="text" name="service_ratio_members" value="{{ isset($data) ? $data['service_ratio_members'] : Request::old('service_ratio_members')}}" required>
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="service_ratio_members" value="{{ isset($data) ? $data['service_ratio_members'] : Request::old('service_ratio_members')}}" required>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
                                             <small>Rasio SKS Anggota</small>
                                         </div>
                                     </div>

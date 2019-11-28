@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-boxes"></i>
+    <i class="icon fa fa-link"></i>
     <div>
         <h4>Integrasi Kurikulum</h4>
         <p class="mg-b-0">Integrasi Kegiatan Penelitian/Pengabdian dalam Pembelajaran</p>

@@ -55,6 +55,12 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::post('study-program', 'StudyProgramController@store')->name('study-program.store');
     Route::put('study-program','StudyProgramController@update')->name('study-program.update');
     Route::delete('study-program','StudyProgramController@destroy')->name('study-program.delete');
+
+    //Aspek Kepuasan
+    Route::get('satisfaction-category', 'SatisfactionCategoryController@index')->name('satisfaction-category');
+    Route::post('satisfaction-category', 'SatisfactionCategoryController@store')->name('satisfaction-category.store');
+    Route::put('satisfaction-category','SatisfactionCategoryController@update')->name('satisfaction-category.update');
+    Route::delete('satisfaction-category','SatisfactionCategoryController@destroy')->name('satisfaction-category.delete');
 });
 
 //Setting
@@ -84,6 +90,9 @@ Route::prefix('ajax')->group(function () {
     Route::post('study-program/show','StudyProgramController@show' );
     Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('ajax.study-program.filter');
     Route::get('study-program/loadData','StudyProgramController@loadData')->name('ajax.study-program.load');
+
+    //Program Studi
+    Route::get('satisfaction-category/{id}','SatisfactionCategoryController@edit')->name('ajax.satisfaction-category.edit');
 
     //Kerja Sama
     Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('ajax.collaboration.filter');
