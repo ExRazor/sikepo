@@ -34,4 +34,9 @@ class Curriculum extends Model
     {
         return $this->hasMany('App\CurriculumSchedule','kd_matkul');
     }
+
+    public function curriculumIntegration()
+    {
+        return $this->hasMany('App\CurriculumIntegration','kd_matkul');
+    }
 }

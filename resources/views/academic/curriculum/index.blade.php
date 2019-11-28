@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Penelitian')
+@section('title', 'Data Kurikulum')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">

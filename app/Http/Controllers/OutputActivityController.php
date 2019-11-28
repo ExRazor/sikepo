@@ -28,11 +28,6 @@ class OutputActivityController extends Controller
         return view('output-activity.show',compact(['data','category']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $category   = OutputActivityCategory::all();
@@ -40,12 +35,6 @@ class OutputActivityController extends Controller
         return view('output-activity.form',compact(['category']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -71,12 +60,6 @@ class OutputActivityController extends Controller
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\OutputActivity  $outputActivity
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $id = decode_id($id);
@@ -86,13 +69,6 @@ class OutputActivityController extends Controller
         return view('output-activity.form',compact(['category','data']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\OutputActivity  $outputActivity
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id = decrypt($request->id);

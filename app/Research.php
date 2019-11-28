@@ -41,22 +41,8 @@ class Research extends Model
         return $this->hasMany('App\ResearchStudent','id_penelitian');
     }
 
-    // public function scopeKetuaPenelitian($query, $jurusan = null)
-    // {
-    //    return $query->whereHas('researchTeacher', function($q1) use($jurusan) {
-    //         $q1->where('status','Ketua');
-    //         if($jurusan) {
-    //             $q1->whereHas('teacher.studyProgram', function($q2) use($jurusan) {
-    //                 return $q2->where('kd_jurusan', $jurusan);
-    //             });
-    //         }
-    //    });
-    // }
-
-    // public function scopeAnggotaPenelitian($query)
-    // {
-    //    return $query->whereHas('researchTeacher', function($q) {
-    //         $q->where('status', 'Anggota');
-    //    });
-    // }
+    public function curriculumIntegration()
+    {
+        return $this->hasMany('App\CurriculumIntegration','id_penelitian');
+    }
 }

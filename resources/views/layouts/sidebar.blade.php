@@ -43,6 +43,7 @@
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->is('academic/curriculum*')) ? 'active' : '' }}">Kurikulum</a></li>
             <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Jadwal Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.integration') }}" class="sub-link {{ (request()->is('academic/integration*')) ? 'active' : '' }}">Integrasi Kurikulum</a></li>
             <li class="sub-item"><a href="{{ route('academic.minithesis') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
         </ul>
     </li>

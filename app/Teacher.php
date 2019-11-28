@@ -73,4 +73,9 @@ class Teacher extends Model
     {
         return $this->hasMany('App\Minithesis','pembimbing_akademik');
     }
+
+    public function curriculumIntegration()
+    {
+        return $this->hasMany('App\CurriculumIntegration','nidn');
+    }
 }

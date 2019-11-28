@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', isset($data) ? 'Sunting Mata Kuliah' : 'Tambah Mata Kuliah')
+@section('title', isset($data) ? 'Sunting Kurikulum' : 'Tambah Kurikulum')
 
 @section('content')
 <div class="br-pageheader">
@@ -20,12 +20,12 @@
         @if(isset($data))
         <div>
             <h4>Sunting</h4>
-            <p class="mg-b-0">Sunting Mata Kuliah</p>
+            <p class="mg-b-0">Sunting Kurikulum</p>
         </div>
         @else
         <div>
             <h4>Tambah</h4>
-            <p class="mg-b-0">Tambah Mata Kuliah</p>
+            <p class="mg-b-0">Tambah Kurikulum</p>
         </div>
         @endif
     </div>

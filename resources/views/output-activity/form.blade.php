@@ -47,7 +47,7 @@
         <div class="col-9">
             <div class="widget-2">
                 <div class="card mb-3">
-                    <form id="communityService_form" action="{{route('output-activity.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                    <form id="outputActivity_form" action="{{route('output-activity.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                         <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                             <div class="row">
                                 <div class="col-12 mx-auto">
@@ -94,13 +94,16 @@
                                     <div class="row mb-3">
                                         <label class="col-3 form-control-label">Judul Kegiatan: <span class="tx-danger">*</span></label>
                                         <div class="col-8">
-                                            <select class="form-control select-activity" required>
-                                                @isset($data)
-                                                <option value="{{isset($data->id_penelitian) ? $data->id_penelitian : $data->id_pengabdian}}">
-                                                    {{isset($data->id_penelitian) ? $data->research->judul_penelitian : $data->communityService->judul_pengabdian}}
-                                                </option>
-                                                @endisset
-                                            </select>
+                                            <div id="pilihJudulKegiatan" class="parsley-select">
+                                                <select class="form-control select-activity" data-parsley-class-handler="#pilihJudulKegiatan" data-parsley-errors-container="#errorsPilihJudulKegiatan" required>
+                                                    @isset($data)
+                                                    <option value="{{isset($data->id_penelitian) ? $data->id_penelitian : $data->id_pengabdian}}">
+                                                        {{isset($data->id_penelitian) ? $data->research->judul_penelitian : $data->communityService->judul_pengabdian}}
+                                                    </option>
+                                                    @endisset
+                                                </select>
+                                                <div id="errorsPilihJudulKegiatan"></div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">

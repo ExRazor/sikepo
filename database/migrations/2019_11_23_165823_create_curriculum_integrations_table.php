@@ -15,6 +15,7 @@ class CreateCurriculumIntegrationsTable extends Migration
     {
         Schema::create('curriculum_integrations', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('id_ta');
             $table->unsignedInteger('id_penelitian')->nullable();
             $table->unsignedInteger('id_pengabdian')->nullable();
             $table->string('kegiatan');
@@ -23,6 +24,7 @@ class CreateCurriculumIntegrationsTable extends Migration
             $table->string('bentuk_integrasi');
             $table->timestamps();
 
+            $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_pengabdian')->references('id')->on('community_services')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');

@@ -267,6 +267,21 @@ Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
     $trail->push('Sunting Jadwal Kurikulum');
 });
 
+// Akademik > Integrasi Kurikulum
+Breadcrumbs::for('academic-integration', function ($trail) {
+    $trail->parent('academic');
+    $trail->push('Integrasi Kurikulum', route('academic.integration'));
+});
+
+Breadcrumbs::for('academic-integration-add', function ($trail) {
+    $trail->parent('academic-integration');
+    $trail->push('Tambah Integrasi Kurikulum', route('academic.integration.add'));
+});
+
+Breadcrumbs::for('academic-integration-edit', function ($trail,$data) {
+    $trail->push('Sunting Integrasi Kurikulum');
+});
+
 // Akademik > Skripsi
 Breadcrumbs::for('academic-minithesis', function ($trail) {
     $trail->parent('academic');

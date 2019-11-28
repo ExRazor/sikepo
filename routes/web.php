@@ -145,6 +145,9 @@ Route::prefix('ajax')->group(function () {
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
     Route::get('curriculum/loadData','CurriculumController@loadData')->name('ajax.curriculum.loadData');
 
+    //Academic - Curriculum Integrations
+    Route::post('curriculum-integration/get_by_filter','CurriculumIntegrationController@get_by_filter')->name('ajax.curriculum-integration.filter');
+
     //Academic - Schedule
     Route::post('schedule/get_by_filter','CurriculumScheduleController@get_by_filter')->name('ajax.schedule.filter');
 
@@ -331,6 +334,15 @@ Route::get('academic/schedule/{nidn}/edit','CurriculumScheduleController@edit')-
 Route::post('academic/schedule','CurriculumScheduleController@store')->name('academic.schedule.store');
 Route::put('academic/schedule','CurriculumScheduleController@update')->name('academic.schedule.update');
 Route::delete('academic/schedule','CurriculumScheduleController@destroy')->name('academic.schedule.delete');
+
+//Academic - Curriculum Integration
+Route::get('academic/integration','CurriculumIntegrationController@index')->name('academic.integration');
+Route::get('academic/integration/add','CurriculumIntegrationController@create')->name('academic.integration.add');
+Route::get('academic/integration/{id}','CurriculumIntegrationController@show')->name('academic.integration.show');
+Route::get('academic/integration/{id}/edit','CurriculumIntegrationController@edit')->name('academic.integration.edit');
+Route::post('academic/integration','CurriculumIntegrationController@store')->name('academic.integration.store');
+Route::put('academic/integration','CurriculumIntegrationController@update')->name('academic.integration.update');
+Route::delete('academic/integration','CurriculumIntegrationController@destroy')->name('academic.integration.delete');
 
 //Academic - Minithesis
 Route::get('academic/minithesis','MiniThesisController@index')->name('academic.minithesis');

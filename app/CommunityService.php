@@ -40,4 +40,9 @@ class CommunityService extends Model
     {
         return $this->hasMany('App\CommunityServiceStudent','id_pengabdian');
     }
+
+    public function curriculumIntegration()
+    {
+        return $this->hasMany('App\CurriculumIntegration','id_pengabdian');
+    }
 }
