@@ -45,5 +45,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MinithesisSeeder::class);
         $this->call(CurriculumIntegrationSeeder::class);
         $this->call(SatisfactionCategorySeeder::class);
+        $this->call(AcademicSatisfactionSeeder::class);
+        $this->call(AlumnusSatisfactionSeeder::class);
     }
 }

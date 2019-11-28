@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSatisfactionsTable extends Migration
+class CreateAcademicSatisfactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateSatisfactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('satisfactions', function (Blueprint $table) {
+        Schema::create('academic_satisfactions', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('id_ta');
+            $table->char('kd_prodi',5);
             $table->unsignedInteger('id_kategori');
             $table->integer('sangat_baik');
             $table->integer('baik');
@@ -23,6 +25,8 @@ class CreateSatisfactionsTable extends Migration
             $table->string('tindak_lanjut');
             $table->timestamps();
 
+            $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_kategori')->references('id')->on('satisfaction_categories')->onUpdate('cascade')->onDelete('cascade');
         });
     }
@@ -34,6 +38,6 @@ class CreateSatisfactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('satisfactions');
+        Schema::dropIfExists('academic_satisfactions');
     }
 }
