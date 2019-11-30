@@ -15,14 +15,15 @@ class CreateAlumnusSatisfactionsTable extends Migration
     {
         Schema::create('alumnus_satisfactions', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('kd_kepuasan');
             $table->unsignedInteger('id_ta');
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_kategori');
-            $table->integer('sangat_baik');
-            $table->integer('baik');
-            $table->integer('cukup');
-            $table->integer('kurang');
-            $table->string('tindak_lanjut');
+            $table->integer('sangat_baik')->nullable();
+            $table->integer('baik')->nullable();
+            $table->integer('cukup')->nullable();
+            $table->integer('kurang')->nullable();
+            $table->string('tindak_lanjut')->nullable();
             $table->timestamps();
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');

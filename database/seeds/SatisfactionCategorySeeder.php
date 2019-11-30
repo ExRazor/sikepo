@@ -38,7 +38,7 @@ class SatisfactionCategorySeeder extends Seeder
 
         foreach($kat_pend as $i => $val) {
             DB::table('satisfaction_categories')->insert([
-                'jenis'         => 'Pendidikan',
+                'jenis'         => 'Akademik',
                 'nama'          => $val,
                 'alias'         => $alias_pend[$i],
                 'deskripsi'     => $desc_pend[$i],

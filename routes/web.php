@@ -362,6 +362,15 @@ Route::post('academic/minithesis','MiniThesisController@store')->name('academic.
 Route::put('academic/minithesis','MiniThesisController@update')->name('academic.minithesis.update');
 Route::delete('academic/minithesis','MiniThesisController@destroy')->name('academic.minithesis.delete');
 
+//Academic - Satisfaction
+Route::get('academic/satisfaction','AcademicSatisfactionController@index')->name('academic.satisfaction');
+Route::get('academic/satisfaction/add','AcademicSatisfactionController@create')->name('academic.satisfaction.add');
+Route::get('academic/satisfaction/{id}','AcademicSatisfactionController@show')->name('academic.satisfaction.show');
+Route::get('academic/satisfaction/{id}/edit','AcademicSatisfactionController@edit')->name('academic.satisfaction.edit');
+Route::post('academic/satisfaction','AcademicSatisfactionController@store')->name('academic.satisfaction.store');
+Route::put('academic/satisfaction','AcademicSatisfactionController@update')->name('academic.satisfaction.update');
+Route::delete('academic/satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');

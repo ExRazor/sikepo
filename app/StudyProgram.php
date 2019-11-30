@@ -55,4 +55,9 @@ class StudyProgram extends Model
     {
         return $this->hasMany('App\Curriculum','kd_prodi');
     }
+
+    public function academicSatisfaction()
+    {
+        return $this->hasMany('App\AcademicSatisfaction','kd_prodi');
+    }
 }

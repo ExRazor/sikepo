@@ -15,8 +15,8 @@ class AcademicSatisfactionSeeder extends Seeder
     public function run()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $academicYear = AcademicYear::all();
-        $category     = SatisfactionCategory::where('jenis','Pendidikan')->get();
+        $academicYear = AcademicYear::where('semester','Ganjil')->get();
+        $category     = SatisfactionCategory::where('jenis','Akademik')->get();
 
         foreach($academicYear as $ay) {
             foreach($studyProgram as $sp) {
@@ -28,6 +28,7 @@ class AcademicSatisfactionSeeder extends Seeder
                     $k  = 100-$sb-$b-$c;
 
                     DB::table('academic_satisfactions')->insert([
+                        'kd_kepuasan'    => $ay->id.'_'.$sp->kd_prodi,
                         'id_ta'          => $ay->id,
                         'kd_prodi'       => $sp->kd_prodi,
                         'id_kategori'    => $cat->id,

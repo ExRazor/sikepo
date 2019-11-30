@@ -66,4 +66,9 @@ class AcademicYear extends Model
     {
         return $this->hasMany('App\CurriculumIntegration','id_ta');
     }
+
+    public function academicSatisfaction()
+    {
+        return $this->hasMany('App\AcademicSatisfaction','id_ta');
+    }
 }

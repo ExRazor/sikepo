@@ -45,6 +45,7 @@
             <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Jadwal Kurikulum</a></li>
             <li class="sub-item"><a href="{{ route('academic.integration') }}" class="sub-link {{ (request()->is('academic/integration*')) ? 'active' : '' }}">Integrasi Kurikulum</a></li>
             <li class="sub-item"><a href="{{ route('academic.minithesis') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
+            <li class="sub-item"><a href="{{ route('academic.satisfaction') }}" class="sub-link {{ (request()->is('academic/satisfaction*')) ? 'active' : '' }}">Kepuasan</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

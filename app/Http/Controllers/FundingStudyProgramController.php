@@ -45,8 +45,6 @@ class FundingStudyProgramController extends Controller
                                     ->get();
         }
 
-        // dd($dana['pd57201_thn19']);
-
         return view('funding.study-program.index',compact(['data','dana']));
     }
 

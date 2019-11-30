@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', isset($data) ? 'Sunting Keuangan Program Studi' : 'Tambah Keuangan Program Studi')
+@section('title', isset($data) ? 'Sunting Kepuasan Akademik' : 'Tambah Kepuasan Akademik')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'funding-studyProgram-edit' : 'funding-studyProgram-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-satisfaction-edit' : 'academic-satisfaction-add', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,12 +20,12 @@
         @if(isset($data))
         <div>
             <h4>Sunting</h4>
-            <p class="mg-b-0">Sunting Data Keuangan Program Studi</p>
+            <p class="mg-b-0">Sunting Data Kepuasan Akademik</p>
         </div>
         @else
         <div>
             <h4>Tambah</h4>
-            <p class="mg-b-0">Tambah Data Keuangan Program Studi</p>
+            <p class="mg-b-0">Tambah Data Kepuasan Akademik</p>
         </div>
         @endif
     </div>
@@ -45,20 +45,20 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="funding_studyProgram_form" action="{{route('funding.study-program.store')}}" method="POST" enctype="multipart/form-data">
+            <form id="funding_studyProgram_form" action="{{route('academic.satisfaction.store')}}" method="POST" enctype="multipart/form-data">
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-10 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
-                                <input type="hidden" name="_id" value="{{encrypt($data->kd_dana)}}">
+                                <input type="hidden" name="id" value="{{encrypt($data->kd_kepuasan)}}">
                             @else
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-7">
+                                <label class="col-2 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                                <div class="col-9">
                                     <div class="row">
                                         <div class="col-6">
                                             <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" {{isset($data) ? 'disabled' : 'required'}}>
@@ -87,41 +87,55 @@
                                             @endif
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                             @foreach($category as $c)
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">{{ $c->nama }}: </label>
-                                <div class="col-7">
-                                    @if($c->children->count())
-                                        @foreach($c->children as $child)
-                                        <div class="row my-3">
-                                            <div class="col-12">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">
-                                                        Rp
-                                                        </div>
-                                                    </div>
-                                                    <input class="form-control rupiah" type="text" name="id_kategori[{{ $child->id }}]" value="{{ isset($data) ? $nominal[$child->id] : Request::old($child->id)}}" placeholder="Masukkan {{ $child->nama }}">
+                                <label class="col-2 form-control-label align-items-start pd-t-12">{{ $c->nama }}: </label>
+                                <div class="col-9">
+                                    <div class="row mb-3">
+                                        <div class="col-3">
+                                            <div class="input-group">
+                                                <input class="form-control" type="number" name="sangat_baik[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->sangat_baik : Request::old('sangat_baik['.$c->id.']')}}" placeholder="Sangat Baik">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        @endforeach
-                                    @else
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                Rp
+                                        <div class="col-3">
+                                            <div class="input-group">
+                                                <input class="form-control" type="number" name="baik[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->baik : Request::old('baik['.$c->id.']')}}" placeholder="Baik">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
                                                 </div>
                                             </div>
-                                            <input class="form-control rupiah" type="text" name="id_kategori[{{ $c->id }}]" value="{{ isset($data) ? $nominal[$c->id] : Request::old($c->id)}}" placeholder="Masukkan {{ $c->nama }}">
                                         </div>
-                                    @endif
+                                        <div class="col-3">
+                                            <div class="input-group">
+                                                <input class="form-control" type="number" name="cukup[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->cukup : Request::old('cukup['.$c->id.']')}}" placeholder="Cukup">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="input-group">
+                                                <input class="form-control" type="number" name="kurang[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->kurang : Request::old('kurang['.$c->id.']')}}" placeholder="Kurang">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <textarea rows="5" name="tindak_lanjut[{{$c->id}}]" class="form-control" placeholder="Tuliskan tindak lanjut UPPS/PS terhadap aspek {{$c->nama}}">{{ isset($data) ? $persen[$c->id]->tindak_lanjut : Request::old('tindak_lanjut['.$c->id.']')}}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             @endforeach
+
                         </div>
                     </div>
                 </div><!-- card-body -->

@@ -297,6 +297,30 @@ Breadcrumbs::for('academic-minithesis-edit', function ($trail,$data) {
     $trail->push('Sunting Tugas Akhir');
 });
 
+// Akademik > Kepuasan
+Breadcrumbs::for('academic-satisfaction', function ($trail) {
+    $trail->parent('academic');
+    $trail->push('Kepuasan Akademik', route('academic.satisfaction'));
+});
+
+Breadcrumbs::for('academic-satisfaction-add', function ($trail) {
+    $trail->parent('academic-satisfaction');
+    $trail->push('Tambah', route('academic.satisfaction.add'));
+});
+
+Breadcrumbs::for('academic-satisfaction-show', function ($trail,$data) {
+    $trail->parent('academic-satisfaction');
+    $trail->push(
+        'Kepuasan Akademik: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
+        route('academic.satisfaction.show',encrypt($data->id))
+    );
+});
+
+Breadcrumbs::for('academic-satisfaction-edit', function ($trail,$data) {
+    $trail->parent('academic-satisfaction-show',$data);
+    $trail->push('Sunting');
+});
+
 // Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');
