@@ -371,6 +371,15 @@ Route::post('academic/satisfaction','AcademicSatisfactionController@store')->nam
 Route::put('academic/satisfaction','AcademicSatisfactionController@update')->name('academic.satisfaction.update');
 Route::delete('academic/satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
 
+//Alumnus - Satisfaction
+Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
+Route::get('alumnus/satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
+Route::get('alumnus/satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
+Route::get('alumnus/satisfaction/{id}/edit','AlumnusSatisfactionController@edit')->name('alumnus.satisfaction.edit');
+Route::post('alumnus/satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
+Route::put('alumnus/satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
+Route::delete('alumnus/satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');

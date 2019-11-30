@@ -99,7 +99,7 @@ class TeacherAchievementController extends Controller
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
             $acv->bukti_nama        = $request->bukti_nama;
 
-            $storagePath = 'upload/teacher-achievement/'.$acv->bukti_file;
+            $storagePath = 'upload/teacher/achievement/'.$acv->bukti_file;
             if($file = $request->file('bukti_file')) {
 
                 if(File::exists($storagePath)) {
@@ -144,6 +144,7 @@ class TeacherAchievementController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
+                $this->delete_file($id);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -159,7 +160,7 @@ class TeacherAchievementController extends Controller
     {
         $file = decode_id($filename);
 
-        $storagePath = 'upload/teacher-achievement/'.$file;
+        $storagePath = 'upload/teacher/achievement/'.$file;
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -170,6 +171,16 @@ class TeacherAchievementController extends Controller
             );
 
             return response(file_get_contents($storagePath), 200, $headers);
+        }
+    }
+
+    public function delete_file($id)
+    {
+        $data = TeacherAchievement::find($id);
+
+        $storagePath = 'upload/teacher/achievement/'.$data->bukti_file;
+        if(File::exists($storagePath)) {
+            File::delete($storagePath);
         }
     }
 

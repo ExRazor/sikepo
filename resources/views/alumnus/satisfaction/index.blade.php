@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Kepuasan Akademik')
+@section('title', 'Kepuasan Pengguna Lulusan')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('academic-satisfaction') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('alumnus-satisfaction') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -22,11 +22,11 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-percentage"></i>
     <div>
-        <h4>Kepuasan Akademik</h4>
-        <p class="mg-b-0">Olah Data Kepuasan Akademik</p>
+        <h4>Kepuasan Pengguna Lulusan</h4>
+        <p class="mg-b-0">Olah Data Kepuasan Pengguna Lulusan</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('academic.satisfaction.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tambah Data</a>
+        <a href="{{ route('alumnus.satisfaction.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tambah Data</a>
     </div>
 </div>
 
@@ -68,7 +68,7 @@
                             <td class="text-center">{{$persen[$s->kd_kepuasan]->kurang}}%</td>
                             <td class="text-center">
                                 <div class="btn-group hidden-xs-down">
-                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('academic.satisfaction.show',encrypt($s->kd_kepuasan))}}">
+                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.satisfaction.show',encrypt($s->kd_kepuasan))}}">
                                         <div><i class="fa fa-search-plus"></i></div>
                                     </a>
                                 </div>

@@ -7,12 +7,6 @@
     </a><!-- br-menu-link -->
   </li>
   <li class="br-menu-item">
-    <a href="{{ route('collaboration') }}" class="br-menu-link {{ (request()->is('collaboration')) ? 'active' : '' }}">
-      <i class="menu-item-icon fa fa-handshake"></i>
-      <span class="menu-item-label">Kerja Sama</span>
-    </a><!-- br-menu-link -->
-  </li>
-  <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'teacher') ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-chalkboard-teacher"></i>
           <span class="menu-item-label">Data Dosen</span>
@@ -47,6 +41,12 @@
             <li class="sub-item"><a href="{{ route('academic.minithesis') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
             <li class="sub-item"><a href="{{ route('academic.satisfaction') }}" class="sub-link {{ (request()->is('academic/satisfaction*')) ? 'active' : '' }}">Kepuasan</a></li>
         </ul>
+    </li>
+    <li class="br-menu-item">
+        <a href="{{ route('collaboration') }}" class="br-menu-link {{ (request()->is('collaboration*')) ? 'active' : '' }}">
+            <i class="menu-item-icon fa fa-handshake"></i>
+            <span class="menu-item-label">Kerja Sama</span>
+        </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
         <a href="{{ route('research') }}" class="br-menu-link {{ (request()->segment(1) == 'research') ? 'active' : '' }}">
@@ -89,6 +89,15 @@
             <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->is('funding/category*')) ? 'active' : '' }}">Kategori Dana</a></li>
             <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->is('funding/faculty*')) ? 'active' : '' }}">Keuangan Fakultas</a></li>
             <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->is('funding/study-program*')) ? 'active' : '' }}">Keuangan Program Studi</a></li>
+        </ul>
+    </li>
+    <li class="br-menu-item">
+        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'alumnus') ? 'active' : '' }}">
+            <i class="menu-item-icon fa fa-graduation-cap"></i>
+            <span class="menu-item-label">Lulusan</span>
+        </a><!-- br-menu-link -->
+        <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('alumnus.satisfaction') }}" class="sub-link {{ (request()->is('alumnus/satisfaction*')) ? 'active' : '' }}">Kepuasan Pengguna</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

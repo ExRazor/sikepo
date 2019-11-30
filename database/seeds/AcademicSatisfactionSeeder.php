@@ -28,7 +28,7 @@ class AcademicSatisfactionSeeder extends Seeder
                     $k  = 100-$sb-$b-$c;
 
                     DB::table('academic_satisfactions')->insert([
-                        'kd_kepuasan'    => $ay->id.'_'.$sp->kd_prodi,
+                        'kd_kepuasan'    => 'academic_'.$ay->id.'_'.$sp->kd_prodi,
                         'id_ta'          => $ay->id,
                         'kd_prodi'       => $sp->kd_prodi,
                         'id_kategori'    => $cat->id,

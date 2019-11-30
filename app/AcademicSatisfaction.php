@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AcademicSatisfaction extends Model
 {
     protected $fillable = [
+        'kd_kepuasan',
         'id_ta',
         'kd_prodi',
         'id_kategori',

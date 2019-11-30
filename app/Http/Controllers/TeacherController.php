@@ -287,6 +287,7 @@ class TeacherController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
+                $this->delete_file($id);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -313,6 +314,16 @@ class TeacherController extends Controller
             );
 
             return response(file_get_contents($storagePath), 200, $headers);
+        }
+    }
+
+    public function delete_file($id)
+    {
+        $data = Teacher::find($id);
+
+        $storagePath = 'upload/teacher/'.$data->foto;
+        if(File::exists($storagePath)) {
+            File::delete($storagePath);
         }
     }
 

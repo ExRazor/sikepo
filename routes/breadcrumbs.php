@@ -321,6 +321,36 @@ Breadcrumbs::for('academic-satisfaction-edit', function ($trail,$data) {
     $trail->push('Sunting');
 });
 
+// Akademik
+Breadcrumbs::for('alumnus', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Lulusan');
+});
+
+// Alumnus > Kepuasan
+Breadcrumbs::for('alumnus-satisfaction', function ($trail) {
+    $trail->parent('alumnus');
+    $trail->push('Kepuasan Pengguna Lulusan', route('alumnus.satisfaction'));
+});
+
+Breadcrumbs::for('alumnus-satisfaction-add', function ($trail) {
+    $trail->parent('alumnus-satisfaction');
+    $trail->push('Tambah', route('alumnus.satisfaction.add'));
+});
+
+Breadcrumbs::for('alumnus-satisfaction-show', function ($trail,$data) {
+    $trail->parent('alumnus-satisfaction');
+    $trail->push(
+        'Kepuasan Pengguna Lulusan: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
+        route('alumnus.satisfaction.show',encrypt($data->id))
+    );
+});
+
+Breadcrumbs::for('alumnus-satisfaction-edit', function ($trail,$data) {
+    $trail->parent('alumnus-satisfaction-show',$data);
+    $trail->push('Sunting');
+});
+
 // Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');

@@ -19,10 +19,10 @@ class CreateAlumnusSatisfactionsTable extends Migration
             $table->unsignedInteger('id_ta');
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_kategori');
-            $table->integer('sangat_baik')->nullable();
-            $table->integer('baik')->nullable();
-            $table->integer('cukup')->nullable();
-            $table->integer('kurang')->nullable();
+            $table->integer('sangat_baik');
+            $table->integer('baik');
+            $table->integer('cukup');
+            $table->integer('kurang');
             $table->string('tindak_lanjut')->nullable();
             $table->timestamps();
 

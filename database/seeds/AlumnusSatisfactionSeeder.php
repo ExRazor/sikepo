@@ -27,8 +27,8 @@ class AlumnusSatisfactionSeeder extends Seeder
                     $c  = rand(0,100-$sb-$b);
                     $k  = 100-$sb-$b-$c;
 
-                    DB::table('academic_satisfactions')->insert([
-                        'kd_kepuasan'    => $ay->id.'_'.$sp->kd_prodi,
+                    DB::table('alumnus_satisfactions')->insert([
+                        'kd_kepuasan'    => 'alumnus_'.$ay->id.'_'.$sp->kd_prodi,
                         'id_ta'          => $ay->id,
                         'kd_prodi'       => $sp->kd_prodi,
                         'id_kategori'    => $cat->id,

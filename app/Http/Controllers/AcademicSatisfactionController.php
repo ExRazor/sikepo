@@ -111,7 +111,7 @@ class AcademicSatisfactionController extends Controller
 
         foreach($request->sangat_baik as $index => $value) {
             $query                 = new AcademicSatisfaction;
-            $query->kd_kepuasan    = $request->id_ta.'_'.$request->kd_prodi;
+            $query->kd_kepuasan    = 'academic_'.$request->id_ta.'_'.$request->kd_prodi;
             $query->kd_prodi       = $request->kd_prodi;
             $query->id_ta          = $request->id_ta;
             $query->id_kategori    = $index;
@@ -125,8 +125,6 @@ class AcademicSatisfactionController extends Controller
 
         return redirect()->route('academic.satisfaction')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
-
-
 
     public function update(Request $request)
     {

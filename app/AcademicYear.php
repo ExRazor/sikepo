@@ -71,4 +71,9 @@ class AcademicYear extends Model
     {
         return $this->hasMany('App\AcademicSatisfaction','id_ta');
     }
+
+    public function alumnusSatisfaction()
+    {
+        return $this->hasMany('App\AlumnusSatisfaction','id_ta');
+    }
 }
