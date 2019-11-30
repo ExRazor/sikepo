@@ -60,7 +60,7 @@ class TeacherController extends Controller
         $request->validate([
             'nidn'                  => 'required|numeric|min:8',
             'kd_prodi'              => 'required',
-            'nip'                   => 'required|numeric|digits:18',
+            'nip'                   => 'nullable|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
             'agama'                 => 'nullable',
@@ -73,6 +73,7 @@ class TeacherController extends Controller
             'sesuai_bidang_ps'      => 'nullable',
             'ikatan_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
+            'foto'                  => 'mimes:jpeg,jpg,png',
         ]);
 
         $bidang_ahli = explode(", ",$request->bidang_ahli);
@@ -109,18 +110,6 @@ class TeacherController extends Controller
         $Teacher->save();
 
         return redirect()->route('teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-    public function import()
-    {
-        $studyProgram = StudyProgram::all();
-        return view('teacher/import',compact('studyProgram'));
-    }
-
-    public function store_import()
-    {
-        $studyProgram = StudyProgram::all();
-        return view('teacher/form',compact('studyProgram'));
     }
 
     /**
@@ -212,7 +201,7 @@ class TeacherController extends Controller
 
         $request->validate([
             'kd_prodi'              => 'required',
-            'nip'                   => 'required|numeric|digits:18',
+            'nip'                   => 'nullable|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
             'agama'                 => 'nullable',
@@ -225,6 +214,7 @@ class TeacherController extends Controller
             'sesuai_bidang_ps'      => 'nullable',
             'ikatan_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
+            'foto'                  => 'mimes:jpeg,jpg,png',
         ]);
 
         $bidang_ahli = explode(", ",$request->bidang_ahli);
@@ -326,6 +316,41 @@ class TeacherController extends Controller
             File::delete($storagePath);
         }
     }
+
+    public function import(Request $request)
+	{
+		// Memvalidasi
+		$this->validate($request, [
+			'file' => 'required|mimes:csv,xls,xlsx'
+		]);
+
+		// Menangkap file excel
+		$file = $request->file('file');
+
+		// Mengambil nama file
+        $nama_file = $file->getClientOriginalName();
+
+		// upload ke folder khusus di dalam folder public
+		$file->move('upload/student/excel_import/',$nama_file);
+
+		// import data
+        $q = Excel::import(new StudentImport, public_path('/upload/student/excel_import/'.$nama_file));
+
+        //Validasi jika terjadi error saat mengimpor
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan saat mengimpor',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil diimpor',
+                'type'    => 'success'
+            ]);
+        }
+	}
 
     public function get_by_department(Request $request)
     {

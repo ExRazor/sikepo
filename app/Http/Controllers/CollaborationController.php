@@ -65,7 +65,7 @@ class CollaborationController extends Controller
             'waktu'             => 'required',
             'durasi'            => 'required',
             'bukti_nama'        => 'required',
-            'bukti_file'        => 'required',
+            'bukti_file'        => 'required|mimes:jpeg,jpg,png,pdf,zip',
         ]);
 
         $collaboration = new Collaboration;
@@ -131,6 +131,8 @@ class CollaborationController extends Controller
             'manfaat_kegiatan'  => 'required',
             'waktu'             => 'required',
             'durasi'            => 'required',
+            'bukti_nama'        => 'required',
+            'bukti_file'        => 'mimes:jpeg,jpg,png,pdf,zip',
         ]);
 
         $collaboration = Collaboration::find($id);

@@ -274,7 +274,7 @@ class StudentController extends Controller
             $id = decrypt($request->_id);
 
             $request->validate([
-                'foto'        => 'required',
+                'foto'        => 'required|mimes:jpeg,jpg,png',
             ]);
 
             $data = Student::find($id);

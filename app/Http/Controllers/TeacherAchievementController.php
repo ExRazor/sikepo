@@ -32,7 +32,8 @@ class TeacherAchievementController extends Controller
                 'prestasi'          => 'required',
                 'tingkat_prestasi'  => 'required',
                 'bukti_nama'        => 'required',
-                'bukti_file'        => 'required',
+                'bukti_file'        => 'required|mimes:jpeg,jpg,png,pdf,zip',
+
             ]);
 
             $acv                    = new TeacherAchievement;
@@ -90,6 +91,7 @@ class TeacherAchievementController extends Controller
                 'prestasi'          => 'required',
                 'tingkat_prestasi'  => 'required',
                 'bukti_nama'        => 'required',
+                'bukti_file'        => 'mimes:jpeg,jpg,png,pdf,zip',
             ]);
 
             $acv                    = TeacherAchievement::find($id);
