@@ -100,9 +100,9 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">NIP: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">NIP:</label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" minlength="16" maxlength="18" required>
+                                    <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" minlength="16" maxlength="18">
                                 </div>
                             </div>
                             <div class="row mb-3">

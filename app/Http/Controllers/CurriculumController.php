@@ -8,6 +8,7 @@ use App\Imports\CurriculumImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
+use File;
 
 class CurriculumController extends Controller
 {
@@ -125,6 +126,7 @@ class CurriculumController extends Controller
                 'type'    => 'error'
             ]);
         } else {
+            File::delete(public_path('/upload/curriculum/excel_import/'.$nama_file));
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',

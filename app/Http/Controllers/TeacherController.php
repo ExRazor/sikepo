@@ -327,14 +327,15 @@ class TeacherController extends Controller
 		// Menangkap file excel
 		$file = $request->file('file');
 
-		// Mengambil nama file
+        // Mengambil nama file
+        $tgl_upload = date('d-m-Y');
         $nama_file = $file->getClientOriginalName();
 
 		// upload ke folder khusus di dalam folder public
-		$file->move('upload/student/excel_import/',$nama_file);
+		$file->move('upload/teacher/excel_import/',$nama_file);
 
 		// import data
-        $q = Excel::import(new StudentImport, public_path('/upload/student/excel_import/'.$nama_file));
+        $q = Excel::import(new TeacherImport, public_path('/upload/teacher/excel_import/'.$nama_file));
 
         //Validasi jika terjadi error saat mengimpor
         if(!$q) {
@@ -344,6 +345,7 @@ class TeacherController extends Controller
                 'type'    => 'error'
             ]);
         } else {
+            File::delete(public_path('/upload/teacher/excel_import/'.$nama_file));
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',

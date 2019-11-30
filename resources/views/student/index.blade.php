@@ -26,8 +26,8 @@
         <p class="mg-b-0">Olah Data Mahasiswa</p>
     </div>
     <div class="ml-auto d-inline-flex">
-            <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-y-10 mg-r-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
-            <button class="btn btn-primary btn-block mg-y-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
+        <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-y-10 mg-r-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
+        <button class="btn btn-primary btn-block mg-y-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
     </div>
 </div>
 

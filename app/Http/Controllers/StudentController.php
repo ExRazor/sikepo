@@ -120,6 +120,7 @@ class StudentController extends Controller
                 'type'    => 'error'
             ]);
         } else {
+            File::delete(public_path('/upload/student/excel_import/'.$nama_file));
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',
