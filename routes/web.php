@@ -372,8 +372,8 @@ Route::put('academic/satisfaction','AcademicSatisfactionController@update')->nam
 Route::delete('academic/satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
 
 //Alumnus - Attainment
-Route::get('alumnus/attainment','AlumnusController@attainment')->name('alumnus.attainment');
-Route::get('alumnus/attainment/{id}','AlumnusController@attainment_show')->name('alumnus.attainment.show');
+Route::get('alumnus/attainment','AlumnusAttainmentController@attainment')->name('alumnus.attainment');
+Route::get('alumnus/attainment/{id}','AlumnusAttainmentController@attainment_show')->name('alumnus.attainment.show');
 
 //Alumnus - Idle
 Route::get('alumnus/idle','AlumnusIdleController@index')->name('alumnus.idle');
