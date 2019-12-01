@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('alumnus-idle-show',$studyProgram) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('alumnus-suitable-show',$studyProgram) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-building"></i>
+    <i class="icon fa fa-network-wired"></i>
     <div>
         <h4>Program Studi: {{$studyProgram->nama}}</h4>
         <p class="mg-b-0">Rincian Bidang Kerja Lulusan</p>

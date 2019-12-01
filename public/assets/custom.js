@@ -3154,14 +3154,14 @@ $(document).ready(function() {
 
     /********************************* DATA WAKTU TUNGGU LULUSAN *********************************/
 
-    $('#modal-alumnus-idle, #modal-alumnus-suitable').on('hidden.bs.modal', function () {
+    $('#modal-alumnus-idle, #modal-alumnus-suitable, #modal-alumnus-workplace').on('hidden.bs.modal', function () {
         $(this).find('form').trigger('reset');
         $(this).find('input[name=tahun_lulus]').removeAttr('value').end()
         $(this).find('select[name=tahun_lulus]').show().end()
         $(this).find('input[name=tahun_lulus]').hide().end()
     })
 
-    $('#modal-alumnus-idle, #modal-alumnus-suitable').on('change','#manual',function(){
+    $('#modal-alumnus-idle, #modal-alumnus-suitable, #modal-alumnus-workplace').on('change','#manual',function(){
         var kd_prodi = $('input[name=kd_prodi]').val();
         var tahun    = $('[name=tahun_lulus]').val();
 
@@ -3185,7 +3185,7 @@ $(document).ready(function() {
         }
     })
 
-    $('#modal-alumnus-idle, #modal-alumnus-suitable').on('change','select[name=tahun_lulus]',function(){
+    $('#modal-alumnus-idle, #modal-alumnus-suitable, #modal-alumnus-workplace').on('change','select[name=tahun_lulus]',function(){
         var kd_prodi = $('input[name=kd_prodi]').val();
         var tahun    = $(this).val();
 
@@ -3234,7 +3234,6 @@ $(document).ready(function() {
     /****************************************************************************************/
 
     /********************************* DATA KESESUAIAN BIDANG KERJA LULUSAN *********************************/
-
     $('#table-alumnusSuitable').on('click','.btn-edit',function(){
 
         var id  = $(this).data('id');
@@ -3263,5 +3262,34 @@ $(document).ready(function() {
     })
     /********************************************************************************************************/
 
+    /*************************************** DATA TEMPAT KERJA LULUSAN ***********************************/
+
+    $('#table-alumnusWorkplace').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/ajax/alumnus/workplace/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-alumnus-workplace')
+                    .find('input[name=id]').val(id).end()
+                    .find('input[name=tahun_lulus]').val(data.tahun_lulus).end()
+                    .find('select[name=tahun_lulus]').hide().end()
+                    .find('input[name=tahun_lulus]').show().end()
+                    .find('input#manual').prop('checked',true).end()
+                    .find('input[name=jumlah_lulusan]').val(data.jumlah_lulusan).prop('readonly',false).end()
+                    .find('input[name=lulusan_bekerja]').val(data.lulusan_bekerja).end()
+                    .find('input[name=kerja_lokal]').val(data.kerja_lokal).end()
+                    .find('input[name=kerja_nasional]').val(data.kerja_nasional).end()
+                    .find('input[name=kerja_internasional]').val(data.kerja_internasional).end()
+                    .modal('toggle').end();
+
+            }
+        });
+    })
+    /****************************************************************************************************/
 
 });

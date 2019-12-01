@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Waktu Tunggu Lulusan')
+@section('title', 'Tempat Kerja Lulusan')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('alumnus-idle') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('alumnus-workplace') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,10 +20,10 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-business-time"></i>
+    <i class="icon fa fa-building"></i>
     <div>
-        <h4>Waktu Tunggu Lulusan</h4>
-        <p class="mg-b-0">Olah Data Waktu Tunggu Lulusan</p>
+        <h4>Tempat Kerja Lulusan</h4>
+        <p class="mg-b-0">Olah Data Tempat Kerja Lulusan</p>
     </div>
 </div>
 
@@ -52,7 +52,7 @@
                             <td class="text-center">{{$sp->nama}}</td>
                             <td class="text-center">
                                 <div class="btn-group hidden-xs-down">
-                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.idle.show',encrypt($sp->kd_prodi))}}">
+                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.workplace.show',encrypt($sp->kd_prodi))}}">
                                         <div><i class="fa fa-search-plus"></i></div>
                                     </a>
                                 </div>

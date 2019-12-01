@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-building"></i>
+    <i class="icon fa fa-network-wired"></i>
     <div>
         <h4>Bidang Kerja Lulusan</h4>
         <p class="mg-b-0">Olah Data Bidang Kerja Lulusan</p>
@@ -39,7 +39,7 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
+                <table class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle">Program Studi</th>
