@@ -333,10 +333,15 @@ Breadcrumbs::for('alumnus-attainment', function ($trail) {
     $trail->push('Capaian Pembelajaran Lulusan', route('alumnus.attainment'));
 });
 
-// Alumnus > Capaian
-Breadcrumbs::for('alumnus-attainment-show', function ($trail,$data) {
-    $trail->parent('alumnus-attainment');
-    $trail->push($data->nama, route('alumnus.attainment.show',encrypt($data->kd_prodi)));
+// Alumnus > Waktu Tunggu
+Breadcrumbs::for('alumnus-idle', function ($trail) {
+    $trail->parent('alumnus');
+    $trail->push('Waktu Tunggu Lulusan', route('alumnus.idle'));
+});
+
+Breadcrumbs::for('alumnus-idle-show', function ($trail,$data) {
+    $trail->parent('alumnus-idle');
+    $trail->push($data->nama, route('alumnus.idle.show',encrypt($data->kd_prodi)));
 });
 
 // Alumnus > Kepuasan

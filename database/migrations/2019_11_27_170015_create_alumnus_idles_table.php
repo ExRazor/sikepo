@@ -14,8 +14,17 @@ class CreateAlumnusIdlesTable extends Migration
     public function up()
     {
         Schema::create('alumnus_idles', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
+            $table->char('kd_prodi',5);
+            $table->char('tahun_lulus',4);
+            $table->integer('jumlah_lulusan');
+            $table->integer('lulusan_terlacak');
+            $table->integer('kriteria_1');
+            $table->integer('kriteria_2');
+            $table->integer('kriteria_3');
             $table->timestamps();
+
+            $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

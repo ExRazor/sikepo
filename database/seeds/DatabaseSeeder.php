@@ -48,5 +48,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SatisfactionCategorySeeder::class);
         $this->call(AcademicSatisfactionSeeder::class);
         $this->call(AlumnusSatisfactionSeeder::class);
+        $this->call(AlumnusIdleSeeder::class);
+        $this->call(AlumnusSuitableSeeder::class);
+        $this->call(AlumnusWorkplaceSeeder::class);
     }
 }

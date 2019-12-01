@@ -82,6 +82,7 @@ $(document).ready(function() {
         $(this).find('form').trigger('reset');
         $('.alert-danger').hide();
         $(this).find('input[name^=_id]').removeAttr('value');
+        $(this).find('input[name^=id]').removeAttr('value');
         $(this).find('select').val(null).trigger('change');
         $('.is-invalid').removeClass('is-invalid');
     })
@@ -3149,6 +3150,90 @@ $(document).ready(function() {
             var form  = $('#form-satisfactionCategory')
             form.trigger('reset');
         }).end()
+    /****************************************************************************************/
+
+    /********************************* DATA WAKTU TUNGGU LULUSAN *********************************/
+
+    $('#modal-alumnus-idle').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+        $(this).find('input[name=tahun_lulus]').removeAttr('value').end()
+        $(this).find('select[name=tahun_lulus]').show().end()
+        $(this).find('input[name=tahun_lulus]').hide().end()
+    })
+
+    $('#modal-alumnus-idle').on('change','#manual',function(){
+        var cont = $('#modal-alumnus-idle');
+        var kd_prodi = cont.find('input[name=kd_prodi]').val();
+        var tahun    = cont.find('[name=tahun_lulus]').val();
+
+        var url = base_url+'/ajax/alumnus/get';
+
+        if ($('#manual').is(':checked') == true){
+            $('input[name=jumlah_lulusan]').val('').prop('readonly', false);
+        } else {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {
+                    tahun:tahun,
+                    prodi:kd_prodi
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('input[name=jumlah_lulusan]').val(data).prop('readonly', true);
+                }
+            });
+        }
+    })
+
+    $('#modal-alumnus-idle').on('change','select[name=tahun_lulus]',function(){
+        var cont = $('#modal-alumnus-idle');
+        var kd_prodi = cont.find('input[name=kd_prodi]').val();
+        var tahun    = $(this).val();
+
+        var url = base_url+'/ajax/alumnus/get';
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: {
+                tahun:tahun,
+                prodi:kd_prodi
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('input[name=jumlah_lulusan]').val(data).prop('readonly', true);
+            }
+        });
+    })
+
+    $('#table-alumnusIdle').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/ajax/alumnus/idle/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-alumnus-idle')
+                    .find('input[name=id]').val(id).end()
+                    .find('input[name=tahun_lulus]').val(data.tahun_lulus).end()
+                    .find('select[name=tahun_lulus]').hide().end()
+                    .find('input[name=tahun_lulus]').show().end()
+                    .find('input#manual').prop('checked',true).end()
+                    .find('input[name=jumlah_lulusan]').val(data.jumlah_lulusan).prop('readonly',false).end()
+                    .find('input[name=lulusan_terlacak]').val(data.lulusan_terlacak).end()
+                    .find('input[name=kriteria_1]').val(data.kriteria_1).end()
+                    .find('input[name=kriteria_2]').val(data.kriteria_2).end()
+                    .find('input[name=kriteria_3]').val(data.kriteria_3).end()
+                    .modal('toggle').end();
+
+            }
+        });
+    })
+
     /****************************************************************************************/
 
 

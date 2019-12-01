@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Capaian Pembelajaran Lulusan')
+@section('title', 'Waktu Tunggu Lulusan')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('alumnus-attainment') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('alumnus-idle') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,10 +20,10 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-list-alt"></i>
+    <i class="icon fa fa-business-time"></i>
     <div>
-        <h4>Capaian Pembelajaran Lulusan</h4>
-        <p class="mg-b-0">Data Capaian Pembelajaran Lulusan</p>
+        <h4>Waktu Tunggu Lulusan</h4>
+        <p class="mg-b-0">Olah Data Waktu Tunggu Lulusan</p>
     </div>
 </div>
 
@@ -38,9 +38,6 @@
     @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
-            <div class="card-header nm_jurusan">
-                <h6 class="card-title">{{ setting('app_department_name') }}</h6>
-            </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
@@ -55,7 +52,7 @@
                             <td class="text-center">{{$sp->nama}}</td>
                             <td class="text-center">
                                 <div class="btn-group hidden-xs-down">
-                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.attainment.show',encrypt($sp->kd_prodi))}}">
+                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.idle.show',encrypt($sp->kd_prodi))}}">
                                         <div><i class="fa fa-search-plus"></i></div>
                                     </a>
                                 </div>

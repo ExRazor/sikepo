@@ -84,6 +84,30 @@ class AlumnusAttainmentController extends Controller
         return view('alumnus.attainment.show',$data);
     }
 
+    public function get_alumnus(Request $request)
+    {
+        $prodi = decrypt($request->prodi);
+        $query = StudentStatus::whereHas(
+                                'academicYear', function($q) use($request) {
+                                    $q->where('tahun_akademik',$request->tahun);
+                                }
+                            )
+                            ->whereHas(
+                                'student', function($q) use ($prodi) {
+                                    $q->where('kd_prodi',$prodi);
+                                }
+                            )
+                            ->where('status','Lulus')
+                            ->count();
+
+        if(request()->ajax()) {
+            return response()->json($query);
+        } else {
+            abort(404);
+        }
+
+    }
+
     // public function attainment_show($id)
     // {
     //     $id = decrypt($id);

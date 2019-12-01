@@ -162,6 +162,13 @@ Route::prefix('ajax')->group(function () {
 
     //Academic - Minithesis
     Route::post('minithesis/get_by_filter','MinithesisController@get_by_filter')->name('ajax.minithesis.filter');
+
+    //Alumnus
+    Route::get('alumnus/get','AlumnusAttainmentController@get_alumnus')->name('alumnus.get_alumnus');
+
+    //Alumnus - Waktu Tunggu Lulusan
+    Route::get('alumnus/idle/{id}','AlumnusIdleController@edit')->name('alumnus.idle.edit');
+
 });
 
 //Collaboration
@@ -388,7 +395,6 @@ Route::delete('alumnus/idle','AlumnusIdleController@destroy')->name('alumnus.idl
 Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
 Route::get('alumnus/satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
 Route::get('alumnus/satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
-Route::get('alumnus/satisfaction/{id}/edit','AlumnusSatisfactionController@edit')->name('alumnus.satisfaction.edit');
 Route::post('alumnus/satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
 Route::put('alumnus/satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
 Route::delete('alumnus/satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
