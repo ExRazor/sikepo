@@ -344,6 +344,28 @@ Breadcrumbs::for('alumnus-idle-show', function ($trail,$data) {
     $trail->push($data->nama, route('alumnus.idle.show',encrypt($data->kd_prodi)));
 });
 
+// Alumnus > Kesesuaian Bidang Kerja
+Breadcrumbs::for('alumnus-suitable', function ($trail) {
+    $trail->parent('alumnus');
+    $trail->push('Bidang Kerja Lulusan', route('alumnus.suitable'));
+});
+
+Breadcrumbs::for('alumnus-suitable-show', function ($trail,$data) {
+    $trail->parent('alumnus-suitable');
+    $trail->push($data->nama, route('alumnus.suitable.show',encrypt($data->kd_prodi)));
+});
+
+// Alumnus > Kinerja Lulusan
+Breadcrumbs::for('alumnus-workplace', function ($trail) {
+    $trail->parent('alumnus');
+    $trail->push('Kinerja Lulusan', route('alumnus.workplace'));
+});
+
+Breadcrumbs::for('alumnus-workplace-show', function ($trail,$data) {
+    $trail->parent('alumnus-workplace');
+    $trail->push($data->nama, route('alumnus.workplace.show',encrypt($data->kd_prodi)));
+});
+
 // Alumnus > Kepuasan
 Breadcrumbs::for('alumnus-satisfaction', function ($trail) {
     $trail->parent('alumnus');

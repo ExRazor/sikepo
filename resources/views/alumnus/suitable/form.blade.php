@@ -1,4 +1,4 @@
-<div id="modal-alumnus-idle" class="modal fade effect-slide-in-right">
+<div id="modal-alumnus-suitable" class="modal fade effect-slide-in-right">
     <form method="POST" enctype="multipart/form-data">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content bd-0 tx-14 modal-form">
@@ -53,26 +53,26 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> WT < 6 Bulan:</label>
+                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Kesesuaian Rendah:</label>
                         <div class="col-sm-8">
-                            <input type="number" class="form-control" name="kriteria_1" placeholder="Isikan jumlah lulusan dengan Waktu Tunggu < 6 bulan">
+                            <input type="number" class="form-control" name="sesuai_rendah" placeholder="Isikan jumlah lulusan dengan kesesuaian bidang kerja rendah">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span>WT 6-18 bulan:</label>
+                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Kesesuaian Sedang:</label>
                         <div class="col-sm-8">
-                            <input type="number" class="form-control" name="kriteria_2" placeholder="Isikan jumlah lulusan dengan 6 bulan ≤ Waktu Tunggu ≤ 18 bulan" required>
+                            <input type="number" class="form-control" name="sesuai_sedang" placeholder="Isikan jumlah lulusan dengan kesesuaian bidang kerja sedang" required>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                            <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span>WT > 18 bulan:</label>
+                            <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Kesesuaian Tinggi:</label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" name="kriteria_3" placeholder="Isikan jumlah lulusan dengan Waktu Tunggu > 18 bulan" required>
+                                <input type="number" class="form-control" name="sesuai_tinggi" placeholder="Isikan jumlah lulusan dengan kesesuaian bidang kerja tinggi" required>
                             </div>
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-save" value="post" data-dest="{{route('alumnus.idle.store')}}">
+                    <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-save" value="post" data-dest="{{route('alumnus.suitable.store')}}">
                         Simpan
                     </button>
                     <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium" data-dismiss="modal">Tutup</button>

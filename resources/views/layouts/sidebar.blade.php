@@ -99,6 +99,7 @@
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('alumnus.attainment') }}" class="sub-link {{ (request()->is('alumnus/attainment*')) ? 'active' : '' }}">Capaian Pembelajaran</a></li>
             <li class="sub-item"><a href="{{ route('alumnus.idle') }}" class="sub-link {{ (request()->is('alumnus/idle*')) ? 'active' : '' }}">Waktu Tunggu Lulusan</a></li>
+            <li class="sub-item"><a href="{{ route('alumnus.suitable') }}" class="sub-link {{ (request()->is('alumnus/suitable*')) ? 'active' : '' }}">Kesesuaian Bidang Kerja</a></li>
             <li class="sub-item"><a href="{{ route('alumnus.satisfaction') }}" class="sub-link {{ (request()->is('alumnus/satisfaction*')) ? 'active' : '' }}">Kepuasan Pengguna</a></li>
         </ul>
     </li>

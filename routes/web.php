@@ -166,8 +166,10 @@ Route::prefix('ajax')->group(function () {
     //Alumnus
     Route::get('alumnus/get','AlumnusAttainmentController@get_alumnus')->name('alumnus.get_alumnus');
 
-    //Alumnus - Waktu Tunggu Lulusan
+    //Alumnus - WTL / Bidang Kerja / Kinerja
     Route::get('alumnus/idle/{id}','AlumnusIdleController@edit')->name('alumnus.idle.edit');
+    Route::get('alumnus/suitable/{id}','AlumnusSuitableController@edit')->name('alumnus.suitable.edit');
+    Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@edit')->name('alumnus.workplace.edit');
 
 });
 
@@ -384,12 +386,24 @@ Route::get('alumnus/attainment/{id}','AlumnusAttainmentController@attainment_sho
 
 //Alumnus - Idle
 Route::get('alumnus/idle','AlumnusIdleController@index')->name('alumnus.idle');
-Route::get('alumnus/idle/add','AlumnusIdleController@create')->name('alumnus.idle.add');
 Route::get('alumnus/idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
-Route::get('alumnus/idle/{id}/edit','AlumnusIdleController@edit')->name('alumnus.idle.edit');
 Route::post('alumnus/idle','AlumnusIdleController@store')->name('alumnus.idle.store');
 Route::put('alumnus/idle','AlumnusIdleController@update')->name('alumnus.idle.update');
 Route::delete('alumnus/idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
+
+//Alumnus - Suitable
+Route::get('alumnus/suitable','AlumnusSuitableController@index')->name('alumnus.suitable');
+Route::get('alumnus/suitable/{id}','AlumnusSuitableController@show')->name('alumnus.suitable.show');
+Route::post('alumnus/suitable','AlumnusSuitableController@store')->name('alumnus.suitable.store');
+Route::put('alumnus/suitable','AlumnusSuitableController@update')->name('alumnus.suitable.update');
+Route::delete('alumnus/suitable','AlumnusSuitableController@destroy')->name('alumnus.suitable.delete');
+
+//Alumnus - Workplace
+Route::get('alumnus/workplace','AlumnusWorkplaceController@index')->name('alumnus.workplace');
+Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@show')->name('alumnus.workplace.show');
+Route::post('alumnus/workplace','AlumnusWorkplaceController@store')->name('alumnus.workplace.store');
+Route::put('alumnus/workplace','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
+Route::delete('alumnus/workplace','AlumnusWorkplaceController@destroy')->name('alumnus.workplace.delete');
 
 //Alumnus - Satisfaction
 Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');

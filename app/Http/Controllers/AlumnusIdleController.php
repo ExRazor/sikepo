@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\AcademicYear;
 use App\AlumnusIdle;
+use App\AcademicYear;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class AlumnusIdleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -22,22 +17,6 @@ class AlumnusIdleController extends Controller
         return view('alumnus.idle.index',compact(['studyProgram']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $kd_prodi = decrypt($request->kd_prodi);
