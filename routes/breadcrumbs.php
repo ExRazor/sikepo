@@ -321,10 +321,22 @@ Breadcrumbs::for('academic-satisfaction-edit', function ($trail,$data) {
     $trail->push('Sunting');
 });
 
-// Akademik
+// Alumnus
 Breadcrumbs::for('alumnus', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Lulusan');
+});
+
+// Alumnus > Capaian
+Breadcrumbs::for('alumnus-attainment', function ($trail) {
+    $trail->parent('alumnus');
+    $trail->push('Capaian Pembelajaran Lulusan', route('alumnus.attainment'));
+});
+
+// Alumnus > Capaian
+Breadcrumbs::for('alumnus-attainment-show', function ($trail,$data) {
+    $trail->parent('alumnus-attainment');
+    $trail->push($data->nama, route('alumnus.attainment.show',encrypt($data->kd_prodi)));
 });
 
 // Alumnus > Kepuasan

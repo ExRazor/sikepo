@@ -371,6 +371,19 @@ Route::post('academic/satisfaction','AcademicSatisfactionController@store')->nam
 Route::put('academic/satisfaction','AcademicSatisfactionController@update')->name('academic.satisfaction.update');
 Route::delete('academic/satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
 
+//Alumnus - Attainment
+Route::get('alumnus/attainment','AlumnusController@attainment')->name('alumnus.attainment');
+Route::get('alumnus/attainment/{id}','AlumnusController@attainment_show')->name('alumnus.attainment.show');
+
+//Alumnus - Idle
+Route::get('alumnus/idle','AlumnusIdleController@index')->name('alumnus.idle');
+Route::get('alumnus/idle/add','AlumnusIdleController@create')->name('alumnus.idle.add');
+Route::get('alumnus/idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
+Route::get('alumnus/idle/{id}/edit','AlumnusIdleController@edit')->name('alumnus.idle.edit');
+Route::post('alumnus/idle','AlumnusIdleController@store')->name('alumnus.idle.store');
+Route::put('alumnus/idle','AlumnusIdleController@update')->name('alumnus.idle.update');
+Route::delete('alumnus/idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
+
 //Alumnus - Satisfaction
 Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
 Route::get('alumnus/satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');

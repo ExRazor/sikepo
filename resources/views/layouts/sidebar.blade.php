@@ -97,6 +97,7 @@
             <span class="menu-item-label">Lulusan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('alumnus.attainment') }}" class="sub-link {{ (request()->is('alumnus/attainment*')) ? 'active' : '' }}">Capaian Pembelajaran</a></li>
             <li class="sub-item"><a href="{{ route('alumnus.satisfaction') }}" class="sub-link {{ (request()->is('alumnus/satisfaction*')) ? 'active' : '' }}">Kepuasan Pengguna</a></li>
         </ul>
     </li>
