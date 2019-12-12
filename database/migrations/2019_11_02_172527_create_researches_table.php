@@ -19,6 +19,7 @@ class CreateResearchesTable extends Migration
             $table->string('tema_penelitian');
             $table->string('judul_penelitian');
             $table->integer('sks_penelitian');
+            $table->char('sesuai_prodi',1)->nullable();
             $table->string('sumber_biaya');
             $table->string('sumber_biaya_nama')->nullable();
             $table->integer('jumlah_biaya');

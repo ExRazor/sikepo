@@ -10,6 +10,7 @@ class Research extends Model
         'id_ta',
         'judul_penelitian',
         'tema_penelitian',
+        'sesuai_prodi',
         'sks_penelitian',
         'sumber_biaya',
         'sumber_nama',

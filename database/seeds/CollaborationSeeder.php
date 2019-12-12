@@ -15,8 +15,9 @@ class CollaborationSeeder extends Seeder
     {
         DB::table('collaborations')->insert([
             [
-                'kd_prodi' => StudyProgram::all()->random()->kd_prodi,
+                'kd_prodi' => StudyProgram::where('kd_jurusan',setting('app_department_id'))->inRandomOrder()->first()->kd_prodi,
                 'id_ta' => AcademicYear::all()->random()->id,
+                'jenis' => 'Pendidikan',
                 'nama_lembaga' => 'RRI',
                 'tingkat' => 'lokal',
                 'judul_kegiatan' => 'Kerja Praktek',
@@ -28,8 +29,9 @@ class CollaborationSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'kd_prodi' => StudyProgram::all()->random()->kd_prodi,
+                'kd_prodi' => StudyProgram::where('kd_jurusan',setting('app_department_id'))->inRandomOrder()->first()->kd_prodi,
                 'id_ta' => AcademicYear::all()->random()->id,
+                'jenis' => 'Pendidikan',
                 'nama_lembaga' => 'Digital Printing',
                 'tingkat' => 'lokal',
                 'judul_kegiatan' => 'Magang',

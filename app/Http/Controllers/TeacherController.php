@@ -13,7 +13,9 @@ use App\TeacherAchievement;
 use App\Research;
 use App\CommunityService;
 use App\Minithesis;
-use File;
+use App\Imports\TeacherImport;
+use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TeacherController extends Controller
 {

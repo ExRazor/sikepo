@@ -10,6 +10,7 @@ class CommunityService extends Model
         'id_ta',
         'judul_pengabdian',
         'tema_pengabdian',
+        'sesuai_prodi',
         'sks_pengabdian',
         'sumber_biaya',
         'sumber_nama',

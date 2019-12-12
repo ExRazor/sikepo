@@ -17,6 +17,7 @@ class CreateCollaborationsTable extends Migration
             $table->bigIncrements('id');
             $table->char('kd_prodi',5);
             $table->unsignedInteger('id_ta');
+            $table->string('jenis');
             $table->string('nama_lembaga');
             $table->enum('tingkat',['Internasional','Nasional','Lokal']);
             $table->string('judul_kegiatan');

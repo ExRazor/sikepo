@@ -56,6 +56,7 @@ class CommunityServiceController extends Controller
             'judul_pengabdian'  => 'required',
             'tema_pengabdian'   => 'required',
             'sks_pengabdian'    => 'required|numeric',
+            'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
@@ -67,6 +68,7 @@ class CommunityServiceController extends Controller
         $community->judul_pengabdian  = $request->judul_pengabdian;
         $community->tema_pengabdian   = $request->tema_pengabdian;
         $community->sks_pengabdian    = $request->sks_pengabdian;
+        $community->sesuai_prodi      = $request->sesuai_prodi;
         $community->sumber_biaya      = $request->sumber_biaya;
         $community->sumber_biaya_nama = $request->sumber_biaya_nama;
         $community->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
@@ -85,29 +87,33 @@ class CommunityServiceController extends Controller
         $ketua->save();
 
         //Tambah Anggota Dosen
-        $hitungDsn = count($request->anggota_nidn);
-        for($i=0;$i<$hitungDsn;$i++) {
-            CommunityServiceTeacher::updateOrCreate(
-                [
-                    'id_penelitian' => $community->id,
-                    'nidn'          => $request->anggota_nidn[$i],
-                ],
-                [
-                    'status'     => 'Anggota',
-                    'sks'        => $sks_anggota,
-                ]
-            );
+        if($request->anggota_nidn) {
+            $hitungDsn = count($request->anggota_nidn);
+            for($i=0;$i<$hitungDsn;$i++) {
+                CommunityServiceTeacher::updateOrCreate(
+                    [
+                        'id_penelitian' => $community->id,
+                        'nidn'          => $request->anggota_nidn[$i],
+                    ],
+                    [
+                        'status'     => 'Anggota',
+                        'sks'        => $sks_anggota,
+                    ]
+                );
+            }
         }
 
         //Tambah Mahasiswa
-        $hitungMhs = count($request->mahasiswa_nim);
-        for($i=0;$i<$hitungMhs;$i++) {
-            CommunityServiceStudent::updateOrCreate(
-                [
-                    'id_pengabdian' => $community->id,
-                    'nim'           => $request->mahasiswa_nim[$i],
-                ]
-            );
+        if($request->mahasiswa_nim) {
+            $hitungMhs = count($request->mahasiswa_nim);
+            for($i=0;$i<$hitungMhs;$i++) {
+                CommunityServiceStudent::updateOrCreate(
+                    [
+                        'id_pengabdian' => $community->id,
+                        'nim'           => $request->mahasiswa_nim[$i],
+                    ]
+                );
+            }
         }
 
         return redirect()->route('community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
@@ -147,6 +153,7 @@ class CommunityServiceController extends Controller
             'judul_pengabdian'  => 'required',
             'tema_pengabdian'   => 'required',
             'sks_pengabdian'    => 'required|numeric',
+            'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
@@ -158,6 +165,7 @@ class CommunityServiceController extends Controller
         $community->judul_pengabdian  = $request->judul_pengabdian;
         $community->tema_pengabdian   = $request->tema_pengabdian;
         $community->sks_pengabdian    = $request->sks_pengabdian;
+        $community->sesuai_prodi      = $request->sesuai_prodi;
         $community->sumber_biaya      = $request->sumber_biaya;
         $community->sumber_biaya_nama = $request->sumber_biaya_nama;
         $community->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
@@ -186,34 +194,39 @@ class CommunityServiceController extends Controller
         }
 
         //Update Anggota
-        $hitungDsn = count($request->anggota_nidn);
-        for($i=0;$i<$hitungDsn;$i++) {
+        if($request->anggota_nidn) {
+            $hitungDsn = count($request->anggota_nidn);
+            for($i=0;$i<$hitungDsn;$i++) {
 
-            CommunityServiceTeacher::updateOrCreate(
-                [
-                    'id_pengabdian' => $id,
-                    'nidn'          => $request->anggota_nidn[$i],
-                ],
-                [
-                    'status'     => 'Anggota',
-                    'sks'        => $sks_anggota,
-                ]
-            );
+                CommunityServiceTeacher::updateOrCreate(
+                    [
+                        'id_pengabdian' => $id,
+                        'nidn'          => $request->anggota_nidn[$i],
+                    ],
+                    [
+                        'status'     => 'Anggota',
+                        'sks'        => $sks_anggota,
+                    ]
+                );
+            }
         }
 
 
-        $hitungMhs = count($request->mahasiswa_nim);
-        for($i=0;$i<$hitungMhs;$i++) {
+        //Update Anggota Mahasiswa
+        if($request->mahasiswa_nim) {
+            $hitungMhs = count($request->mahasiswa_nim);
+            for($i=0;$i<$hitungMhs;$i++) {
 
-            CommunityServiceStudent::updateOrCreate(
-                [
-                    'id_pengabdian' => $id,
-                    'nim'           => $request->mahasiswa_nim[$i],
-                ]
-            );
+                CommunityServiceStudent::updateOrCreate(
+                    [
+                        'id_pengabdian' => $id,
+                        'nim'           => $request->mahasiswa_nim[$i],
+                    ]
+                );
+            }
         }
 
-        return redirect()->route('community-service')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('community-service.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     /**

@@ -49,6 +49,7 @@ class PublicationController extends Controller
             'penerbit'        => 'required',
             'tahun'           => 'required|numeric|digits:4',
             'jurnal'          => 'nullable',
+            'sesuai_prodi'    => 'nullable',
             'sitasi'          => 'nullable|numeric',
             'akreditasi'      => 'nullable',
             'tautan'          => 'nullable',
@@ -60,6 +61,7 @@ class PublicationController extends Controller
         $data->judul            = $request->judul;
         $data->penerbit         = $request->penerbit;
         $data->tahun            = $request->tahun;
+        $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
         $data->sitasi           = $request->sitasi;
         $data->sitasi           = $request->sitasi;
@@ -67,20 +69,21 @@ class PublicationController extends Controller
         $data->tautan           = $request->tautan;
         $data->save();
 
+        if($request->mahasiswa_nim) {
+            $hitungMhs = count($request->mahasiswa_nim);
+            for($i=0;$i<$hitungMhs;$i++) {
 
-        $hitungMhs = count($request->mahasiswa_nim);
-        for($i=0;$i<$hitungMhs;$i++) {
-
-            PublicationStudents::updateOrCreate(
-                [
-                    'id_publikasi'  => $data->id,
-                    'nim'           => $request->mahasiswa_nim[$i],
-                ],
-                [
-                    'nama'          => $request->mahasiswa_nama[$i],
-                    'kd_prodi'      => $request->mahasiswa_prodi[$i],
-                ]
-            );
+                PublicationStudents::updateOrCreate(
+                    [
+                        'id_publikasi'  => $data->id,
+                        'nim'           => $request->mahasiswa_nim[$i],
+                    ],
+                    [
+                        'nama'          => $request->mahasiswa_nama[$i],
+                        'kd_prodi'      => $request->mahasiswa_prodi[$i],
+                    ]
+                );
+            }
         }
 
         return redirect()->route('publication')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
@@ -109,6 +112,7 @@ class PublicationController extends Controller
             'penerbit'        => 'required',
             'tahun'           => 'required|numeric|digits:4',
             'jurnal'          => 'nullable',
+            'sesuai_prodi'    => 'nullable',
             'sitasi'          => 'nullable|numeric',
             'akreditasi'      => 'nullable',
             'tautan'          => 'nullable',
@@ -118,30 +122,33 @@ class PublicationController extends Controller
         $data->jenis_publikasi  = $request->jenis_publikasi;
         $data->nidn             = $request->nidn;
         $data->judul            = $request->judul;
-        $data->penerbit         = $request->penerbit  ;
+        $data->penerbit         = $request->penerbit;
         $data->tahun            = $request->tahun;
+        $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
-        $data->sitasi           = $request->sitasi;
         $data->sitasi           = $request->sitasi;
         $data->akreditasi       = $request->akreditasi;
         $data->tautan           = $request->tautan;
         $data->save();
 
+        if($request->mahasiswa_nim) {
+            $hitungMhs = count($request->mahasiswa_nim);
+            for($i=0;$i<$hitungMhs;$i++) {
 
-        $hitungMhs = count($request->mahasiswa_nim);
-        for($i=0;$i<$hitungMhs;$i++) {
-
-            PublicationStudents::updateOrCreate(
-                [
-                    'id_publikasi'  => $id,
-                    'nim'           => $request->mahasiswa_nim[$i],
-                ],
-                [
-                    'nama'          => $request->mahasiswa_nama[$i],
-                    'kd_prodi'      => $request->mahasiswa_prodi[$i],
-                ]
-            );
+                PublicationStudents::updateOrCreate(
+                    [
+                        'id_publikasi'  => $id,
+                        'nim'           => $request->mahasiswa_nim[$i],
+                    ],
+                    [
+                        'nama'          => $request->mahasiswa_nama[$i],
+                        'kd_prodi'      => $request->mahasiswa_prodi[$i],
+                    ]
+                );
+            }
         }
+
+
 
         return redirect()->route('publication')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }

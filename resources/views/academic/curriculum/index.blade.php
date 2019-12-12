@@ -100,10 +100,11 @@
                         <tr>
                             <th class="text-center all defaultSort" width="50">#</th>
                             <th class="text-center all" width="200">Program Studi</th>
-                            <th class="text-center all" width="250">Kode Matkul</th>
-                            <th class="text-center all" width="600">Nama Matkul</th>
+                            <th class="text-center all" width="100">Kode</th>
+                            <th class="text-center all" width="600">Nama</th>
                             <th class="text-center all">Semester</th>
-                            <th class="text-center all" width="200">Jenis Matkul</th>
+                            <th class="text-center all" width="200">Jenis</th>
+                            <th class="text-center all">Sesuai<br>Kompetensi</th>
                             <th class="text-center none">Tahun Kurikulum</th>
                             <th class="text-center none">SKS Teori</th>
                             <th class="text-center none">SKS Seminar</th>
@@ -123,11 +124,16 @@
                                 <td>{{$c->nama}}</td>
                                 <td class="text-center">{{$c->semester}}</td>
                                 <td class="text-center">{{$c->jenis}}</td>
+                                <td class="text-center">
+                                    @isset($c->kompetensi_prodi)
+                                        <i class="fa fa-check"></i>
+                                    @endisset
+                                </td>
                                 <td>{{$c->versi}}</td>
                                 <td>{{$c->sks_teori}}</td>
                                 <td>{{$c->sks_seminar}}</td>
                                 <td>{{$c->sks_praktikum}}</td>
-                                <td>{!! implode(', ',$c->capaian) !!}</td>
+                                <td>{{ implode(', ',$c->capaian) }}</td>
                                 <td>{{$c->dokumen_nama}}</td>
                                 <td>{{$c->unit_penyelenggara}}</td>
                                 <td class="text-center" width="50">

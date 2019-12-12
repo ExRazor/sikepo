@@ -84,6 +84,7 @@
                             <th class="text-center all" width="600">Judul Pengabdian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Pengabdian</th>
                             <th class="text-center all" width="250">Ketua Pelaksana</th>
+                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
                             <th class="text-center none">Tema Pengabdian</th>
                             <th class="text-center none">SKS Pengabdian</th>
                             <th class="text-center none">Dosen Terlibat</th>
@@ -107,6 +108,11 @@
                                     {{ $p->serviceKetua->teacher->nama }}<br>
                                     <small>NIDN.{{ $p->serviceKetua->teacher->nidn }} / {{ $p->serviceKetua->teacher->studyProgram->singkatan }}</small>
                                 </a>
+                            </td>
+                            <td class="text-center">
+                                @isset($p->sesuai_prodi)
+                                    <i class="fa fa-check"></i>
+                                @endisset
                             </td>
                             <td>{{ $p->tema_pengabdian }}</td>
                             <td class="text-center">{{ $p->sks_pengabdian }}</td>

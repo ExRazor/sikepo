@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Teacher;
 use App\AcademicYear;
+use Illuminate\Support\Facades\DB;
 
 class CommunityServiceSeeder extends Seeder
 {
@@ -43,6 +44,8 @@ class CommunityServiceSeeder extends Seeder
 
         $sks = [3,4,5,6];
 
+        $sesuai = [0,1];
+
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
                 $random_sumber = $sumber_biaya[array_rand($sumber_biaya)];
@@ -54,12 +57,14 @@ class CommunityServiceSeeder extends Seeder
                 }
 
                 $nominal = rand(1000, 50000).'000';
+                $rand_sesuai = $sesuai[array_rand($sesuai)];
 
                 DB::table('community_services')->insert([
                     'id_ta'             => AcademicYear::all()->random()->id,
                     'tema_pengabdian'   => 'Analisis dan Perancangan',
                     'judul_pengabdian'  => $judul[array_rand($judul)],
                     'sks_pengabdian'    => $sks[array_rand($sks)],
+                    'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
                     'jumlah_biaya'      => $nominal,

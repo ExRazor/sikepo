@@ -12,6 +12,7 @@ class Publication extends Model
         'judul',
         'penerbit',
         'tahun',
+        'sesuai_prodi',
         'sitasi',
         'jurnal',
         'akreditasi',

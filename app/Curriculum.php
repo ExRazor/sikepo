@@ -21,6 +21,7 @@ class Curriculum extends Model
         'sks_seminar',
         'sks_praktikum',
         'capaian',
+        'kompetensi_prodi',
         'dokumen_nama',
         'unit_penyelenggara',
     ];

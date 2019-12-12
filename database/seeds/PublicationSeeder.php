@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Teacher;
 use App\PublicationCategory;
+use Illuminate\Support\Facades\DB;
 
 class PublicationSeeder extends Seeder
 {
@@ -56,6 +57,9 @@ class PublicationSeeder extends Seeder
 
         $tahun = ['2013','2014','2015','2016','2017','2018','2019'];
 
+        $sesuai = [0,1];
+        $rand_sesuai = $sesuai[array_rand($sesuai)];
+
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
                 DB::table('publications')->insert([
@@ -64,6 +68,7 @@ class PublicationSeeder extends Seeder
                     'judul'             => $judul[array_rand($judul)],
                     'penerbit'          => $penerbit[array_rand($penerbit)],
                     'tahun'             => $tahun[array_rand($tahun)],
+                    'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'created_at'        => now()
                 ]);
             }

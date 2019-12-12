@@ -155,6 +155,15 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
+                                <label class="col-3 form-control-label">Kompetensi: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <label class="ckbox ckbox-inline mb-0 mr-4">
+                                        <input name="kompetensi_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->kompetensi_prodi) || Request::old('kompetensi_prodi')=='1' ? 'checked' : ''}}>
+                                        <span class="pl-0">Sesuai Kompetensi Prodi?</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label class="col-3 form-control-label">Dokumen Rencana: </label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="dokumen_nama" value="{{ isset($data) ? $data->dokumen_nama : Request::old('dokumen_nama')}}" placeholder="Masukkan nama dokumen rencana pembelajaran">

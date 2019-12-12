@@ -9,6 +9,7 @@ class Collaboration extends Model
     protected $fillable = [
                             'kd_prodi',
                             'id_ta',
+                            'jenis',
                             'nama_lembaga',
                             'tingkat',
                             'judul_kegiatan',

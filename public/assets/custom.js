@@ -1148,6 +1148,7 @@ $(document).ready(function() {
                         var id              = val.id;
                         var tahun_akademik  = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
                         var prodi           = val.study_program.nama;
+                        var jenis           = val.jenis;
                         var lembaga         = val.nama_lembaga;
                         var tingkat         = val.tingkat;
                         var judul           = val.judul_kegiatan;
@@ -1158,6 +1159,7 @@ $(document).ready(function() {
                         html +='<tr>'+
                                     '<td>'+tahun_akademik+'</td>'+
                                     '<td>'+prodi+'</td>'+
+                                    '<td>'+jenis+'</td>'+
                                     '<td>'+lembaga+'</td>'+
                                     '<td class="text-capitalize">'+tingkat+'</td>'+
                                     '<td>'+judul+'</td>'+
@@ -1331,7 +1333,7 @@ $(document).ready(function() {
             $.ajax({
                 url: base_url+'/ajax/teacher/get_by_studyProgram',
                 data: {kd_prodi:id},
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 success: function (data) {
 
@@ -2304,6 +2306,11 @@ $(document).ready(function() {
                         var jumlah_biaya = val.jumlah_biaya;
                         var daftar_dsn  = '';
                         var daftar_mhs  = '';
+                        var sesuai_prodi = '';
+
+                        if(val.sesuai_prodi!=null) {
+                            sesuai_prodi = '<i class="fa fa-check"></i>';
+                        }
 
                         //Daftar Dosen Anggota
                         if(val.research_anggota.length > 0) {
@@ -2342,6 +2349,7 @@ $(document).ready(function() {
                                         '<small>NIDN.'+ketua_nidn+' / '+ketua_prodi+'</small>'+
                                     '</a>'+
                                 '</td>'+
+                                '<td class="text-center">'+sesuai_prodi+'</td>'+
                                 '<td>'+tema+'</td>'+
                                 '<td class="text-center">'+sks+'</td>'+
                                 '<td>'+dosen+'</td>'+
@@ -2528,6 +2536,11 @@ $(document).ready(function() {
                         var jumlah_biaya = val.jumlah_biaya;
                         var daftar_dsn  = '';
                         var daftar_mhs  = '';
+                        var sesuai_prodi = '';
+
+                        if(val.sesuai_prodi!=null) {
+                            sesuai_prodi = '<i class="fa fa-check"></i>';
+                        }
 
                         //Daftar Dosen Anggota
                         if(val.service_anggota.length > 0) {
@@ -2566,6 +2579,7 @@ $(document).ready(function() {
                                         '<small>NIDN.'+ketua_nidn+' / '+ketua_prodi+'</small>'+
                                     '</a>'+
                                 '</td>'+
+                                '<td class="text-center">'+sesuai_prodi+'</td>'+
                                 '<td>'+tema+'</td>'+
                                 '<td class="text-center">'+sks+'</td>'+
                                 '<td>'+dosen+'</td>'+
@@ -2652,6 +2666,11 @@ $(document).ready(function() {
                         var capaian       = val.capaian;
                         var dokumen       = val.dokumen_nama;
                         var unit          = val.unit_penyelenggara;
+                        var kompetensi_prodi = '';
+
+                        if(val.kompetensi_prodi!=null) {
+                            kompetensi_prodi = '<i class="fa fa-check"></i>';
+                        }
 
                         html += '<tr>'+
                                     '<td>'+i+'</td>'+
@@ -2660,6 +2679,7 @@ $(document).ready(function() {
                                     '<td>'+nama+'</td>'+
                                     '<td class="text-center">'+semester+'</td>'+
                                     '<td class="text-center">'+jenis+'</td>'+
+                                    '<td class="text-center">'+kompetensi_prodi+'</td>'+
                                     '<td>'+versi+'</td>'+
                                     '<td>'+sks_teori+'</td>'+
                                     '<td>'+sks_seminar+'</td>'+
@@ -3034,6 +3054,11 @@ $(document).ready(function() {
                         var akreditasi  = val.akreditasi;
                         var tautan      = val.tautan;
                         var daftar      = '';
+                        var sesuai_prodi = '';
+
+                        if(val.sesuai_prodi!=null) {
+                            sesuai_prodi = '<i class="fa fa-check"></i>';
+                        }
 
                         if(val.publication_students.length > 0) {
                             $.each(val.publication_students, function(i,mhs){
@@ -3059,6 +3084,7 @@ $(document).ready(function() {
                                 '<td>'+judul+'</td>'+
                                 '<td>'+kategori+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
+                                '<td class="text-center">'+sesuai_prodi+'</td>'+
                                 '<td>'+penerbit+'</td>'+
                                 '<td>'+jurnal+'</td>'+
                                 '<td>'+akreditasi+'</td>'+

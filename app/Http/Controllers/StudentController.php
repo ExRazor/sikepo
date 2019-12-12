@@ -9,13 +9,13 @@ use App\StudyProgram;
 use App\AcademicYear;
 use App\Research;
 use App\CommunityService;
-use App\Imports\StudentImport;
 use App\StudentAchievement;
 use App\Minithesis;
+use App\Imports\StudentImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use File;
-use DataTables;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
 
 class StudentController extends Controller
 {

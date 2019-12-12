@@ -89,6 +89,15 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
+                                <label class="col-3 form-control-label">Bidang: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <label class="ckbox ckbox-inline mb-0 mr-4">
+                                        <input name="sesuai_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->sesuai_prodi) || Request::old('sesuai_prodi')=='1' ? 'checked' : ''}}>
+                                        <span class="pl-0">Sesuai Bidang Prodi?</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jumlah SKS: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <input class="form-control number" type="text" name="sks_penelitian" value="{{ isset($data) ? $data->sks_penelitian : Request::old('sks_penelitian')}}" placeholder="Masukkan jumlah SKS" value="3" required>

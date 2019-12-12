@@ -2,6 +2,7 @@
 
 use App\AcademicYear;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Teacher;
 
 class ResearchSeeder extends Seeder
@@ -42,6 +43,8 @@ class ResearchSeeder extends Seeder
 
         $sks_penelitian = [3,4,5,6];
 
+        $sesuai = [0,1];
+
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
                 $random_sumber = $sumber_biaya[array_rand($sumber_biaya)];
@@ -52,11 +55,15 @@ class ResearchSeeder extends Seeder
                     $nama_lembaga = '';
                 }
 
+                $rand_sesuai = $sesuai[array_rand($sesuai)];
+
                 $nominal = rand(1000, 50000).'000';
                 DB::table('researches')->insert([
                     'id_ta'             => AcademicYear::all()->random()->id,
                     'tema_penelitian'   => 'Analisis dan Perancangan',
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
+                    'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
+                    'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'sks_penelitian'    => $sks_penelitian[array_rand($sks_penelitian)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,

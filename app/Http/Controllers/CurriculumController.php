@@ -8,7 +8,7 @@ use App\Imports\CurriculumImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
-use File;
+use Illuminate\Support\Facades\File;
 
 class CurriculumController extends Controller
 {
@@ -77,6 +77,7 @@ class CurriculumController extends Controller
             'sks_seminar'       => 'nullable|numeric',
             'sks_praktikum'     => 'nullable|numeric',
             'capaian'           => 'required',
+            'kompetensi_prodi'  => 'nullable',
             'dokumen_nama'      => 'nullable',
             'unit_penyelenggara'=> 'required',
         ]);
@@ -92,6 +93,7 @@ class CurriculumController extends Controller
         $query->sks_seminar     = intval($request->sks_seminar);
         $query->sks_praktikum   = intval($request->sks_praktikum);
         $query->capaian         = $request->capaian;
+        $query->kompetensi_prodi= $request->kompetensi_prodi;
         $query->dokumen_nama    = $request->dokumen_nama;
         $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();
@@ -157,6 +159,7 @@ class CurriculumController extends Controller
             'sks_seminar'       => 'nullable|numeric',
             'sks_praktikum'     => 'nullable|numeric',
             'capaian'           => 'required',
+            'kompetensi_prodi'  => 'nullable',
             'dokumen_nama'      => 'nullable',
             'unit_penyelenggara'=> 'required',
         ]);
@@ -172,6 +175,7 @@ class CurriculumController extends Controller
         $query->sks_seminar     = intval($request->sks_seminar);
         $query->sks_praktikum   = intval($request->sks_praktikum);
         $query->capaian         = $request->capaian;
+        $query->kompetensi_prodi= $request->kompetensi_prodi;
         $query->dokumen_nama    = $request->dokumen_nama;
         $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();

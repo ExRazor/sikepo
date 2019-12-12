@@ -72,6 +72,7 @@
                             <th class="text-center all" width="600">Judul Publikasi</th>
                             <th class="text-center all" width="250">Jenis Publikasi</th>
                             <th class="text-center defaultSort all" width="100">Tahun Terbit</th>
+                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
                             <th class="text-center none" width="250">Penerbit</th>
                             <th class="text-center none">Nama Jurnal</th>
                             <th class="text-center none">Akreditasi</th>
@@ -91,6 +92,11 @@
                             <td>{{ $p->judul }}</td>
                             <td>{{ $p->publicationCategory->nama }}</td>
                             <td class="text-center">{{ $p->tahun }}</td>
+                            <td class="text-center">
+                                @isset($p->sesuai_prodi)
+                                    <i class="fa fa-check"></i>
+                                @endisset
+                            </td>
                             <td>{{ $p->penerbit }}</td>
                             <td>{{ $p->jurnal }}</td>
                             <td>{{ $p->akreditasi }}</td>

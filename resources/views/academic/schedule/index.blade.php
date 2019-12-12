@@ -92,7 +92,7 @@
                                 <th class="text-center">Jumlah SKS</th>
                                 <th class="text-center">Nama Dosen</th>
                                 <th class="text-center">Sesuai Prodi</th>
-                                <th class="text-center no-sort">Sesuai Bidang</th>
+                                <th class="text-center">Sesuai Bidang</th>
                                 <th class="text-center no-sort">Aksi</th>
                             </tr>
                         </thead>

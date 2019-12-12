@@ -6,7 +6,7 @@ use App\Collaboration;
 use App\StudyProgram;
 use App\AcademicYear;
 use Illuminate\Http\Request;
-use File;
+use Illuminate\Support\Facades\File;
 
 class CollaborationController extends Controller
 {
@@ -58,6 +58,7 @@ class CollaborationController extends Controller
         $request->validate([
             'kd_prodi'          => 'required',
             'id_ta'             => 'required',
+            'jenis'             => 'required',
             'nama_lembaga'      => 'required',
             'tingkat'           => 'required',
             'judul_kegiatan'    => 'required',
@@ -71,6 +72,7 @@ class CollaborationController extends Controller
         $collaboration = new Collaboration;
         $collaboration->kd_prodi         = $request->kd_prodi;
         $collaboration->id_ta            = $request->id_ta;
+        $collaboration->jenis            = $request->jenis;
         $collaboration->nama_lembaga     = $request->nama_lembaga;
         $collaboration->tingkat          = $request->tingkat;
         $collaboration->judul_kegiatan   = $request->judul_kegiatan;
@@ -124,6 +126,7 @@ class CollaborationController extends Controller
 
         $request->validate([
             'kd_prodi'          => 'required',
+            'jenis'             => 'required',
             'id_ta'             => 'required',
             'nama_lembaga'      => 'required',
             'tingkat'           => 'required',
@@ -138,6 +141,7 @@ class CollaborationController extends Controller
         $collaboration = Collaboration::find($id);
         $collaboration->kd_prodi         = $request->kd_prodi;
         $collaboration->id_ta            = $request->id_ta;
+        $collaboration->jenis            = $request->jenis;
         $collaboration->nama_lembaga     = $request->nama_lembaga;
         $collaboration->tingkat          = $request->tingkat;
         $collaboration->judul_kegiatan   = $request->judul_kegiatan;

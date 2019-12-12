@@ -84,7 +84,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($achievement as $acv)
+                        @foreach ($achievement as $acv)
                         <tr>
                             <td class="text-center">{{ $acv->academicYear->tahun_akademik.' - '.$acv->academicYear->semester }}</td>
                             <td>
@@ -117,11 +117,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan=5 class="text-center align-middle">BELUM ADA DATA</td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div><!-- card-body -->

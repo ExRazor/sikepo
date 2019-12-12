@@ -23,7 +23,8 @@ class CreateCurriculaTable extends Migration
             $table->integer('sks_teori')->default(0);
             $table->integer('sks_seminar')->nullable();
             $table->integer('sks_praktikum')->nullable();
-            $table->text('capaian')->nullable();
+            $table->text('capaian');
+            $table->char('kompetensi_prodi',1)->nullable();
             $table->string('dokumen_nama')->nullable();
             $table->string('unit_penyelenggara')->nullable();
             $table->timestamps();

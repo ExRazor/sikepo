@@ -69,6 +69,9 @@ Route::prefix('setting')->name('setting.')->group(function () {
     //Umum
     Route::get('general', 'SettingController@index')->name('general');
     Route::put('general', 'SettingController@update')->name('general.update');
+
+    //User
+    Route::get('user', 'UserController@index')->name('user');
 });
 
 //Fungsi Ajax

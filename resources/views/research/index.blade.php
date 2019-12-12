@@ -84,6 +84,7 @@
                             <th class="text-center all" width="600">Judul Penelitian</th>
                             <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
                             <th class="text-center all" width="250">Ketua Peneliti</th>
+                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
                             <th class="text-center none">Tema Penelitian</th>
                             <th class="text-center none">SKS Penelitian</th>
                             <th class="text-center none">Dosen Terlibat</th>
@@ -107,6 +108,11 @@
                                     {{ $p->researchKetua->teacher->nama }}<br>
                                     <small>NIDN.{{ $p->researchKetua->teacher->nidn }} / {{ $p->researchKetua->teacher->studyProgram->singkatan }}</small>
                                 </a>
+                            </td>
+                            <td class="text-center">
+                                @isset($p->sesuai_prodi)
+                                    <i class="fa fa-check"></i>
+                                @endisset
                             </td>
                             <td>{{ $p->tema_penelitian }}</td>
                             <td class="text-center">{{ $p->sks_penelitian }}</td>

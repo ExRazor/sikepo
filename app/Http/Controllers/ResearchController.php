@@ -57,6 +57,7 @@ class ResearchController extends Controller
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
             'sks_penelitian'    => 'required|numeric',
+            'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
@@ -68,6 +69,7 @@ class ResearchController extends Controller
         $research->judul_penelitian  = $request->judul_penelitian;
         $research->tema_penelitian   = $request->tema_penelitian;
         $research->sks_penelitian    = $request->sks_penelitian;
+        $research->sesuai_prodi      = $request->sesuai_prodi;
         $research->sumber_biaya      = $request->sumber_biaya;
         $research->sumber_biaya_nama = $request->sumber_biaya_nama;
         $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
@@ -86,29 +88,34 @@ class ResearchController extends Controller
         $ketua->save();
 
         //Tambah Anggota Dosen
-        $hitungDsn = count($request->anggota_nidn);
-        for($i=0;$i<$hitungDsn;$i++) {
-            ResearchTeacher::updateOrCreate(
-                [
-                    'id_penelitian' => $research->id,
-                    'nidn'          => $request->anggota_nidn[$i],
-                ],
-                [
-                    'status'     => 'Anggota',
-                    'sks'        => $sks_anggota,
-                ]
-            );
+        if($request->anggota_nidn) {
+            $hitungDsn = count($request->anggota_nidn);
+            for($i=0;$i<$hitungDsn;$i++) {
+                ResearchTeacher::updateOrCreate(
+                    [
+                        'id_penelitian' => $research->id,
+                        'nidn'          => $request->anggota_nidn[$i],
+                    ],
+                    [
+                        'status'     => 'Anggota',
+                        'sks'        => $sks_anggota,
+                    ]
+                );
+            }
         }
 
+
         //Tambah Mahasiswa
-        $hitungMhs = count($request->mahasiswa_nim);
-        for($i=0;$i<$hitungMhs;$i++) {
-            ResearchStudent::updateOrCreate(
-                [
-                    'id_penelitian' => $research->id,
-                    'nim'           => $request->mahasiswa_nim[$i],
-                ]
-            );
+        if($request->mahasiswa_nim) {
+            $hitungMhs = count($request->mahasiswa_nim);
+            for($i=0;$i<$hitungMhs;$i++) {
+                ResearchStudent::updateOrCreate(
+                    [
+                        'id_penelitian' => $research->id,
+                        'nim'           => $request->mahasiswa_nim[$i],
+                    ]
+                );
+            }
         }
 
         return redirect()->route('research')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
@@ -136,6 +143,7 @@ class ResearchController extends Controller
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
             'sks_penelitian'    => 'required|numeric',
+            'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
@@ -147,6 +155,7 @@ class ResearchController extends Controller
         $research->judul_penelitian  = $request->judul_penelitian;
         $research->tema_penelitian   = $request->tema_penelitian;
         $research->sks_penelitian    = $request->sks_penelitian;
+        $research->sesuai_prodi      = $request->sesuai_prodi;
         $research->sumber_biaya      = $request->sumber_biaya;
         $research->sumber_biaya_nama = $request->sumber_biaya_nama;
         $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
@@ -176,34 +185,38 @@ class ResearchController extends Controller
         }
 
         //Update Anggota
-        $hitungDsn = count($request->anggota_nidn);
-        for($i=0;$i<$hitungDsn;$i++) {
+        if($request->anggota_nidn) {
+            $hitungDsn = count($request->anggota_nidn);
+            for($i=0;$i<$hitungDsn;$i++) {
 
-            ResearchTeacher::updateOrCreate(
-                [
-                    'id_penelitian' => $id,
-                    'nidn'          => $request->anggota_nidn[$i],
-                ],
-                [
-                    'status'     => 'Anggota',
-                    'sks'        => $sks_anggota,
-                ]
-            );
+                ResearchTeacher::updateOrCreate(
+                    [
+                        'id_penelitian' => $id,
+                        'nidn'          => $request->anggota_nidn[$i],
+                    ],
+                    [
+                        'status'     => 'Anggota',
+                        'sks'        => $sks_anggota,
+                    ]
+                );
+            }
         }
 
         //Update Mahasiswa
-        $hitungMhs = count($request->mahasiswa_nim);
-        for($i=0;$i<$hitungMhs;$i++) {
+        if($request->mahasiswa_nim) {
+            $hitungMhs = count($request->mahasiswa_nim);
+            for($i=0;$i<$hitungMhs;$i++) {
 
-            ResearchStudent::updateOrCreate(
-                [
-                    'id_penelitian' => $id,
-                    'nim'           => $request->mahasiswa_nim[$i],
-                ]
-            );
+                ResearchStudent::updateOrCreate(
+                    [
+                        'id_penelitian' => $id,
+                        'nim'           => $request->mahasiswa_nim[$i],
+                    ]
+                );
+            }
         }
 
-        return redirect()->route('research')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('research.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)

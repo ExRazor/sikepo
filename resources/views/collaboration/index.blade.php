@@ -68,16 +68,17 @@
                 <table id="table_collaboration" class="table datatable display responsive" data-sort="desc">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="150">Tahun Akademik</th>
-                            <th class="text-center all" width="250">Program Studi</th>
-                            <th class="text-center all">Lembaga Mitra</th>
-                            <th class="text-center all" width="150">Tingkat</th>
-                            <th class="text-center none">Judul Kegiatan</th>
-                            <th class="text-center no-sort none">Manfaat</th>
-                            <th class="text-center defaultSort all" width="100">Waktu</th>
-                            <th class="text-center no-sort none">Durasi</th>
-                            <th class="text-center no-sort all">Bukti Kerjasama</th>
-                            <th class="text-center no-sort all">Aksi</th>
+                            <th class="text-center align-middle all defaultSort" width="150">Tahun Akademik</th>
+                            <th class="text-center align-middle all" width="250">Program Studi</th>
+                            <th class="text-center align-middle all" width="175">Jenis</th>
+                            <th class="text-center align-middle all">Lembaga Mitra</th>
+                            <th class="text-center align-middle all" width="150">Tingkat</th>
+                            <th class="text-center align-middle none">Judul Kegiatan</th>
+                            <th class="text-center align-middle no-sort none">Manfaat</th>
+                            <th class="text-center align-middle none">Waktu</th>
+                            <th class="text-center align-middle no-sort none">Durasi</th>
+                            <th class="text-center align-middle no-sort none">Bukti Kerjasama</th>
+                            <th class="text-center align-middle no-sort all">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,8 +86,9 @@
                         <tr>
                             <td>{{$d->academicYear->tahun_akademik." - ".$d->academicYear->semester}}</td>
                             <td>{{$d->studyProgram->nama}}</td>
+                            <td>{{$d->jenis}}</td>
                             <td>{{$d->nama_lembaga}}</td>
-                            <td class="text-capitalize">{{$d->tingkat}}</td>
+                            <td class="text-capitalize text-center">{{$d->tingkat}}</td>
                             <td>{{$d->judul_kegiatan}}</td>
                             <td>{{$d->manfaat_kegiatan}}</td>
                             <td>{{$d->waktu}}</td>
