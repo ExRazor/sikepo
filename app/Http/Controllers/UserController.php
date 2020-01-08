@@ -62,7 +62,6 @@ class UserController extends Controller
         $request->validate([
             'name'                  => 'required|min:5',
             'username'              => 'required|min:5|alpha_dash',
-            'password'              => 'required|min:8',
             'role'                  => 'required',
             'kd_prodi'              => $validateProdi,
         ]);
@@ -70,7 +69,7 @@ class UserController extends Controller
         $data            = new User;
         $data->name      = $request->name;
         $data->username  = $request->username;
-        $data->password  = Hash::make($request->password);
+        $data->password  = Hash::make($request->username);
         $data->role      = $request->role;
         $data->kd_prodi  = $request->kd_prodi;
         $q = $data->save();
@@ -90,15 +89,28 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
+    public function reset_password(Request $request)
     {
-        //
+        $id         = decrypt($request->id);
+        $password   = generatePassword();
+
+        $data            = User::find($id);
+        $data->password  = Hash::make($password);
+        $q = $data->save();
+
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Mohon ulangi lagi kembali',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'     => 'Password baru Anda:',
+                'password'  => $password,
+                'type'      => 'success'
+            ]);
+        }
     }
 
     /**
@@ -107,9 +119,12 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        //
+        $id = decrypt($id);
+        $data = User::find($id);
+
+        return response()->json($data);
     }
 
     /**
@@ -119,9 +134,38 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
-        //
+        $id = decrypt($request->id);
+        $validateProdi = $request->has('kd_prodi') ? 'required' : 'nullable';
+
+        $request->validate([
+            'name'                  => 'required|min:5',
+            'username'              => 'required|min:5|alpha_dash',
+            'role'                  => 'required',
+            'kd_prodi'              => $validateProdi,
+        ]);
+
+        $data            = User::find($id);
+        $data->name      = $request->name;
+        $data->username  = $request->username;
+        $data->role      = $request->role;
+        $data->kd_prodi  = $request->kd_prodi;
+        $q = $data->save();
+
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil diubah',
+                'type'    => 'success'
+            ]);
+        }
     }
 
     /**

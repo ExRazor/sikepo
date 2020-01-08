@@ -3341,6 +3341,99 @@ $(document).ready(function() {
             selectProdi.prop('required',false);
         }
     })
+
+    $('#table-user').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/setting/user/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                var selectProdi = $('#modal-setting-user').find('select#kd_prodi');
+                if (data.role == 'Kaprodi') {
+                    selectProdi.prop('disabled',false);
+                    selectProdi.prop('required',true);
+                    selectProdi.val(data.kd_prodi);
+                } else {
+                    selectProdi.prop('disabled',true);
+                    selectProdi.prop('required',false);
+                    selectProdi.val(null);
+                }
+
+                switch(data.role) {
+                    case 'Admin':
+                        $('input:radio[name=role][value="Admin"]').prop('checked',true);
+                    break;
+                    case 'Kajur':
+                        $('input:radio[name=role][value="Kajur"]').prop('checked',true);
+                    break;
+                    case 'Kaprodi':
+                        $('input:radio[name=role][value="Kaprodi"]').prop('checked',true);
+                    break;
+                }
+
+                $('#modal-setting-user')
+                    .find('input[name=id]').val(id).end()
+                    .find('input[name=name]').val(data.name).end()
+                    .find('input[name=username]').val(data.username).prop('readonly',false).end()
+                    .modal('toggle').end();
+
+            }
+        });
+    })
+
+    //Reset Password Button
+    $('#table-user').on('click','.reset-password',function(e){
+        e.preventDefault();
+
+        var id   = $(this).data('id');
+        var url  = base_url+'/setting/user/resetpass';
+
+        Swal.fire({
+            title: 'Reset password?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Reset!',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    data: {
+                        id:id
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.showLoading()
+                    },
+                    success: function (state) {
+                        if(state.type=='success') {
+                            Swal.fire({
+                                title: state.title,
+                                html:
+                                    '<input class="swal2-input" value="'+state.password+'" readonly>',
+                            });
+                        } else {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                            });
+                        }
+                    }
+                });
+                // console.log(result.value);
+            }
+        })
+    })
     /****************************************************************************************************/
 
 });

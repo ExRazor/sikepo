@@ -9,6 +9,7 @@ class User extends Model
     use Traits\Uuid;
 
     public $incrementing = false;
+    protected $hidden = array('password', 'remember_token','created_at','updated_at');
 
     protected $fillable = [
         'username'            ,

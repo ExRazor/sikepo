@@ -17,6 +17,7 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Nama Lengkap:</label>
                         <div class="col-sm-8">
+                            <input type="hidden" name="id">
                             <input type="text" class="form-control" name="name" placeholder="Masukkan nama lengkap" required>
                         </div>
                     </div>
@@ -24,17 +25,6 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Username:</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="username" placeholder="Masukkan username" required>
-                        </div>
-                    </div>
-                    <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Password:</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" name="password" placeholder="Masukkan password" required readonly>
-                        </div>
-                        <div class="col-sm-2">
-                            <button id="generatePassword" class="btn btn-primary btn-block" required>
-                                Generate
-                            </button>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">

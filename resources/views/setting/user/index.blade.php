@@ -53,7 +53,7 @@
                     </h6>
                 </div>
                 <div class="card-body bd-color-gray-lighter">
-                    <table class="table table-bordered mb-0">
+                    <table id="table-user" class="table table-bordered mb-0">
                         <thead>
                             <tr>
                                 <th class="text-center align-middle">#</th>
@@ -79,6 +79,7 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
                                             <button class="dropdown-item btn-edit" data-id="{{ encrypt($u->id) }}">Sunting</button>
+                                            <button class="dropdown-item reset-password" data-id="{{ encrypt($u->id) }}">Reset Password</button>
                                             <form method="POST">
                                                 @method('delete')
                                                 @csrf
@@ -118,4 +119,8 @@
     </div>
 </div>
 @include('setting.user.form')
+@endsection
+
+@section('custom-js')
+
 @endsection
