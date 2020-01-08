@@ -167,6 +167,7 @@ $(document).ready(function() {
                 $.each(json.errors, function(key, value){
                     $('.alert-danger').show();
                     $('.alert-danger').append('<span>'+value+'</span><br>');
+                    $('#'+key).addClass('is-invalid');
                     $('[name='+key+']').addClass('is-invalid');
                     $('[name='+key+']').parents('div.radio').addClass('is-invalid');
                     $('[aria-labelledby*=select2-'+key+']').addClass('is-invalid');
@@ -3315,6 +3316,30 @@ $(document).ready(function() {
 
             }
         });
+    })
+    /****************************************************************************************************/
+
+    /******************************************* DATA USER *********************************************/
+
+    $('#modal-setting-user').on('click','button#generatePassword',function(e){
+        e.preventDefault();
+
+        var formPass = $('#modal-setting-user').find('input[name=password]');
+        var password = rand_password();
+
+        formPass.val(password);
+    })
+
+    $('#modal-setting-user').on('change','input[name=role]',function(){
+        var selectProdi = $('#modal-setting-user').find('select#kd_prodi');
+
+        if ($(this).is(':checked') && $(this).val() == 'Kaprodi') {
+            selectProdi.prop('disabled',false);
+            selectProdi.prop('required',true);
+        } else {
+            selectProdi.prop('disabled',true);
+            selectProdi.prop('required',false);
+        }
     })
     /****************************************************************************************************/
 

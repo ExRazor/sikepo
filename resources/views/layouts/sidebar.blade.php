@@ -124,7 +124,7 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{route('setting.general')}}" class="sub-link {{ (request()->is('setting/general*')) ? 'active' : '' }}">Umum</a></li>
-            <li class="sub-item"><a href="#" class="sub-link {{ (request()->is('setting/users*')) ? 'active' : '' }}">Pengguna</a></li>
+            <li class="sub-item"><a href="{{route('setting.user')}}" class="sub-link {{ (request()->is('setting/user*')) ? 'active' : '' }}">Pengguna</a></li>
         </ul>
     </li>
 </ul><!-- br-sideleft-menu -->

@@ -10,7 +10,7 @@ trait Uuid
         parent::boot();
         static::creating(function ($model) {
             try {
-                $model->uuid = Str::uuid()->toString();
+                $model->id = Str::uuid()->toString();
             } catch (UnsatisfiedDependencyException $e) {
                 abort(500, $e->getMessage());
             }

@@ -72,6 +72,9 @@ Route::prefix('setting')->name('setting.')->group(function () {
 
     //User
     Route::get('user', 'UserController@index')->name('user');
+    Route::post('user', 'UserController@store')->name('user.store');
+    Route::put('user', 'UserController@update')->name('user.update');
+    Route::delete('user', 'UserController@destroy')->name('user.delete');
 });
 
 //Fungsi Ajax

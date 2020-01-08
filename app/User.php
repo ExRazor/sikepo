@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
-    use Uuid;
+    use Traits\Uuid;
 
-    protected $primaryKey = 'uuid';
+    public $incrementing = false;
+
     protected $fillable = [
         'username'            ,
         'password'            ,
@@ -17,4 +18,9 @@ class User extends Model
         'remember_token'      ,
         'name'                ,
     ];
+
+    public function studyProgram()
+    {
+        return $this->belongsTo('App\StudyProgram','kd_prodi');
+    }
 }

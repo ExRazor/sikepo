@@ -26,6 +26,11 @@ class StudyProgram extends Model
         return $this->belongsTo('App\Department','kd_jurusan');
     }
 
+    public function user()
+    {
+        return $this->hasOne('App\User','kd_prodi');
+    }
+
     public function collaboration()
     {
         return $this->hasMany('App\Collaboration','kd_prodi');

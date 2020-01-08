@@ -45,6 +45,7 @@
 
     <!-- BASE JS -->
     <script src="{{ asset ('assets/js') }}/bracket.js"></script>
+    <script src="{{ asset ('assets') }}/cust.func.js"></script>
     <script src="{{ asset ('assets') }}/custom.js"></script>
 
   </head>

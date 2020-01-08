@@ -455,7 +455,13 @@ Breadcrumbs::for('setting', function ($trail) {
 // Setelan > Umum
 Breadcrumbs::for('setting-general', function ($trail) {
     $trail->parent('setting');
-    $trail->push('Setelan Umum');
+    $trail->push('Setelan Umum',route('setting.general'));
+});
+
+// Setelan > User
+Breadcrumbs::for('setting-user', function ($trail) {
+    $trail->parent('setting');
+    $trail->push('Manajemen User',route('setting.user'));
 });
 
 // // Home > About

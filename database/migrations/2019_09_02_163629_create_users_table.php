@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('id')->primary();
             $table->string('username');
             $table->string('password');
             $table->string('role');
@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('remember_token')->nullable();
             $table->string('name');
             $table->timestamps();
+
+            $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
