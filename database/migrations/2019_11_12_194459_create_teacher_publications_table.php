@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePublicationsTable extends Migration
+class CreateTeacherPublicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePublicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('publications', function (Blueprint $table) {
+        Schema::create('teacher_publications', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('nidn',9);
+            $table->char('nidn',10);
             $table->unsignedInteger('jenis_publikasi');
             $table->string('judul');
             $table->string('penerbit');
@@ -29,7 +29,6 @@ class CreatePublicationsTable extends Migration
 
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('jenis_publikasi')->references('id')->on('publication_categories')->onUpdate('cascade')->onDelete('cascade');
-
         });
     }
 
@@ -40,6 +39,6 @@ class CreatePublicationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('publications');
+        Schema::dropIfExists('teacher_publications');
     }
 }

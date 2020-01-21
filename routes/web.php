@@ -149,14 +149,14 @@ Route::prefix('ajax')->group(function () {
     //Publication Category
     Route::get('publication/category/{id}','PublicationCategoryController@edit')->name('publication.category.edit');
 
-    //Publication
-    Route::post('publication/get_by_filter','PublicationController@get_by_filter')->name('ajax.publication.filter');
+    //Teacher Publication
+    Route::post('publication/teacher/get_by_filter','TeacherPublicationController@get_by_filter')->name('ajax.publication.teacher.filter');
 
     //Output Activity Category
     Route::get('output-activity/category/{id}','OutputActivityCategoryController@edit')->name('output-activity.category.edit');
 
     //Output Activity
-    Route::post('output-activity/get_by_filter','PublicationController@get_by_filter')->name('ajax.output-activity.filter');
+    Route::post('output-activity/get_by_filter','OutputActivityController@get_by_filter')->name('ajax.output-activity.filter');
 
     //Academic - Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
@@ -318,15 +318,15 @@ Route::post('publication/category','PublicationCategoryController@store')->name(
 Route::put('publication/category','PublicationCategoryController@update')->name('publication.category.update');
 Route::delete('publication/category','PublicationCategoryController@destroy')->name('publication.category.delete');
 
-//Publication List
-Route::get('publication/list','PublicationController@index')->name('publication');
-Route::get('publication/list/add','PublicationController@create')->name('publication.add');
-Route::get('publication/list/{id}','PublicationController@show')->name('publication.show');
-Route::get('publication/list/{id}/edit','PublicationController@edit')->name('publication.edit');
-Route::post('publication/list','PublicationController@store')->name('publication.store');
-Route::put('publication/list','PublicationController@update')->name('publication.update');
-Route::delete('publication/list','PublicationController@destroy')->name('publication.delete');
-Route::get('publication/list/delete_student/{id}','PublicationController@destroy_students')->name('publication.students.delete');
+//Teacher Publication List
+Route::get('publication/teacher','TeacherPublicationController@index')->name('publication.teacher');
+Route::get('publication/teacher/add','TeacherPublicationController@create')->name('publication.teacher.add');
+Route::get('publication/teacher/{id}','TeacherPublicationController@show')->name('publication.teacher.show');
+Route::get('publication/teacher/{id}/edit','TeacherPublicationController@edit')->name('publication.teacher.edit');
+Route::post('publication/teacher','TeacherPublicationController@store')->name('publication.teacher.store');
+Route::put('publication/teacher','TeacherPublicationController@update')->name('publication.teacher.update');
+Route::delete('publication/teacher','TeacherPublicationController@destroy')->name('publication.teacher.delete');
+Route::post('publication/teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
 
 //Output Activity Category
 Route::get('output-activity/category','OutputActivityCategoryController@index')->name('output-activity.category');

@@ -67,7 +67,8 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('publication.category') }}" class="sub-link {{ (request()->is('publication/category*')) ? 'active' : '' }}">Jenis Publikasi</a></li>
-            <li class="sub-item"><a href="{{ route('publication') }}" class="sub-link {{ (request()->is('publication/list*')) ? 'active' : '' }}">Daftar Publikasi</a></li>
+            <li class="sub-item"><a href="{{ route('publication.teacher') }}" class="sub-link {{ (request()->is('publication/teacher*')) ? 'active' : '' }}">Publikasi Dosen</a></li>
+            {{-- <li class="sub-item"><a href="{{ route('publication.student') }}" class="sub-link {{ (request()->is('publication/student*')) ? 'active' : '' }}">Publikasi Mahasiswa</a></li> --}}
         </ul>
     </li>
     <li class="br-menu-item">

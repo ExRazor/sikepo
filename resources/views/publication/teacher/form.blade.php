@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-edit' : 'publication-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-teacher-edit' : 'publication-teacher-add', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -45,7 +45,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="publication_form" action="{{route('publication.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="publication_form" action="{{route('publication.teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-9 mx-auto">
@@ -155,12 +155,47 @@
                     <hr>
                     <div class="row">
                         <div class="col-9 mx-auto">
+                            <h3 class="text-center mb-3">Daftar Dosen</h3>
+                            @isset($data)
+                            <div id="daftarDosen">
+                                @foreach ($data->publicationMembers as $i => $pm)
+                                <div class="row mb-3 justify-content-center align-items-center">
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
+                                    <div class="col-2">
+                                        <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ $pm->nidn }}" placeholder="NIDN" maxlength="9" readonly>
+                                    </div>
+                                    <div class="col-5">
+                                        <input class="form-control" type="text" name="anggota_nama[]" value="{{ $pm->nama }}" placeholder="Nama Dosen" required>
+                                    </div>
+                                    <div class="col-4">
+                                        <div id="prodiDsn{{$i}}" class="parsley-select">
+                                            <select class="form-control select-prodi" data-parsley-class-handler="#prodiDsn{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_prodi[]" required>
+                                                <option value="{{$pm->kd_prodi}}">{{$pm->studyProgram->nama}}</option>
+                                            </select>
+                                        </div>
+                                        <div id="errorsProdiDsn{{$i}}"></div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endisset
+                            <div id="panelDosen" data-jumlah="0"></div>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                <button class="add-dosen btn btn-primary" data-jenis="publikasi"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
                             <h3 class="text-center mb-3">Daftar Mahasiswa</h3>
                             @isset($data)
                             <div id="daftarMahasiswa">
                                 @foreach ($data->publicationStudents as $i => $ps)
-                                <div class="row mb-3 align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.students.delete',encode_id($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
+                                <div class="row mb-3 justify-content-center align-items-center">
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-2">
                                         <input class="form-control number" type="text" name="mahasiswa_nim[]" value="{{ $ps->nim }}" placeholder="NIM" maxlength="9" readonly>
                                     </div>
@@ -182,7 +217,7 @@
                             <div id="panelMahasiswa" data-jumlah="0"></div>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                <a class="add-mahasiswa btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</a>
+                                <button class="add-mahasiswa btn btn-primary" data-jenis="publikasi"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
                                 </div>
                             </div>
                         </div>

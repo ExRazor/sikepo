@@ -3,9 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\Teacher;
 use App\PublicationCategory;
-use Illuminate\Support\Facades\DB;
 
-class PublicationSeeder extends Seeder
+class TeacherPublicationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -62,7 +61,7 @@ class PublicationSeeder extends Seeder
 
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
-                DB::table('publications')->insert([
+                DB::table('teacher_publications')->insert([
                     'nidn'              => $t->nidn,
                     'jenis_publikasi'   => $jenis->random()->id,
                     'judul'             => $judul[array_rand($judul)],

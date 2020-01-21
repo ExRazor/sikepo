@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Publication extends Model
+class TeacherPublication extends Model
 {
     protected $fillable = [
         'nidn',
@@ -29,8 +29,13 @@ class Publication extends Model
         return $this->belongsTo('App\PublicationCategory','jenis_publikasi');
     }
 
+    public function publicationMembers()
+    {
+        return $this->hasMany('App\TeacherPublicationMember','id_publikasi');
+    }
+
     public function publicationStudents()
     {
-        return $this->hasMany('App\PublicationStudents','id_publikasi');
+        return $this->hasMany('App\TeacherPublicationStudent','id_publikasi');
     }
 }

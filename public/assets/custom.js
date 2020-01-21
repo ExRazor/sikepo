@@ -2407,32 +2407,53 @@ $(document).ready(function() {
         })
 
     /******************* TOMBOL TAMBAH DOSEN *******************/
-    $('a.add-dosen').on('click', function (){
+    $('button.add-dosen').on('click', function (){
         var panel = $('div#panelDosen'); /* target untuk menampilkan form */
         var hitung = panel.attr('data-jumlah');
         var jumlah = parseInt(hitung) + 1;
+        var jenis  = $(this).data('jenis');
 
         /* menampilkan form */
-        var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-dosen">'+
-                                '<a class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></a>'+
-                                '<div class="col-7">'+
-                                    '<div id="pilihDosen'+jumlah+'" class="parsley-select">'+
-                                        '<select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen'+jumlah+'" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_nidn[]" required>'+
-                                        '</select>'+
+        if(jenis == 'publikasi') {
+            var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-dosen">'+
+                                    '<button class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></button>'+
+                                    '<div class="col-2">'+
+                                        '<input class="form-control number" type="text" name="anggota_nidn[]" placeholder="NIDN" maxlength="9">'+
                                     '</div>'+
-                                    '<div id="errorsPilihDosen'+jumlah+'"></div>'+
-                                '</div>'+
-                            '</div>')
+                                    '<div class="col-5">'+
+                                        '<input class="form-control" type="text" name="anggota_nama[]" placeholder="Nama Dosen" required>'+
+                                    '</div>'+
+                                    '<div class="col-4">'+
+                                        '<div id="prodiDsn'+jumlah+'" class="parsley-select">'+
+                                            '<select class="form-control select-prodi" data-parsley-class-handler="#prodiDsn'+jumlah+'" data-parsley-errors-container="#errorsProdiDsn'+jumlah+'" name="anggota_prodi[]" required>'+
+                                            '</select>'+
+                                        '</div>'+
+                                        '<div id="errorsProdiDsn'+jumlah+'"></div>'+
+                                    '</div>'+
+                                '</div>')
+        } else {
+            var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-dosen">'+
+                                    '<a class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></a>'+
+                                    '<div class="col-7">'+
+                                        '<div id="pilihDosen'+jumlah+'" class="parsley-select">'+
+                                            '<select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen'+jumlah+'" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_nidn[]" required>'+
+                                            '</select>'+
+                                        '</div>'+
+                                        '<div id="errorsPilihDosen'+jumlah+'"></div>'+
+                                    '</div>'+
+                                '</div>')
+        }
 
         sintakshtml.hide();
         panel.append(sintakshtml);
         sintakshtml.fadeIn('slow');
         panel.attr('data-jumlah',jumlah);
         load_select_dsn(panel.find('.select-dsn'));
+        load_select_prodi(panel.find('.select-prodi'));
         return false;
     })
 
-    $('div#panelDosen').on('click', 'a.remove-box', function() {
+    $('div#panelDosen').on('click', 'button.remove-box', function() {
         var panel  = $('div#panelDosen');
         var hitung = panel.attr('data-jumlah');
         var jumlah = parseInt(hitung) - 1;
@@ -2446,34 +2467,56 @@ $(document).ready(function() {
     });
 
     /***********************************************************/
+
     /************ TOMBOL TAMBAH MAHASISWA ***********/
-    $('a.add-mahasiswa').on('click', function (){
+    $('button.add-mahasiswa').on('click', function (){
         var panel = $('div#panelMahasiswa'); /* target untuk menampilkan form */
         var hitung = panel.attr('data-jumlah');
         var jumlah = parseInt(hitung) + 1;
+        var jenis  = $(this).data('jenis');
 
         /* menampilkan form */
-        var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-mahasiswa">'+
-                                '<a class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></a>'+
-                                '<div class="col-7">'+
-                                    '<div id="mhs'+jumlah+'" class="parsley-select">'+
-                                        '<select class="form-control select-mhs" name="mahasiswa_nim[]" data-parsley-class-handler="#mhs'+jumlah+'" data-parsley-errors-container="#errorsMhs'+jumlah+'" required>'+
-                                            '<option value="">- Asal Program Studi -</option>'+
-                                        '</select>'+
+        if(jenis == 'publikasi') {
+            var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-mahasiswa">'+
+                                    '<button class="remove-box btn btn-danger btn-sm"><i class="fa fa-times"></i></button>'+
+                                    '<div class="col-2">'+
+                                        '<input class="form-control number" type="text" name="mahasiswa_nim[]" placeholder="NIM" maxlength="9">'+
                                     '</div>'+
-                                    '<div id="errorsMhs'+jumlah+'"></div>'+
-                                '</div>'+
-                            '</div>')
+                                    '<div class="col-5">'+
+                                        '<input class="form-control" type="text" name="mahasiswa_nama[]" placeholder="Nama Mahasiswa" required>'+
+                                    '</div>'+
+                                    '<div class="col-4">'+
+                                        '<div id="prodiMhs'+jumlah+'" class="parsley-select">'+
+                                            '<select class="form-control select-prodi" data-parsley-class-handler="#prodiMhs'+jumlah+'" data-parsley-errors-container="#errorsProdiMhs'+jumlah+'" name="mahasiswa_prodi[]" required>'+
+                                            '</select>'+
+                                        '</div>'+
+                                        '<div id="errorsProdiMhs'+jumlah+'"></div>'+
+                                    '</div>'+
+                                '</div>')
+        } else {
+            var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-mahasiswa">'+
+                                    '<button class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></button>'+
+                                    '<div class="col-7">'+
+                                        '<div id="mhs'+jumlah+'" class="parsley-select">'+
+                                            '<select class="form-control select-mhs" name="mahasiswa_nim[]" data-parsley-class-handler="#mhs'+jumlah+'" data-parsley-errors-container="#errorsMhs'+jumlah+'" required>'+
+                                            '</select>'+
+                                        '</div>'+
+                                        '<div id="errorsMhs'+jumlah+'"></div>'+
+                                    '</div>'+
+                                '</div>')
+        }
+
 
         sintakshtml.hide();
         panel.append(sintakshtml);
         sintakshtml.fadeIn('slow');
         panel.attr('data-jumlah',jumlah);
         load_select_mhs(panel.find('.select-mhs'));
+        load_select_prodi(panel.find('.select-prodi'));
         return false;
     })
 
-    $('div#panelMahasiswa').on('click', 'a.remove-box', function() {
+    $('div#panelMahasiswa').on('click', 'button.remove-box', function() {
         var panel  = $('div#panelMahasiswa');
         var hitung = panel.attr('data-jumlah');
         var jumlah = parseInt(hitung) - 1;
@@ -3050,25 +3093,35 @@ $(document).ready(function() {
                         var kategori    = val.publication_category.nama;
                         var penerbit    = val.penerbit;
                         var tahun       = val.tahun;
-                        var jurnal      = val.jurnal;
-                        var sitasi      = val.sitasi;
-                        var akreditasi  = val.akreditasi;
-                        var tautan      = val.tautan;
-                        var daftar      = '';
+                        var jurnal      = val.jurnal ? val.jurnal : '';
+                        var sitasi      = val.sitasi  ? val.sitasi : '';
+                        var akreditasi  = val.akreditasi  ? val.akreditasi : '';
+                        var tautan      = val.tautan  ? val.tautan : '';
+                        var daftarDsn   = '';
+                        var daftarMhs   = '';
                         var sesuai_prodi = '';
 
                         if(val.sesuai_prodi!=null) {
                             sesuai_prodi = '<i class="fa fa-check"></i>';
                         }
 
-                        if(val.publication_students.length > 0) {
-                            $.each(val.publication_students, function(i,mhs){
-                                daftar += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
+                        if(val.publication_members.length > 0) {
+                            $.each(val.publication_members, function(i,dsn){
+                                daftarDsn += '<li>'+dsn.nama+'('+dsn.nidn+') ('+dsn.study_program.department.nama+' - '+dsn.study_program.nama+')</li>';
                             })
                         } else {
-                            daftar = '-';
+                            daftarDsn = '-';
                         }
-                        var mahasiswa = '<ol>'+daftar+'</ol>';
+                        var dosen = '<ol>'+daftarDsn+'</ol>';
+
+                        if(val.publication_students.length > 0) {
+                            $.each(val.publication_students, function(i,mhs){
+                                daftarMhs += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
+                            })
+                        } else {
+                            daftarMhs = '-';
+                        }
+                        var mahasiswa = '<ol>'+daftarMhs+'</ol>';
 
                         if(val.tautan) {
                             var tautan = '<a href="'+val.tautan+'" target="_blank"><div><i class="fa fa-download"></i></div></a>';
@@ -3090,6 +3143,7 @@ $(document).ready(function() {
                                 '<td>'+jurnal+'</td>'+
                                 '<td>'+akreditasi+'</td>'+
                                 '<td>'+sitasi+'</td>'+
+                                '<td>'+dosen+'</td>'+
                                 '<td>'+mahasiswa+'</td>'+
                                 '<td>'+tautan+'</td>'+
                                 '<td class="text-center" width="50">'+

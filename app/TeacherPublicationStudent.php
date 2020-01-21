@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PublicationStudents extends Model
+class TeacherPublicationStudent extends Model
 {
     protected $fillable = [
         'id_publikasi',
@@ -15,7 +15,7 @@ class PublicationStudents extends Model
 
     public function publication()
     {
-        return $this->belongsTo('App\Publication','id_publikasi');
+        return $this->belongsTo('App\TeacherPublication','id_publikasi');
     }
 
     public function studyProgram()

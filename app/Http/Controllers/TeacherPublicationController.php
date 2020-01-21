@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Publication;
 use App\PublicationCategory;
-use App\PublicationStudents;
+use App\TeacherPublication;
+use App\TeacherPublicationMember;
+use App\TeacherPublicationStudent;
 use App\StudyProgram;
 use App\Teacher;
 use Illuminate\Http\Request;
 
-class PublicationController extends Controller
+class TeacherPublicationController extends Controller
 {
 
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $publikasi    = Publication::whereHas(
+        $publikasi    = TeacherPublication::whereHas(
                             'teacher.studyProgram', function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
                             }
@@ -23,7 +24,7 @@ class PublicationController extends Controller
                         ->with('publicationStudents.studyProgram.department.faculty','teacher.studyProgram')
                         ->get();
 
-        return view('publication.index',compact(['publikasi','studyProgram']));
+        return view('publication.teacher.index',compact(['publikasi','studyProgram']));
     }
 
     public function create()
@@ -31,7 +32,7 @@ class PublicationController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $jenis        = PublicationCategory::all();
 
-        return view('publication.form',compact(['studyProgram','jenis']));
+        return view('publication.teacher.form',compact(['studyProgram','jenis']));
     }
 
     /**
@@ -69,11 +70,29 @@ class PublicationController extends Controller
         $data->tautan           = $request->tautan;
         $data->save();
 
+        //Tambah Anggota Dosen
+        if($request->anggota_nidn) {
+            $hitungDsn = count($request->anggota_nidn);
+            for($i=0;$i<$hitungDsn;$i++) {
+                TeacherPublicationMember::updateOrCreate(
+                    [
+                        'id_publikasi' => $data->id,
+                        'nidn'         => $request->anggota_nidn[$i],
+                    ],
+                    [
+                        'nama'         => $request->anggota_nama[$i],
+                        'kd_prodi'     => $request->anggota_prodi[$i],
+                    ]
+                );
+            }
+        }
+
+        //Tambah Mahasiswa
         if($request->mahasiswa_nim) {
             $hitungMhs = count($request->mahasiswa_nim);
             for($i=0;$i<$hitungMhs;$i++) {
 
-                PublicationStudents::updateOrCreate(
+                TeacherPublicationStudent::updateOrCreate(
                     [
                         'id_publikasi'  => $data->id,
                         'nim'           => $request->mahasiswa_nim[$i],
@@ -86,7 +105,7 @@ class PublicationController extends Controller
             }
         }
 
-        return redirect()->route('publication')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('publication.teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function edit($id)
@@ -95,10 +114,10 @@ class PublicationController extends Controller
 
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $jenis        = PublicationCategory::all();
-        $data         = Publication::with('teacher','publicationStudents')->where('id',$id)->first();
+        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
         $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
 
-        return view('publication.form',compact(['jenis','data','studyProgram','teacher']));
+        return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
     }
 
     public function update(Request $request)
@@ -118,7 +137,7 @@ class PublicationController extends Controller
             'tautan'          => 'nullable',
         ]);
 
-        $data                   = Publication::find($id);
+        $data                   = TeacherPublication::find($id);
         $data->jenis_publikasi  = $request->jenis_publikasi;
         $data->nidn             = $request->nidn;
         $data->judul            = $request->judul;
@@ -131,11 +150,30 @@ class PublicationController extends Controller
         $data->tautan           = $request->tautan;
         $data->save();
 
+        //Update Anggota Dosen
+        if($request->anggota_nidn) {
+            $hitungDsn = count($request->anggota_nidn);
+            for($i=0;$i<$hitungDsn;$i++) {
+
+                TeacherPublicationMember::updateOrCreate(
+                    [
+                        'id_publikasi'  => $id,
+                        'nidn'           => $request->anggota_nidn[$i],
+                    ],
+                    [
+                        'nama'          => $request->anggota_nama[$i],
+                        'kd_prodi'      => $request->anggota_prodi[$i],
+                    ]
+                );
+            }
+        }
+
+        //Update Mahasiswa
         if($request->mahasiswa_nim) {
             $hitungMhs = count($request->mahasiswa_nim);
             for($i=0;$i<$hitungMhs;$i++) {
 
-                PublicationStudents::updateOrCreate(
+                TeacherPublicationStudent::updateOrCreate(
                     [
                         'id_publikasi'  => $id,
                         'nim'           => $request->mahasiswa_nim[$i],
@@ -148,16 +186,35 @@ class PublicationController extends Controller
             }
         }
 
-
-
-        return redirect()->route('publication')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('publication.teacher')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
         if($request->ajax()) {
             $id = decode_id($request->id);
-            $q  = Publication::find($id)->delete();
+            $q  = TeacherPublication::find($id)->delete();
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
+        }
+    }
+
+    public function destroy_member(Request $request)
+    {
+        if($request->ajax()) {
+            $id = decrypt($request->id);
+            $q  = TeacherPublicationMember::find($id)->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -178,7 +235,7 @@ class PublicationController extends Controller
     {
         if($request->ajax()) {
             $id = decrypt($request->id);
-            $q  = PublicationStudents::find($id)->delete();
+            $q  = TeacherPublicationStudent::find($id)->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -199,7 +256,11 @@ class PublicationController extends Controller
     {
         if($request->ajax()) {
 
-            $q   = Publication::with(['teacher.studyProgram','publicationStudents.studyProgram.department','publicationCategory'])
+            $q   = TeacherPublication::with([
+                                                'teacher.studyProgram',
+                                                'publicationMembers.studyProgram.department',
+                                                'publicationStudents.studyProgram.department',
+                                                'publicationCategory'])
                             ->whereHas(
                                 'teacher.studyProgram.department', function($query) {
                                     $query->where('kd_jurusan',setting('app_department_id'));

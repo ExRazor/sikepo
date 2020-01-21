@@ -26,7 +26,7 @@
         <p class="mg-b-0">Olah Data Publikasi</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('publication.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
+        <a href="{{ route('publication.teacher.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.publication.filter')}}" id="filter-publication" method="POST">
+            <form action="{{route('ajax.publication.teacher.filter')}}" id="filter-publication" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
@@ -77,6 +77,7 @@
                             <th class="text-center none">Nama Jurnal</th>
                             <th class="text-center none">Akreditasi</th>
                             <th class="text-center none">Jumlah Sitasi</th>
+                            <th class="text-center none">Dosen Terlibat</th>
                             <th class="text-center none">Mahasiswa Terlibat</th>
                             <th class="text-center none">Tautan</th>
                             <th class="text-center no-sort all" width="50">Aksi</th>
@@ -102,6 +103,17 @@
                             <td>{{ $p->akreditasi }}</td>
                             <td>{{ $p->sitasi }}</td>
                             <td>
+                                @if($p->publicationMembers->count())
+                                <ol>
+                                    @foreach ($p->publicationMembers as $ps)
+                                    <li>{{$ps->nama}} - NIDN.{{$ps->nidn}} ({{$ps->studyProgram->department->nama }} - {{$ps->studyProgram->nama }})</li>
+                                    @endforeach
+                                </ol>
+                                @else
+                                -
+                                @endif
+                            </td>
+                            <td>
                                 @if($p->publicationStudents->count())
                                 <ol>
                                     @foreach ($p->publicationStudents as $ps)
@@ -125,10 +137,10 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('publication.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('publication.teacher.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('publication.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('publication.teacher.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>

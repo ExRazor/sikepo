@@ -183,25 +183,31 @@ Breadcrumbs::for('community-service-edit', function ($trail,$data) {
     $trail->push('Sunting Data Pengabdian');
 });
 
-//Publikasi
+//Publikasi > Dosen
 Breadcrumbs::for('publication', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Publikasi', route('publication'));
-});
-
-Breadcrumbs::for('publication-add', function ($trail) {
-    $trail->parent('publication');
-    $trail->push('Tambah Data Publikasi', route('publication.add'));
-});
-
-Breadcrumbs::for('publication-edit', function ($trail,$data) {
-    $trail->push('Sunting Data Publikasi');
+    $trail->push('Data Publikasi');
 });
 
 //Publikasi > Kategori
 Breadcrumbs::for('publication-category', function ($trail) {
     $trail->parent('publication');
     $trail->push('Kategori Jenis Publikasi', route('publication.category'));
+});
+
+//Publikasi > Dosen
+Breadcrumbs::for('publication-teacher', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Publikasi Dosen', route('publication.teacher'));
+});
+
+Breadcrumbs::for('publication-teacher-add', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Tambah Publikasi Dosen', route('publication.teacher.add'));
+});
+
+Breadcrumbs::for('publication-teacher-edit', function ($trail,$data) {
+    $trail->push('Sunting Publikasi Dosen');
 });
 
 // Luaran
