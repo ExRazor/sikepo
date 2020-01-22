@@ -326,7 +326,8 @@ Route::get('publication/teacher/{id}/edit','TeacherPublicationController@edit')-
 Route::post('publication/teacher','TeacherPublicationController@store')->name('publication.teacher.store');
 Route::put('publication/teacher','TeacherPublicationController@update')->name('publication.teacher.update');
 Route::delete('publication/teacher','TeacherPublicationController@destroy')->name('publication.teacher.delete');
-Route::post('publication/teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
+Route::get('publication/teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
+Route::get('publication/teacher/delete_member/{id}','TeacherPublicationController@destroy_member')->name('publication.teacher.delete.member');
 
 //Output Activity Category
 Route::get('output-activity/category','OutputActivityCategoryController@index')->name('output-activity.category');

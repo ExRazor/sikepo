@@ -90,7 +90,9 @@
                                 {{ $p->teacher->nama }}<br>
                                 <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
                             </td>
-                            <td>{{ $p->judul }}</td>
+                            <td>
+                                <a href="{{route('publication.teacher.show',encode_id($p->id))}}">{{ $p->judul }}</a>
+                            </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
                             <td class="text-center">{{ $p->tahun }}</td>
                             <td class="text-center">

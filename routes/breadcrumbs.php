@@ -202,11 +202,17 @@ Breadcrumbs::for('publication-teacher', function ($trail) {
 });
 
 Breadcrumbs::for('publication-teacher-add', function ($trail) {
-    $trail->parent('publication');
+    $trail->parent('publication-teacher');
     $trail->push('Tambah Publikasi Dosen', route('publication.teacher.add'));
 });
 
+Breadcrumbs::for('publication-teacher-show', function ($trail,$data) {
+    $trail->parent('publication-teacher');
+    $trail->push('Data Publikasi: '.$data->judul, route('publication.teacher.show',encode_id($data->id)));
+});
+
 Breadcrumbs::for('publication-teacher-edit', function ($trail,$data) {
+    $trail->parent('publication-teacher');
     $trail->push('Sunting Publikasi Dosen');
 });
 

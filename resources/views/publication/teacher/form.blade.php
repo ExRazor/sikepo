@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Bidang: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Bidang: </label>
                                 <div class="col-8">
                                     <label class="ckbox ckbox-inline mb-0 mr-4">
                                         <input name="sesuai_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->sesuai_prodi) || Request::old('sesuai_prodi')=='1' ? 'checked' : ''}}>
@@ -160,7 +160,7 @@
                             <div id="daftarDosen">
                                 @foreach ($data->publicationMembers as $i => $pm)
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.member',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-2">
                                         <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ $pm->nidn }}" placeholder="NIDN" maxlength="9" readonly>
                                     </div>

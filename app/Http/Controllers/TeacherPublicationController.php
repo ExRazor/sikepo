@@ -35,6 +35,16 @@ class TeacherPublicationController extends Controller
         return view('publication.teacher.form',compact(['studyProgram','jenis']));
     }
 
+    public function show($id)
+    {
+        $id   = decode_id($id);
+        $data = TeacherPublication::find($id);
+
+        // dd($data);
+
+        return view('publication.teacher.show',compact(['data']));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -51,12 +61,12 @@ class TeacherPublicationController extends Controller
             'tahun'           => 'required|numeric|digits:4',
             'jurnal'          => 'nullable',
             'sesuai_prodi'    => 'nullable',
-            'sitasi'          => 'nullable|numeric',
             'akreditasi'      => 'nullable',
+            'sitasi'          => 'nullable|numeric',
             'tautan'          => 'nullable',
         ]);
 
-        $data                   = new Publication;
+        $data                   = new TeacherPublication;
         $data->jenis_publikasi  = $request->jenis_publikasi;
         $data->nidn             = $request->nidn;
         $data->judul            = $request->judul;
@@ -64,9 +74,8 @@ class TeacherPublicationController extends Controller
         $data->tahun            = $request->tahun;
         $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
-        $data->sitasi           = $request->sitasi;
-        $data->sitasi           = $request->sitasi;
         $data->akreditasi       = $request->akreditasi;
+        $data->sitasi           = $request->sitasi;
         $data->tautan           = $request->tautan;
         $data->save();
 
@@ -132,8 +141,8 @@ class TeacherPublicationController extends Controller
             'tahun'           => 'required|numeric|digits:4',
             'jurnal'          => 'nullable',
             'sesuai_prodi'    => 'nullable',
-            'sitasi'          => 'nullable|numeric',
             'akreditasi'      => 'nullable',
+            'sitasi'          => 'nullable|numeric',
             'tautan'          => 'nullable',
         ]);
 
@@ -145,8 +154,8 @@ class TeacherPublicationController extends Controller
         $data->tahun            = $request->tahun;
         $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
-        $data->sitasi           = $request->sitasi;
         $data->akreditasi       = $request->akreditasi;
+        $data->sitasi           = $request->sitasi;
         $data->tautan           = $request->tautan;
         $data->save();
 
@@ -186,7 +195,7 @@ class TeacherPublicationController extends Controller
             }
         }
 
-        return redirect()->route('publication.teacher')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('publication.teacher.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
@@ -231,7 +240,7 @@ class TeacherPublicationController extends Controller
         }
     }
 
-    public function destroy_students(Request $request)
+    public function destroy_student(Request $request)
     {
         if($request->ajax()) {
             $id = decrypt($request->id);
