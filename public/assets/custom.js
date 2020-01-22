@@ -3135,7 +3135,9 @@ $(document).ready(function() {
                                     nama_dsn+'<br>'+
                                     '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
                                 '</td>'+
-                                '<td>'+judul+'</td>'+
+                                '<td>'+
+                                    '<a href="'+base_url+'/publication/teacher/'+encode_id(id)+'">'+judul+'</a>'+
+                                '</td>'+
                                 '<td>'+kategori+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td class="text-center">'+sesuai_prodi+'</td>'+
