@@ -1354,6 +1354,36 @@ $(document).ready(function() {
                 }
             })
         })
+        .on('change','#prodi_mahasiswa',function(){
+            var cont    = $(this);
+            var target  = $('#select-mahasiswa');
+            var id      = cont.val();
+
+            target.find('option').remove();
+
+            $.ajax({
+                url: base_url+'/ajax/student/get_by_studyProgram',
+                data: {kd_prodi:id},
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+
+                    var html = '';
+
+                    if(data.length > 0) {
+                        html += '<option value="">- Pilih Mahasiswa -</option>';
+                        $.each(data,function(i){
+                            html += '<option value="'+data[i].nim+'">'+data[i].nama+'</option>';
+                        })
+
+                    } else {
+                        html = '<option value="">- Pilih Mahasiswa -</option>';
+                    }
+
+                    target.append(html);
+                }
+            })
+        })
 
     /*****************************************************************************/
 
@@ -3062,6 +3092,7 @@ $(document).ready(function() {
         var url     = cont.attr('action');
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
+        var type    = cont.data('type');
 
         if(opsi.val()) {
             var teks = 'Prodi: '+opsi.text();
@@ -3085,55 +3116,33 @@ $(document).ready(function() {
 
                 if(data.length > 0) {
                     $.each(data, function(i,val){
+
+                        if(type=='teacher') {
+                            var id_unik     = val.teacher.nidn;
+                            var nama        = val.teacher.nama;
+                            var prodi       = val.teacher.study_program.singkatan;
+                            var id_cat      = 'NIDN.'
+                        } else {
+                            var id_unik     = val.student.nim;
+                            var nama        = val.student.nama;
+                            var prodi       = val.student.study_program.singkatan;
+                            var id_cat = 'NIM.'
+                        }
+
                         var id          = val.id;
-                        var nidn        = val.teacher.nidn;
-                        var nama_dsn    = val.teacher.nama;
-                        var prodi       = val.teacher.study_program.singkatan;
                         var judul       = val.judul;
                         var kategori    = val.publication_category.nama;
-                        var penerbit    = val.penerbit;
                         var tahun       = val.tahun;
-                        var jurnal      = val.jurnal ? val.jurnal : '';
-                        var sitasi      = val.sitasi  ? val.sitasi : '';
-                        var akreditasi  = val.akreditasi  ? val.akreditasi : '';
-                        var tautan      = val.tautan  ? val.tautan : '';
-                        var daftarDsn   = '';
-                        var daftarMhs   = '';
                         var sesuai_prodi = '';
 
                         if(val.sesuai_prodi!=null) {
                             sesuai_prodi = '<i class="fa fa-check"></i>';
                         }
 
-                        if(val.publication_members.length > 0) {
-                            $.each(val.publication_members, function(i,dsn){
-                                daftarDsn += '<li>'+dsn.nama+'('+dsn.nidn+') ('+dsn.study_program.department.nama+' - '+dsn.study_program.nama+')</li>';
-                            })
-                        } else {
-                            daftarDsn = '-';
-                        }
-                        var dosen = '<ol>'+daftarDsn+'</ol>';
-
-                        if(val.publication_students.length > 0) {
-                            $.each(val.publication_students, function(i,mhs){
-                                daftarMhs += '<li>'+mhs.nama+'('+mhs.nim+') ('+mhs.study_program.department.nama+' - '+mhs.study_program.nama+')</li>';
-                            })
-                        } else {
-                            daftarMhs = '-';
-                        }
-                        var mahasiswa = '<ol>'+daftarMhs+'</ol>';
-
-                        if(val.tautan) {
-                            var tautan = '<a href="'+val.tautan+'" target="_blank"><div><i class="fa fa-download"></i></div></a>';
-                        } else {
-                            var tautan = '-';
-                        }
-
-
                         html +='<tr>'+
                                 '<td>'+
-                                    nama_dsn+'<br>'+
-                                    '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
+                                    nama+'<br>'+
+                                    '<small>'+id_cat+id_unik+' / '+prodi+'</small>'+
                                 '</td>'+
                                 '<td>'+
                                     '<a href="'+base_url+'/publication/teacher/'+encode_id(id)+'">'+judul+'</a>'+
@@ -3141,23 +3150,16 @@ $(document).ready(function() {
                                 '<td>'+kategori+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td class="text-center">'+sesuai_prodi+'</td>'+
-                                '<td>'+penerbit+'</td>'+
-                                '<td>'+jurnal+'</td>'+
-                                '<td>'+akreditasi+'</td>'+
-                                '<td>'+sitasi+'</td>'+
-                                '<td>'+dosen+'</td>'+
-                                '<td>'+mahasiswa+'</td>'+
-                                '<td>'+tautan+'</td>'+
                                 '<td class="text-center" width="50">'+
                                     '<div class="btn-group" role="group">'+
                                         '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                             '<div><span class="fa fa-caret-down"></span></div>'+
                                         '</button>'+
                                         '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="'+base_url+'/publication/list/'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<a class="dropdown-item" href="'+base_url+'/publication/'+type+'/'+encode_id(id)+'/edit">Sunting</a>'+
                                             '<form method="POST">'+
                                                 '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/publication/list">Hapus</button>'+
+                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/publication/'+type+'">Hapus</button>'+
                                             '</form>'+
                                         '</div>'+
                                     '</div>'+

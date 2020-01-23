@@ -3,27 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\PublicationCategory;
-use App\TeacherPublication;
-use App\TeacherPublicationMember;
-use App\TeacherPublicationStudent;
+use App\StudentPublication;
+use App\StudentPublicationMember;
 use App\StudyProgram;
-use App\Teacher;
+use App\Student;
 use Illuminate\Http\Request;
 
-class TeacherPublicationController extends Controller
+class StudentPublicationController extends Controller
 {
 
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $publikasi    = TeacherPublication::whereHas(
-                            'teacher.studyProgram', function($query) {
+        $publikasi    = StudentPublication::whereHas(
+                            'student.studyProgram', function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
                             }
-                        )
-                        ->get();
+                        )->get();
 
-        return view('publication.teacher.index',compact(['publikasi','studyProgram']));
+        return view('publication.student.index',compact(['publikasi','studyProgram']));
     }
 
     public function create()
@@ -31,15 +29,15 @@ class TeacherPublicationController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $jenis        = PublicationCategory::all();
 
-        return view('publication.teacher.form',compact(['studyProgram','jenis']));
+        return view('publication.student.form',compact(['studyProgram','jenis']));
     }
 
     public function show($id)
     {
         $id   = decode_id($id);
-        $data = TeacherPublication::find($id);
+        $data = StudentPublication::find($id);
 
-        return view('publication.teacher.show',compact(['data']));
+        return view('publication.student.show',compact(['data']));
     }
 
     /**
@@ -52,7 +50,7 @@ class TeacherPublicationController extends Controller
     {
         $request->validate([
             'jenis_publikasi' => 'required',
-            'nidn'            => 'required',
+            'nim'             => 'required',
             'judul'           => 'required',
             'penerbit'        => 'required',
             'tahun'           => 'required|numeric|digits:4',
@@ -63,9 +61,9 @@ class TeacherPublicationController extends Controller
             'tautan'          => 'nullable|url',
         ]);
 
-        $data                   = new TeacherPublication;
+        $data                   = new StudentPublication;
         $data->jenis_publikasi  = $request->jenis_publikasi;
-        $data->nidn             = $request->nidn;
+        $data->nim              = $request->nim;
         $data->judul            = $request->judul;
         $data->penerbit         = $request->penerbit;
         $data->tahun            = $request->tahun;
@@ -75,96 +73,16 @@ class TeacherPublicationController extends Controller
         $data->sitasi           = $request->sitasi;
         $data->tautan           = $request->tautan;
         $data->save();
-
-        //Tambah Anggota Dosen
-        if($request->anggota_nidn) {
-            $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
-                TeacherPublicationMember::updateOrCreate(
-                    [
-                        'id_publikasi' => $data->id,
-                        'nidn'         => $request->anggota_nidn[$i],
-                    ],
-                    [
-                        'nama'         => $request->anggota_nama[$i],
-                        'kd_prodi'     => $request->anggota_prodi[$i],
-                    ]
-                );
-            }
-        }
 
         //Tambah Mahasiswa
-        if($request->mahasiswa_nim) {
-            $hitungMhs = count($request->mahasiswa_nim);
+        if($request->anggota_nim) {
+            $hitungMhs = count($request->anggota_nim);
             for($i=0;$i<$hitungMhs;$i++) {
 
-                TeacherPublicationStudent::updateOrCreate(
+                StudentPublicationMember::updateOrCreate(
                     [
                         'id_publikasi'  => $data->id,
-                        'nim'           => $request->mahasiswa_nim[$i],
-                    ],
-                    [
-                        'nama'          => $request->mahasiswa_nama[$i],
-                        'kd_prodi'      => $request->mahasiswa_prodi[$i],
-                    ]
-                );
-            }
-        }
-
-        return redirect()->route('publication.teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-    public function edit($id)
-    {
-        $id   = decode_id($id);
-
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $jenis        = PublicationCategory::all();
-        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
-        $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
-
-        return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
-    }
-
-    public function update(Request $request)
-    {
-        $id = decrypt($request->id);
-
-        $request->validate([
-            'jenis_publikasi' => 'required',
-            'nidn'            => 'required',
-            'judul'           => 'required',
-            'penerbit'        => 'required',
-            'tahun'           => 'required|numeric|digits:4',
-            'jurnal'          => 'nullable',
-            'sesuai_prodi'    => 'nullable',
-            'akreditasi'      => 'nullable',
-            'sitasi'          => 'nullable|numeric',
-            'tautan'          => 'nullable|url',
-        ]);
-
-        $data                   = TeacherPublication::find($id);
-        $data->jenis_publikasi  = $request->jenis_publikasi;
-        $data->nidn             = $request->nidn;
-        $data->judul            = $request->judul;
-        $data->penerbit         = $request->penerbit;
-        $data->tahun            = $request->tahun;
-        $data->sesuai_prodi     = $request->sesuai_prodi;
-        $data->jurnal           = $request->jurnal;
-        $data->akreditasi       = $request->akreditasi;
-        $data->sitasi           = $request->sitasi;
-        $data->tautan           = $request->tautan;
-        $data->save();
-
-        //Update Anggota Dosen
-        if($request->anggota_nidn) {
-            $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
-
-                TeacherPublicationMember::updateOrCreate(
-                    [
-                        'id_publikasi'  => $id,
-                        'nidn'           => $request->anggota_nidn[$i],
+                        'nim'           => $request->anggota_nim[$i],
                     ],
                     [
                         'nama'          => $request->anggota_nama[$i],
@@ -174,32 +92,77 @@ class TeacherPublicationController extends Controller
             }
         }
 
+        return redirect()->route('publication.student')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+    }
+
+    public function edit($id)
+    {
+        $id   = decode_id($id);
+
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $jenis        = PublicationCategory::all();
+        $data         = StudentPublication::with('student','publicationMembers')->where('id',$id)->first();
+        $student      = Student::where('kd_prodi',$data->student->kd_prodi)->get();
+
+        return view('publication.student.form',compact(['jenis','data','studyProgram','student']));
+    }
+
+    public function update(Request $request)
+    {
+        $id = decrypt($request->id);
+
+        $request->validate([
+            'jenis_publikasi' => 'required',
+            'nim'             => 'required',
+            'judul'           => 'required',
+            'penerbit'        => 'required',
+            'tahun'           => 'required|numeric|digits:4',
+            'jurnal'          => 'nullable',
+            'sesuai_prodi'    => 'nullable',
+            'akreditasi'      => 'nullable',
+            'sitasi'          => 'nullable|numeric',
+            'tautan'          => 'nullable|url',
+        ]);
+
+        $data                   = StudentPublication::find($id);
+        $data->jenis_publikasi  = $request->jenis_publikasi;
+        $data->nim              = $request->nim;
+        $data->judul            = $request->judul;
+        $data->penerbit         = $request->penerbit;
+        $data->tahun            = $request->tahun;
+        $data->sesuai_prodi     = $request->sesuai_prodi;
+        $data->jurnal           = $request->jurnal;
+        $data->akreditasi       = $request->akreditasi;
+        $data->sitasi           = $request->sitasi;
+        $data->tautan           = $request->tautan;
+        $data->save();
+
         //Update Mahasiswa
-        if($request->mahasiswa_nim) {
-            $hitungMhs = count($request->mahasiswa_nim);
+        if($request->anggota_nim) {
+            $hitungMhs = count($request->anggota_nim);
             for($i=0;$i<$hitungMhs;$i++) {
 
-                TeacherPublicationStudent::updateOrCreate(
+                StudentPublicationMember::updateOrCreate(
                     [
                         'id_publikasi'  => $id,
-                        'nim'           => $request->mahasiswa_nim[$i],
+                        'nim'           => $request->anggota_nim[$i],
                     ],
                     [
-                        'nama'          => $request->mahasiswa_nama[$i],
-                        'kd_prodi'      => $request->mahasiswa_prodi[$i],
+                        'nama'          => $request->anggota_nama[$i],
+                        'kd_prodi'      => $request->anggota_prodi[$i],
                     ]
                 );
             }
         }
 
-        return redirect()->route('publication.teacher.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('publication.student.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
         if($request->ajax()) {
             $id = decode_id($request->id);
-            $q  = TeacherPublication::find($id)->delete();
+            $q  = StudentPublication::find($id)->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -220,28 +183,7 @@ class TeacherPublicationController extends Controller
     {
         if($request->ajax()) {
             $id = decrypt($request->id);
-            $q  = TeacherPublicationMember::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        }
-    }
-
-    public function destroy_student(Request $request)
-    {
-        if($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = TeacherPublicationStudent::find($id)->delete();
+            $q  = StudentPublicationMember::find($id)->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -262,20 +204,19 @@ class TeacherPublicationController extends Controller
     {
         if($request->ajax()) {
 
-            $q   = TeacherPublication::with([
-                                                'teacher.studyProgram',
+            $q   = StudentPublication::with([
+                                                'student.studyProgram',
                                                 'publicationMembers.studyProgram.department',
-                                                'publicationStudents.studyProgram.department',
                                                 'publicationCategory'])
                             ->whereHas(
-                                'teacher.studyProgram.department', function($query) {
+                                'student.studyProgram.department', function($query) {
                                     $query->where('kd_jurusan',setting('app_department_id'));
                                 }
                             );
 
             if($request->kd_prodi){
                 $q->whereHas(
-                    'teacher.studyProgram', function($query) use ($request) {
+                    'student.studyProgram', function($query) use ($request) {
                         $query->where('kd_prodi',$request->kd_prodi);
                 });
             }

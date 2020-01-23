@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Publikasi Dosen')
+@section('title', 'Publikasi Mahasiswa')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('publication-teacher') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('publication-student') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -22,11 +22,11 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-newspaper"></i>
     <div>
-        <h4>Data Publikasi Dosen</h4>
-        <p class="mg-b-0">Olah data publikasi dosen</p>
+        <h4>Data Publikasi Mahasiswa</h4>
+        <p class="mg-b-0">Olah data publikasi mahasiswa</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('publication.teacher.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
+        <a href="{{ route('publication.student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.publication.teacher.filter')}}" id="filter-publication" data-type="teacher" method="POST">
+            <form action="{{route('ajax.publication.student.filter')}}" id="filter-publication" data-type="student" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
@@ -80,11 +80,11 @@
                         @foreach ($publikasi as $p)
                         <tr>
                             <td>
-                                {{ $p->teacher->nama }}<br>
-                                <small>NIDN.{{ $p->teacher->nidn }} / {{ $p->teacher->studyProgram->singkatan }}</small>
+                                {{ $p->student->nama }}<br>
+                                <small>NIM.{{ $p->student->nim }} / {{ $p->student->studyProgram->singkatan }}</small>
                             </td>
                             <td>
-                                <a href="{{route('publication.teacher.show',encode_id($p->id))}}">{{ $p->judul }}</a>
+                                <a href="{{route('publication.student.show',encode_id($p->id))}}">{{ $p->judul }}</a>
                             </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
                             <td class="text-center">{{ $p->tahun }}</td>
@@ -99,10 +99,10 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('publication.teacher.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('publication.student.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('publication.teacher.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('publication.student.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>

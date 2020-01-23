@@ -216,6 +216,27 @@ Breadcrumbs::for('publication-teacher-edit', function ($trail,$data) {
     $trail->push('Sunting Publikasi Dosen');
 });
 
+//Publikasi > Mahasiswa
+Breadcrumbs::for('publication-student', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Publikasi Mahasiswa', route('publication.student'));
+});
+
+Breadcrumbs::for('publication-student-add', function ($trail) {
+    $trail->parent('publication-student');
+    $trail->push('Tambah Publikasi Mahasiswa', route('publication.student.add'));
+});
+
+Breadcrumbs::for('publication-student-show', function ($trail,$data) {
+    $trail->parent('publication-student');
+    $trail->push('Data Publikasi: '.$data->judul, route('publication.student.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('publication-student-edit', function ($trail,$data) {
+    $trail->parent('publication-student');
+    $trail->push('Sunting Publikasi Mahasiswa');
+});
+
 // Luaran
 Breadcrumbs::for('output-activity', function ($trail) {
     $trail->parent('dashboard');

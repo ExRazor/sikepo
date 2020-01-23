@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="{{ asset ('assets/css') }}/bracket.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset ('assets') }}/custom.css">
+    <link rel="stylesheet" href="{{ asset ('assets') }}/app.css">
 
     <!-- Vendor JS -->
     <script src="{{ asset ('assets/lib') }}/jquery/jquery.min.js"></script>
@@ -46,7 +46,7 @@
     <!-- BASE JS -->
     <script src="{{ asset ('assets/js') }}/bracket.js"></script>
     <script src="{{ asset ('assets') }}/cust.func.js"></script>
-    <script src="{{ asset ('assets') }}/custom.js"></script>
+    <script src="{{ asset ('assets') }}/app.js"></script>
 
   </head>
 

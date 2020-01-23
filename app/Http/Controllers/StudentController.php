@@ -429,4 +429,16 @@ class StudentController extends Controller
         //     abort(404);
         // }
     }
+
+    public function get_by_studyProgram(Request $request)
+    {
+        if($request->ajax()) {
+
+            $data = Student::where('kd_prodi',$request->kd_prodi)->select('nim','nama')->get();
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
 }
