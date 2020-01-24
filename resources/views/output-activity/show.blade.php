@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Rincian Luaran Penelitian')
+@section('title', 'Rincian Luaran')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -22,8 +22,8 @@
 <div class="br-pagetitle">
     <i class="icon fa fa-american-sign-language-interpreting"></i>
     <div>
-        <h4>Rincian Luaran Penelitian</h4>
-        <p class="mg-b-0">Rincian data luaran penelitian</p>
+        <h4>Rincian Luaran</h4>
+        <p class="mg-b-0">Rincian data luaran</p>
     </div>
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
@@ -55,27 +55,12 @@
                         <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
                             <tbody>
                                 <tr>
-                                    <td>Judul Luaran</td>
-                                    <td>:</td>
-                                    <td>{{$data->judul_luaran}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Kategori Luaran</td>
-                                    <td>:</td>
-                                    <td>{{$data->outputActivityCategory->nama}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Tahun Luaran</td>
-                                    <td>:</td>
-                                    <td>{{$data->tahun_luaran}}</td>
-                                </tr>
-                                <tr>
                                     <td>Jenis Kegiatan</td>
                                     <td>:</td>
                                     <td>{{$data->kegiatan}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Judul Kegiatan</td>
+                                    <td>Nama Kegiatan</td>
                                     <td>:</td>
                                     @if($data->kegiatan=='Penelitian')
                                     <td>
@@ -83,26 +68,34 @@
                                             {{$data->research->judul_penelitian}}
                                         </a>
                                     </td>
-                                    @else
+                                    @elseif($data->kegiatan=='Pengabdian')
                                     <td>
                                         <a href="{{route('community-service.show',encode_id($data->communityService->id))}}">
                                             {{$data->communityService->judul_pengabdian}}
                                         </a>
                                     </td>
+                                    @else
+                                    <td>
+                                        {{$data->lainnya}}
+                                    </td>
                                     @endif
                                 </tr>
                                 <tr>
-                                    <td>Dosen Penanggung Jawab</td>
+                                    <td>Penanggung Jawab</td>
                                     <td>:</td>
                                     @if($data->kegiatan=='Penelitian')
                                     <td>
                                         {{$data->research->researchKetua->teacher->nama}}
                                         ({{$data->research->researchKetua->teacher->nidn}})
                                     </td>
-                                    @else
+                                    @elseif($data->kegiatan=='Pengabdian')
                                     <td>
                                         {{$data->communityService->serviceKetua->teacher->nama}}
                                         ({{$data->communityService->serviceKetua->teacher->nidn}})
+                                    </td>
+                                    @else
+                                    <td>
+                                        -
                                     </td>
                                     @endif
                                 </tr>
@@ -114,17 +107,79 @@
                                         {{$data->research->researchKetua->teacher->studyProgram->nama}}
                                         ({{$data->research->researchKetua->teacher->studyProgram->department->nama}} - {{$data->research->researchKetua->teacher->studyProgram->department->faculty->singkatan}})
                                     </td>
-                                    @else
+                                    @elseif($data->kegiatan=='Pengabdian')
                                     <td>
                                         {{$data->communityService->serviceKetua->teacher->studyProgram->nama}}
                                         ({{$data->communityService->serviceKetua->teacher->studyProgram->department->nama}} - {{$data->communityService->serviceKetua->teacher->studyProgram->department->faculty->singkatan}})
                                     </td>
+                                    @else
+                                    <td>
+                                        -
+                                    </td>
                                     @endif
+                                </tr>
+                                <tr>
+                                    <td>Pembuat Luaran</td>
+                                    <td>:</td>
+                                    <td>{{$data->pembuat_luaran}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Judul Luaran</td>
+                                    <td>:</td>
+                                    <td>{{$data->judul_luaran}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kategori Luaran</td>
+                                    <td>:</td>
+                                    <td>{{$data->outputActivityCategory->nama}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jurnal Luaran</td>
+                                    <td>:</td>
+                                    <td>{{$data->jurnal_luaran}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tahun Publikasi</td>
+                                    <td>:</td>
+                                    <td>{{$data->tahun_luaran}}</td>
+                                </tr>
+                                <tr>
+                                    <td>ISSN / ISBN</td>
+                                    <td>:</td>
+                                    <td>{{$data->issn}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Vol/No/Hal</td>
+                                    <td>:</td>
+                                    <td>{{$data->volume_hal}}</td>
+                                </tr>
+                                <tr>
+                                    <td>URL Jurnal</td>
+                                    <td>:</td>
+                                    <td><a href="{{$data->url}}">{{$data->url}}</a></td>
                                 </tr>
                                 <tr>
                                     <td>Keterangan</td>
                                     <td>:</td>
                                     <td>{{$data->keterangan}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Surat Keterangan Accepted</td>
+                                    <td>:</td>
+                                    <td class="align-middle">
+                                        <a href="{{route('output-activity.file.download','type=keterangan&id='.encrypt($data->id))}}" target="_blank">
+                                            {{$data->file_keterangan}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Artikel Luaran</td>
+                                    <td>:</td>
+                                    <td class="align-middle">
+                                        <a href="{{route('output-activity.file.download','type=artikel&id='.encrypt($data->id))}}" target="_blank">
+                                            {{$data->file_artikel}}
+                                        </a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

@@ -16,12 +16,20 @@ class CreateOutputActivitiesTable extends Migration
         Schema::create('output_activities', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_kategori');
+            $table->string('pembuat_luaran');
+            $table->string('kegiatan');
             $table->unsignedInteger('id_penelitian')->nullable();
             $table->unsignedInteger('id_pengabdian')->nullable();
-            $table->string('kegiatan');
+            $table->string('lainnya')->nullable();
             $table->string('judul_luaran');
+            $table->string('jurnal_luaran')->nullable();
             $table->char('tahun_luaran',4);
+            $table->string('issn')->nullable();
+            $table->string('volume_hal')->nullable();
+            $table->string('url')->nullable();
             $table->string('keterangan')->nullable();
+            $table->string('file_keterangan')->nullable();
+            $table->string('file_artikel')->nullable();
             $table->timestamps();
 
             $table->foreign('id_kategori')->references('id')->on('output_activity_categories')->onUpdate('cascade')->onDelete('cascade');

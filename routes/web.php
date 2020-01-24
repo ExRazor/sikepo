@@ -357,6 +357,9 @@ Route::get('output-activity/list/{id}/edit','OutputActivityController@edit')->na
 Route::post('output-activity/list','OutputActivityController@store')->name('output-activity.store');
 Route::put('output-activity/list','OutputActivityController@update')->name('output-activity.update');
 Route::delete('output-activity/list','OutputActivityController@destroy')->name('output-activity.delete');
+Route::get('/download/output-activity','OutputActivityController@download')->name('output-activity.file.download');
+Route::get('/delete_file/output-activity','OutputActivityController@delete_file')->name('output-activity.file.delete');
+
 
 //Academic - Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');

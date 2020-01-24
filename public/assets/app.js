@@ -334,6 +334,70 @@ $(document).ready(function() {
         })
     })
 
+    //btn-delete File
+    $(document).on('click','.btn-delfile',function(e){
+        e.preventDefault();
+
+        var url  = $(this).data('dest');
+        var redir= $(this).data('redir');
+
+        Swal.fire({
+            title: 'Yakin menghapus?',
+            text: "Datanya tidak dapat dikembalikan!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.showLoading()
+                    },
+                    success: function (state) {
+                        if(state.type=='success') {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                                onClose: () => {
+                                    if(redir) {
+                                        window.location.replace(redir);
+                                    } else {
+                                        location.reload();
+                                    }
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: state.title,
+                                text: state.message,
+                                type: state.type,
+                                timer: 2000,
+                            });
+                        }
+                    },
+                    statusCode: {
+                        500: function(state) {
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: 'Terjadi kesalahan saat memproses',
+                                type: 'error',
+                                timer: 1500,
+                            });
+                        }
+                    },
+                });
+            }
+        })
+    })
+
     /***********************************************************************************/
 
     /********************************* DATA TABLE *********************************/
@@ -718,60 +782,6 @@ $(document).ready(function() {
         }
     });
 
-    if($('select[name=kegiatan]').length) {
-        load_select_activity()
-
-        $('select[name=kegiatan]').on('change', function(){
-            load_select_activity()
-        })
-    }
-
-    function load_select_activity() {
-        var select_src  = $('select[name=kegiatan]');
-        var select      = $('.select-activity');
-        var value       = select_src.val();
-
-        if(value=="Penelitian") {
-            var url_select2 = base_url+'/ajax/research/get_by_department';
-            var placeholder = 'Masukkan nama penelitian';
-
-            select.attr('name','id_penelitian');
-            select.prop('disabled',false)
-        } else if(value=="Pengabdian") {
-            var url_select2 = base_url+'/ajax/community-service/get_by_department';
-            var placeholder = 'Masukkan nama pengabdian';
-
-            select.attr('name','id_pengabdian');
-            select.prop('disabled',false)
-        } else {
-            select.removeAttr('name');
-            select.prop('disabled',true)
-        }
-
-        if(value!='' || value!=null) {
-            select.select2({
-                language: "id",
-                minimumInputLength: 5,
-                allowClear: true,
-                placeholder: placeholder,
-                ajax: {
-                    dataType: 'json',
-                    url: url_select2,
-                    delay: 800,
-                    data: function(params) {
-                        return {
-                            cari: params.term
-                        }
-                    },
-                    processResults: function (response) {
-                        return {
-                            results: response
-                        };
-                    },
-                }
-            });
-        }
-    }
 
     /****************************************************************************/
 
@@ -3209,7 +3219,89 @@ $(document).ready(function() {
         }).end()
     /****************************************************************************************/
 
-    /********************************* DATA KATEGORI LUARAN *********************************/
+    /********************************* DATA LUARAN *********************************/
+    $('#outputActivity_form').on('change','select[name=kegiatan]',function(){
+
+        var div_select_kegiatan = $('#outputActivity_form').find('#pilihNamaKegiatan');
+        var select_kegiatan = $('#outputActivity_form').find('.select-activity');
+        var input_kegiatan = $('#outputActivity_form').find('#namaLainnya');
+
+        var kegiatan = $(this).val();
+
+        if(kegiatan=='Lainnya') {
+            select_kegiatan.prop('required',false);
+            select_kegiatan.prop('disabled',true);
+            div_select_kegiatan.hide();
+            input_kegiatan.prop('disabled',false);
+            input_kegiatan.prop('required',true);
+            input_kegiatan.show();
+        } else {
+            input_kegiatan.hide();
+            input_kegiatan.prop('required',false);
+            input_kegiatan.prop('disabled',true);
+            select_kegiatan.prop('disabled',false);
+            select_kegiatan.prop('required',true);
+            select_kegiatan.empty();
+            load_select_activity();
+            div_select_kegiatan.show();
+        }
+    })
+
+    if($('select[name=kegiatan]').length) {
+        load_select_activity();
+    }
+
+    function load_select_activity() {
+        var select_src  = $('select[name=kegiatan]');
+        var select      = $('.select-activity');
+        var value       = select_src.val();
+
+        if(value=="Penelitian") {
+            var url_select2 = base_url+'/ajax/research/get_by_department';
+            var placeholder = 'Masukkan nama penelitian';
+
+            select.attr('name','id_penelitian');
+            select.prop('disabled',false)
+        } else if(value=="Pengabdian") {
+            var url_select2 = base_url+'/ajax/community-service/get_by_department';
+            var placeholder = 'Masukkan nama pengabdian';
+
+            select.attr('name','id_pengabdian');
+            select.prop('disabled',false)
+        } else {
+            select.removeAttr('name');
+            select.prop('disabled',true)
+        }
+
+        if(value!='' || value!=null) {
+            select.select2({
+                width: '100%',
+                language: "id",
+                minimumInputLength: 5,
+                allowClear: true,
+                placeholder: placeholder,
+                ajax: {
+                    dataType: 'json',
+                    url: url_select2,
+                    delay: 800,
+                    data: function(params) {
+                        return {
+                            cari: params.term
+                        }
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                }
+            });
+        }
+    }
+
+    /****************************************************************************************/
+
+    /********************************* DATA KATEGORI KEPUASAN *********************************/
     $('#table-satisfactionCategory').on('click','.btn-edit',function(){
 
         var id  = $(this).data('id');

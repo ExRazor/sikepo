@@ -131,7 +131,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Dosen yang Terlibat</td>
+                            <td>Mahasiswa yang Terlibat</td>
                             <td>:</td>
                             <td>
                                 <table class="table table-bordered table-colored table-danger">

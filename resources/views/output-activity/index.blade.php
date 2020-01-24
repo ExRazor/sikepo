@@ -23,7 +23,7 @@
     <i class="icon fa fa-boxes"></i>
     <div>
         <h4>Luaran Kegiatan</h4>
-        <p class="mg-b-0">Olah Data Luaran Kegiatan DTPS</p>
+        <p class="mg-b-0">Olah Data Luaran Kegiatan</p>
     </div>
     <div class="ml-auto">
         <a href="{{ route('output-activity.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
@@ -78,14 +78,12 @@
                 <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="500">Judul Luaran</th>
-                            <th class="text-center all" width="300">Kategori</th>
-                            <th class="text-center all defaultSort" width="150">Tahun</th>
-                            <th class="text-center none">Jenis Kegiatan</th>
-                            <th class="text-center none">Judul Kegiatan</th>
-                            <th class="text-center none">Asal Program Studi</th>
-                            <th class="text-center none">Keterangan</th>
-                            <th class="text-center no-sort all" width="50">Aksi</th>
+                            <th class="text-center" width="500">Judul Luaran</th>
+                            <th class="text-center" width="300">Kategori</th>
+                            <th class="text-center defaultSort" width="150">Tahun</th>
+                            <th class="text-center" width="125">Jenis Kegiatan</th>
+                            <th class="text-center" width="125">Pembuat</th>
+                            <th class="text-center no-sort" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,33 +92,28 @@
                             <td>
                                 <a href="{{route('output-activity.show',encode_id($activity->id))}}">
                                     {{$activity->judul_luaran}}
-                                </a>
+                                </a><br>
+                                @switch($activity->kegiatan)
+                                    @case('Penelitian')
+                                    <small>
+                                        {{$activity->research->researchKetua->teacher->studyProgram->nama}} - {{$activity->research->researchKetua->teacher->studyProgram->department->nama}}
+                                    </small>
+                                    @break
+
+                                    @case('Pengabdian')
+                                    <small>
+                                        {{$activity->communityService->serviceKetua->teacher->studyProgram->nama}} - {{$activity->communityService->serviceKetua->teacher->studyProgram->department->nama}}
+                                    </small>
+                                    @break
+
+                                    @case('Lainnya')
+                                    @break
+                                @endswitch
                             </td>
                             <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
                             <td class="text-center">{{$activity->tahun_luaran}}</td>
                             <td class="text-center">{{$activity->kegiatan}}</td>
-                            @if($activity->kegiatan=='Penelitian')
-                            <td>
-                                <a href="{{route('research.show',encode_id($activity->research->id))}}">
-                                    {{$activity->research->judul_penelitian}}
-                                </a>
-                            </td>
-                            <td>
-                                {{$activity->research->researchKetua->teacher->studyProgram->nama}}
-                                ({{$activity->research->researchKetua->teacher->studyProgram->department->nama}} - {{$activity->research->researchKetua->teacher->studyProgram->department->faculty->singkatan}})
-                            </td>
-                            @else
-                            <td>
-                                <a href="{{route('community-service.show',encode_id($activity->communityService->id))}}">
-                                    {{$activity->communityService->judul_pengabdian}}
-                                </a>
-                            </td>
-                            <td>
-                                {{$activity->communityService->serviceKetua->teacher->studyProgram->nama}}
-                                ({{$activity->communityService->serviceKetua->teacher->studyProgram->department->nama}} - {{$activity->communityService->serviceKetua->teacher->studyProgram->department->faculty->singkatan}})
-                            </td>
-                            @endif
-                            <td>{{$activity->keterangan}}</td>
+                            <td class="text-center">{{$activity->pembuat_luaran}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
