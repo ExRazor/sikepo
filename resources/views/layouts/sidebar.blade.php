@@ -66,28 +66,31 @@
             <span class="menu-item-label">Publikasi</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('publication.category') }}" class="sub-link {{ (request()->is('publication/category*')) ? 'active' : '' }}">Jenis Publikasi</a></li>
             <li class="sub-item"><a href="{{ route('publication.teacher') }}" class="sub-link {{ (request()->is('publication/teacher*')) ? 'active' : '' }}">Publikasi Dosen</a></li>
             <li class="sub-item"><a href="{{ route('publication.student') }}" class="sub-link {{ (request()->is('publication/student*')) ? 'active' : '' }}">Publikasi Mahasiswa</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
-            <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'output-activity') ? 'active' : '' }}">
-                <i class="menu-item-icon fa fa-boxes"></i>
-                <span class="menu-item-label">Luaran Kegiatan</span>
-            </a><!-- br-menu-link -->
-            <ul class="br-menu-sub">
-                <li class="sub-item"><a href="{{ route('output-activity.category') }}" class="sub-link {{ (request()->is('output-activity/category*')) ? 'active' : '' }}">Kategori Luaran</a></li>
-                <li class="sub-item"><a href="{{ route('output-activity') }}" class="sub-link {{ (request()->is('output-activity/list*')) ? 'active' : '' }}">Data Luaran</a></li>
-            </ul>
-        </li>
+        <a href="{{ route('output-activity') }}" class="br-menu-link {{ (request()->segment(1) == 'output-activity') ? 'active' : '' }}">
+          <i class="menu-item-icon fa fa-boxes"></i>
+          <span class="menu-item-label">Luaran Kegiatan</span>
+        </a><!-- br-menu-link -->
+    </li>
+    {{-- <li class="br-menu-item">
+        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'output-activity') ? 'active' : '' }}">
+            <i class="menu-item-icon fa fa-boxes"></i>
+            <span class="menu-item-label">Luaran Kegiatan</span>
+        </a><!-- br-menu-link -->
+        <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('output-activity') }}" class="sub-link {{ (request()->is('output-activity/list*')) ? 'active' : '' }}">Data Luaran</a></li>
+        </ul>
+    </li> --}}
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'funding') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-balance-scale"></i>
             <span class="menu-item-label">Keuangan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('funding.category') }}" class="sub-link {{ (request()->is('funding/category*')) ? 'active' : '' }}">Kategori Dana</a></li>
             <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->is('funding/faculty*')) ? 'active' : '' }}">Keuangan Fakultas</a></li>
             <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->is('funding/study-program*')) ? 'active' : '' }}">Keuangan Program Studi</a></li>
         </ul>
@@ -112,10 +115,13 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('master.academic-year') }}" class="sub-link {{ (request()->is('master/academic-year*')) ? 'active' : '' }}">Tahun Akademik</a></li>
+            <li class="sub-item"><a href="{{ route('master.publication-category') }}" class="sub-link {{ (request()->is('master/publication-category*')) ? 'active' : '' }}">Kategori Publikasi</a></li>
+            <li class="sub-item"><a href="{{ route('master.outputactivity-category') }}" class="sub-link {{ (request()->is('master/outputactivity-category*')) ? 'active' : '' }}">Kategori Luaran</a></li>
+            <li class="sub-item"><a href="{{ route('master.funding-category') }}" class="sub-link {{ (request()->is('master/funding-category*')) ? 'active' : '' }}">Kategori Dana</a></li>
+            <li class="sub-item"><a href="{{ route('master.satisfaction-category') }}" class="sub-link {{ (request()->is('master/satisfaction-category*')) ? 'active' : '' }}">Aspek Kepuasan</a></li>
             <li class="sub-item"><a href="{{ route('master.study-program') }}" class="sub-link {{ (request()->is('master/study-program*')) ? 'active' : '' }}">Program Studi</a></li>
             <li class="sub-item"><a href="{{ route('master.department') }}" class="sub-link {{ (request()->is('master/department*')) ? 'active' : '' }}">Jurusan</a></li>
             <li class="sub-item"><a href="{{ route('master.faculty') }}" class="sub-link {{ (request()->is('master/faculty*')) ? 'active' : '' }}">Fakultas</a></li>
-            <li class="sub-item"><a href="{{ route('master.satisfaction-category') }}" class="sub-link {{ (request()->is('master/satisfaction-category*')) ? 'active' : '' }}">Aspek Kepuasan</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

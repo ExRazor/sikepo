@@ -11,7 +11,7 @@ class PublicationCategoryController extends Controller
     {
         $category = PublicationCategory::orderBy('id','asc')->get();
 
-        return view('publication/category/index',compact(['category']));
+        return view('master/publication-category/index',compact(['category']));
     }
 
     public function store(Request $request)

@@ -11,7 +11,7 @@ class OutputActivityCategoryController extends Controller
     {
         $category = OutputActivityCategory::orderBy('id','asc')->get();
 
-        return view('output-activity/category/index',compact(['category']));
+        return view('master/outputactivity-category/index',compact(['category']));
     }
 
     public function store(Request $request)

@@ -2247,11 +2247,13 @@ $(document).ready(function() {
                     .find('textarea[name=deskripsi]').val(data.deskripsi).end()
 
                 if(data.id_parent) {
+                    $('#form-fundCat').find('.select_parent').show()
                     $('#form-fundCat').find('.category-description').show();
                     $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',false);
                     $('#form-fundCat').find('select[name=jenis]').prop('disabled',true).val(data.jenis);
                     $('#form-fundCat').find('input[name=jenis]').prop('disabled',false).val(data.jenis);
                 } else {
+                    $('#form-fundCat').find('.select_parent').hide()
                     $('#form-fundCat').find('.category-description').hide();
                     $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',true);
                     $('#form-fundCat').find('input[name=jenis]').prop('disabled',true).removeAttr('value');
@@ -2294,7 +2296,9 @@ $(document).ready(function() {
         .on('click','.btn-add',function(e){
             var form  = $('#form-fundCat')
             form.trigger('reset');
+            form.find('.select_parent').show()
             form.find('select[name=id_parent]').trigger('change')
+
         }).end()
     /****************************************************************************************/
 

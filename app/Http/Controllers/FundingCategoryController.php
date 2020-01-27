@@ -12,7 +12,7 @@ class FundingCategoryController extends Controller
     {
         $category = FundingCategory::with('children')->orderBy('id','asc')->whereNull('id_parent')->get();
 
-        return view('funding/category/index',compact(['category']));
+        return view('master.funding-category.index',compact(['category']));
     }
 
     public function store(Request $request)

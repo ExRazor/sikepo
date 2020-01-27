@@ -61,6 +61,24 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::post('satisfaction-category', 'SatisfactionCategoryController@store')->name('satisfaction-category.store');
     Route::put('satisfaction-category','SatisfactionCategoryController@update')->name('satisfaction-category.update');
     Route::delete('satisfaction-category','SatisfactionCategoryController@destroy')->name('satisfaction-category.delete');
+
+    //Publication Category
+    Route::get('publication-category','PublicationCategoryController@index')->name('publication-category');
+    Route::post('publication-category','PublicationCategoryController@store')->name('publication-category.store');
+    Route::put('publication-category','PublicationCategoryController@update')->name('publication-category.update');
+    Route::delete('publication-category','PublicationCategoryController@destroy')->name('publication-category.delete');
+
+    //Output Activity Category
+    Route::get('outputactivity-category','OutputActivityCategoryController@index')->name('outputactivity-category');
+    Route::post('outputactivity-category','OutputActivityCategoryController@store')->name('outputactivity-category.store');
+    Route::put('outputactivity-category','OutputActivityCategoryController@update')->name('outputactivity-category.update');
+    Route::delete('outputactivity-category','OutputActivityCategoryController@destroy')->name('outputactivity-category.delete');
+
+    //Funding - Category
+    Route::get('funding-category','FundingCategoryController@index')->name('funding-category');
+    Route::post('funding-category','FundingCategoryController@store')->name('funding-category.store');
+    Route::put('funding-category','FundingCategoryController@update')->name('funding-category.update');
+    Route::delete('funding-category','FundingCategoryController@destroy')->name('funding-category.delete');
 });
 
 //Setting
@@ -270,12 +288,6 @@ Route::get('funding',function(){
     return redirect(route('student'));
 });
 
-//Funding - Category
-Route::get('funding/category','FundingCategoryController@index')->name('funding.category');
-Route::post('funding/category','FundingCategoryController@store')->name('funding.category.store');
-Route::put('funding/category','FundingCategoryController@update')->name('funding.category.update');
-Route::delete('funding/category','FundingCategoryController@destroy')->name('funding.category.delete');
-
 //Funding - Faculty
 Route::get('funding/faculty','FundingFacultyController@index')->name('funding.faculty');
 Route::get('funding/faculty/add','FundingFacultyController@create')->name('funding.faculty.add');
@@ -316,12 +328,6 @@ Route::delete('community-service','CommunityServiceController@destroy')->name('c
 Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
 Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
-//Publication Category
-Route::get('publication/category','PublicationCategoryController@index')->name('publication.category');
-Route::post('publication/category','PublicationCategoryController@store')->name('publication.category.store');
-Route::put('publication/category','PublicationCategoryController@update')->name('publication.category.update');
-Route::delete('publication/category','PublicationCategoryController@destroy')->name('publication.category.delete');
-
 //Teacher Publication List
 Route::get('publication/teacher','TeacherPublicationController@index')->name('publication.teacher');
 Route::get('publication/teacher/add','TeacherPublicationController@create')->name('publication.teacher.add');
@@ -343,23 +349,16 @@ Route::put('publication/student','StudentPublicationController@update')->name('p
 Route::delete('publication/student','StudentPublicationController@destroy')->name('publication.student.delete');
 Route::get('publication/student/delete_member/{id}','StudentPublicationController@destroy_member')->name('publication.student.delete.member');
 
-//Output Activity Category
-Route::get('output-activity/category','OutputActivityCategoryController@index')->name('output-activity.category');
-Route::post('output-activity/category','OutputActivityCategoryController@store')->name('output-activity.category.store');
-Route::put('output-activity/category','OutputActivityCategoryController@update')->name('output-activity.category.update');
-Route::delete('output-activity/category','OutputActivityCategoryController@destroy')->name('output-activity.category.delete');
-
 //Output Activity
-Route::get('output-activity/list','OutputActivityController@index')->name('output-activity');
-Route::get('output-activity/list/add','OutputActivityController@create')->name('output-activity.add');
-Route::get('output-activity/list/{id}','OutputActivityController@show')->name('output-activity.show');
-Route::get('output-activity/list/{id}/edit','OutputActivityController@edit')->name('output-activity.edit');
-Route::post('output-activity/list','OutputActivityController@store')->name('output-activity.store');
-Route::put('output-activity/list','OutputActivityController@update')->name('output-activity.update');
-Route::delete('output-activity/list','OutputActivityController@destroy')->name('output-activity.delete');
+Route::get('output-activity','OutputActivityController@index')->name('output-activity');
+Route::get('output-activity/add','OutputActivityController@create')->name('output-activity.add');
+Route::get('output-activity/{id}','OutputActivityController@show')->name('output-activity.show');
+Route::get('output-activity/{id}/edit','OutputActivityController@edit')->name('output-activity.edit');
+Route::post('output-activity','OutputActivityController@store')->name('output-activity.store');
+Route::put('output-activity','OutputActivityController@update')->name('output-activity.update');
+Route::delete('output-activity','OutputActivityController@destroy')->name('output-activity.delete');
 Route::get('/download/output-activity','OutputActivityController@download')->name('output-activity.file.download');
 Route::get('/delete_file/output-activity','OutputActivityController@delete_file')->name('output-activity.file.delete');
-
 
 //Academic - Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');

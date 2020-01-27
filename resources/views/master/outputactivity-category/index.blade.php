@@ -66,7 +66,7 @@
                                             <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit" data-id="{{ encrypt($c->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encrypt($c->id)}}" name="_id">
-                                                <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('output-activity.category.delete') }}">
+                                                <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.outputactivity-category.delete') }}">
                                                     <div><i class="fa fa-trash"></i></div>
                                                 </button>
                                             </form>
@@ -106,7 +106,7 @@
                         </div>
                         <div class="row mg-t-20">
                             <div class="offset-sm-3 col-sm-9 mg-t-10 mg-sm-t-0">
-                                <button type="submit" class="btn btn-info mr-2 btn-save" value="post" data-dest="{{route('output-activity.category.store')}}">Simpan</button>
+                                <button type="submit" class="btn btn-info mr-2 btn-save" value="post" data-dest="{{route('master.outputactivity-category.store')}}">Simpan</button>
                                 <button class="btn btn-secondary btn-add">Reset</button>
                             </div>
                         </div>

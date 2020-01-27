@@ -189,12 +189,6 @@ Breadcrumbs::for('publication', function ($trail) {
     $trail->push('Data Publikasi');
 });
 
-//Publikasi > Kategori
-Breadcrumbs::for('publication-category', function ($trail) {
-    $trail->parent('publication');
-    $trail->push('Kategori Jenis Publikasi', route('publication.category'));
-});
-
 //Publikasi > Dosen
 Breadcrumbs::for('publication-teacher', function ($trail) {
     $trail->parent('publication');
@@ -256,12 +250,6 @@ Breadcrumbs::for('output-activity-show', function ($trail,$data) {
 Breadcrumbs::for('output-activity-edit', function ($trail,$data) {
     $trail->parent('output-activity-show',$data);
     $trail->push('Sunting Data Luaran');
-});
-
-// Luaran > Kategori
-Breadcrumbs::for('output-activity-category', function ($trail) {
-    $trail->parent('output-activity');
-    $trail->push('Kategori Luaran', route('output-activity.category'));
 });
 
 // Akademik
@@ -433,6 +421,24 @@ Breadcrumbs::for('master', function ($trail) {
 Breadcrumbs::for('academic-year', function ($trail) {
     $trail->parent('master');
     $trail->push('Tahun Akademik', route('master.academic-year'));
+});
+
+// Data Master > Kategori Publikasi
+Breadcrumbs::for('publication-category', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Kategori Publikasi', route('master.publication-category'));
+});
+
+// Luaran > Kategori
+Breadcrumbs::for('output-activity-category', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Kategori Luaran', route('master.outputactivity-category'));
+});
+
+// Luaran > Kategori
+Breadcrumbs::for('funding-category', function ($trail) {
+    $trail->parent('master');
+    $trail->push('Kategori Pendanaan', route('master.funding-category'));
 });
 
 // Data Master > Program Studi
