@@ -3224,7 +3224,7 @@ $(document).ready(function() {
     /****************************************************************************************/
 
     /********************************* DATA LUARAN *********************************/
-    $('#outputActivity_form').on('change','select[name=kegiatan]',function(){
+    $(document).on('change','select[name=kegiatan]',function(){
 
         var div_select_kegiatan = $('#outputActivity_form').find('#pilihNamaKegiatan');
         var select_kegiatan = $('#outputActivity_form').find('.select-activity');

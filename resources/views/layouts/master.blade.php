@@ -69,13 +69,14 @@
     <div class="br-mainpanel">
         @yield('content')
         <footer class="br-footer my-auto">
-          <div class="footer-left">
-              <div class="mg-b-2">Copyright &copy; 2019. DikaDikkun. All Rights Reserved.</div>
-              <div>Carefully made by ThemePixels. Modified for needs by DikaDikkun.</div>
-          </div>
+            <div class="footer-left">
+                <div class="mg-b-2">Copyright &copy; 2019. DikaDikkun. All Rights Reserved.</div>
+                <div>Carefully made by ThemePixels. Modified for needs by DikaDikkun.</div>
+            </div>
         </footer>
     </div>
     <!-- END: CONTENT -->
+
 
     @yield('custom-js')
   </body>
