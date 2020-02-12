@@ -1,0 +1,20 @@
+.sidebar {
+	padding: 48px 0 0;
+}
+
+.sidebar-sticky {
+	position: sticky;
+}
+
+main.konten {
+    padding-top: 48px;
+    margin: 0 auto;
+}
+
+.panduan {
+	padding-bottom: 40px;
+}
+
+.panduan img {
+	width: 100%;
+}
