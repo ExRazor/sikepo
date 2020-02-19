@@ -231,24 +231,50 @@ Breadcrumbs::for('publication-student-edit', function ($trail,$data) {
     $trail->push('Sunting Publikasi Mahasiswa');
 });
 
-// Luaran
+// Luaran - Dosen
 Breadcrumbs::for('output-activity', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Luaran', route('output-activity'));
+    $trail->push('Data Luaran');
 });
 
-Breadcrumbs::for('output-activity-add', function ($trail) {
+Breadcrumbs::for('output-activity-teacher', function ($trail) {
     $trail->parent('output-activity');
-    $trail->push('Tambah Data Luaran', route('output-activity.add'));
+    $trail->push('Luaran Dosen', route('output-activity.teacher'));
 });
 
-Breadcrumbs::for('output-activity-show', function ($trail,$data) {
+Breadcrumbs::for('output-activity-teacher-add', function ($trail) {
+    $trail->parent('output-activity-teacher');
+    $trail->push('Tambah Data Luaran', route('output-activity.teacher.add'));
+});
+
+Breadcrumbs::for('output-activity-teacher-show', function ($trail,$data) {
+    $trail->parent('output-activity-teacher');
+    $trail->push('Luaran Penelitian: '.$data->judul_luaran, route('output-activity.teacher.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('output-activity-teacher-edit', function ($trail,$data) {
+    $trail->parent('output-activity-teacher-show',$data);
+    $trail->push('Sunting Data Luaran');
+});
+
+// Luaran - Mahasiswa
+Breadcrumbs::for('output-activity-student', function ($trail) {
     $trail->parent('output-activity');
-    $trail->push('Luaran Penelitian: '.$data->judul_luaran, route('output-activity.show',encode_id($data->id)));
+    $trail->push('Luaran Mahasiswa', route('output-activity.student'));
 });
 
-Breadcrumbs::for('output-activity-edit', function ($trail,$data) {
-    $trail->parent('output-activity-show',$data);
+Breadcrumbs::for('output-activity-student-add', function ($trail) {
+    $trail->parent('output-activity-student');
+    $trail->push('Tambah Data Luaran', route('output-activity.student.add'));
+});
+
+Breadcrumbs::for('output-activity-student-show', function ($trail,$data) {
+    $trail->parent('output-activity-student');
+    $trail->push('Luaran Penelitian: '.$data->judul_luaran, route('output-activity.student.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('output-activity-student-edit', function ($trail,$data) {
+    $trail->parent('output-activity-student-show',$data);
     $trail->push('Sunting Data Luaran');
 });
 

@@ -78,4 +78,9 @@ class Teacher extends Model
     {
         return $this->hasMany('App\CurriculumIntegration','nidn');
     }
+
+    public function outputActivity()
+    {
+        return $this->hasMany('App\TeacherOutputActivity','nidn');
+    }
 }

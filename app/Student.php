@@ -68,4 +68,9 @@ class Student extends Model
     {
         return $this->hasOne('App\Minithesis','nim');
     }
+
+    public function outputActivity()
+    {
+        return $this->hasMany('App\StudentOutputActivity','nim');
+    }
 }

@@ -11,8 +11,13 @@ class OutputActivityCategory extends Model
         'deskripsi',
     ];
 
-    public function outputActivity()
+    public function teacherOutput()
     {
-        return $this->hasMany('App\OutputActivity','id_kategori');
+        return $this->hasMany('App\TeacherOutputActivity','id_kategori');
+    }
+
+    public function studentOutput()
+    {
+        return $this->hasMany('App\StudentOutputActivity','id_kategori');
     }
 }

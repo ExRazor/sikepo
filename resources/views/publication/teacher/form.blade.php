@@ -93,7 +93,7 @@
                                             </select>
                                         </div>
                                         <div class="col-3">
-                                            <a href="{{ route('publication.category') }}" class="btn btn-teal btn-block mg-b-10" style="color:white">Tambah Kategori</a>
+                                            <a href="{{ route('master.publication-category') }}" class="btn btn-teal btn-block mg-b-10" style="color:white">Tambah Kategori</a>
                                         </div>
                                     </div>
 

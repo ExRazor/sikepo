@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Luaran')
+@section('title', 'Luaran Mahasiswa')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('publication') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('output-activity-student') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -23,10 +23,10 @@
     <i class="icon fa fa-boxes"></i>
     <div>
         <h4>Luaran Kegiatan</h4>
-        <p class="mg-b-0">Olah Data Luaran Kegiatan</p>
+        <p class="mg-b-0">Olah data luaran kegiatan mahasiswa</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('output-activity.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
+        <a href="{{ route('output-activity.student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
     </div>
 </div>
 
@@ -52,7 +52,8 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.output-activity.filter')}}" id="filter-outputActivity" method="POST">
+            <form action="{{route('ajax.output-activity.student.filter')}}" id="filter-outputActivity" method="POST">
+                <input type="hidden" id="nm_jurusan" value="{{ setting('app_department_name') }}">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <select class="form-control" name="kd_prodi">
@@ -75,14 +76,14 @@
                 <h6 class="card-title">{{ setting('app_department_name') }}</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_outputActivity" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center" width="500">Judul Luaran</th>
+                            <th class="text-center" width="125">Jenis Luaran</th>
                             <th class="text-center" width="300">Kategori</th>
                             <th class="text-center defaultSort" width="150">Tahun</th>
                             <th class="text-center" width="125">Jenis Kegiatan</th>
-                            <th class="text-center" width="125">Pembuat</th>
                             <th class="text-center no-sort" width="50">Aksi</th>
                         </tr>
                     </thead>
@@ -90,40 +91,27 @@
                         @foreach ($outputActivity as $activity)
                         <tr>
                             <td>
-                                <a href="{{route('output-activity.show',encode_id($activity->id))}}">
+                                <a href="{{route('output-activity.student.show',encode_id($activity->id))}}">
                                     {{$activity->judul_luaran}}
                                 </a><br>
-                                @switch($activity->kegiatan)
-                                    @case('Penelitian')
-                                    <small>
-                                        {{$activity->research->researchKetua->teacher->studyProgram->nama}} - {{$activity->research->researchKetua->teacher->studyProgram->department->nama}}
-                                    </small>
-                                    @break
-
-                                    @case('Pengabdian')
-                                    <small>
-                                        {{$activity->communityService->serviceKetua->teacher->studyProgram->nama}} - {{$activity->communityService->serviceKetua->teacher->studyProgram->department->nama}}
-                                    </small>
-                                    @break
-
-                                    @case('Lainnya')
-                                    @break
-                                @endswitch
+                                <small>
+                                    {{$activity->student->nama.' ('.$activity->nim.')'.' / '.$activity->student->studyProgram->singkatan}}
+                                </small>
                             </td>
+                            <td class="text-center">{{$activity->jenis_luaran}}</td>
                             <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
-                            <td class="text-center">{{$activity->tahun_luaran}}</td>
+                            <td class="text-center">{{$activity->thn_luaran}}</td>
                             <td class="text-center">{{$activity->kegiatan}}</td>
-                            <td class="text-center">{{$activity->pembuat_luaran}}</td>
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('output-activity.edit',encode_id($activity->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('output-activity.student.edit',encode_id($activity->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($activity->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('output-activity.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('output-activity.student.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>

@@ -177,8 +177,11 @@ Route::prefix('ajax')->group(function () {
     //Output Activity Category
     Route::get('output-activity/category/{id}','OutputActivityCategoryController@edit')->name('output-activity.category.edit');
 
-    //Output Activity
-    Route::post('output-activity/get_by_filter','OutputActivityController@get_by_filter')->name('ajax.output-activity.filter');
+    //Output Activity - Teacher
+    Route::post('output-activity/teacher/get_by_filter','TeacherOutputActivityController@get_by_filter')->name('ajax.output-activity.teacher.filter');
+
+    //Output Activity - Student
+    Route::post('output-activity/student/get_by_filter','StudentOutputActivityController@get_by_filter')->name('ajax.output-activity.student.filter');
 
     //Academic - Curriculum
     Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
@@ -349,16 +352,25 @@ Route::put('publication/student','StudentPublicationController@update')->name('p
 Route::delete('publication/student','StudentPublicationController@destroy')->name('publication.student.delete');
 Route::get('publication/student/delete_member/{id}','StudentPublicationController@destroy_member')->name('publication.student.delete.member');
 
-//Output Activity
-Route::get('output-activity','OutputActivityController@index')->name('output-activity');
-Route::get('output-activity/add','OutputActivityController@create')->name('output-activity.add');
-Route::get('output-activity/{id}','OutputActivityController@show')->name('output-activity.show');
-Route::get('output-activity/{id}/edit','OutputActivityController@edit')->name('output-activity.edit');
-Route::post('output-activity','OutputActivityController@store')->name('output-activity.store');
-Route::put('output-activity','OutputActivityController@update')->name('output-activity.update');
-Route::delete('output-activity','OutputActivityController@destroy')->name('output-activity.delete');
-Route::get('/download/output-activity','OutputActivityController@download')->name('output-activity.file.download');
-Route::get('/delete_file/output-activity','OutputActivityController@delete_file')->name('output-activity.file.delete');
+//Output Activity - Teacher
+Route::get('output-activity/teacher','TeacherOutputActivityController@index')->name('output-activity.teacher');
+Route::get('output-activity/teacher/add','TeacherOutputActivityController@create')->name('output-activity.teacher.add');
+Route::get('output-activity/teacher/{id}','TeacherOutputActivityController@show')->name('output-activity.teacher.show');
+Route::get('output-activity/teacher/{id}/edit','TeacherOutputActivityController@edit')->name('output-activity.teacher.edit');
+Route::post('output-activity/teacher','TeacherOutputActivityController@store')->name('output-activity.teacher.store');
+Route::put('output-activity/teacher','TeacherOutputActivityController@update')->name('output-activity.teacher.update');
+Route::delete('output-activity/teacher','TeacherOutputActivityController@destroy')->name('output-activity.teacher.delete');
+Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('output-activity.file.download');
+Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('output-activity.file.delete');
+
+//Output Activity - Student
+Route::get('output-activity/student','StudentOutputActivityController@index')->name('output-activity.student');
+Route::get('output-activity/student/add','StudentOutputActivityController@create')->name('output-activity.student.add');
+Route::get('output-activity/student/{id}','StudentOutputActivityController@show')->name('output-activity.student.show');
+Route::get('output-activity/student/{id}/edit','StudentOutputActivityController@edit')->name('output-activity.student.edit');
+Route::post('output-activity/student','StudentOutputActivityController@store')->name('output-activity.student.store');
+Route::put('output-activity/student','StudentOutputActivityController@update')->name('output-activity.student.update');
+Route::delete('output-activity/student','StudentOutputActivityController@destroy')->name('output-activity.student.delete');
 
 //Academic - Curriculum
 Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');

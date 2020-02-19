@@ -1,13 +1,12 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Research;
-use App\CommunityService;
 use App\OutputActivityCategory;
 use App\Teacher;
 use App\Student;
+use App\AcademicYear;
 
-class OutputActivitySeeder extends Seeder
+class StudentOutputActivity extends Seeder
 {
     /**
      * Run the database seeds.
@@ -25,13 +24,8 @@ class OutputActivitySeeder extends Seeder
 
         for($i=0;$i<100;$i++) {
             $kategori   = OutputActivityCategory::all()->random()->id;
-
-            $kegiatan = $tipe[array_rand($tipe)];
-            $pilihPemilik = $pemilik[array_rand($pemilik)];
-
-            if($pilihPemilik == 'Dosen')
-            {
-                $teacher = Teacher::whereHas(
+            $thn_luaran = $tahun[array_rand($tahun)];
+            $student    = Student::whereHas(
                                         'studyProgram', function($q) {
                                             $q->where('kd_jurusan',setting('app_department_id'));
                                         }
@@ -39,23 +33,8 @@ class OutputActivitySeeder extends Seeder
                                     ->inRandomOrder()
                                     ->first();
 
-                $id_pemilik = $teacher->nidn;
-                $nm_pemilik = $teacher->nama;
-            }
-            else
-            {
-                $student = Student::whereHas(
-                                    'studyProgram', function($q) {
-                                        $q->where('kd_jurusan',setting('app_department_id'));
-                                    }
-                                )
-                                ->inRandomOrder()
-                                ->first();
-
-                $id_pemilik = $student->nim;
-                $nm_pemilik = $student->nama;
-
-            }
+            $kegiatan = $tipe[array_rand($tipe)];
+            $pilihPemilik = $pemilik[array_rand($pemilik)];
 
             $hal_1 = rand(0,350);
             $hal_2 = rand($hal_1,$hal_1+rand(0,15));
@@ -66,15 +45,13 @@ class OutputActivitySeeder extends Seeder
 
             if($pilihJenis == 'Buku')
             {
-                DB::table('output_activities')->insert([
+                DB::table('student_output_activities')->insert([
                     'kegiatan'          => $kegiatan,
                     'nm_kegiatan'       => 'Ini adalah nama kegiatan '.$kegiatan,
-                    'pemilik_luaran'    => $pilihPemilik,
-                    'id_pemilik'        => $id_pemilik,
-                    'nm_pemilik'        => $nm_pemilik,
+                    'nim'               => $student->nim,
                     'id_kategori'       => $kategori,
                     'judul_luaran'      => 'Ini adalah judul luaran',
-                    'thn_luaran'        => $tahun[array_rand($tahun)],
+                    'thn_luaran'        => $thn_luaran,
                     'jenis_luaran'      => $pilihJenis,
                     'nama_karya'        => 'Ini adalah judul buku',
                     'issn'              => rand(1000,9999).'-'.rand(1000,9999),
@@ -86,15 +63,13 @@ class OutputActivitySeeder extends Seeder
             }
             elseif ($pilihJenis == 'Jurnal')
             {
-                DB::table('output_activities')->insert([
+                DB::table('student_output_activities')->insert([
                     'kegiatan'          => $kegiatan,
                     'nm_kegiatan'       => 'Ini adalah nama kegiatan '.$kegiatan,
-                    'pemilik_luaran'    => $pilihPemilik,
-                    'id_pemilik'        => $id_pemilik,
-                    'nm_pemilik'        => $nm_pemilik,
+                    'nim'               => $student->nim,
                     'id_kategori'       => $kategori,
                     'judul_luaran'      => 'Ini adalah judul luaran',
-                    'thn_luaran'        => $tahun[array_rand($tahun)],
+                    'thn_luaran'        => $thn_luaran,
                     'jenis_luaran'      => $pilihJenis,
                     'nama_karya'        => 'Ini adalah judul jurnal',
                     'issn'              => rand(1000,9999).'-'.rand(1000,9999),
@@ -106,15 +81,13 @@ class OutputActivitySeeder extends Seeder
             }
             elseif ($pilihJenis == 'HKI')
             {
-                DB::table('output_activities')->insert([
+                DB::table('student_output_activities')->insert([
                     'kegiatan'          => $kegiatan,
                     'nm_kegiatan'       => 'Ini adalah nama kegiatan '.$kegiatan,
-                    'pemilik_luaran'    => $pilihPemilik,
-                    'id_pemilik'        => $id_pemilik,
-                    'nm_pemilik'        => $nm_pemilik,
+                    'nim'               => $student->nim,
                     'id_kategori'       => $kategori,
                     'judul_luaran'      => 'Ini adalah judul luaran',
-                    'thn_luaran'        => $tahun[array_rand($tahun)],
+                    'thn_luaran'        => $thn_luaran,
                     'jenis_luaran'      => $pilihJenis,
                     'nama_karya'        => 'Ini adalah judul karya HKI',
                     'jenis_karya'       => 'Ini adalah jenis karya HKI',
@@ -126,15 +99,13 @@ class OutputActivitySeeder extends Seeder
             }
             else
             {
-                DB::table('output_activities')->insert([
+                DB::table('student_output_activities')->insert([
                     'kegiatan'          => $kegiatan,
                     'nm_kegiatan'       => 'Ini adalah nama kegiatan '.$kegiatan,
-                    'pemilik_luaran'    => $pilihPemilik,
-                    'id_pemilik'        => $id_pemilik,
-                    'nm_pemilik'        => $nm_pemilik,
+                    'nim'               => $student->nim,
                     'id_kategori'       => $kategori,
                     'judul_luaran'      => 'Ini adalah judul luaran',
-                    'thn_luaran'        => $tahun[array_rand($tahun)],
+                    'thn_luaran'        => $thn_luaran,
                     'jenis_luaran'      => $pilihJenis,
                     'nama_karya'        => 'Ini adalah judul karya HKI Paten',
                     'jenis_karya'       => 'Ini adalah jenis karya HKI Paten',

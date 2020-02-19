@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Faculty;
+use App\StudyProgram;
 use App\OutputActivity;
 use App\OutputActivityCategory;
-use App\StudyProgram;
 use Illuminate\Http\Request;
 use File;
 
@@ -48,6 +48,7 @@ class OutputActivityController extends Controller
             'file_keterangan'   => 'mimes:pdf',
             'file_artikel'      => 'mimes:pdf',
         ]);
+
 
         //Simpan Data Penelitian
         $data                   = new OutputActivity;

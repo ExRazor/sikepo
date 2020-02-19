@@ -3226,30 +3226,237 @@ $(document).ready(function() {
     /********************************* DATA LUARAN *********************************/
     $(document).on('change','select[name=kegiatan]',function(){
 
-        var div_select_kegiatan = $('#outputActivity_form').find('#pilihNamaKegiatan');
-        var select_kegiatan = $('#outputActivity_form').find('.select-activity');
-        var input_kegiatan = $('#outputActivity_form').find('#namaLainnya');
+        var input_kegiatan = $('#outputActivity_form').find('input[name=nm_kegiatan]');
 
         var kegiatan = $(this).val();
 
-        if(kegiatan=='Lainnya') {
-            select_kegiatan.prop('required',false);
-            select_kegiatan.prop('disabled',true);
-            div_select_kegiatan.hide();
+        if(kegiatan != '') {
             input_kegiatan.prop('disabled',false);
             input_kegiatan.prop('required',true);
-            input_kegiatan.show();
         } else {
-            input_kegiatan.hide();
-            input_kegiatan.prop('required',false);
             input_kegiatan.prop('disabled',true);
-            select_kegiatan.prop('disabled',false);
-            select_kegiatan.prop('required',true);
-            select_kegiatan.empty();
-            load_select_activity();
-            div_select_kegiatan.show();
+            input_kegiatan.prop('required',false);
         }
     })
+
+    $('#outputActivity_form').on('change','select#jenis',function(){
+
+        var jenis = $(this).val();
+        var karya = $('#outputActivity_form').find('div#karya');
+
+        karya.find('div.row.mb-3, div.row.mg-t-20').addClass('d-none');
+        karya.find('input').prop('disabled',true);
+        karya.find('input').prop('required',false);
+        karya.find('select').prop('disabled',true);
+        karya.find('select').prop('required',false);
+
+        if(jenis == 'Buku')
+        {
+            $('#nama_karya').removeClass('d-none');
+            $('#nama_karya').find('label').html('Nama Buku: <span class="tx-danger">*</span>');
+            $('#nama_karya').find('input').prop('disabled',false);
+            $('#nama_karya').find('input').prop('required',true);
+
+            $('#issn').removeClass('d-none');
+            $('#issn').find('input').prop('disabled',false);
+            $('#issn').find('input').prop('required',true);
+
+            $('#penerbit').removeClass('d-none');
+            $('#penerbit').find('input').prop('disabled',false);
+            $('#penerbit').find('input').prop('required',true);
+
+            $('#url').removeClass('d-none');
+            $('#url').find('input').prop('disabled',false);
+
+            $('#keterangan').removeClass('d-none');
+            $('#keterangan').find('input').prop('disabled',false);
+
+            $('#file').removeClass('d-none');
+            $('#file').find('input').prop('disabled',false);
+
+
+        }
+        else if(jenis == 'Jurnal')
+        {
+            $('#nama_karya').removeClass('d-none');
+            $('#nama_karya').find('label').html('Nama Jurnal: <span class="tx-danger">*</span>');
+            $('#nama_karya').find('input').prop('disabled',false);
+            $('#nama_karya').find('input').prop('required',true);
+
+            $('#issn').removeClass('d-none');
+            $('#issn').find('input').prop('disabled',false);
+            $('#issn').find('input').prop('required',true);
+
+            $('#penyelenggara').removeClass('d-none');
+            $('#penyelenggara').find('input').prop('disabled',false);
+            $('#penyelenggara').find('input').prop('required',true);
+
+            $('#url').removeClass('d-none');
+            $('#url').find('input').prop('disabled',false);
+
+            $('#keterangan').removeClass('d-none');
+            $('#keterangan').find('input').prop('disabled',false);
+
+            $('#file').removeClass('d-none');
+            $('#file').find('input').prop('disabled',false);
+
+
+        }
+        else if(jenis == 'HKI')
+        {
+            $('#nama_karya').removeClass('d-none');
+            $('#nama_karya').find('label').html('Nama Karya: <span class="tx-danger">*</span>');
+            $('#nama_karya').find('input').prop('disabled',false);
+            $('#nama_karya').find('input').prop('required',true);
+
+            $('#jenis_karya').removeClass('d-none');
+            $('#jenis_karya').find('input').prop('disabled',false);
+            $('#jenis_karya').find('input').prop('required',true);
+
+            $('#pencipta_karya').removeClass('d-none');
+            $('#pencipta_karya').find('input').prop('disabled',false);
+            $('#pencipta_karya').find('input').prop('required',true);
+
+            $('#no_permohonan').removeClass('d-none');
+            $('#no_permohonan').find('input').prop('disabled',false);
+            $('#no_permohonan').find('input').prop('required',true);
+
+            $('#tgl_permohonan').removeClass('d-none');
+            $('#tgl_permohonan').find('input').prop('disabled',false);
+            $('#tgl_permohonan').find('input').prop('required',true);
+
+            $('#keterangan').removeClass('d-none');
+            $('#keterangan').find('input').prop('disabled',false);
+
+            $('#file').removeClass('d-none');
+            $('#file').find('input').prop('disabled',false);
+
+        }
+        else if(jenis == 'HKI Paten')
+        {
+            $('#nama_karya').removeClass('d-none');
+            $('#nama_karya').find('label').html('Nama Karya: <span class="tx-danger">*</span>');
+            $('#nama_karya').find('input').prop('disabled',false);
+            $('#nama_karya').find('input').prop('required',true);
+
+            $('#jenis_karya').removeClass('d-none');
+            $('#jenis_karya').find('input').prop('disabled',false);
+            $('#jenis_karya').find('input').prop('required',true);
+
+            $('#pencipta_karya').removeClass('d-none');
+            $('#pencipta_karya').find('input').prop('disabled',false);
+            $('#pencipta_karya').find('input').prop('required',true);
+
+            $('#no_paten').removeClass('d-none');
+            $('#no_paten').find('input').prop('disabled',false);
+            $('#no_paten').find('input').prop('required',true);
+
+            $('#tgl_sah').removeClass('d-none');
+            $('#tgl_sah').find('input').prop('disabled',false);
+            $('#tgl_sah').find('input').prop('required',true);
+
+            $('#keterangan').removeClass('d-none');
+            $('#keterangan').find('input').prop('disabled',false);
+
+            $('#file').removeClass('d-none');
+            $('#file').find('input').prop('disabled',false);
+        }
+    })
+
+    $('form#filter-outputActivity').submit(function(e){
+        e.preventDefault();
+
+        var cont    = $(this);
+        var btn     = cont.find('button[type=submit]');
+        var tabel   = $('#table_outputActivity');
+        var datacon = cont.serializeArray();
+        var url     = cont.attr('action');
+        var opsi    = cont.find('select[name=kd_prodi] option:selected');
+        var jurusan = cont.find('input#nm_jurusan').val();
+        var type    = cont.data('type');
+
+        if(opsi.val()) {
+            var teks = 'Prodi: '+opsi.text();
+            $('h6.card-title').text(teks);
+        } else {
+            $('h6.card-title').text(jurusan);
+        }
+
+        $.ajax({
+            url: url,
+            data: datacon,
+            type: 'POST',
+            async: true,
+            dataType: 'json',
+            beforeSend: function() {
+                btn.addClass('disabled');
+                btn.html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (data) {
+                var html          = '';
+
+                if(data.length > 0) {
+                    $.each(data, function(i,val){
+
+                        if(type=='teacher') {
+                            var id_unik     = val.teacher.nidn;
+                            var nama        = val.teacher.nama;
+                            var prodi       = val.teacher.study_program.singkatan;
+                            var id_cat      = 'NIDN.'
+                        } else {
+                            var id_unik     = val.student.nim;
+                            var nama        = val.student.nama;
+                            var prodi       = val.student.study_program.singkatan;
+                            var id_cat = 'NIM.'
+                        }
+
+                        var id          = val.id;
+                        var judul       = val.judul_luaran;
+                        var jenis       = val.jenis_luaran;
+                        var kategori    = val.output_activity_category.nama;
+                        var tahun       = val.thn_luaran;
+                        var kegiatan    = val.kegiatan;
+
+                        html +='<tr>'+
+                                '<td>'+
+                                    '<a href="'+base_url+'/output-activity/teacher/'+encode_id(id)+'">'+judul+'</a><br>'+
+                                    '<small>'+nama+' ('+id_unik+') / '+prodi+'</small>'+
+                                '</td>'+
+                                '<td class="text-center">'+jenis+'</td>'+
+                                '<td class="text-center">'+kategori+'</td>'+
+                                '<td class="text-center">'+tahun+'</td>'+
+                                '<td class="text-center">'+kegiatan+'</td>'+
+                                '<td class="text-center" width="50">'+
+                                    '<div class="btn-group" role="group">'+
+                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                            '<div><span class="fa fa-caret-down"></span></div>'+
+                                        '</button>'+
+                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                            '<a class="dropdown-item" href="'+base_url+'/output-activity/'+type+'/'+encode_id(id)+'/edit">Sunting</a>'+
+                                            '<form method="POST">'+
+                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/output-activity/'+type+'">Hapus</button>'+
+                                            '</form>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</td>'+
+                            '</tr>';
+                    })
+                }
+                // tabel.dataTable().fnDestroy();
+                tabel.DataTable().clear().destroy();
+                tabel.find('tbody').html(html);
+                tabel.DataTable(datatable_opt);
+
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            },
+            error: function (request) {
+                btn.removeClass('disabled');
+                btn.html('Cari');
+            }
+        });
+    });
 
     if($('select[name=kegiatan]').length) {
         load_select_activity();

@@ -148,7 +148,7 @@
                                     <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('community-service.teacher.delete',encode_id($data->id)) }}" data-id="{{encrypt($rt->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-7">
                                         <div id="pilihDosen{{$i}}" class="parsley-select">
-                                            <select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_nidn[]" required>
+                                            <select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsPilihDosen{{$i}}" name="anggota_nidn[]" required>
                                                 <option value="{{$rt->nidn}}">{{$rt->teacher->nama.' ('.$rt->teacher->nidn.')'}}</option>
                                             </select>
                                         </div>
