@@ -16,7 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::orderBy('created_at','asc')->get();
+        $user   = User::where('role','!=','Dosen')->orderBy('created_at','asc')->get();
+        $dosen  = User::where('role','=','Dosen')->orderBy('created_at','asc')->get();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
         foreach($user as $u) {
@@ -36,7 +37,7 @@ class UserController extends Controller
             }
         }
 
-        return view('setting.user.index',compact(['user','studyProgram']));
+        return view('setting.user.index',compact(['user','studyProgram','dosen']));
     }
 
     /**
@@ -94,8 +95,9 @@ class UserController extends Controller
         $id         = decrypt($request->id);
         $password   = generatePassword();
 
-        $data            = User::find($id);
-        $data->password  = Hash::make($password);
+        $data              = User::find($id);
+        $data->password    = Hash::make($password);
+        $data->defaultPass = 0;
         $q = $data->save();
 
         if(!$q) {

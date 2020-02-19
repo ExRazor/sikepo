@@ -401,8 +401,8 @@ $(document).ready(function() {
     /***********************************************************************************/
 
     /********************************* DATA TABLE *********************************/
-    if($().DataTable) {
-        var direction = $('table').data('sort');
+    if($('.datatable').length) {
+        var direction = $('.datatable').data('sort');
 
         var bahasa = {
             "sProcessing":   "Sedang proses...",
@@ -3748,7 +3748,7 @@ $(document).ready(function() {
     })
 
     //Reset Password Button
-    $('#table-user').on('click','.reset-password',function(e){
+    $('#table-user, #table-dosen').on('click','.reset-password',function(e){
         e.preventDefault();
 
         var id   = $(this).data('id');
@@ -3780,6 +3780,9 @@ $(document).ready(function() {
                                 title: state.title,
                                 html:
                                     '<input class="swal2-input" value="'+state.password+'" readonly>',
+                                onClose: () => {
+                                        location.reload();
+                                    }
                             });
                         } else {
                             Swal.fire({

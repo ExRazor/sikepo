@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use App\Teacher;
 
 class UserSeeder extends Seeder
 {
@@ -58,7 +59,23 @@ class UserSeeder extends Seeder
                 'name'       => 'Kaprodi PTI',
                 'created_at' => now()
             ],
+        ]);
 
+        $teacher = Teacher::all();
+
+        foreach($teacher as $t) {
+            DB::table('users')->insert([
+                [
+                    'id'         => Str::uuid()->toString(),
+                    'username'   => $t->nidn,
+                    'password'   => Hash::make($t->nidn),
+                    'role'       => 'Dosen',
+                    'kd_prodi'   => null,
+                    'name'       => $t->nama,
+                    'defaultPass'=> 1,
+                    'created_at' => now()
+                ],
             ]);
+        }
     }
 }

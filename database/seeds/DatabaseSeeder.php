@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DepartmentSeeder::class);
         $this->call(StudyProgramSeeder::class);
         $this->call(SettingSeeder::class);
-        $this->call(UserSeeder::class);
         $this->call(CollaborationSeeder::class);
         $this->call(TeacherSeeder::class);
         $this->call(TeacherAchievementSeeder::class);
@@ -44,9 +43,9 @@ class DatabaseSeeder extends Seeder
         // $this->call(TeacherPublicationStudentSeeder::class);
         // $this->call(StudentPublicationSeeder::class);
         // $this->call(StudentPublicationMemberSeeder::class);
-        $this->call(OutputActivityCategorySeeder::class);
-        $this->call(TeacherOutputActivity::class);
-        $this->call(StudentOutputActivity::class);
+        // $this->call(OutputActivityCategorySeeder::class);
+        // $this->call(TeacherOutputActivity::class);
+        // $this->call(StudentOutputActivity::class);
         // $this->call(OutputActivitySeeder::class);
         // $this->call(MinithesisSeeder::class);
         // $this->call(CurriculumIntegrationSeeder::class);
@@ -56,5 +55,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(AlumnusIdleSeeder::class);
         // $this->call(AlumnusSuitableSeeder::class);
         // $this->call(AlumnusWorkplaceSeeder::class);
+        $this->call(UserSeeder::class);
     }
 }

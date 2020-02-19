@@ -16,8 +16,9 @@ class User extends Model
         'password'            ,
         'role'                ,
         'kd_prodi'            ,
-        'remember_token'      ,
         'name'                ,
+        'remember_token'      ,
+        'defaultPass'         ,
     ];
 
     public function studyProgram()

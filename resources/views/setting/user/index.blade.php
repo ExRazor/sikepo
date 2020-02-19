@@ -95,6 +95,50 @@
                     </table>
                 </div><!-- card-body -->
             </div>
+            <div class="card shadow-base mb-3">
+                <div class="card-header">
+                    <h6 class="card-title">
+                        Daftar User
+                    </h6>
+                </div>
+                <div class="card-body bd-color-gray-lighter">
+                    <table id="table-dosen" class="table table-bordered responsive datatable" data-sort="asc">
+                        <thead>
+                            <tr>
+                                <th class="text-center defaultSort">Nama User</th>
+                                <th class="text-center">Username</th>
+                                <th class="text-center">Password?</th>
+                                <th class="text-center no-sort">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($dosen as $d)
+                            <tr>
+                                <td>{{ $d->name }}</td>
+                                <td>{{ $d->username }}</td>
+                                <td>
+                                    @if($d->defaultPass=='1')
+                                    Belum
+                                    @else
+                                    Sudah ganti
+                                    @endif
+                                </td>
+                                <td width="50" class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div><span class="fa fa-caret-down"></span></div>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
+                                            <button class="dropdown-item reset-password" data-id="{{ encrypt($d->id) }}">Reset Password</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div><!-- card-body -->
+            </div>
         </div>
         <div class="col-3">
             <div class="alert alert-info">
@@ -121,6 +165,8 @@
 @include('setting.user.form')
 @endsection
 
-@section('custom-js')
-
+@section('js')
+<script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
