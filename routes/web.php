@@ -15,24 +15,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+// Login Routes...
+Route::get('login', 'Auth\LoginController@form')->middleware('guest')->name('login');
+Route::post('login', 'Auth\LoginController@login')->name('login_post');
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 //Pages Controller
-Route::get('/dashboard', 'PageController@dashboard')->name('dashboard');
-Route::get('/setpro/{prodi}', 'PageController@set_prodi');
+Route::get('/dashboard', 'PageController@dashboard')->middleware('auth')->name('dashboard');
 
-//Master
-Route::prefix('master')->name('master.')->group(function () {
-    //Tahun Akademik
+//Master Data
+Route::prefix('master')->name('master.')->middleware('role:admin')->group(function () {
+    //Academic Year
     Route::get('academic-year', 'AcademicYearController@index')->name('academic-year');
-
     Route::post('academic-year','AcademicYearController@store' )->name('academic-year.store');
     Route::put('academic-year','AcademicYearController@update' )->name('academic-year.update');
     Route::delete('academic-year','AcademicYearController@destroy')->name('academic-year.delete');
 
-    //Fakultas
+    //Faculty
     Route::get('faculty', 'FacultyController@index')->name('faculty');
     Route::get('faculty/add', 'FacultyController@create')->name('faculty.add');
     Route::get('faculty/{id}', 'FacultyController@show')->name('faculty.show');
@@ -40,7 +39,7 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::put('faculty','FacultyController@update')->name('faculty.update');
     Route::delete('faculty','FacultyController@destroy')->name('faculty.delete');
 
-    //Jurusan
+    //Department
     Route::get('department', 'DepartmentController@index')->name('department');
     Route::get('department/add', 'DepartmentController@create')->name('department.add');
     Route::post('department/show', 'DepartmentController@show')->name('department.show');
@@ -48,7 +47,7 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::put('department','DepartmentController@update')->name('department.update');
     Route::delete('department','DepartmentController@destroy')->name('department.delete');
 
-    //Program Studi
+    //Study Program
     Route::get('study-program', 'StudyProgramController@index')->name('study-program');
     Route::get('study-program/add', 'StudyProgramController@create')->name('study-program.add');
     Route::get('study-program/{id}/edit', 'StudyProgramController@edit')->name('study-program.edit');
@@ -56,7 +55,7 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::put('study-program','StudyProgramController@update')->name('study-program.update');
     Route::delete('study-program','StudyProgramController@destroy')->name('study-program.delete');
 
-    //Aspek Kepuasan
+    //Satisfaction Category
     Route::get('satisfaction-category', 'SatisfactionCategoryController@index')->name('satisfaction-category');
     Route::post('satisfaction-category', 'SatisfactionCategoryController@store')->name('satisfaction-category.store');
     Route::put('satisfaction-category','SatisfactionCategoryController@update')->name('satisfaction-category.update');
@@ -74,7 +73,7 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::put('outputactivity-category','OutputActivityCategoryController@update')->name('outputactivity-category.update');
     Route::delete('outputactivity-category','OutputActivityCategoryController@destroy')->name('outputactivity-category.delete');
 
-    //Funding - Category
+    //Funding Category
     Route::get('funding-category','FundingCategoryController@index')->name('funding-category');
     Route::post('funding-category','FundingCategoryController@store')->name('funding-category.store');
     Route::put('funding-category','FundingCategoryController@update')->name('funding-category.update');
@@ -82,9 +81,8 @@ Route::prefix('master')->name('master.')->group(function () {
 });
 
 //Setting
-Route::prefix('setting')->name('setting.')->group(function () {
-
-    //Umum
+Route::prefix('setting')->name('setting.')->middleware('role:dosen,admin')->group(function () {
+    //General
     Route::get('general', 'SettingController@index')->name('general');
     Route::put('general', 'SettingController@update')->name('general.update');
 
@@ -97,109 +95,114 @@ Route::prefix('setting')->name('setting.')->group(function () {
     Route::get('user/{id}', 'UserController@edit')->name('user.edit');
 });
 
-//Fungsi Ajax
-Route::prefix('ajax')->group(function () {
-    //Tahun Akademik
+//Ajax
+Route::prefix('ajax')->name('ajax.')->group(function () {
+    //Academic Year
     Route::post('academic-year/edit', 'AcademicYearController@edit');
     Route::post('academic-year/status','AcademicYearController@setStatus');
-    Route::get('academic-year/loadData','AcademicYearController@loadData')->name('ajax.academic-year.load');
+    Route::get('academic-year/loadData','AcademicYearController@loadData')->name('academic-year.load');
 
-    //Fakultas
+    //Faculty
     Route::post('faculty/edit','FacultyController@edit' );
 
-    //Jurusan
+    //Department
     Route::post('department/edit','DepartmentController@edit' );
     Route::post('department/get_by_faculty','DepartmentController@get_by_faculty' );
     Route::post('department/get_faculty','DepartmentController@get_faculty' );
 
-    //Program Studi
+    //Study Program
     Route::post('study-program/show','StudyProgramController@show' );
-    Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('ajax.study-program.filter');
-    Route::get('study-program/loadData','StudyProgramController@loadData')->name('ajax.study-program.load');
+    Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('study-program.filter');
+    Route::get('study-program/loadData','StudyProgramController@loadData')->name('study-program.load');
 
-    //Program Studi
-    Route::get('satisfaction-category/{id}','SatisfactionCategoryController@edit')->name('ajax.satisfaction-category.edit');
+    //Satisfaction Category
+    Route::get('satisfaction-category/{id}','SatisfactionCategoryController@edit')->name('satisfaction-category.edit');
 
-    //Kerja Sama
-    Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('ajax.collaboration.filter');
+    //Publication Category
+    Route::get('publication/category/{id}','PublicationCategoryController@edit')->name('publication.category.edit');
 
-    //Teacher
-    Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('ajax.teacher.filter');
-    Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('ajax.teacher.studyProgram');
-    Route::get('teacher/loadData','TeacherController@loadData')->name('ajax.teacher.loadData');
-
-    //Teacher - EWMP
-    Route::get('ewmp/countsks','EwmpController@countSKS')->name('ajax.ewmp.countsks');
-
-    //Teacher - Achievement
-    Route::post('teacher/achievement/get_by_filter','TeacherAchievementController@get_by_filter')->name('ajax.teacher.achievement.filter');
-
-    //Student Quota
-    Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
-
-    //Student
-    Route::get('student/datatable','StudentController@datatable')->name('ajax.student.datatable');
-    Route::get('student/loadData','StudentController@loadData')->name('ajax.student.loadData');
-    Route::get('student/select_by_studyProgram','StudentController@select_by_studyProgram')->name('ajax.student.studyProgram');
-    Route::post('student/get_by_studyProgram','StudentController@get_by_studyProgram');
-    Route::post('student/get_by_filter','StudentController@get_by_filter')->name('ajax.student.filter');
-
-    //Student - Status
-    Route::get('student/status/{id}','StudentStatusController@edit')->name('student.status.edit');
-
-    //Student - Foreign
-    Route::post('student/foreign/get_by_filter','StudentForeignController@get_by_filter')->name('ajax.student.foreign.filter');
-
-    //Student - Achievement
-    Route::post('student/achievement/get_by_filter','StudentAchievementController@get_by_filter')->name('ajax.student.achievement.filter');
+    //Output Activity Category
+    Route::get('output-activity/category/{id}','OutputActivityCategoryController@edit')->name('output-activity.category.edit');
 
     //Funding Category
     Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
     Route::get('funding/category/select/{id}','FundingCategoryController@get_jenis')->name('funding.category.select');
 
+    //Collaboration
+    Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('collaboration.filter');
+
+    //Teacher
+    Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('teacher.filter');
+    Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('teacher.studyProgram');
+    Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
+
+    //Teacher - EWMP
+    Route::get('ewmp/countsks','EwmpController@countSKS')->name('ewmp.countsks');
+    Route::post('ewmp/list','EwmpController@show_by_filter')->name('ewmp.show_filter');
+    Route::get('ewmp/{id}','EwmpController@edit')->name('ewmp.edit');
+    Route::post('ewmp','EwmpController@store')->name('ewmp.store');
+    Route::put('ewmp','EwmpController@update')->name('ewmp.update');
+    Route::delete('ewmp','EwmpController@destroy')->name('ewmp.delete');
+
+    //Teacher - Achievement
+    Route::post('teacher/achievement/get_by_filter','TeacherAchievementController@get_by_filter')->name('teacher.achievement.filter');
+
+    //Student
+    Route::get('student/datatable','StudentController@datatable')->name('student.datatable');
+    Route::get('student/loadData','StudentController@loadData')->name('student.loadData');
+    Route::get('student/select_by_studyProgram','StudentController@select_by_studyProgram')->name('student.studyProgram');
+    Route::post('student/get_by_studyProgram','StudentController@get_by_studyProgram');
+    Route::post('student/get_by_filter','StudentController@get_by_filter')->name('student.filter');
+
+    //Student - Quota
+    Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
+
+    //Student - Status
+    Route::get('student/status/{id}','StudentStatusController@edit')->name('student.status.edit');
+
+    //Student - Foreign
+    Route::post('student/foreign/get_by_filter','StudentForeignController@get_by_filter')->name('student.foreign.filter');
+
+    //Student - Achievement
+    Route::post('student/achievement/get_by_filter','StudentAchievementController@get_by_filter')->name('student.achievement.filter');
+
     //Research
-    Route::get('research/get_by_department','ResearchController@get_by_department')->name('ajax.research.get_by_department');
-    Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('ajax.research.filter');
+    Route::get('research/get_by_department','ResearchController@get_by_department')->name('research.get_by_department');
+    Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('research.filter');
 
     //Community Service
-    Route::get('community-service/get_by_department','CommunityServiceController@get_by_department')->name('ajax.community-service.get_by_department');
-    Route::post('community-service/get_by_filter','CommunityServiceController@get_by_filter')->name('ajax.community-service.filter');
+    Route::get('community-service/get_by_department','CommunityServiceController@get_by_department')->name('community-service.get_by_department');
+    Route::post('community-service/get_by_filter','CommunityServiceController@get_by_filter')->name('community-service.filter');
 
-    //Publication Category
-    Route::get('publication/category/{id}','PublicationCategoryController@edit')->name('publication.category.edit');
+    //Publication - Teacher
+    Route::post('publication/teacher/get_by_filter','TeacherPublicationController@get_by_filter')->name('publication.teacher.filter');
 
-    //Teacher Publication
-    Route::post('publication/teacher/get_by_filter','TeacherPublicationController@get_by_filter')->name('ajax.publication.teacher.filter');
-
-    //Student Publication
-    Route::post('publication/student/get_by_filter','StudentPublicationController@get_by_filter')->name('ajax.publication.student.filter');
-
-    //Output Activity Category
-    Route::get('output-activity/category/{id}','OutputActivityCategoryController@edit')->name('output-activity.category.edit');
+    //Publication - Student
+    Route::post('publication/student/get_by_filter','StudentPublicationController@get_by_filter')->name('publication.student.filter');
 
     //Output Activity - Teacher
-    Route::post('output-activity/teacher/get_by_filter','TeacherOutputActivityController@get_by_filter')->name('ajax.output-activity.teacher.filter');
+    Route::post('output-activity/teacher/get_by_filter','TeacherOutputActivityController@get_by_filter')->name('output-activity.teacher.filter');
 
     //Output Activity - Student
-    Route::post('output-activity/student/get_by_filter','StudentOutputActivityController@get_by_filter')->name('ajax.output-activity.student.filter');
+    Route::post('output-activity/student/get_by_filter','StudentOutputActivityController@get_by_filter')->name('output-activity.student.filter');
 
     //Academic - Curriculum
-    Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('ajax.curriculum.filter');
-    Route::get('curriculum/loadData','CurriculumController@loadData')->name('ajax.curriculum.loadData');
+    Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('curriculum.filter');
+    Route::get('curriculum/loadData','CurriculumController@loadData')->name('curriculum.loadData');
 
     //Academic - Curriculum Integrations
-    Route::post('curriculum-integration/get_by_filter','CurriculumIntegrationController@get_by_filter')->name('ajax.curriculum-integration.filter');
+    Route::post('curriculum-integration/get_by_filter','CurriculumIntegrationController@get_by_filter')->name('curriculum-integration.filter');
 
     //Academic - Schedule
-    Route::post('schedule/get_by_filter','CurriculumScheduleController@get_by_filter')->name('ajax.schedule.filter');
+    Route::post('schedule/get_by_filter','CurriculumScheduleController@get_by_filter')->name('schedule.filter');
 
     //Academic - Minithesis
-    Route::post('minithesis/get_by_filter','MinithesisController@get_by_filter')->name('ajax.minithesis.filter');
+    Route::post('minithesis/get_by_filter','MinithesisController@get_by_filter')->name('minithesis.filter');
 
     //Alumnus
     Route::get('alumnus/get','AlumnusAttainmentController@get_alumnus')->name('alumnus.get_alumnus');
 
-    //Alumnus - WTL / Bidang Kerja / Kinerja
+    //Alumnus - Waktu Tunggu Lulusan / Bidang Kerja / Kinerja
     Route::get('alumnus/idle/{id}','AlumnusIdleController@edit')->name('alumnus.idle.edit');
     Route::get('alumnus/suitable/{id}','AlumnusSuitableController@edit')->name('alumnus.suitable.edit');
     Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@edit')->name('alumnus.workplace.edit');
@@ -207,13 +210,15 @@ Route::prefix('ajax')->group(function () {
 });
 
 //Collaboration
-Route::get('/collaboration','CollaborationController@index')->name('collaboration');
-Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
-Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
-Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
-Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
-Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
-Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
+Route::middleware('role:admin,kaprodi,kajur')->group(function () {
+    Route::get('/collaboration','CollaborationController@index')->name('collaboration');
+    Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
+    Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
+    Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
+    Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
+    Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
+    Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
+});
 
 //Teacher
 Route::get('/teacher',function(){
@@ -239,18 +244,6 @@ Route::get('/download/teacher/achievement/{filename}','TeacherAchievementControl
 
 //EWMP
 Route::get('/teacher/ewmp', 'EwmpController@index')->name('teacher.ewmp');
-Route::post('/ajax/ewmp/list','EwmpController@show_by_filter')->name('ewmp.show_filter');
-Route::get('/ajax/ewmp/{id}','EwmpController@edit')->name('ewmp.edit');
-Route::post('/ajax/ewmp','EwmpController@store')->name('ewmp.store');
-Route::put('/ajax/ewmp','EwmpController@update')->name('ewmp.update');
-Route::delete('/ajax/ewmp','EwmpController@destroy')->name('ewmp.delete');
-
-//Students - Quota
-Route::get('student/quota','StudentQuotaController@index')->name('student.quota');
-Route::get('student/quota/add','StudentQuotaController@create')->name('student.quota.add');
-Route::post('student/quota','StudentQuotaController@store')->name('student.quota.store');
-Route::put('student/quota','StudentQuotaController@update')->name('student.quota.update');
-Route::delete('student/quota','StudentQuotaController@destroy')->name('student.quota.delete');
 
 //Students
 Route::get('student',function(){
@@ -265,6 +258,13 @@ Route::post('student/list/import','StudentController@import')->name('student.imp
 Route::post('student/list','StudentController@store')->name('student.store');
 Route::put('student/list','StudentController@update')->name('student.update');
 Route::delete('student/list','StudentController@destroy')->name('student.delete');
+
+//Students - Quota
+Route::get('student/quota','StudentQuotaController@index')->name('student.quota');
+Route::get('student/quota/add','StudentQuotaController@create')->name('student.quota.add');
+Route::post('student/quota','StudentQuotaController@store')->name('student.quota.store');
+Route::put('student/quota','StudentQuotaController@update')->name('student.quota.update');
+Route::delete('student/quota','StudentQuotaController@destroy')->name('student.quota.delete');
 
 //Students - Status
 Route::post('student/status','StudentStatusController@store')->name('student.status.store');
@@ -331,7 +331,7 @@ Route::delete('community-service','CommunityServiceController@destroy')->name('c
 Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
 Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
-//Teacher Publication List
+//Publication - Teacher
 Route::get('publication/teacher','TeacherPublicationController@index')->name('publication.teacher');
 Route::get('publication/teacher/add','TeacherPublicationController@create')->name('publication.teacher.add');
 Route::get('publication/teacher/{id}','TeacherPublicationController@show')->name('publication.teacher.show');
@@ -342,7 +342,7 @@ Route::delete('publication/teacher','TeacherPublicationController@destroy')->nam
 Route::get('publication/teacher/delete_member/{id}','TeacherPublicationController@destroy_member')->name('publication.teacher.delete.member');
 Route::get('publication/teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
 
-//Student Publication List
+//Publication - Student
 Route::get('publication/student','StudentPublicationController@index')->name('publication.student');
 Route::get('publication/student/add','StudentPublicationController@create')->name('publication.student.add');
 Route::get('publication/student/{id}','StudentPublicationController@show')->name('publication.student.show');
@@ -450,6 +450,4 @@ Route::post('alumnus/satisfaction','AlumnusSatisfactionController@store')->name(
 Route::put('alumnus/satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
 Route::delete('alumnus/satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
 
-
-Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');

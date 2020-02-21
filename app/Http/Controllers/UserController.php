@@ -22,13 +22,13 @@ class UserController extends Controller
 
         foreach($user as $u) {
             switch($u->role) {
-                case 'Admin':
+                case 'admin':
                     $u->badge = 'primary';
                 break;
-                case 'Kajur':
+                case 'kajur':
                     $u->badge = 'success';
                 break;
-                case 'Kaprodi':
+                case 'kaprodi':
                     $u->badge = 'danger';
                 break;
                 default:

@@ -7,6 +7,7 @@ use App\StudyProgram;
 use App\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class CollaborationController extends Controller
 {
@@ -25,12 +26,26 @@ class CollaborationController extends Controller
             $collab[$sp->kd_prodi] = Collaboration::where('kd_prodi',$sp->kd_prodi)->get();
         }
 
-        $collab = Collaboration::whereHas(
-                                    'studyProgram', function($query) {
-                                        $query->where('kd_jurusan',setting('app_department_id'));
-                                    }
-                                )
-                                ->get();
+        if(Auth::user()->hasRole('kaprodi'))
+        {
+            $collab = Collaboration::whereHas(
+                                        'studyProgram', function($query) {
+                                            $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                        }
+                                    )
+                                    ->get();
+        }
+        else
+        {
+            $collab = Collaboration::whereHas(
+                                        'studyProgram', function($query) {
+                                            $query->where('kd_jurusan',setting('app_department_id'));
+                                        }
+                                    )
+                                    ->get();
+        }
+
+
 
         return view('collaboration/index',compact(['studyProgram','collab']));
     }
@@ -42,6 +57,10 @@ class CollaborationController extends Controller
      */
     public function create()
     {
+        if(Auth::user()->hasRole('admin','kaprodi')) {
+            return redirect(route('collaboration'));
+        }
+
         $academicYear = AcademicYear::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         return view('collaboration/form',compact(['academicYear','studyProgram']));
@@ -66,7 +85,7 @@ class CollaborationController extends Controller
             'waktu'             => 'required',
             'durasi'            => 'required',
             'bukti_nama'        => 'required',
-            'bukti_file'        => 'required|mimes:jpeg,jpg,png,pdf,zip',
+            'bukti_file'        => 'required|mimes:pdf',
         ]);
 
         $collaboration = new Collaboration;
@@ -126,8 +145,8 @@ class CollaborationController extends Controller
 
         $request->validate([
             'kd_prodi'          => 'required',
-            'jenis'             => 'required',
             'id_ta'             => 'required',
+            'jenis'             => 'required',
             'nama_lembaga'      => 'required',
             'tingkat'           => 'required',
             'judul_kegiatan'    => 'required',
@@ -135,7 +154,7 @@ class CollaborationController extends Controller
             'waktu'             => 'required',
             'durasi'            => 'required',
             'bukti_nama'        => 'required',
-            'bukti_file'        => 'mimes:jpeg,jpg,png,pdf,zip',
+            'bukti_file'        => 'mimes:pdf',
         ]);
 
         $collaboration = Collaboration::find($id);

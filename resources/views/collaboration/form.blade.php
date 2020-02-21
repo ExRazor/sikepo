@@ -51,35 +51,53 @@
                         @method('post')
                     @endif
                     <div class="row mg-b-25">
-                        <div class="col-lg-6">
-                        <div class="form-group">
-                            <label class="form-control-label">Program Studi:<span class="tx-danger">*</span></label>
-                            <div id="prodi" class="parsley-select">
-                                <select class="form-control select2" name="kd_prodi" data-placeholder="Pilih Prodi" data-parsley-class-handler="#prodi"
-                                data-parsley-errors-container="#errorProdi" required>
-                                    <option></option>
-                                    @foreach ($studyProgram as $sp)
-                                    <option value="{{$sp->kd_prodi}}" {{ isset($data) && ($data->kd_prodi==$sp->kd_prodi || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                    @endforeach
-                                </select>
-                                <div id="errorProdi"></div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">Program Studi:<span class="tx-danger">*</span></label>
+                                <div id="prodi" class="parsley-select">
+                                    @if(Auth::user()->role=='kaprodi')
+                                    <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+                                    @endif
+                                    <select class="form-control select2" name="kd_prodi" data-placeholder="Pilih Prodi" data-parsley-class-handler="#prodi"
+                                    data-parsley-errors-container="#errorProdi" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
+                                        <option></option>
+                                        @foreach ($studyProgram as $sp)
+                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->kd_prodi==$sp->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi  ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="errorProdi"></div>
+                                </div>
                             </div>
-                        </div>
                         </div><!-- col-4 -->
-                        <div class="col-lg-6">
-                        <div class="form-group">
-                            <label class="form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
-                            <div id="tahun_akademik" class="parsley-select">
-                                <select class="form-control select2" name="id_ta" data-parsley-class-handler="#tahun_akademik"
-                                data-parsley-errors-container="#errorTahunAkademik"  required>
-                                    <option></option>
-                                    @foreach ($academicYear as $ay)
-                                    <option value="{{$ay->id}}" {{ isset($data) && ($data->id_ta==$ay->id || Request::old('id_ta')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik.' - '.$ay->semester}}</option>
-                                    @endforeach
-                                </select>
-                                <div id="errorTahunAkademik"></div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
+                                <div id="tahun_akademik" class="parsley-select">
+                                    <select class="form-control select2" name="id_ta" data-parsley-class-handler="#tahun_akademik"
+                                    data-parsley-errors-container="#errorTahunAkademik"  required>
+                                        <option></option>
+                                        @foreach ($academicYear as $ay)
+                                        <option value="{{$ay->id}}" {{ isset($data) && ($data->id_ta==$ay->id || Request::old('id_ta')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik.' - '.$ay->semester}}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="errorTahunAkademik"></div>
+                                </div>
                             </div>
-                        </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">Jenis Kerja Sama: <span class="tx-danger">*</span></label>
+                                <div id="jenis" class="parsley-select">
+                                    <select class="form-control select2" name="jenis" data-parsley-class-handler="#jenis"
+                                    data-parsley-errors-container="#errorJenis"  required>
+                                        <option value=""></option>
+                                        <option {{ isset($data) && ($data->jenis=='Pendidikan' || Request::old('jenis')=='Pendidikan') ? 'selected' : ''}}>Pendidikan</option>
+                                        <option {{ isset($data) && ($data->jenis=='Penelitian' || Request::old('jenis')=='Penelitian') ? 'selected' : ''}}>Penelitian</option>
+                                        <option {{ isset($data) && ($data->jenis=='Pengabdian' || Request::old('jenis')=='Pengabdian') ? 'selected' : ''}}>Pengabdian</option>
+                                    </select>
+                                    <div id="errorJenis"></div>
+                                </div>
+                            </div>
                         </div><!-- col-4 -->
                         <div class="col-lg-6">
                             <div class="form-group">
@@ -149,8 +167,8 @@
                             <div class="form-group mg-b-10-force">
                                 <label class="form-control-label">Berkas Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="bukti_file" {{ isset($data) ? '' : 'required'}}>
-                                    <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">Pilih fail</label>
+                                    <input type="file" class="custom-file-input" name="bukti_file" accept=".pdf" {{ isset($data) ? '' : 'required'}}>
+                                    <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">{{ isset($data->bukti_file) ? $data->bukti_file : 'Pilih fail'}}</label>
                                 </div>
                                 <small class="w-100">
                                     Jika berkas bukti lebih dari satu, mohon filenya dirangkum dalam bentuk 1 file PDF kemudian diunggah.

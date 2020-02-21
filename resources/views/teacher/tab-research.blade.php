@@ -8,7 +8,7 @@
             </div>
             <div class="row">
                 <div class="bd rounded table-responsive">
-                    <table class="table datatable table-bordered mb-0">
+                    <table class="table table-bordered mb-0">
                         <thead>
                             <tr>
                                 <th class="text-center align-middle">Judul Penelitian</th>

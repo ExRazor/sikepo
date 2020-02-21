@@ -3,8 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
-class User extends Model
+class User extends Authenticatable
 {
     use Traits\Uuid;
 
@@ -24,5 +26,20 @@ class User extends Model
     public function studyProgram()
     {
         return $this->belongsTo('App\StudyProgram','kd_prodi');
+    }
+
+    public function hasRole(...$roles)
+    {
+        $userRole = Auth::user()->role;
+
+        foreach($roles as $role)
+        {
+            if($userRole==$role)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

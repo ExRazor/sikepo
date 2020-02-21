@@ -70,7 +70,7 @@
                                 <td>{{ $u->name }}</td>
                                 <td>{{ $u->username }}</td>
                                 <td>
-                                    <span class="badge badge-{{$u->badge}} tx-13">{{ $u->role }} {{isset($u->kd_prodi) ? ' - '.$u->studyProgram->nama : ''}}</span>
+                                    <span class="badge badge-{{$u->badge}} tx-13">{{ ucfirst($u->role) }} {{isset($u->kd_prodi) ? ' - '.$u->studyProgram->nama : ''}}</span>
                                 </td>
                                 <td width="50" class="text-center">
                                     <div class="btn-group" role="group">

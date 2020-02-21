@@ -20,7 +20,7 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon ion-calendar"></i>
+    <i class="icon fa fa-handshake"></i>
     <div>
         <h4>Daftar Kerja Sama</h4>
         <p class="mg-b-0">Olah Data Kerja Sama</p>
@@ -39,6 +39,7 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if (Auth::user()->role!='kaprodi')
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.collaboration.filter')}}" id="filter-collaboration" method="POST">
@@ -59,6 +60,7 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="widget-2">
         <div class="card shadow-base overflow-hidden mb-3">
             <div class="card-header">
@@ -69,7 +71,9 @@
                     <thead>
                         <tr>
                             <th class="text-center align-middle all defaultSort" width="150">Tahun Akademik</th>
+                            @if (Auth::user()->role!='kaprodi')
                             <th class="text-center align-middle all" width="250">Program Studi</th>
+                            @endif
                             <th class="text-center align-middle all" width="175">Jenis</th>
                             <th class="text-center align-middle all">Lembaga Mitra</th>
                             <th class="text-center align-middle all" width="150">Tingkat</th>
@@ -85,7 +89,9 @@
                         @foreach ($collab as $d)
                         <tr>
                             <td>{{$d->academicYear->tahun_akademik." - ".$d->academicYear->semester}}</td>
+                            @if (Auth::user()->role!='kaprodi')
                             <td>{{$d->studyProgram->nama}}</td>
+                            @endif
                             <td>{{$d->jenis}}</td>
                             <td>{{$d->nama_lembaga}}</td>
                             <td class="text-capitalize text-center">{{$d->tingkat}}</td>
@@ -94,7 +100,7 @@
                             <td>{{$d->waktu}}</td>
                             <td>{{$d->durasi}}</td>
                             <td class="text-center" width="75">
-                                <a href="{{ route('collaboration.download',encode_id($d->bukti)) }}" target="_blank">
+                                <a href="{{ route('collaboration.download',encode_id($d->bukti_file)) }}" target="_blank">
                                     {{$d->bukti_nama}}
                                 </a>
                             </td>

@@ -2460,7 +2460,7 @@ $(document).ready(function() {
         /* menampilkan form */
         if(jenis == 'publikasi') {
             var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-dosen">'+
-                                    '<button class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></button>'+
+                                    '<button class="remove-box btn btn-danger btn-sm"><i class="fa fa-times"></i></button>'+
                                     '<div class="col-2">'+
                                         '<input class="form-control number" type="text" name="anggota_nidn[]" placeholder="NIDN" maxlength="9">'+
                                     '</div>'+
@@ -2477,7 +2477,7 @@ $(document).ready(function() {
                                 '</div>')
         } else {
             var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-dosen">'+
-                                    '<a class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></a>'+
+                                    '<button class="remove-box btn btn-danger btn-sm"><i class="fa fa-times"></i></button>'+
                                     '<div class="col-7">'+
                                         '<div id="pilihDosen'+jumlah+'" class="parsley-select">'+
                                             '<select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen'+jumlah+'" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_nidn[]" required>'+
@@ -2539,7 +2539,7 @@ $(document).ready(function() {
                                 '</div>')
         } else {
             var sintakshtml = $('<div class="row mb-3 justify-content-center align-items-center row-mahasiswa">'+
-                                    '<button class="remove-box btn btn-danger btn-sm" href="javascript:void(0)"><i class="fa fa-times"></i></button>'+
+                                    '<button class="remove-box btn btn-danger btn-sm"><i class="fa fa-times"></i></button>'+
                                     '<div class="col-7">'+
                                         '<div id="mhs'+jumlah+'" class="parsley-select">'+
                                             '<select class="form-control select-mhs" name="mahasiswa_nim[]" data-parsley-class-handler="#mhs'+jumlah+'" data-parsley-errors-container="#errorsMhs'+jumlah+'" required>'+
@@ -2549,8 +2549,6 @@ $(document).ready(function() {
                                     '</div>'+
                                 '</div>')
         }
-
-
         sintakshtml.hide();
         panel.append(sintakshtml);
         sintakshtml.fadeIn('slow');

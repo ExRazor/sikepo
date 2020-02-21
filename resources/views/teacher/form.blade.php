@@ -74,7 +74,7 @@
                                             @if($f->department->count())
                                             <optgroup label="{{$f->nama}}">
                                                 @foreach($f->department as $d)
-                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) ? 'selected': ''}}>{{$d->nama}}</option>
+                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) || setting('app_department_id')==$d->kd_jurusan ? 'selected': ''}}>{{$d->nama}}</option>
                                                 @endforeach
                                             </optgroup>
                                             @endif
@@ -88,7 +88,7 @@
                                     <select class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
                                         @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi)) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -174,11 +174,11 @@
                                 </div>
                             </div>
                             <div class="row mb-3 form-opsional">
-                                <label class="col-3 form-control-label">Pendidikan Terakhir: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Pendidikan Terakhir:</label>
                                 <div class="col-8">
                                     <div class="row">
                                         <div class="col-4">
-                                            <select class="form-control" name="pend_terakhir_jenjang" required>
+                                            <select class="form-control" name="pend_terakhir_jenjang">
                                                 <option value="">- Pilih Pendidikan Terakhir -</option>
                                                 <option value="D3" {{ (isset($data) && ($data->pend_terakhir_jenjang=='D3') || Request::old('pend_terakhir_jenjang')=='D3') ? 'selected' : ''}}>Diploma D3</option>
                                                 <option value="D4" {{ (isset($data) && ($data->pend_terakhir_jenjang=='D4') || Request::old('pend_terakhir_jenjang')=='D4') ? 'selected' : ''}}>Diploma D4</option>
@@ -188,24 +188,24 @@
                                             </select>
                                         </div>
                                         <div class="col-8">
-                                            <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan Pendidikan Terakhir" required>
+                                            <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan Pendidikan Terakhir">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3 form-opsional">
-                                <label class="col-3 form-control-label">Bidang Keahlian: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Bidang Keahlian:</label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Jika lebih dari satu, pisahkan dengan tanda koma." required>
+                                    <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Jika lebih dari satu, pisahkan dengan tanda koma.">
                                 </div>
                             </div>
                             <div class="row mb-3 form-opsional">
-                                <label class="col-3 form-control-label">Sesuai Bidang PS? <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Sesuai Bidang PS?</label>
                                 <div class="col-8">
                                     <div id="sesuai_bidang_ps" class="radio">
                                         <label class="rdiobox rdiobox-inline mb-0">
                                             <input name="sesuai_bidang_ps" type="radio" value="Ya" {{ isset($data) && ($data->sesuai_bidang_ps=='Ya' || Request::old('sesuai_bidang_ps')=='Ya') ? 'checked' : ''}} data-parsley-class-handler="#sesuai_bidang_ps"
-                                            data-parsley-errors-container="#errorsBD" required>
+                                            data-parsley-errors-container="#errorsBD">
                                             <span>Ya</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </label>
                                         <label class="rdiobox rdiobox-inline mb-0">
@@ -293,12 +293,8 @@ $('#teacher_form').on('change','select[name=kd_jurusan]',function(){
 
 function cek(value) {
     if(value!={{setting('app_department_id')}}) {
-        $('.form-opsional').find('input').prop('required',false);
-        $('.form-opsional').find('select').prop('required',false);
         $('.form-opsional').hide();
     } else {
-        $('.form-opsional').find('input').prop('required',true);
-        $('.form-opsional').find('select').prop('required',true);
         $('.form-opsional').show();
     }
 }

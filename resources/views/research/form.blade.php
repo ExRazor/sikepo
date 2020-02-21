@@ -161,7 +161,7 @@
                             <div id="panelDosen" data-jumlah="0"></div>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                <a class="add-dosen btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</a>
+                                <button class="add-dosen btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +190,7 @@
                             <div id="panelMahasiswa" data-jumlah="0"></div>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                <a class="add-mahasiswa btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</a>
+                                <button class="add-mahasiswa btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
                                 </div>
                             </div>
                         </div>

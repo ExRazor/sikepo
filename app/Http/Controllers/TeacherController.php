@@ -16,6 +16,7 @@ use App\Minithesis;
 use App\Imports\TeacherImport;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherController extends Controller
 {
@@ -29,11 +30,21 @@ class TeacherController extends Controller
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $faculty      = Faculty::all();
-        $data         = Teacher::whereHas(
-                            'studyProgram', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            })
-                        ->get();
+
+        if(Auth::user()->role=='kaprodi') {
+            $data         = Teacher::whereHas(
+                                'studyProgram', function($query) {
+                                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                })
+                            ->get();
+        } else {
+            $data         = Teacher::whereHas(
+                                'studyProgram', function($query) {
+                                    $query->where('kd_jurusan',setting('app_department_id'));
+                                })
+                            ->get();
+        }
+
 
         return view('teacher/index',compact(['studyProgram','faculty','data']));
     }

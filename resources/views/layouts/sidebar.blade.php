@@ -1,12 +1,12 @@
 <label class="sidebar-label pd-x-10 mg-t-20 op-3">Navigation</label>
 <ul class="br-sideleft-menu">
-  <li class="br-menu-item">
+    <li class="br-menu-item">
     <a href="{{ route('dashboard') }}" class="br-menu-link {{ (request()->segment(1) == 'dashboard') ? 'active' : '' }}">
-      <i class="menu-item-icon icon ion-ios-home-outline tx-24"></i>
-      <span class="menu-item-label">Beranda</span>
+        <i class="menu-item-icon icon ion-ios-home-outline tx-24"></i>
+        <span class="menu-item-label">Beranda</span>
     </a><!-- br-menu-link -->
-  </li>
-  <li class="br-menu-item">
+    </li>
+    <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'teacher') ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-chalkboard-teacher"></i>
           <span class="menu-item-label">Data Dosen</span>
@@ -80,15 +80,6 @@
             <li class="sub-item"><a href="{{ route('output-activity.student') }}" class="sub-link {{ (request()->is('output-activity/student*')) ? 'active' : '' }}">Luaran Mahasiswa</a></li>
         </ul>
     </li>
-    {{-- <li class="br-menu-item">
-        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'output-activity') ? 'active' : '' }}">
-            <i class="menu-item-icon fa fa-boxes"></i>
-            <span class="menu-item-label">Luaran Kegiatan</span>
-        </a><!-- br-menu-link -->
-        <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('output-activity') }}" class="sub-link {{ (request()->is('output-activity/list*')) ? 'active' : '' }}">Data Luaran</a></li>
-        </ul>
-    </li> --}}
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'funding') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-balance-scale"></i>
@@ -112,6 +103,7 @@
             <li class="sub-item"><a href="{{ route('alumnus.satisfaction') }}" class="sub-link {{ (request()->is('alumnus/satisfaction*')) ? 'active' : '' }}">Kepuasan Pengguna</a></li>
         </ul>
     </li>
+    @if (Auth::user()->role=='admin')
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'master') ? 'active' : '' }}">
             <i class="menu-item-icon icon ion-ios-briefcase-outline tx-22"></i>
@@ -138,4 +130,5 @@
             <li class="sub-item"><a href="{{route('setting.user')}}" class="sub-link {{ (request()->is('setting/user*')) ? 'active' : '' }}">Pengguna</a></li>
         </ul>
     </li>
+    @endif
 </ul><!-- br-sideleft-menu -->

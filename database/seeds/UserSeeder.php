@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
                 'id'       => Str::uuid()->toString(),
                 'username'   => 'admin',
                 'password'   => Hash::make('admin123'),
-                'role'       => 'Admin',
+                'role'       => 'admin',
                 'kd_prodi'   => null,
                 'name'       => 'Administrator',
                 'created_at' => now()
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 'id'       => Str::uuid()->toString(),
                 'username'   => 'dikkun',
                 'password'   => Hash::make('dikkun123'),
-                'role'       => 'Admin',
+                'role'       => 'admin',
                 'kd_prodi'   => null,
                 'name'       => 'Siddik Hatala',
                 'created_at' => now()
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
                 'id'       => Str::uuid()->toString(),
                 'username'   => 'kaprodi',
                 'password'   => Hash::make('kajurinfor'),
-                'role'       => 'Kajur',
+                'role'       => 'kajur',
                 'kd_prodi'   => null,
                 'name'       => 'Kepala Jurusan',
                 'created_at' => now()
@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
                 'id'       => Str::uuid()->toString(),
                 'username'   => 'kaprodisi',
                 'password'   => Hash::make('kaprodisi'),
-                'role'       => 'Kaprodi',
+                'role'       => 'kaprodi',
                 'kd_prodi'   => '57201',
                 'name'       => 'Kaprodi Sistem Informasi',
                 'created_at' => now()
@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
                 'id'       => Str::uuid()->toString(),
                 'username'   => 'kaprodipti',
                 'password'   => Hash::make('kaprodipti'),
-                'role'       => 'Kaprodi',
+                'role'       => 'kaprodi',
                 'kd_prodi'   => '83207',
                 'name'       => 'Kaprodi PTI',
                 'created_at' => now()
@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
                     'id'         => Str::uuid()->toString(),
                     'username'   => $t->nidn,
                     'password'   => Hash::make($t->nidn),
-                    'role'       => 'Dosen',
+                    'role'       => 'dosen',
                     'kd_prodi'   => null,
                     'name'       => $t->nama,
                     'defaultPass'=> 1,

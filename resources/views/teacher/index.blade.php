@@ -40,6 +40,7 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if (Auth::user()->role!='kaprodi')
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" method="POST">
@@ -73,6 +74,7 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header">
