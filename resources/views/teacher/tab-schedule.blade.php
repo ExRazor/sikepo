@@ -5,9 +5,11 @@
                 <div class="pt-1">
                     <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">Prestasi/Pengakuan/Rekognisi Dosen</h6>
                 </div>
+                @if(!Auth::user()->role=='kajur')
                 <div class="ml-auto">
                     <button class="btn btn-sm btn-primary mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-schedule"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
                 </div>
+                @endif
             </div>
             <div class="row">
                 <div class="bd rounded table-responsive">
@@ -19,7 +21,9 @@
                                 <th class="text-center align-middle">SKS</th>
                                 <th class="text-center align-middle">Sesuai Prodi</th>
                                 <th class="text-center align-middle">Sesuai Bidang</th>
+                                @if(!Auth::user()->role=='kajur')
                                 <th class="text-center align-middle">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -40,6 +44,7 @@
                                     <i class="fa fa-check"></i>
                                     @endisset
                                 </td>
+                                @if(!Auth::user()->role=='kajur')
                                 <td width="50">
                                     <div class="btn-group" role="group">
                                         <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,6 +59,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                @endif
                             </tr>
                             @empty
                             <tr>

@@ -30,6 +30,7 @@
                     Program Studi: <strong>{{ $data->studyProgram->nama }}</strong>
                 </p>
 
+                @if(!Auth::user()->role=='kajur')
                 <p class="mg-b-0 tx-24">
                     <form method="POST">
                         <input type="hidden" value="{{encode_id($data->nidn)}}" name="id">
@@ -37,6 +38,7 @@
                         <button class="btn btn-sm btn-danger mg-b-10 btn-delete" data-dest="{{ route('teacher.delete') }}"><i class="fa fa-trash-alt mg-r-10"></i> Hapus</button>
                     </form>
                 </p>
+                @endif
             </div><!-- card-body -->
         </div>
         <div class="ht-70 bg-gray-100 pd-x-20 d-flex align-items-center justify-content-center shadow-base">

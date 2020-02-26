@@ -1220,6 +1220,7 @@ $(document).ready(function() {
         var btn  = cont.find('button[type=submit]');
         var data = cont.serialize();
         var url  = cont.attr('action');
+        var role = decode_id(cont.data('token'));
         var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
 
         $.ajax({
@@ -1251,7 +1252,24 @@ $(document).ready(function() {
                         var fakultas    = data[i].study_program.department.faculty.singkatan;
                         var ikatan      = data[i].ikatan_kerja;
                         var jabatan     = data[i].jabatan_akademik;
+                        var aksi;
 
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center no-sort" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
+                                                    '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
 
                         html += '<tr>'+
                                     '<td><a href="/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
@@ -1265,21 +1283,9 @@ $(document).ready(function() {
                                     '</td>'+
                                     '<td>'+ikatan+'</td>'+
                                     '<td>'+jabatan+'</td>'+
-                                    '<td class="text-center no-sort" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
-                                                    '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
+                                    aksi+
                                 '</tr>';
+
                     })
                 }
                 // tabel.dataTable().fnDestroy();
@@ -1490,9 +1496,10 @@ $(document).ready(function() {
 
         var cont    = $(this);
         var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table_teacherAcv');
+        var tabel   = $('#table-teacherAcv');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -1525,7 +1532,26 @@ $(document).ready(function() {
                         var prodi       = val.teacher.study_program.singkatan;
                         var prestasi    = val.prestasi;
                         var tingkat     = val.tingkat_prestasi;
-                        var bukti       = bukti_pendukung;
+                        var bukti_nama  = val.bukti_nama;
+                        var bukti_file  = val.bukti_file;
+                        var aksi;
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/community-service">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
 
                         html +='<tr>'+
                                 '<td class="text-center">'+tahun+'</td>'+
@@ -1538,22 +1564,9 @@ $(document).ready(function() {
                                 '<td>'+prestasi+'</td>'+
                                 '<td>'+tingkat+'</td>'+
                                 '<td class="text-center align-middle">'+
-                                    '<a href="'+base_url+'/download/teacher-achievement/'+encode_id(bukti)+'" target="_blank"><div><i class="fa fa-download"></i></div></a>'+
+                                    '<a href="'+base_url+'/download/teacher-achievement/'+encode_id(bukti_file)+'" target="_blank"><div>'+bukti_nama+'</div></a>'+
                                 '</td>'+
-                                '<td class="text-center" width="50">'+
-                                    '<div class="btn-group" role="group">'+
-                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                            '<div><span class="fa fa-caret-down"></span></div>'+
-                                        '</button>'+
-                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="'+base_url+'/'+encode_id(id)+'/edit">Sunting</a>'+
-                                            '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/community-service">Hapus</button>'+
-                                            '</form>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</td>'+
+                                aksi+
                             '</tr>';
                     })
                 }

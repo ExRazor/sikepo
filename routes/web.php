@@ -221,10 +221,11 @@ Route::middleware('auth')->group(function () {
     //Teacher
     Route::prefix('teacher')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
-        //Teacher List
         Route::get('/',function(){
             return redirect(route('teacher'));
         });
+
+        //Teacher - List
         Route::get('list','TeacherController@index')->name('teacher');
         Route::get('list/add','TeacherController@create')->name('teacher.add');
         Route::get('list/import','TeacherController@import')->name('teacher.import');
@@ -234,60 +235,63 @@ Route::middleware('auth')->group(function () {
         Route::put('list','TeacherController@update')->name('teacher.update');
         Route::delete('list','TeacherController@destroy')->name('teacher.delete');
 
-        //Teacher Achievement
+        //Teacher - Achievement
         Route::get('achievement','TeacherAchievementController@index')->name('teacher.achievement');
         Route::get('achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
         Route::post('achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
         Route::put('achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
         Route::delete('achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
         Route::get('achievement/file/{nidn}','TeacherAchievementController@delete_file')->name('teacher.achievement.file');
+
+        //EWMP
+        Route::get('ewmp', 'EwmpController@index')->name('teacher.ewmp');
     });
-
-
-
-    //EWMP
-    Route::get('/teacher/ewmp', 'EwmpController@index')->name('teacher.ewmp');
 
     //Students
-    Route::get('student',function(){
-        return redirect(route('student'));
+    Route::prefix('student')->middleware('role:admin,kaprodi,kajur')->group(function () {
+
+        Route::get('/',function(){
+            return redirect(route('student'));
+        });
+
+        //Students - List
+        Route::get('list','StudentController@index')->name('student');
+        Route::get('list/add','StudentController@create')->name('student.add');
+        Route::get('list/{id}','StudentController@profile')->name('student.profile');
+        Route::get('list/{id}/edit','StudentController@edit')->name('student.edit');
+        Route::post('list/upload_photo','StudentController@upload_photo')->name('student.photo');
+        Route::post('list/import','StudentController@import')->name('student.import');
+        Route::post('list','StudentController@store')->name('student.store');
+        Route::put('list','StudentController@update')->name('student.update');
+        Route::delete('list','StudentController@destroy')->name('student.delete');
+
+        //Students - Quota
+        Route::get('quota','StudentQuotaController@index')->name('student.quota');
+        Route::get('quota/add','StudentQuotaController@create')->name('student.quota.add');
+        Route::post('quota','StudentQuotaController@store')->name('student.quota.store');
+        Route::put('quota','StudentQuotaController@update')->name('student.quota.update');
+        Route::delete('quota','StudentQuotaController@destroy')->name('student.quota.delete');
+
+        //Students - Status
+        Route::post('status','StudentStatusController@store')->name('student.status.store');
+        Route::put('status','StudentStatusController@update')->name('student.status.update');
+        Route::delete('status','StudentStatusController@destroy')->name('student.status.delete');
+
+        //Students - Foreign
+        Route::get('foreign','StudentForeignController@index')->name('student.foreign');
+        Route::get('foreign/add','StudentForeignController@create')->name('student.foreign.add');
+        Route::get('foreign/{id}','StudentForeignController@edit')->name('student.foreign.edit');
+        Route::post('foreign','StudentForeignController@store')->name('student.foreign.store');
+        Route::put('foreign','StudentForeignController@update')->name('student.foreign.update');
+        Route::delete('foreign','StudentForeignController@destroy')->name('student.foreign.delete');
+
+        //Student Achievement
+        Route::get('achievement','StudentAchievementController@index')->name('student.achievement');
+        Route::get('achievement/{nidn}','StudentAchievementController@edit')->name('student.achievement.edit');
+        Route::post('achievement','StudentAchievementController@store')->name('student.achievement.store');
+        Route::put('achievement','StudentAchievementController@update')->name('student.achievement.update');
+        Route::delete('achievement','StudentAchievementController@destroy')->name('student.achievement.delete');
     });
-    Route::get('student/list','StudentController@index')->name('student');
-    Route::get('student/list/add','StudentController@create')->name('student.add');
-    Route::get('student/list/{id}','StudentController@profile')->name('student.profile');
-    Route::get('student/list/{id}/edit','StudentController@edit')->name('student.edit');
-    Route::post('student/list/upload_photo','StudentController@upload_photo')->name('student.photo');
-    Route::post('student/list/import','StudentController@import')->name('student.import');
-    Route::post('student/list','StudentController@store')->name('student.store');
-    Route::put('student/list','StudentController@update')->name('student.update');
-    Route::delete('student/list','StudentController@destroy')->name('student.delete');
-
-    //Students - Quota
-    Route::get('student/quota','StudentQuotaController@index')->name('student.quota');
-    Route::get('student/quota/add','StudentQuotaController@create')->name('student.quota.add');
-    Route::post('student/quota','StudentQuotaController@store')->name('student.quota.store');
-    Route::put('student/quota','StudentQuotaController@update')->name('student.quota.update');
-    Route::delete('student/quota','StudentQuotaController@destroy')->name('student.quota.delete');
-
-    //Students - Status
-    Route::post('student/status','StudentStatusController@store')->name('student.status.store');
-    Route::put('student/status','StudentStatusController@update')->name('student.status.update');
-    Route::delete('student/status','StudentStatusController@destroy')->name('student.status.delete');
-
-    //Students - Foreign
-    Route::get('student/foreign','StudentForeignController@index')->name('student.foreign');
-    Route::get('student/foreign/add','StudentForeignController@create')->name('student.foreign.add');
-    Route::get('student/foreign/{id}','StudentForeignController@edit')->name('student.foreign.edit');
-    Route::post('student/foreign','StudentForeignController@store')->name('student.foreign.store');
-    Route::put('student/foreign','StudentForeignController@update')->name('student.foreign.update');
-    Route::delete('student/foreign','StudentForeignController@destroy')->name('student.foreign.delete');
-
-    //Student Achievement
-    Route::get('/student/achievement','StudentAchievementController@index')->name('student.achievement');
-    Route::get('/student/achievement/{nidn}','StudentAchievementController@edit')->name('student.achievement.edit');
-    Route::post('/student/achievement','StudentAchievementController@store')->name('student.achievement.store');
-    Route::put('/student/achievement','StudentAchievementController@update')->name('student.achievement.update');
-    Route::delete('/student/achievement','StudentAchievementController@destroy')->name('student.achievement.delete');
 
     //Funding
     Route::get('funding',function(){

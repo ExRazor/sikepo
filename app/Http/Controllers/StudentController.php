@@ -19,6 +19,22 @@ use Yajra\DataTables\DataTables;
 
 class StudentController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'import',
+            'update',
+            'destroy',
+            'upload_photo',
+            'delete_photo',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $faculty      = Faculty::all();
@@ -35,6 +51,46 @@ class StudentController extends Controller
         return view('student.index',compact(['studyProgram','faculty','angkatan','status','data']));
     }
 
+    public function profile($id)
+    {
+        $id = decode_id($id);
+
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $data       = Student::with('studyProgram','studentForeign')->where('nim',$id)->first();
+        $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
+        $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
+        $achievement = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
+        $minithesis = Minithesis::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
+
+        if($status){
+            if($status->status == 'Aktif') {
+                $status->setAttribute('status_button','btn-success');
+            } else if($status->status=='Lulus') {
+                $status->setAttribute('status_button','btn-pink');
+            } else {
+                $status->setAttribute('status_button','btn-danger');
+            }
+        }
+
+        $research       = Research::whereHas(
+                                        'researchStudent', function($q1) use ($data) {
+                                            $q1->where('nim',$data->nim);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        $service        = CommunityService::whereHas(
+                                        'serviceStudent', function($q1) use ($data) {
+                                            $q1->where('nim',$data->nim);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','minithesis','research','service']));
+    }
+
     public function create()
     {
         $faculty      = Faculty::all();
@@ -42,6 +98,18 @@ class StudentController extends Controller
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
 
         return view('student/form',compact(['faculty','studyProgram','academicYear']));
+    }
+
+    public function edit($id)
+    {
+        $nim          = decode_id($id);
+        $data         = Student::where('nim',$nim)->first();
+        $faculty      = Faculty::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $status       = StudentStatus::where('nim',$nim)->orderBy('id','asc')->first();
+
+        return view('student/form',compact(['faculty','studyProgram','academicYear','data','status']));
     }
 
     public function store(Request $request)
@@ -129,71 +197,6 @@ class StudentController extends Controller
         }
 	}
 
-    public function profile($id)
-    {
-        $id = decode_id($id);
-
-        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $data       = Student::with('studyProgram','studentForeign')->where('nim',$id)->first();
-        $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
-        $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
-        $achievement = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
-        $minithesis = Minithesis::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
-
-        if($status){
-            if($status->status == 'Aktif') {
-                $status->setAttribute('status_button','btn-success');
-            } else if($status->status=='Lulus') {
-                $status->setAttribute('status_button','btn-pink');
-            } else {
-                $status->setAttribute('status_button','btn-danger');
-            }
-        }
-
-        $research       = Research::whereHas(
-                                        'researchStudent', function($q1) use ($data) {
-                                            $q1->where('nim',$data->nim);
-                                        }
-                                    )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
-
-        $service        = CommunityService::whereHas(
-                                        'serviceStudent', function($q1) use ($data) {
-                                            $q1->where('nim',$data->nim);
-                                        }
-                                    )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
-
-        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','minithesis','research','service']));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $nim          = decode_id($id);
-        $data         = Student::where('nim',$nim)->first();
-        $faculty      = Faculty::all();
-        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
-        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $status       = StudentStatus::where('nim',$nim)->orderBy('id','asc')->first();
-
-        return view('student/form',compact(['faculty','studyProgram','academicYear','data','status']));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id = decrypt($request->_id);
@@ -241,12 +244,6 @@ class StudentController extends Controller
         return redirect()->route('student.profile',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if(request()->ajax()) {

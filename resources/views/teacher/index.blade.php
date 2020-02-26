@@ -26,8 +26,10 @@
         <p class="mg-b-0">Olah Data Dosen</p>
     </div>
     <div class="ml-auto d-inline-flex">
+        @if(!Auth::user()->role=='kajur')
         <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block mg-y-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
         {{-- <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-y-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a> --}}
+        @endif
     </div>
 </div>
 
@@ -40,11 +42,12 @@
             {{ session('flash.message') }}
         </div>
     @endif
-    @if (Auth::user()->role!='kaprodi')
+    @if(Auth::user()->role!='kaprodi')
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" method="POST">
+            <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    @if(Auth::user()->role!='kajur')
                     <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">Semua Jurusan</option>
@@ -59,9 +62,10 @@
                             @endforeach
                         </select>
                     </div>
+                    @endif
                     <div class="mg-r-10">
                         <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
+                            <option value="">- Semua Program Studi -</option>
                             @foreach($studyProgram as $sp)
                             <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                             @endforeach
@@ -96,7 +100,9 @@
                             <th class="text-center">Program Studi</th>
                             <th class="text-center">Ikatan Kerja</th>
                             <th class="text-center">Jabatan<br>Akademik</th>
+                            @if(Auth::user()->role!='kajur')
                             <th class="text-center no-sort">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -108,10 +114,12 @@
                                 <small>NIP. {{$d->nip}}</small>
                             </td>
                             <td>
-                                {{$d->studyProgram->nama}}
+                                {{$d->studyProgram->nama}}<br>
+                                <small>{{$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama}}</small>
                             </td>
                             <td>{{$d->ikatan_kerja}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
+                            @if(Auth::user()->role!='kajur')
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -126,6 +134,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

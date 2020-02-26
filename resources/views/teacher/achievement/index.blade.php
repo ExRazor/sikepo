@@ -26,9 +26,11 @@
         <h4>Prestasi Dosen</h4>
         <p class="mg-b-0">Daftar Prestasi Dosen</p>
     </div>
+    @if (Auth::user()->role!='kajur')
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -47,12 +49,12 @@
     @if (Auth::user()->role!='kaprodi')
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.teacher.achievement.filter')}}" id="filter-teacherAcv" method="POST">
+            <form action="{{route('ajax.teacher.achievement.filter')}}" id="filter-teacherAcv" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
+                            <option value="">- Semua Program Studi -</option>
                             @foreach($studyProgram as $sp)
                             <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                             @endforeach
@@ -82,7 +84,9 @@
                             <th class="text-center align-middle">Prestasi</th>
                             <th class="text-center align-middle">Tingkat</th>
                             <th class="text-center align-middle no-sort">Bukti<br>Pendukung</th>
+                            @if(Auth::user()->role!='kajur')
                             <th class="text-center align-middle no-sort">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -102,6 +106,7 @@
                                     {{$acv->bukti_nama}}
                                 </a>
                             </td>
+                            @if(Auth::user()->role!='kajur')
                             <td width="50" class="text-center">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -118,6 +123,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>
