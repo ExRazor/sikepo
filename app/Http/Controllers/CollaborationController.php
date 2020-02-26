@@ -151,7 +151,9 @@ class CollaborationController extends Controller
         $storagePath = public_path('upload/collaboration/'.$collaboration->bukti_file);
         $tgl_skrg = date('Y_m_d_H_i_s');
         if($request->file('bukti_file')) {
-            File::delete($storagePath);
+            if(File::exists($storagePath)) {
+                File::delete($storagePath);
+            }
 
             $file = $request->file('bukti_file');
             $tujuan_upload = public_path('upload/collaboration');
