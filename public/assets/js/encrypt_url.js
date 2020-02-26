@@ -14,7 +14,7 @@ function encode_id(str){
     str         = btoa(key+str);
     replace     = str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
 
-    return replace
+    return replace;
 }
 
 /**
@@ -32,7 +32,7 @@ function decode_id(str){
 
     // return decrypted;
 
-    str     = (str + '===').slice(0, str.length + (str.length % 4));
+    // str     = (str + '===').slice(0, str.length + (str.length % 4));
     replace = str.replace(/-/g, '+').replace(/_/g, '/');
     decrypt = atob(str);
 
