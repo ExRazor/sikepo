@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\StudyProgram;
 use App\TeacherAchievement;
 use Illuminate\Http\Request;
-use Illuminate\Http\File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 
 class TeacherAchievementController extends Controller
@@ -104,7 +104,7 @@ class TeacherAchievementController extends Controller
 
             return response()->json($data);
         } else {
-            abot(404);
+            abort(404);
         }
     }
 
