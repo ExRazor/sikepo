@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\StudyProgram;
 use App\TeacherAchievement;
+use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,7 @@ class TeacherAchievementController extends Controller
     public function index()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $teacher = null;
 
         if(Auth::user()->role=='kaprodi') {
 
@@ -72,8 +74,8 @@ class TeacherAchievementController extends Controller
 
             if($file = $request->file('bukti_file')) {
                 $tgl_skrg = date('Y_m_d_H_i_s');
-                $tujuan_upload = 'upload/teacher-achievement';
-                $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $tujuan_upload = public_path('upload/teacher/achievement');
+                $filename = $acv->nidn.'_'.str_replace(' ', '', $request->bukti_nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
                 $file->move($tujuan_upload,$filename);
                 $acv->bukti_file = $filename;
             }
@@ -128,20 +130,26 @@ class TeacherAchievementController extends Controller
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
             $acv->bukti_nama        = $request->bukti_nama;
 
-            $storagePath = 'upload/teacher/achievement/'.$acv->bukti_file;
+            //Bukti File
+            $storagePath = public_path('upload/teacher/achievement/'.$acv->bukti_file);
+            $tgl_skrg = date('Y_m_d_H_i_s');
             if($file = $request->file('bukti_file')) {
-
                 if(File::exists($storagePath)) {
                     File::delete($storagePath);
                 }
 
-                $tgl_skrg = date('Y_m_d_H_i_s');
-                $tujuan_upload = 'upload/teacher-achievement';
-                $filename = $acv->nidn.'_'.str_replace(' ', '', $request->prestasi).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $tujuan_upload = public_path('upload/teacher/achievement');
+                $filename = $request->nidn.'_'.str_replace(' ', '', $request->bukti_nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
                 $file->move($tujuan_upload,$filename);
+                $acv->bukti_file = $filename;
+            } else {
+                $ekstensi = File::extension($storagePath);
+                $filename = $request->nidn.'_'.str_replace(' ', '', $request->bukti_nama).'_'.$tgl_skrg.'.'.$ekstensi;
+                File::move($storagePath,public_path('upload/teacher/achievement/'.$filename));
                 $acv->bukti_file = $filename;
             }
 
+            //Simpan
             $q = $acv->save();
 
             if(!$q) {
@@ -163,8 +171,9 @@ class TeacherAchievementController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_id($request->_id);
-            $q = TeacherAchievement::destroy($id);
+            $id     = decode_id($request->_id);
+            $data   = TeacherAchievement::find($id);
+            $q      = $data->delete();
 
             if(!$q) {
                 return response()->json([
@@ -173,7 +182,7 @@ class TeacherAchievementController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
-                $this->delete_file($id);
+                $this->delete_file($data->bukti_file);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -189,7 +198,7 @@ class TeacherAchievementController extends Controller
     {
         $file = decode_id($filename);
 
-        $storagePath = 'upload/teacher/achievement/'.$file;
+        $storagePath = public_path('upload/teacher/achievement/'.$file);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -203,11 +212,10 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    public function delete_file($id)
+    public function delete_file($file)
     {
-        $data = TeacherAchievement::find($id);
+        $storagePath = public_path('upload/teacher/achievement/'.$file);
 
-        $storagePath = 'upload/teacher/achievement/'.$data->bukti_file;
         if(File::exists($storagePath)) {
             File::delete($storagePath);
         }

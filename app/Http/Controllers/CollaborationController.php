@@ -105,8 +105,8 @@ class CollaborationController extends Controller
         if($request->file('bukti_file')) {
             $file = $request->file('bukti_file');
             $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = 'upload/collaboration';
-            $filename = $request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $tujuan_upload = public_path('upload/collaboration');
+            $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $collaboration->bukti_file = $filename;
         }
@@ -148,15 +148,20 @@ class CollaborationController extends Controller
         $collaboration->bukti_nama       = $request->bukti_nama;
 
         //Upload File
-        $storagePath = 'upload/collaboration/'.$collaboration->bukti_file;
+        $storagePath = public_path('upload/collaboration/'.$collaboration->bukti_file);
+        $tgl_skrg = date('Y_m_d_H_i_s');
         if($request->file('bukti_file')) {
             File::delete($storagePath);
 
             $file = $request->file('bukti_file');
-            $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = 'upload/collaboration';
-            $filename = $request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $tujuan_upload = public_path('upload/collaboration');
+            $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
+            $collaboration->bukti_file = $filename;
+        } else {
+            $ekstensi = File::extension($storagePath);
+            $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$ekstensi;
+            File::move($storagePath,public_path('upload/collaboration/'.$filename));
             $collaboration->bukti_file = $filename;
         }
 
@@ -168,9 +173,9 @@ class CollaborationController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()){
-            $id = decode_id($request->id);
-
-            $q = Collaboration::destroy($id);
+            $id     = decode_id($request->id);
+            $data   = Collaboration::find($id);
+            $q      = $data->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -178,7 +183,7 @@ class CollaborationController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
-                $this->delete_file($id);
+                $this->delete_file($data->bukti_file);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -193,7 +198,7 @@ class CollaborationController extends Controller
     public function download($filename)
     {
         $file = decode_id($filename);
-        $storagePath = 'upload/collaboration/'.$file;
+        $storagePath = public_path('upload/collaboration/'.$file);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -207,11 +212,9 @@ class CollaborationController extends Controller
         }
     }
 
-    public function delete_file($id)
+    public function delete_file($file)
     {
-        $data = Collaboration::find($id);
-
-        $storagePath = 'upload/collaboration/'.$data->bukti_file;
+        $storagePath = public_path('upload/collaboration/'.$file);
         if(File::exists($storagePath)) {
             File::delete($storagePath);
         }

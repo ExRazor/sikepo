@@ -115,7 +115,7 @@ class CurriculumController extends Controller
         $nama_file = $file->getClientOriginalName();
 
 		// upload ke folder khusus di dalam folder public
-		$file->move('upload/curriculum/excel_import/',$nama_file);
+		$file->move(public_path('upload/curriculum/excel_import/',$nama_file));
 
 		// import data
         $q = Excel::import(new CurriculumImport, public_path('/upload/curriculum/excel_import/'.$nama_file));

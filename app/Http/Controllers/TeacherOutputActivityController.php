@@ -81,7 +81,7 @@ class TeacherOutputActivityController extends Controller
         $data->save();
 
         if($file = $request->file('file_karya')) {
-            $tujuan_upload = 'upload/output-activity/teacher';
+            $tujuan_upload = public_path('upload/output-activity/teacher');
             $filename = $request->jenis_luaran.'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $data->update([
@@ -131,18 +131,25 @@ class TeacherOutputActivityController extends Controller
         $data->keterangan       = $request->keterangan;
         $data->save();
 
+        $storagePath = public_path('upload/output-activity/teacher'.$data->file_karya);
         if($file = $request->file('file_karya')) {
-            $storagePath = 'upload/output-activity/artikel'.$data->file_karya;
             if(File::exists($storagePath)) {
                 File::delete($storagePath);
             }
 
-            $tujuan_upload = 'upload/output-activity/teacher';
+            $tujuan_upload = public_path('upload/output-activity/teacher');
             $filename = $request->jenis_luaran.'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $data->update([
-                    'file_karya' => $filename
-                ]);
+                'file_karya' => $filename
+            ]);
+        } else {
+            $ekstensi = File::extension($storagePath);
+            $filename = $request->jenis_luaran.'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$ekstensi;
+            File::move($storagePath,public_path('upload/output-activity/teacher/'.$filename));
+            $data->update([
+                'file_karya' => $filename
+            ]);
         }
 
         return redirect()->route('output-activity.teacher.show',encode_id($data->id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
@@ -178,7 +185,7 @@ class TeacherOutputActivityController extends Controller
 
         $data = TeacherOutputActivity::find($id);
 
-        $storagePath = 'upload/output-activity/teacher/'.$data->file_karya;
+        $storagePath = public_path('upload/output-activity/teacher/'.$data->file_karya);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -199,7 +206,7 @@ class TeacherOutputActivityController extends Controller
 
         if(request()->ajax()) {
 
-            $storagePath = 'upload/output-activity/teacher/'.$data->file_karya;
+            $storagePath = public_path('upload/output-activity/teacher/'.$data->file_karya);
             if(File::exists($storagePath)) {
                 $delete = File::delete($storagePath);
 
@@ -230,7 +237,7 @@ class TeacherOutputActivityController extends Controller
 
     public function delete_all_file($file)
     {
-        $storage = 'upload/output-activity/teacher/'.$file;
+        $storage = public_path('upload/output-activity/teacher/'.$file);
         if(File::exists($storage)) {
             File::delete($storage);
         }

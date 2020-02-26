@@ -176,9 +176,8 @@ class TeacherController extends Controller
 
         if($request->file('foto')) {
             $file = $request->file('foto');
-            $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = 'upload/teacher';
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $tujuan_upload = public_path('upload/teacher');
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
         }
@@ -240,17 +239,21 @@ class TeacherController extends Controller
         $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
         $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
-        $storagePath = 'upload/teacher/'.$Teacher->foto;
+        $storagePath = public_path('upload/teacher/'.$Teacher->foto);
         if($request->file('foto')) {
             if(File::exists($storagePath)) {
                 File::delete($storagePath);
             }
 
             $file = $request->file('foto');
-            $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = 'upload/teacher';
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+            $tujuan_upload = public_path('upload/teacher');
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
+            $Teacher->foto = $filename;
+        } else {
+            $ekstensi = File::extension($storagePath);
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$ekstensi;
+            File::move($storagePath,public_path('upload/teacher/'.$filename));
             $Teacher->foto = $filename;
         }
 
@@ -267,8 +270,9 @@ class TeacherController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_id($request->id);
-            $q  = Teacher::destroy($id);
+            $id     = decode_id($request->id);
+            $data   = Teacher::find($id);
+            $q      = $data->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -276,7 +280,7 @@ class TeacherController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
-                $this->delete_file($id);
+                $this->delete_file($data->foto);
                 $this->delete_user($id);
                 return response()->json([
                     'title'   => 'Berhasil',
@@ -293,7 +297,7 @@ class TeacherController extends Controller
     {
         $file = decrypt($filename);
 
-        $storagePath = 'upload/teacher/'.$file;
+        $storagePath = public_path('upload/teacher/'.$file);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -307,15 +311,11 @@ class TeacherController extends Controller
         }
     }
 
-    public function delete_file($id)
+    public function delete_file($file)
     {
-        $data = Teacher::find($id);
-
-        if(isset($data->foto)) {
-            $storagePath = 'upload/teacher/'.$data->foto;
-            if(File::exists($storagePath)) {
-                File::delete($storagePath);
-            }
+        $storagePath = public_path('upload/teacher/'.$file);
+        if(File::exists($storagePath)) {
+            File::delete($storagePath);
         }
 
     }
@@ -343,8 +343,9 @@ class TeacherController extends Controller
         $tgl_upload = date('d-m-Y');
         $nama_file = $file->getClientOriginalName();
 
-		// upload ke folder khusus di dalam folder public
-		$file->move('upload/teacher/excel_import/',$nama_file);
+        // upload ke folder khusus di dalam folder public
+        $path = public_path('upload/teacher/excel_import/',$nama_file);
+		$file->move($path);
 
 		// import data
         $q = Excel::import(new TeacherImport, public_path('/upload/teacher/excel_import/'.$nama_file));
@@ -425,9 +426,24 @@ class TeacherController extends Controller
     {
         if($request->ajax()) {
 
-            $data = Teacher::where('kd_prodi',$request->kd_prodi)->select('nidn','nama')->get();
+            $q = Teacher::where('kd_prodi',$request->kd_prodi);
 
-            return response()->json($data);
+            if($request->cari) {
+                $q->where(function($query) use ($request) {
+                    $query->where('nidn', 'LIKE', '%'.$request->cari.'%')->orWhere('nama', 'LIKE', '%'.$request->cari.'%');
+                });
+            }
+
+            $data = $q->get();
+
+            $response = array();
+            foreach($data as $d){
+                $response[] = array(
+                    "id"    => $d->nidn,
+                    "text"  => $d->nama.' ('.$d->nidn.')'
+                );
+            }
+            return response()->json($response);
         } else {
             abort(404);
         }

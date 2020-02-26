@@ -240,6 +240,7 @@ Route::middleware('auth')->group(function () {
         Route::post('achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
         Route::put('achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
         Route::delete('achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
+        Route::get('achievement/file/{nidn}','TeacherAchievementController@delete_file')->name('teacher.achievement.file');
     });
 
 

@@ -13,7 +13,7 @@ class DownloadController extends Controller
         $file = decrypt($request->input('id'));
 
 
-        $storagePath = 'upload/'.$type.'/'.$file;
+        $storagePath = public_path('upload/'.$type.'/'.$file);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {

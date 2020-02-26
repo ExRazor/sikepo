@@ -107,7 +107,7 @@ class StudentController extends Controller
         $nama_file = $file->getClientOriginalName();
 
 		// upload ke folder khusus di dalam folder public
-		$file->move('upload/student/excel_import/',$nama_file);
+		$file->move(public_path('upload/student/excel_import/',$nama_file));
 
 		// import data
         $q = Excel::import(new StudentImport, public_path('/upload/student/excel_import/'.$nama_file));
@@ -250,8 +250,9 @@ class StudentController extends Controller
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_id($request->id);
-            $q  = Student::destroy($id);
+            $id     = decode_id($request->id);
+            $data   = Student::find($id);
+            $q      = $data->delete();
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -259,7 +260,7 @@ class StudentController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
-                $this->delete_photo($id);
+                $this->delete_photo($data->foto);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -280,14 +281,14 @@ class StudentController extends Controller
 
             $data = Student::find($id);
 
-            $storagePath = 'upload/student/'.$data->foto;
+            $storagePath = public_path('upload/student/'.$data->foto);
             if($storagePath || $request->file('foto')) {
                 if(File::exists($storagePath)) {
                     File::delete($storagePath);
                 }
                 $file = $request->file('foto');
                 $tgl_skrg = date('Y_m_d_H_i_s');
-                $tujuan_upload = 'upload/student';
+                $tujuan_upload = public_path('upload/student');
                 $filename = $id.'_'.str_replace(' ', '', $data->nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
                 $file->move($tujuan_upload,$filename);
                 $data->foto = $filename;
@@ -310,15 +311,11 @@ class StudentController extends Controller
         }
     }
 
-    public function delete_photo($id)
+    public function delete_photo($file)
     {
-        $data = Student::find($id);
-
-        if(isset($data->foto)) {
-            $storagePath = 'upload/student/'.$data->foto;
-            if(File::exists($storagePath)) {
-                File::delete($storagePath);
-            }
+        $storagePath = public_path('upload/student/'.$file);
+        if(File::exists($storagePath)) {
+            File::delete($storagePath);
         }
 
     }

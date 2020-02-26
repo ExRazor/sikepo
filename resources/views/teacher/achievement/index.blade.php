@@ -44,6 +44,7 @@
         </ul>
     </div>
     @endif
+    @if (Auth::user()->role!='kaprodi')
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.teacher.achievement.filter')}}" id="filter-teacherAcv" method="POST">
@@ -64,6 +65,7 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header">
@@ -72,7 +74,7 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacherAcv" class="table table-bordered mb-0 datatable" data-sort="desc">
+                <table id="table-teacherAcv" class="table table-bordered mb-0 datatable" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle defaultSort" width="100">Tanggal Diperoleh</th>
