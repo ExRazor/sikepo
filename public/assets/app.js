@@ -1024,7 +1024,7 @@ $(document).ready(function() {
                                     '<td class="text-center">'+
                                         '<div class="btn-group hidden-xs-down">'+
                                             '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+encode_id(kd_prodi)+'" ><div><i class="fa fa-search-plus"></i></div></button>'+
-                                            '<a href="/master/study-program/'+encode_id(kd_prodi)+'/edit" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
+                                            '<a href="'+base_url+'/master/study-program/'+encode_id(kd_prodi)+'/edit" class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10"><div><i class="fa fa-pencil-alt"></i></div></a>'+
                                             '<form method="POST">'+
                                                 '<input type="hidden" value="'+encode_id(kd_prodi)+'" name="id">'+
                                                 '<button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="/master/study-program">'+
@@ -1121,6 +1121,7 @@ $(document).ready(function() {
         var tabel   = $('#table_collaboration');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -1156,6 +1157,24 @@ $(document).ready(function() {
                         var manfaat         = val.manfaat_kegiatan;
                         var waktu           = val.waktu;
                         var durasi          = val.durasi;
+                        var aksi;
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/collaboration/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<a href="#" class="dropdown-item btn-delete" data-dest="/collaboration">Hapus</a>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>';
+                        }
 
                         html +='<tr>'+
                                     '<td>'+tahun_akademik+'</td>'+
@@ -1168,22 +1187,9 @@ $(document).ready(function() {
                                     '<td>'+waktu+'</td>'+
                                     '<td>'+durasi+'</td>'+
                                     '<td class="text-center" width="75">'+
-                                        '<a href="/download/collab/'+encode_id(id)+'" target="_blank"><div><i class="fa fa-download"></i></div></a>'+
+                                        '<a href="'+base_url+'/download/collab/'+encode_id(id)+'" target="_blank"><div><i class="fa fa-download"></i></div></a>'+
                                     '</td>'+
-                                    '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/collaboration/'+encode_id(id)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                    '<a href="#" class="dropdown-item btn-delete" data-dest="/collaboration">Hapus</a>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
+                                    aksi+
                                 '</tr>';
                     })
                 }
@@ -1261,7 +1267,7 @@ $(document).ready(function() {
                                                 '<div><span class="fa fa-caret-down"></span></div>'+
                                             '</button>'+
                                             '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
+                                                '<a class="dropdown-item" href="'+base_url+'/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
                                                 '<form method="POST">'+
                                                     '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
                                                     '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
@@ -1272,7 +1278,7 @@ $(document).ready(function() {
                         }
 
                         html += '<tr>'+
-                                    '<td><a href="/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
+                                    '<td><a href="'+base_url+'/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
                                     '<td>'+
                                         nama+'<br>'+
                                         '<small>NIP. '+nip+'</small>'+
@@ -1615,7 +1621,7 @@ $(document).ready(function() {
     $('#ewmp').on('click','.btn-edit',function(e){
         e.preventDefault();
         var id  = $(this).data('id');
-        var url = '/ajax/ewmp/'+id;
+        var url = base_url+'/ajax/ewmp/'+id;
 
         $.ajax({
             url: url,
@@ -1760,7 +1766,7 @@ $(document).ready(function() {
 
                             html += '<tr>'+
                                         '<td>'+
-                                            '<a href="/student/list/'+encode_id(nim)+'">'+
+                                            '<a href="'+base_url+'/student/list/'+encode_id(nim)+'">'+
                                                 nama+'<br>'+
                                                 '<small>NIM. '+nim+'</small>'+
                                             '</a>'+
@@ -1780,7 +1786,7 @@ $(document).ready(function() {
                                                     '<div><span class="fa fa-caret-down"></span></div>'+
                                                 '</button>'+
                                                 '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                    '<a class="dropdown-item" href="/student/list/'+encode_id(nim)+'/edit">Sunting</a>'+
+                                                    '<a class="dropdown-item" href="'+base_url+'/student/list/'+encode_id(nim)+'/edit">Sunting</a>'+
                                                     '<form method="POST">'+
                                                         '<input type="hidden" value="'+encode_id(nim)+'" name="id">'+
                                                         '<button type="submit" class="dropdown-item btn-delete" data-dest="/student/list">Hapus</button>'+
@@ -1910,7 +1916,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         var id  = $(this).data('id');
-        var url = '/ajax/student/quota/'+id;
+        var url = base_url+'/ajax/student/quota/'+id;
 
         $.ajax({
             url: url,
@@ -1938,7 +1944,7 @@ $(document).ready(function() {
     $('#table_student_status').on('click','.btn-edit',function(e){
 
         var id  = $(this).data('id');
-        var url = '/ajax/student/status/'+id;
+        var url = base_url+'/ajax/student/status/'+id;
 
         $.ajax({
             url: url,
@@ -2255,7 +2261,7 @@ $(document).ready(function() {
     $('#table-fundCat').on('click','.btn-edit',function(){
 
         var id  = $(this).data('id');
-        var url = '/ajax/funding/category/'+id;
+        var url = base_url+'/ajax/funding/category/'+id;
 
         $.ajax({
             url: url,
@@ -2293,7 +2299,7 @@ $(document).ready(function() {
 
             if(value) {
                 $.ajax({
-                    url: '/ajax/funding/category/select/'+value,
+                    url: base_url+'/ajax/funding/category/select/'+value,
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
@@ -2801,7 +2807,7 @@ $(document).ready(function() {
                                                 '<div><span class="fa fa-caret-down"></span></div>'+
                                             '</button>'+
                                             '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="/academic/curriculum/'+encode_id(kd_matkul)+'/edit">Sunting</a>'+
+                                                '<a class="dropdown-item" href="'+base_url+'/academic/curriculum/'+encode_id(kd_matkul)+'/edit">Sunting</a>'+
                                                 '<form method="POST">'+
                                                     '<input type="hidden" value="'+encode_id(kd_matkul)+'" name="id">'+
                                                     '<button class="dropdown-item btn-delete" data-dest="/academic/curriculum">Hapus</button>'+
@@ -3093,7 +3099,7 @@ $(document).ready(function() {
     $('#table-publishCat').on('click','.btn-edit',function(){
 
         var id  = $(this).data('id');
-        var url = '/ajax/publication/category/'+id;
+        var url = base_url+'/ajax/publication/category/'+id;
 
         $.ajax({
             url: url,
