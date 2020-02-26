@@ -31,7 +31,12 @@
                 </p>
 
                 <p class="mg-b-0 tx-24">
-                    <a href="{{ route('teacher.edit',encode_id($data->nidn)) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Ubah Data</a>
+                    <form method="POST">
+                        <input type="hidden" value="{{encode_id($data->nidn)}}" name="id">
+                        <a href="{{ route('teacher.edit',encode_id($data->nidn)) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Sunting</a>
+                        <button class="btn btn-sm btn-danger mg-b-10 btn-delete" data-dest="{{ route('teacher.delete') }}"><i class="fa fa-trash-alt mg-r-10"></i> Hapus</button>
+                    </form>
+                    {{-- <a href="{{ route('teacher.delete',encode_id($data->nidn)) }}" class="btn btn-sm btn-danger mg-b-10" style="color:white"><i class="fa fa-trash-alt mg-r-10"></i> Hapus</a> --}}
                 </p>
             </div><!-- card-body -->
         </div>

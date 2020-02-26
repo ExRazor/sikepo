@@ -16,7 +16,7 @@ class CreateTeachersTable extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->char('nidn',10)->primary();
             $table->char('kd_prodi',5);
-            $table->char('nip',18);
+            $table->char('nip',18)->nullable();
             $table->string('nama');
             $table->string('jk');
             $table->string('agama')->nullable();

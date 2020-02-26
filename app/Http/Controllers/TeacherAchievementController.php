@@ -5,19 +5,46 @@ namespace App\Http\Controllers;
 use App\StudyProgram;
 use App\TeacherAchievement;
 use Illuminate\Http\Request;
-use File;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherAchievementController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'delete_file',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
-        $achievement    = TeacherAchievement::whereHas(
-                                                'teacher.studyProgram',function($query) {
-                                                    $query->where('kd_jurusan',setting('app_department_id'));
-                                                }
-                                            )
-                                            ->orderBy('id_ta','desc')->get();
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
+        if(Auth::user()->role=='kaprodi') {
+
+            $achievement    = TeacherAchievement::whereHas(
+                                                    'teacher.studyProgram',function($query) {
+                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                                    }
+                                                )
+                                                ->orderBy('id_ta','desc')->get();
+        } else {
+            $achievement    = TeacherAchievement::whereHas(
+                                                    'teacher.studyProgram',function($query) {
+                                                        $query->where('kd_jurusan',setting('app_department_id'));
+                                                    }
+                                                )
+                                                ->orderBy('id_ta','desc')->get();
+        }
+
 
         return view('teacher.achievement.index',compact(['achievement','studyProgram']));
     }

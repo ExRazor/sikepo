@@ -68,7 +68,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="kd_jurusan" data-type="form" required>
+                                    <select class="form-control" name="kd_jurusan" data-type="form" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
                                         <option value="">- Pilih Jurusan -</option>
                                         @foreach($faculty as $f)
                                             @if($f->department->count())
@@ -85,7 +85,10 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="kd_prodi" required>
+                                    @if(Auth::user()->role=='kaprodi')
+                                    <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+                                    @endif
+                                    <select class="form-control" name="kd_prodi" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
                                         <option value="">- Pilih Prodi -</option>
                                         @foreach($studyProgram as $sp)
                                         <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi)) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
@@ -100,7 +103,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">NIP:</label>
+                                <label class="col-3 form-control-label">NIP: </label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" minlength="16" maxlength="18">
                                 </div>

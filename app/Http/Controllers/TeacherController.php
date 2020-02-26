@@ -13,18 +13,30 @@ use App\TeacherAchievement;
 use App\Research;
 use App\CommunityService;
 use App\Minithesis;
+use App\User;
 use App\Imports\TeacherImport;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'delete_file',
+            'delete_user',
+            'import'
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
 
     public function index()
     {
@@ -49,11 +61,55 @@ class TeacherController extends Controller
         return view('teacher/index',compact(['studyProgram','faculty','data']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function profile($nidn)
+    {
+        $nidn = decode_id($nidn);
+        $data = Teacher::where('nidn',$nidn)->first();
+
+        if(!isset($data)) {
+            return redirect(route('teacher'));
+        }
+
+        $data->bidang_ahli = json_decode($data->bidang_ahli);
+
+        $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
+        $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_pendamping',$data->nidn)->orderBy('id_ta','desc')->get();
+        $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
+        $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
+
+        $research       = Research::with([
+                                        'researchTeacher' => function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'researchTeacher', function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        $service        = CommunityService::with([
+                                        'serviceTeacher' => function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'serviceTeacher', function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
+                                        }
+                                    )
+                                    ->orderBy('id_ta','desc')
+                                    ->get();
+
+        // dd($research);
+        // return response()->json($research);die;
+
+        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research','service','minithesis']));
+    }
+
     public function create()
     {
         $faculty = Faculty::all();
@@ -62,12 +118,19 @@ class TeacherController extends Controller
         return view('teacher/form',compact(['faculty','studyProgram']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function edit($nidn)
+    {
+        $nidn          = decode_id($nidn);
+        $data         = Teacher::where('nidn',$nidn)->first();
+        $faculty      = Faculty::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
+
+        $bidang = json_decode($data->bidang_ahli);
+        $data->bidang_ahli   = implode(', ',$bidang);
+
+        return view('teacher/form',compact(['data','faculty','studyProgram']));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -122,92 +185,18 @@ class TeacherController extends Controller
 
         $Teacher->save();
 
+        //Buat User Dosen
+        $user               = new User;
+        $user->username     = $request->nidn;
+        $user->password     = Hash::make($request->nidn);
+        $user->role         = 'dosen';
+        $user->defaultPass  = 1;
+        $user->name         = $request->nama;
+        $user->save();
+
         return redirect()->route('teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
-    public function profile($nidn)
-    {
-        $nidn               = decode_id($nidn);
-        $data              = Teacher::where('nidn',$nidn)->first();
-        $data->bidang_ahli = json_decode($data->bidang_ahli);
-
-        $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
-        $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_pendamping',$data->nidn)->orderBy('id_ta','desc')->get();
-        $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
-        $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
-
-        $research       = Research::with([
-                                        'researchTeacher' => function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    ])
-                                    ->whereHas(
-                                        'researchTeacher', function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
-
-        $service        = CommunityService::with([
-                                        'serviceTeacher' => function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    ])
-                                    ->whereHas(
-                                        'serviceTeacher', function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
-
-        // dd($research);
-        // return response()->json($research);die;
-
-        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research','service','minithesis']));
-    }
-
-    public function show_by_prodi(Request $request)
-    {
-        $data = Teacher::where('kd_prodi',$request->kd_prodi)->get();
-
-        return response()->json($data);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($nidn)
-    {
-        $nidn          = decode_id($nidn);
-        $data         = Teacher::where('nidn',$nidn)->first();
-        $faculty      = Faculty::all();
-        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
-
-        $bidang = json_decode($data->bidang_ahli);
-        $data->bidang_ahli   = implode(', ',$bidang);
-
-        return view('teacher/form',compact(['data','faculty','studyProgram']));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id  = decrypt($request->_id);
@@ -267,22 +256,19 @@ class TeacherController extends Controller
 
         $Teacher->save();
 
+        //Update User Dosen
+        $user          = User::where('username',$id)->first();
+        $user->name    = $request->nama;
+        $user->save();
 
         return redirect()->route('teacher.profile',encode_id($Teacher->nidn))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Teacher  $teacher
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if(request()->ajax()) {
-
             $id = decode_id($request->id);
-            $q = Teacher::destroy($id);
+            $q  = Teacher::destroy($id);
             if(!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -291,6 +277,7 @@ class TeacherController extends Controller
                 ]);
             } else {
                 $this->delete_file($id);
+                $this->delete_user($id);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -298,7 +285,7 @@ class TeacherController extends Controller
                 ]);
             }
         } else {
-            return redirect()->route('teacher.achievement');
+            return redirect()->route('teacher');
         }
     }
 
@@ -324,9 +311,21 @@ class TeacherController extends Controller
     {
         $data = Teacher::find($id);
 
-        $storagePath = 'upload/teacher/'.$data->foto;
-        if(File::exists($storagePath)) {
-            File::delete($storagePath);
+        if(isset($data->foto)) {
+            $storagePath = 'upload/teacher/'.$data->foto;
+            if(File::exists($storagePath)) {
+                File::delete($storagePath);
+            }
+        }
+
+    }
+
+    public function delete_user($id)
+    {
+        $cek = User::where('username',$id)->count();
+
+        if($cek) {
+            User::where('username', $id)->delete();
         }
     }
 
@@ -365,7 +364,14 @@ class TeacherController extends Controller
                 'type'    => 'success'
             ]);
         }
-	}
+    }
+
+    public function show_by_prodi(Request $request)
+    {
+        $data = Teacher::where('kd_prodi',$request->kd_prodi)->get();
+
+        return response()->json($data);
+    }
 
     public function get_by_department(Request $request)
     {

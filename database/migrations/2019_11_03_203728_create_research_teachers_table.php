@@ -19,9 +19,11 @@ class CreateResearchTeachersTable extends Migration
             $table->string('status');
             $table->float('sks');
             $table->char('nidn',10);
+            $table->string('nama_lain')->nullable();
+            $table->string('asal_lain')->nullable();
 
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

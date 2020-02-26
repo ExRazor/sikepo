@@ -314,10 +314,13 @@ class StudentController extends Controller
     {
         $data = Student::find($id);
 
-        $storagePath = 'upload/student/'.$data->foto;
-        if(File::exists($storagePath)) {
-            File::delete($storagePath);
+        if(isset($data->foto)) {
+            $storagePath = 'upload/student/'.$data->foto;
+            if(File::exists($storagePath)) {
+                File::delete($storagePath);
+            }
         }
+
     }
 
     public function get_by_filter(Request $request)

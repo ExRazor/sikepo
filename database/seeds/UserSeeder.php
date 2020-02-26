@@ -34,8 +34,8 @@ class UserSeeder extends Seeder
             ],
             [
                 'id'       => Str::uuid()->toString(),
-                'username'   => 'kaprodi',
-                'password'   => Hash::make('kajurinfor'),
+                'username'   => 'kajur',
+                'password'   => Hash::make('kajur'),
                 'role'       => 'kajur',
                 'kd_prodi'   => null,
                 'name'       => 'Kepala Jurusan',

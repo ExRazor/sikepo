@@ -3,6 +3,7 @@
 use App\CommunityService;
 use App\Teacher;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class CommunityServiceTeacherSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class CommunityServiceTeacherSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker::create('id_ID');
         $community_services = CommunityService::all();
 
         foreach($community_services as $cs) {
@@ -33,9 +35,24 @@ class CommunityServiceTeacherSeeder extends Seeder
                     $sks = $cs->sks_pengabdian * (setting('service_ratio_members')/100);
                 }
 
+                $asal       = ['dalam','luar'];
+                $rand_asal  = $asal[array_rand($asal)];
+
+                if($rand_asal=='dalam') {
+                    $nidn       = Teacher::all()->random()->nidn;
+                    $nama_lain  = null;
+                    $asal_lain  = null;
+                } else {
+                    $nidn       = rand(111111111,999999999);
+                    $nama_lain  = $faker->name;
+                    $asal_lain  = 'Luar kampus';
+                }
+
                 DB::table('community_service_teachers')->insert([
                     'id_pengabdian' => $cs->id,
-                    'nidn'          => Teacher::all()->random()->nidn,
+                    'nidn'          => $nidn,
+                    'nama_lain'     => $nama_lain,
+                    'asal_lain'     => $asal_lain,
                     'status'        => $status,
                     'sks'           => $sks
                 ]);

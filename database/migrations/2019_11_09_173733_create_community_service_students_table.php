@@ -17,9 +17,11 @@ class CreateCommunityServiceStudentsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('id_pengabdian');
             $table->char('nim',10);
+            $table->string('nama_lain')->nullable();
+            $table->string('asal_lain')->nullable();
 
             $table->foreign('id_pengabdian')->references('id')->on('community_services')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

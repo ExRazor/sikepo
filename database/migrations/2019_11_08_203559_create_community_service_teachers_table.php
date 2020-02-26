@@ -19,9 +19,11 @@ class CreateCommunityServiceTeachersTable extends Migration
             $table->string('status');
             $table->float('sks');
             $table->char('nidn',10);
+            $table->string('nama_lain')->nullable();
+            $table->string('asal_lain')->nullable();
 
             $table->foreign('id_pengabdian')->references('id')->on('community_services')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

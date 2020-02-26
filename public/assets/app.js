@@ -252,16 +252,6 @@ $(document).ready(function() {
                             });
                         }
                     },
-                    statusCode: {
-                        500: function(state) {
-                            Swal.fire({
-                                title: 'Gagal',
-                                text: 'Terjadi kesalahan saat memproses',
-                                type: 'error',
-                                timer: 1500,
-                            });
-                        }
-                    },
                 });
                 // console.log(result.value);
             }

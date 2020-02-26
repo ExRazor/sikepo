@@ -45,11 +45,12 @@ class RoleMiddleware
             if($checkRole == 1)
                 return $next($request);
             else
-               return redirect()->intended(route('dashboard'));
+            //    return redirect()->intended(route('dashboard'));
+                return abort(404);
         }
         else
         {
-            return redirect('/dashboard');
+            return redirect('/');
         }
     }
 }

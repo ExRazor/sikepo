@@ -11,11 +11,19 @@ use Illuminate\Support\Facades\Auth;
 
 class CollaborationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $method = [
+                    'create',
+                    'edit',
+                    'store',
+                    'update',
+                    'destroy',
+                    'delete_file'
+                ];
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         // $data = Collaboration::all();
@@ -45,33 +53,27 @@ class CollaborationController extends Controller
                                     ->get();
         }
 
-
-
         return view('collaboration/index',compact(['studyProgram','collab']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        if(Auth::user()->hasRole('admin','kaprodi')) {
-            return redirect(route('collaboration'));
-        }
-
         $academicYear = AcademicYear::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         return view('collaboration/form',compact(['academicYear','studyProgram']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function edit($id)
+    {
+        $id = decode_id($id);
+        $data = Collaboration::find($id);
+
+        $academicYear = AcademicYear::all();
+        $studyProgram = StudyProgram::all();
+        return view('collaboration/form',compact(['academicYear','studyProgram','data']));
+
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -115,30 +117,6 @@ class CollaborationController extends Controller
         return redirect()->route('collaboration')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Collaboration  $collaboration
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $id = decode_id($id);
-        $data = Collaboration::find($id);
-
-        $academicYear = AcademicYear::all();
-        $studyProgram = StudyProgram::all();
-        return view('collaboration/form',compact(['academicYear','studyProgram','data']));
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Collaboration  $collaboration
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id = decrypt($request->id);
@@ -187,12 +165,6 @@ class CollaborationController extends Controller
         return redirect()->route('collaboration')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Collaboration  $collaboration
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if(request()->ajax()){

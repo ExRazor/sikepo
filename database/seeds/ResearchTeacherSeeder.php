@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 use App\Research;
 use App\Teacher;
 
@@ -13,6 +14,7 @@ class ResearchTeacherSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker::create('id_ID');
         $research = Research::all();
 
         foreach($research as $r) {
@@ -33,9 +35,24 @@ class ResearchTeacherSeeder extends Seeder
                     $sks = $r->sks_penelitian * (setting('research_ratio_members')/100);
                 }
 
+                $asal       = ['dalam','luar'];
+                $rand_asal  = $asal[array_rand($asal)];
+
+                if($rand_asal=='dalam') {
+                    $nidn       = Teacher::all()->random()->nidn;
+                    $nama_lain  = null;
+                    $asal_lain  = null;
+                } else {
+                    $nidn       = rand(111111111,999999999);
+                    $nama_lain  = $faker->name;
+                    $asal_lain  = 'Luar program studi';
+                }
+
                 DB::table('research_teachers')->insert([
                     'id_penelitian' => $r->id,
-                    'nidn'          => Teacher::all()->random()->nidn,
+                    'nidn'          => $nidn,
+                    'nama_lain'     => $nama_lain,
+                    'asal_lain'     => $asal_lain,
                     'status'        => $status,
                     'sks'           => $sks
                 ]);
