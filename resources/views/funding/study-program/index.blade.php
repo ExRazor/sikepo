@@ -25,9 +25,11 @@
         <h4>Keuangan Program Studi</h4>
         <p class="mg-b-0">Olah Data Keuangan Program Studi</p>
     </div>
+    @if(Auth::user()->hasRole('admin','kaprodi'))
     <div class="ml-auto">
         <a href="{{ route('funding.study-program.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Keuangan</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -48,7 +50,9 @@
                 <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
                         <tr>
+                            @if(!Auth::user()->hasRole('kaprodi'))
                             <th class="text-center align-middle">Program Studi</th>
+                            @endif
                             <th class="text-center align-middle defaultSort">Tahun Akademik</th>
                             <th class="text-center">Total Biaya<br>Operasional</th>
                             <th class="text-center">Total Biaya<br>Penelitian dan Pengabdian</th>
@@ -59,8 +63,12 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('funding.study-program.show',encrypt($d->kd_dana)) }}">{{ $d->studyProgram->nama }}</a></td>
-                            <td class="text-center">{{ $d->academicYear->tahun_akademik }}</td>
+                            @if(!Auth::user()->hasRole('kaprodi'))
+                                <td><a href="{{ route('funding.study-program.show',encrypt($d->kd_dana)) }}">{{ $d->studyProgram->nama }}</a></td>
+                                <td class="text-center">{{ $d->academicYear->tahun_akademik }}</td>
+                            @else
+                                <td class="text-center"><a href="{{ route('funding.study-program.show',encrypt($d->kd_dana)) }}">{{ $d->academicYear->tahun_akademik }}</a></td>
+                            @endif
                             @php
                                 $kolom = 0;
                                 $total = 0;

@@ -86,7 +86,9 @@
             <span class="menu-item-label">Keuangan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
+            @if (Auth::user()->hasRole('admin','kajur'))
             <li class="sub-item"><a href="{{ route('funding.faculty') }}" class="sub-link {{ (request()->is('funding/faculty*')) ? 'active' : '' }}">Keuangan Fakultas</a></li>
+            @endif
             <li class="sub-item"><a href="{{ route('funding.study-program') }}" class="sub-link {{ (request()->is('funding/study-program*')) ? 'active' : '' }}">Keuangan Program Studi</a></li>
         </ul>
     </li>
@@ -103,7 +105,7 @@
             <li class="sub-item"><a href="{{ route('alumnus.satisfaction') }}" class="sub-link {{ (request()->is('alumnus/satisfaction*')) ? 'active' : '' }}">Kepuasan Pengguna</a></li>
         </ul>
     </li>
-    @if (Auth::user()->role=='admin')
+    @if (Auth::user()->hasRole('admin'))
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'master') ? 'active' : '' }}">
             <i class="menu-item-icon icon ion-ios-briefcase-outline tx-22"></i>

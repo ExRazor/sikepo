@@ -294,27 +294,35 @@ Route::middleware('auth')->group(function () {
     });
 
     //Funding
-    Route::get('funding',function(){
-        return redirect(route('student'));
+    Route::prefix('funding')->group(function () {
+
+        //Index
+        Route::get('/',function(){
+            return redirect(route('dashboard'));
+        });
+
+        //Funding - Faculty
+        Route::middleware('role:admin,kajur')->group(function () {
+            Route::get('faculty','FundingFacultyController@index')->name('funding.faculty');
+            Route::get('faculty/add','FundingFacultyController@create')->name('funding.faculty.add');
+            Route::get('faculty/{id}','FundingFacultyController@show')->name('funding.faculty.show');
+            Route::get('faculty/{id}/edit','FundingFacultyController@edit')->name('funding.faculty.edit');
+            Route::post('faculty','FundingFacultyController@store')->name('funding.faculty.store');
+            Route::put('faculty','FundingFacultyController@update')->name('funding.faculty.update');
+            Route::delete('faculty','FundingFacultyController@destroy')->name('funding.faculty.delete');
+        });
+
+        //Funding - Study Program
+        Route::middleware('role:admin,kaprodi,kajur')->group(function () {
+            Route::get('study-program','FundingStudyProgramController@index')->name('funding.study-program');
+            Route::get('study-program/add','FundingStudyProgramController@create')->name('funding.study-program.add');
+            Route::get('study-program/{id}','FundingStudyProgramController@show')->name('funding.study-program.show');
+            Route::get('study-program/{id}/edit','FundingStudyProgramController@edit')->name('funding.study-program.edit');
+            Route::post('study-program','FundingStudyProgramController@store')->name('funding.study-program.store');
+            Route::put('study-program','FundingStudyProgramController@update')->name('funding.study-program.update');
+            Route::delete('study-program','FundingStudyProgramController@destroy')->name('funding.study-program.delete');
+        });
     });
-
-    //Funding - Faculty
-    Route::get('funding/faculty','FundingFacultyController@index')->name('funding.faculty');
-    Route::get('funding/faculty/add','FundingFacultyController@create')->name('funding.faculty.add');
-    Route::get('funding/faculty/{id}','FundingFacultyController@show')->name('funding.faculty.show');
-    Route::get('funding/faculty/{id}/edit','FundingFacultyController@edit')->name('funding.faculty.edit');
-    Route::post('funding/faculty','FundingFacultyController@store')->name('funding.faculty.store');
-    Route::put('funding/faculty','FundingFacultyController@update')->name('funding.faculty.update');
-    Route::delete('funding/faculty','FundingFacultyController@destroy')->name('funding.faculty.delete');
-
-    //Funding - Study Program
-    Route::get('funding/study-program','FundingStudyProgramController@index')->name('funding.study-program');
-    Route::get('funding/study-program/add','FundingStudyProgramController@create')->name('funding.study-program.add');
-    Route::get('funding/study-program/{id}','FundingStudyProgramController@show')->name('funding.study-program.show');
-    Route::get('funding/study-program/{id}/edit','FundingStudyProgramController@edit')->name('funding.study-program.edit');
-    Route::post('funding/study-program','FundingStudyProgramController@store')->name('funding.study-program.store');
-    Route::put('funding/study-program','FundingStudyProgramController@update')->name('funding.study-program.update');
-    Route::delete('funding/study-program','FundingStudyProgramController@destroy')->name('funding.study-program.delete');
 
     //Research
     Route::get('research','ResearchController@index')->name('research');

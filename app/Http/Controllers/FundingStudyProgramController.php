@@ -8,10 +8,24 @@ use App\StudyProgram;
 use App\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class FundingStudyProgramController extends Controller
 {
+
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
 
     public function index()
     {
@@ -23,12 +37,24 @@ class FundingStudyProgramController extends Controller
         //             ->groupBy('status')
         //             ->get();
 
-        $data         = FundingStudyProgram::groupBy('kd_dana')
-                                            ->groupBy('kd_prodi')
-                                            ->groupBy('id_ta')
-                                            ->orderBy('id_ta','desc')
-                                            ->select('kd_dana','kd_prodi','id_ta')
-                                            ->get();
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data         = FundingStudyProgram::groupBy('kd_dana')
+                                                ->groupBy('kd_prodi')
+                                                ->groupBy('id_ta')
+                                                ->where('kd_prodi',Auth::user()->kd_prodi)
+                                                ->orderBy('id_ta','desc')
+                                                ->select('kd_dana','kd_prodi','id_ta')
+                                                ->get();
+        } else {
+            $data         = FundingStudyProgram::groupBy('kd_dana')
+                                                ->groupBy('kd_prodi')
+                                                ->groupBy('id_ta')
+                                                ->orderBy('id_ta','desc')
+                                                ->select('kd_dana','kd_prodi','id_ta')
+                                                ->get();
+        }
+
+
 
         $funding      = FundingStudyProgram::groupBy('kd_dana')->get('kd_dana');
 
@@ -47,17 +73,6 @@ class FundingStudyProgramController extends Controller
 
         return view('funding.study-program.index',compact(['data','dana']));
     }
-
-
-    public function create()
-    {
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $category     = FundingCategory::with('children')->orderBy('id','asc')->whereNull('id_parent')->get();
-        $academicYear = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
-
-        return view('funding.study-program.form',compact(['studyProgram','category','academicYear']));
-    }
-
 
     public function show($kd_dana)
     {
@@ -83,6 +98,14 @@ class FundingStudyProgramController extends Controller
 
     }
 
+    public function create()
+    {
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $category     = FundingCategory::with('children')->orderBy('id','asc')->whereNull('id_parent')->get();
+        $academicYear = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
+
+        return view('funding.study-program.form',compact(['studyProgram','category','academicYear']));
+    }
 
     public function edit($id)
     {
