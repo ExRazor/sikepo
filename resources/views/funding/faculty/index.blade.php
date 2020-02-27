@@ -48,7 +48,6 @@
                 <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
                         <tr>
-                            <th class="text-center align-middle no-sort" width="50"></th>
                             <th class="text-center align-middle defaultSort">Tahun Akademik</th>
                             <th class="text-center">Total Biaya<br>Operasional Akademik</th>
                             <th class="text-center">Total Biaya<br>Pengabdian kepada Masyarakat</th>
@@ -60,11 +59,10 @@
                         @foreach ($data as $d)
                         <tr>
                             <td class="text-center">
-                                <a class="btn btn-success btn-sm btn-icon rounded-circle" href="{{ route('funding.faculty.show',encrypt($d->kd_dana)) }}">
-                                    <div><i class="fa fa-search-plus"></i></div>
+                                <a href="{{ route('funding.faculty.show',encrypt($d->kd_dana)) }}">
+                                    {{ $d->academicYear->tahun_akademik }}
                                 </a>
                             </td>
-                            <td class="text-center">{{ $d->academicYear->tahun_akademik }}</td>
                             @php
                                 $kolom = 0;
                                 $total = 0;
