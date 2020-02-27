@@ -653,34 +653,30 @@ $(document).ready(function() {
         }
     });
 
-    if($('input[name=kd_prodi]').length)
-    {
-        var prodi = $('input[name=kd_prodi]').val();
-
-        $('.select-mhs').select2({
-            width: "100%",
-            language: "id",
-            minimumInputLength: 3,
-            allowClear: true,
-            placeholder: 'Masukkan nama mahasiswa',
-            ajax: {
-                dataType: 'json',
-                url: base_url+'/ajax/student/loadData',
-                delay: 800,
-                data: function(params) {
-                    return {
-                        prodi: prodi,
-                        cari: params.term
-                    }
-                },
-                processResults: function (response) {
-                    return {
-                        results: response
-                    };
-                },
-            }
-        });
-    }
+    var prodi = $('input[name=kd_prodi]').val();
+    $('.select-mhs').select2({
+        width: "100%",
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan nama mahasiswa',
+        ajax: {
+            dataType: 'json',
+            url: base_url+'/ajax/student/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    prodi: prodi,
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
 
     function load_select_mhs(selectElementObj) {
         selectElementObj.select2({
@@ -2006,6 +2002,7 @@ $(document).ready(function() {
         var tabel   = $('#table-studentForeign');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -2037,17 +2034,10 @@ $(document).ready(function() {
                         var prodi       = val.student.study_program.singkatan;
                         var asal_negara = val.asal_negara;
                         var durasi      = val.durasi;
+                        var aksi;
 
-                        html += '<tr>'+
-                                    '<td>'+
-                                        '<a href="'+base_url+'/student/list/'+encode_id(nim)+'">'+
-                                            nama+'<br>'+
-                                            '<small>NIM.'+nim+' / '+prodi+'</small>'+
-                                        '</a>'+
-                                    '</td>'+
-                                    '<td class="text-center">'+asal_negara+'</td>'+
-                                    '<td class="text-center">'+durasi+'</td>'+
-                                    '<td class="text-center">'+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center">'+
                                         '<div class="btn-group" role="group">'+
                                             '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                                 '<div><span class="fa fa-caret-down"></span></div>'+
@@ -2060,7 +2050,19 @@ $(document).ready(function() {
                                                 '</form>'+
                                             '</div>'+
                                         '</div>'+
+                                    '</td>'
+                        }
+
+                        html += '<tr>'+
+                                    '<td>'+
+                                        '<a href="'+base_url+'/student/list/'+encode_id(nim)+'">'+
+                                            nama+'<br>'+
+                                            '<small>NIM.'+nim+' / '+prodi+'</small>'+
+                                        '</a>'+
                                     '</td>'+
+                                    '<td class="text-center">'+asal_negara+'</td>'+
+                                    '<td class="text-center">'+durasi+'</td>'+
+                                    aksi+
                                 '</tr>'
                     })
                 }
