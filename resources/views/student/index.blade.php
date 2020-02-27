@@ -25,10 +25,12 @@
         <h4>Data Mahasiswa</h4>
         <p class="mg-b-0">Olah Data Mahasiswa</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto d-inline-flex">
         <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-y-10 mg-r-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
         <button class="btn btn-primary btn-block mg-y-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -44,9 +46,10 @@
         <div class="col-12">
             <form action="{{route('ajax.student.filter')}}" id="filter-student" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    @if(Auth::user()->hasRole('admin'))
                     <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                            <option value="0">Semua Jurusan</option>
+                            <option value="0">- Semua Jurusan -</option>
                             @foreach($faculty as $f)
                                 @if($f->department->count())
                                 <optgroup label="{{$f->nama}}">
@@ -58,17 +61,20 @@
                             @endforeach
                         </select>
                     </div>
+                    @endif
+                    @if(!Auth::user()->hasRole('kaprodi'))
                     <div class="mg-r-10">
                         <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
+                            <option value="">- Semua Program Studi -</option>
                             @foreach($studyProgram as $sp)
                             <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                             @endforeach
                         </select>
                     </div>
+                    @endif
                     <div class="mg-r-10">
                         <select class="form-control" name="angkatan" style="width:200px">
-                            <option value="">- Pilih Angkatan -</option>
+                            <option value="">- Semua Angkatan -</option>
                             @foreach($angkatan as $a)
                             <option value="{{$a->tahun_akademik}}">{{$a->tahun_akademik}}</option>
                             @endforeach

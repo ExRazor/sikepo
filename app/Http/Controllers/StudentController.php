@@ -15,6 +15,7 @@ use App\Imports\StudentImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class StudentController extends Controller
@@ -41,14 +42,9 @@ class StudentController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $angkatan     = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
         $status       = StudentStatus::groupBy('status')->get('status');
-        $students     = Student::whereHas(
-                            'studyProgram', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            })
-                        ->get();
 
-        $data = datatables()->of($students)->make(true);
-        return view('student.index',compact(['studyProgram','faculty','angkatan','status','data']));
+        // $data = datatables()->of($students)->make(true);
+        return view('student.index',compact(['studyProgram','faculty','angkatan','status']));
     }
 
     public function profile($id)
@@ -356,13 +352,22 @@ class StudentController extends Controller
     public function datatable(Request $request)
     {
         if($request->ajax()) {
-            $students     = Student::whereHas(
-                            'studyProgram', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            })
-                            ->get();
 
-            return DataTables::of($students)
+            if(Auth::user()->hasRole('kaprodi')) {
+                $students     = Student::whereHas(
+                                            'studyProgram', function($query) {
+                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                            })
+                                        ->get();
+            } else {
+                $students     = Student::whereHas(
+                                            'studyProgram', function($query) {
+                                                $query->where('kd_jurusan',setting('app_department_id'));
+                                            })
+                                        ->get();
+            }
+
+            $data = DataTables::of($students)
                                 ->editColumn('nama', function($d) {
                                     return '<a href="'.route("student.profile",encode_id($d->nim)).'">'.$d->nama.'<br><small>NIM. '.$d->nim.'</small></a>';
                                 })
@@ -377,6 +382,8 @@ class StudentController extends Controller
                                 })
                                 ->escapeColumns([])
                                 ->make(true);
+
+            return $data;
         }
     }
 

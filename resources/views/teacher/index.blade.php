@@ -26,7 +26,7 @@
         <p class="mg-b-0">Olah Data Dosen</p>
     </div>
     <div class="ml-auto d-inline-flex">
-        @if(!Auth::user()->role=='kajur')
+        @if(!Auth::user()->hasRole('kajur'))
         <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block mg-y-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
         {{-- <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-y-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a> --}}
         @endif
@@ -50,7 +50,7 @@
                     @if(Auth::user()->role!='kajur')
                     <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                            <option value="0">Semua Jurusan</option>
+                            <option value="0">- Semua Jurusan -</option>
                             @foreach($faculty as $f)
                                 @if($f->department->count())
                                 <optgroup label="{{$f->nama}}">

@@ -23,8 +23,8 @@
           <span class="menu-item-label">Data Mahasiswa</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->is('student/list*')) ? 'active' : '' }}">Data Mahasiswa</a></li>
         <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->is('student/quota*')) ? 'active' : '' }}">Kuota Mahasiswa</a></li>
-          <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->is('student/list*')) ? 'active' : '' }}">Data Mahasiswa</a></li>
           <li class="sub-item"><a href="{{ route('student.foreign') }}" class="sub-link {{ (request()->is('student/foreign*')) ? 'active' : '' }}">Mahasiswa Asing</a></li>
           <li class="sub-item"><a href="{{ route('student.achievement') }}" class="sub-link {{ (request()->is('student/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
         </ul>

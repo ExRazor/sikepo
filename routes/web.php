@@ -208,16 +208,6 @@ Route::middleware('auth')->group(function () {
 
     });
 
-    //Collaboration
-    Route::middleware('role:admin,kaprodi,kajur')->group(function () {
-        Route::get('/collaboration','CollaborationController@index')->name('collaboration');
-        Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
-        Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
-        Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
-        Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
-        Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
-    });
-
     //Teacher
     Route::prefix('teacher')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
@@ -293,6 +283,134 @@ Route::middleware('auth')->group(function () {
         Route::delete('achievement','StudentAchievementController@destroy')->name('student.achievement.delete');
     });
 
+    //Academic
+    Route::prefix('academic')->middleware('role:admin,kaprodi,kajur')->group(function () {
+
+        //Academic - Curriculum
+        Route::get('curriculum','CurriculumController@index')->name('academic.curriculum');
+        Route::get('curriculum/add','CurriculumController@create')->name('academic.curriculum.add');
+        Route::get('curriculum/{id}','CurriculumController@show')->name('academic.curriculum.show');
+        Route::get('curriculum/{id}/edit','CurriculumController@edit')->name('academic.curriculum.edit');
+        Route::post('curriculum_import','CurriculumController@import')->name('academic.curriculum.import');
+        Route::post('curriculum','CurriculumController@store')->name('academic.curriculum.store');
+        Route::put('curriculum','CurriculumController@update')->name('academic.curriculum.update');
+        Route::delete('curriculum','CurriculumController@destroy')->name('academic.curriculum.delete');
+
+        //Academic - Schedule
+        Route::get('schedule','CurriculumScheduleController@index')->name('academic.schedule');
+        Route::get('schedule/add','CurriculumScheduleController@create')->name('academic.schedule.add');
+        Route::get('schedule/{nidn}/edit','CurriculumScheduleController@edit')->name('academic.schedule.edit');
+        Route::post('schedule','CurriculumScheduleController@store')->name('academic.schedule.store');
+        Route::put('schedule','CurriculumScheduleController@update')->name('academic.schedule.update');
+        Route::delete('schedule','CurriculumScheduleController@destroy')->name('academic.schedule.delete');
+
+        //Academic - Curriculum Integration
+        Route::get('integration','CurriculumIntegrationController@index')->name('academic.integration');
+        Route::get('integration/add','CurriculumIntegrationController@create')->name('academic.integration.add');
+        Route::get('integration/{id}','CurriculumIntegrationController@show')->name('academic.integration.show');
+        Route::get('integration/{id}/edit','CurriculumIntegrationController@edit')->name('academic.integration.edit');
+        Route::post('integration','CurriculumIntegrationController@store')->name('academic.integration.store');
+        Route::put('integration','CurriculumIntegrationController@update')->name('academic.integration.update');
+        Route::delete('integration','CurriculumIntegrationController@destroy')->name('academic.integration.delete');
+
+        //Academic - Minithesis
+        Route::get('minithesis','MiniThesisController@index')->name('academic.minithesis');
+        Route::get('minithesis/add','MiniThesisController@create')->name('academic.minithesis.add');
+        Route::get('minithesis/{nidn}','MiniThesisController@show')->name('academic.minithesis.show');
+        Route::get('minithesis/{nidn}/edit','MiniThesisController@edit')->name('academic.minithesis.edit');
+        Route::post('minithesis','MiniThesisController@store')->name('academic.minithesis.store');
+        Route::put('minithesis','MiniThesisController@update')->name('academic.minithesis.update');
+        Route::delete('minithesis','MiniThesisController@destroy')->name('academic.minithesis.delete');
+
+        //Academic - Satisfaction
+        Route::get('satisfaction','AcademicSatisfactionController@index')->name('academic.satisfaction');
+        Route::get('satisfaction/add','AcademicSatisfactionController@create')->name('academic.satisfaction.add');
+        Route::get('satisfaction/{id}','AcademicSatisfactionController@show')->name('academic.satisfaction.show');
+        Route::get('satisfaction/{id}/edit','AcademicSatisfactionController@edit')->name('academic.satisfaction.edit');
+        Route::post('satisfaction','AcademicSatisfactionController@store')->name('academic.satisfaction.store');
+        Route::put('satisfaction','AcademicSatisfactionController@update')->name('academic.satisfaction.update');
+        Route::delete('satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
+    });
+
+    //Collaboration
+    Route::middleware('role:admin,kaprodi,kajur')->group(function () {
+        Route::get('/collaboration','CollaborationController@index')->name('collaboration');
+        Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
+        Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
+        Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
+        Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
+        Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
+    });
+
+    //Research
+    Route::get('research','ResearchController@index')->name('research');
+    Route::get('research/add','ResearchController@create')->name('research.add');
+    Route::get('research/{id}','ResearchController@show')->name('research.show');
+    Route::get('research/{id}/edit','ResearchController@edit')->name('research.edit');
+    Route::post('research','ResearchController@store')->name('research.store');
+    Route::put('research','ResearchController@update')->name('research.update');
+    Route::delete('research','ResearchController@destroy')->name('research.delete');
+    Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
+    Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
+
+    //Community Service
+    Route::get('community-service','CommunityServiceController@index')->name('community-service');
+    Route::get('community-service/add','CommunityServiceController@create')->name('community-service.add');
+    Route::get('community-service/{id}','CommunityServiceController@show')->name('community-service.show');
+    Route::get('community-service/{id}/edit','CommunityServiceController@edit')->name('community-service.edit');
+    Route::post('community-service','CommunityServiceController@store')->name('community-service.store');
+    Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
+    Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
+    Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
+    Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
+
+    //Publication
+    Route::prefix('publication')->middleware('role:admin,kaprodi,kajur')->group(function () {
+        //Publication - Teacher
+        Route::get('teacher','TeacherPublicationController@index')->name('publication.teacher');
+        Route::get('teacher/add','TeacherPublicationController@create')->name('publication.teacher.add');
+        Route::get('teacher/{id}','TeacherPublicationController@show')->name('publication.teacher.show');
+        Route::get('teacher/{id}/edit','TeacherPublicationController@edit')->name('publication.teacher.edit');
+        Route::post('teacher','TeacherPublicationController@store')->name('publication.teacher.store');
+        Route::put('teacher','TeacherPublicationController@update')->name('publication.teacher.update');
+        Route::delete('teacher','TeacherPublicationController@destroy')->name('publication.teacher.delete');
+        Route::get('teacher/delete_member/{id}','TeacherPublicationController@destroy_member')->name('publication.teacher.delete.member');
+        Route::get('teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
+
+        //Publication - Student
+        Route::get('student','StudentPublicationController@index')->name('publication.student');
+        Route::get('student/add','StudentPublicationController@create')->name('publication.student.add');
+        Route::get('student/{id}','StudentPublicationController@show')->name('publication.student.show');
+        Route::get('student/{id}/edit','StudentPublicationController@edit')->name('publication.student.edit');
+        Route::post('student','StudentPublicationController@store')->name('publication.student.store');
+        Route::put('student','StudentPublicationController@update')->name('publication.student.update');
+        Route::delete('student','StudentPublicationController@destroy')->name('publication.student.delete');
+        Route::get('student/delete_member/{id}','StudentPublicationController@destroy_member')->name('publication.student.delete.member');
+    });
+
+    Route::prefix('output-activity')->middleware('role:admin,kaprodi,kajur')->group(function () {
+
+        //Output Activity - Teacher
+        Route::get('output-activity/teacher','TeacherOutputActivityController@index')->name('output-activity.teacher');
+        Route::get('output-activity/teacher/add','TeacherOutputActivityController@create')->name('output-activity.teacher.add');
+        Route::get('output-activity/teacher/{id}','TeacherOutputActivityController@show')->name('output-activity.teacher.show');
+        Route::get('output-activity/teacher/{id}/edit','TeacherOutputActivityController@edit')->name('output-activity.teacher.edit');
+        Route::post('output-activity/teacher','TeacherOutputActivityController@store')->name('output-activity.teacher.store');
+        Route::put('output-activity/teacher','TeacherOutputActivityController@update')->name('output-activity.teacher.update');
+        Route::delete('output-activity/teacher','TeacherOutputActivityController@destroy')->name('output-activity.teacher.delete');
+        Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('output-activity.file.download');
+        Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('output-activity.file.delete');
+
+        //Output Activity - Student
+        Route::get('output-activity/student','StudentOutputActivityController@index')->name('output-activity.student');
+        Route::get('output-activity/student/add','StudentOutputActivityController@create')->name('output-activity.student.add');
+        Route::get('output-activity/student/{id}','StudentOutputActivityController@show')->name('output-activity.student.show');
+        Route::get('output-activity/student/{id}/edit','StudentOutputActivityController@edit')->name('output-activity.student.edit');
+        Route::post('output-activity/student','StudentOutputActivityController@store')->name('output-activity.student.store');
+        Route::put('output-activity/student','StudentOutputActivityController@update')->name('output-activity.student.update');
+        Route::delete('output-activity/student','StudentOutputActivityController@destroy')->name('output-activity.student.delete');
+    });
+
     //Funding
     Route::prefix('funding')->group(function () {
 
@@ -324,146 +442,42 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    //Research
-    Route::get('research','ResearchController@index')->name('research');
-    Route::get('research/add','ResearchController@create')->name('research.add');
-    Route::get('research/{id}','ResearchController@show')->name('research.show');
-    Route::get('research/{id}/edit','ResearchController@edit')->name('research.edit');
-    Route::post('research','ResearchController@store')->name('research.store');
-    Route::put('research','ResearchController@update')->name('research.update');
-    Route::delete('research','ResearchController@destroy')->name('research.delete');
-    Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
-    Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
+    //Alumnus
+    Route::prefix('alumnus')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
-    //Community Service
-    Route::get('community-service','CommunityServiceController@index')->name('community-service');
-    Route::get('community-service/add','CommunityServiceController@create')->name('community-service.add');
-    Route::get('community-service/{id}','CommunityServiceController@show')->name('community-service.show');
-    Route::get('community-service/{id}/edit','CommunityServiceController@edit')->name('community-service.edit');
-    Route::post('community-service','CommunityServiceController@store')->name('community-service.store');
-    Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
-    Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
-    Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
-    Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
+        //Alumnus - Attainment
+        Route::get('alumnus/attainment','AlumnusAttainmentController@attainment')->name('alumnus.attainment');
+        Route::get('alumnus/attainment/{id}','AlumnusAttainmentController@attainment_show')->name('alumnus.attainment.show');
 
-    //Publication - Teacher
-    Route::get('publication/teacher','TeacherPublicationController@index')->name('publication.teacher');
-    Route::get('publication/teacher/add','TeacherPublicationController@create')->name('publication.teacher.add');
-    Route::get('publication/teacher/{id}','TeacherPublicationController@show')->name('publication.teacher.show');
-    Route::get('publication/teacher/{id}/edit','TeacherPublicationController@edit')->name('publication.teacher.edit');
-    Route::post('publication/teacher','TeacherPublicationController@store')->name('publication.teacher.store');
-    Route::put('publication/teacher','TeacherPublicationController@update')->name('publication.teacher.update');
-    Route::delete('publication/teacher','TeacherPublicationController@destroy')->name('publication.teacher.delete');
-    Route::get('publication/teacher/delete_member/{id}','TeacherPublicationController@destroy_member')->name('publication.teacher.delete.member');
-    Route::get('publication/teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
+        //Alumnus - Idle
+        Route::get('alumnus/idle','AlumnusIdleController@index')->name('alumnus.idle');
+        Route::get('alumnus/idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
+        Route::post('alumnus/idle','AlumnusIdleController@store')->name('alumnus.idle.store');
+        Route::put('alumnus/idle','AlumnusIdleController@update')->name('alumnus.idle.update');
+        Route::delete('alumnus/idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
 
-    //Publication - Student
-    Route::get('publication/student','StudentPublicationController@index')->name('publication.student');
-    Route::get('publication/student/add','StudentPublicationController@create')->name('publication.student.add');
-    Route::get('publication/student/{id}','StudentPublicationController@show')->name('publication.student.show');
-    Route::get('publication/student/{id}/edit','StudentPublicationController@edit')->name('publication.student.edit');
-    Route::post('publication/student','StudentPublicationController@store')->name('publication.student.store');
-    Route::put('publication/student','StudentPublicationController@update')->name('publication.student.update');
-    Route::delete('publication/student','StudentPublicationController@destroy')->name('publication.student.delete');
-    Route::get('publication/student/delete_member/{id}','StudentPublicationController@destroy_member')->name('publication.student.delete.member');
+        //Alumnus - Suitable
+        Route::get('alumnus/suitable','AlumnusSuitableController@index')->name('alumnus.suitable');
+        Route::get('alumnus/suitable/{id}','AlumnusSuitableController@show')->name('alumnus.suitable.show');
+        Route::post('alumnus/suitable','AlumnusSuitableController@store')->name('alumnus.suitable.store');
+        Route::put('alumnus/suitable','AlumnusSuitableController@update')->name('alumnus.suitable.update');
+        Route::delete('alumnus/suitable','AlumnusSuitableController@destroy')->name('alumnus.suitable.delete');
 
-    //Output Activity - Teacher
-    Route::get('output-activity/teacher','TeacherOutputActivityController@index')->name('output-activity.teacher');
-    Route::get('output-activity/teacher/add','TeacherOutputActivityController@create')->name('output-activity.teacher.add');
-    Route::get('output-activity/teacher/{id}','TeacherOutputActivityController@show')->name('output-activity.teacher.show');
-    Route::get('output-activity/teacher/{id}/edit','TeacherOutputActivityController@edit')->name('output-activity.teacher.edit');
-    Route::post('output-activity/teacher','TeacherOutputActivityController@store')->name('output-activity.teacher.store');
-    Route::put('output-activity/teacher','TeacherOutputActivityController@update')->name('output-activity.teacher.update');
-    Route::delete('output-activity/teacher','TeacherOutputActivityController@destroy')->name('output-activity.teacher.delete');
-    Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('output-activity.file.download');
-    Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('output-activity.file.delete');
+        //Alumnus - Workplace
+        Route::get('alumnus/workplace','AlumnusWorkplaceController@index')->name('alumnus.workplace');
+        Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@show')->name('alumnus.workplace.show');
+        Route::post('alumnus/workplace','AlumnusWorkplaceController@store')->name('alumnus.workplace.store');
+        Route::put('alumnus/workplace','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
+        Route::delete('alumnus/workplace','AlumnusWorkplaceController@destroy')->name('alumnus.workplace.delete');
 
-    //Output Activity - Student
-    Route::get('output-activity/student','StudentOutputActivityController@index')->name('output-activity.student');
-    Route::get('output-activity/student/add','StudentOutputActivityController@create')->name('output-activity.student.add');
-    Route::get('output-activity/student/{id}','StudentOutputActivityController@show')->name('output-activity.student.show');
-    Route::get('output-activity/student/{id}/edit','StudentOutputActivityController@edit')->name('output-activity.student.edit');
-    Route::post('output-activity/student','StudentOutputActivityController@store')->name('output-activity.student.store');
-    Route::put('output-activity/student','StudentOutputActivityController@update')->name('output-activity.student.update');
-    Route::delete('output-activity/student','StudentOutputActivityController@destroy')->name('output-activity.student.delete');
-
-    //Academic - Curriculum
-    Route::get('academic/curriculum','CurriculumController@index')->name('academic.curriculum');
-    Route::get('academic/curriculum/add','CurriculumController@create')->name('academic.curriculum.add');
-    Route::get('academic/curriculum/{id}','CurriculumController@show')->name('academic.curriculum.show');
-    Route::get('academic/curriculum/{id}/edit','CurriculumController@edit')->name('academic.curriculum.edit');
-    Route::post('academic/curriculum_import','CurriculumController@import')->name('academic.curriculum.import');
-    Route::post('academic/curriculum','CurriculumController@store')->name('academic.curriculum.store');
-    Route::put('academic/curriculum','CurriculumController@update')->name('academic.curriculum.update');
-    Route::delete('academic/curriculum','CurriculumController@destroy')->name('academic.curriculum.delete');
-
-    //Academic - Schedule
-    Route::get('academic/schedule','CurriculumScheduleController@index')->name('academic.schedule');
-    Route::get('academic/schedule/add','CurriculumScheduleController@create')->name('academic.schedule.add');
-    Route::get('academic/schedule/{nidn}/edit','CurriculumScheduleController@edit')->name('academic.schedule.edit');
-    Route::post('academic/schedule','CurriculumScheduleController@store')->name('academic.schedule.store');
-    Route::put('academic/schedule','CurriculumScheduleController@update')->name('academic.schedule.update');
-    Route::delete('academic/schedule','CurriculumScheduleController@destroy')->name('academic.schedule.delete');
-
-    //Academic - Curriculum Integration
-    Route::get('academic/integration','CurriculumIntegrationController@index')->name('academic.integration');
-    Route::get('academic/integration/add','CurriculumIntegrationController@create')->name('academic.integration.add');
-    Route::get('academic/integration/{id}','CurriculumIntegrationController@show')->name('academic.integration.show');
-    Route::get('academic/integration/{id}/edit','CurriculumIntegrationController@edit')->name('academic.integration.edit');
-    Route::post('academic/integration','CurriculumIntegrationController@store')->name('academic.integration.store');
-    Route::put('academic/integration','CurriculumIntegrationController@update')->name('academic.integration.update');
-    Route::delete('academic/integration','CurriculumIntegrationController@destroy')->name('academic.integration.delete');
-
-    //Academic - Minithesis
-    Route::get('academic/minithesis','MiniThesisController@index')->name('academic.minithesis');
-    Route::get('academic/minithesis/add','MiniThesisController@create')->name('academic.minithesis.add');
-    Route::get('academic/minithesis/{nidn}','MiniThesisController@show')->name('academic.minithesis.show');
-    Route::get('academic/minithesis/{nidn}/edit','MiniThesisController@edit')->name('academic.minithesis.edit');
-    Route::post('academic/minithesis','MiniThesisController@store')->name('academic.minithesis.store');
-    Route::put('academic/minithesis','MiniThesisController@update')->name('academic.minithesis.update');
-    Route::delete('academic/minithesis','MiniThesisController@destroy')->name('academic.minithesis.delete');
-
-    //Academic - Satisfaction
-    Route::get('academic/satisfaction','AcademicSatisfactionController@index')->name('academic.satisfaction');
-    Route::get('academic/satisfaction/add','AcademicSatisfactionController@create')->name('academic.satisfaction.add');
-    Route::get('academic/satisfaction/{id}','AcademicSatisfactionController@show')->name('academic.satisfaction.show');
-    Route::get('academic/satisfaction/{id}/edit','AcademicSatisfactionController@edit')->name('academic.satisfaction.edit');
-    Route::post('academic/satisfaction','AcademicSatisfactionController@store')->name('academic.satisfaction.store');
-    Route::put('academic/satisfaction','AcademicSatisfactionController@update')->name('academic.satisfaction.update');
-    Route::delete('academic/satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
-
-    //Alumnus - Attainment
-    Route::get('alumnus/attainment','AlumnusAttainmentController@attainment')->name('alumnus.attainment');
-    Route::get('alumnus/attainment/{id}','AlumnusAttainmentController@attainment_show')->name('alumnus.attainment.show');
-
-    //Alumnus - Idle
-    Route::get('alumnus/idle','AlumnusIdleController@index')->name('alumnus.idle');
-    Route::get('alumnus/idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
-    Route::post('alumnus/idle','AlumnusIdleController@store')->name('alumnus.idle.store');
-    Route::put('alumnus/idle','AlumnusIdleController@update')->name('alumnus.idle.update');
-    Route::delete('alumnus/idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
-
-    //Alumnus - Suitable
-    Route::get('alumnus/suitable','AlumnusSuitableController@index')->name('alumnus.suitable');
-    Route::get('alumnus/suitable/{id}','AlumnusSuitableController@show')->name('alumnus.suitable.show');
-    Route::post('alumnus/suitable','AlumnusSuitableController@store')->name('alumnus.suitable.store');
-    Route::put('alumnus/suitable','AlumnusSuitableController@update')->name('alumnus.suitable.update');
-    Route::delete('alumnus/suitable','AlumnusSuitableController@destroy')->name('alumnus.suitable.delete');
-
-    //Alumnus - Workplace
-    Route::get('alumnus/workplace','AlumnusWorkplaceController@index')->name('alumnus.workplace');
-    Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@show')->name('alumnus.workplace.show');
-    Route::post('alumnus/workplace','AlumnusWorkplaceController@store')->name('alumnus.workplace.store');
-    Route::put('alumnus/workplace','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
-    Route::delete('alumnus/workplace','AlumnusWorkplaceController@destroy')->name('alumnus.workplace.delete');
-
-    //Alumnus - Satisfaction
-    Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
-    Route::get('alumnus/satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
-    Route::get('alumnus/satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
-    Route::post('alumnus/satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
-    Route::put('alumnus/satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
-    Route::delete('alumnus/satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
+        //Alumnus - Satisfaction
+        Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
+        Route::get('alumnus/satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
+        Route::get('alumnus/satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
+        Route::post('alumnus/satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
+        Route::put('alumnus/satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
+        Route::delete('alumnus/satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
+    });
 
     //Download
     Route::get('/download/collab/{filename}','CollaborationController@download')->name('collaboration.download');
