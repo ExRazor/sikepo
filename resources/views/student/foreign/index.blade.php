@@ -36,6 +36,7 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.student.foreign.filter')}}" id="filter-studentForeign" method="POST">
@@ -56,6 +57,7 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="row widget-2">
         <div class="col-8">
             <div class="card shadow-base mb-3">
@@ -116,6 +118,9 @@
                                 {{ $error }}
                             @endforeach
                         </div>
+                        @isset(Auth::user()->kd_prodi)
+                        <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+                        @endisset
                         <div class="row mg-t-20">
                             <label class="col-sm-4 form-control-label">Mahasiswa: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">

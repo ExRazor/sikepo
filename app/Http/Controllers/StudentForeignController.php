@@ -6,6 +6,7 @@ use App\StudentForeign;
 use App\Student;
 use App\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentForeignController extends Controller
 {
@@ -18,6 +19,18 @@ class StudentForeignController extends Controller
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $studentForeign = StudentForeign::all();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $studentForeign        = StudentForeign::whereHas('student.studyProgram', function($query){
+                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                                    })
+                                                    ->orderBy('created_at','desc')->get();
+        } else {
+            $studentForeign        = StudentForeign::whereHas('student.studyProgram', function($query){
+                                                        $query->where('kd_jurusan',setting('app_department_id'));
+                                                    })
+                                                    ->orderBy('created_at','desc')->get();
+        }
 
         return view('student.foreign.index',compact(['studentForeign','studyProgram']));
     }

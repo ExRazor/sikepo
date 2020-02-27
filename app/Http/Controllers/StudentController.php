@@ -390,8 +390,22 @@ class StudentController extends Controller
     public function loadData(Request $request)
     {
         if($request->has('cari')){
+            $prodi = $request->prodi;
             $cari = $request->cari;
-            $data = Student::where('nama', 'LIKE', '%'.$cari.'%')->orWhere('nim','LIKE','%'.$cari.'%')->get();
+
+            $q = Student::select('nim','nama');
+
+            if($prodi) {
+                $q->where('kd_prodi',$prodi);
+            }
+
+            if($cari) {
+                $q->where(function($query) use($cari) {
+                    $query->where('nim', 'LIKE', '%'.$cari.'%')->orWhere('nama','LIKE','%'.$cari.'%');
+                });
+            }
+
+            $data = $q->get();
 
             $response = array();
             foreach($data as $d){

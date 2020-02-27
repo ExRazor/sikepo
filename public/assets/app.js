@@ -653,28 +653,34 @@ $(document).ready(function() {
         }
     });
 
-    $('.select-mhs').select2({
-        width: "100%",
-        language: "id",
-        minimumInputLength: 3,
-        allowClear: true,
-        placeholder: 'Masukkan nama mahasiswa',
-        ajax: {
-            dataType: 'json',
-            url: base_url+'/ajax/student/loadData',
-            delay: 800,
-            data: function(params) {
-                return {
-                    cari: params.term
-                }
-            },
-            processResults: function (response) {
-                return {
-                    results: response
-                };
-            },
-        }
-    });
+    if($('input[name=kd_prodi]').length)
+    {
+        var prodi = $('input[name=kd_prodi]').val();
+
+        $('.select-mhs').select2({
+            width: "100%",
+            language: "id",
+            minimumInputLength: 3,
+            allowClear: true,
+            placeholder: 'Masukkan nama mahasiswa',
+            ajax: {
+                dataType: 'json',
+                url: base_url+'/ajax/student/loadData',
+                delay: 800,
+                data: function(params) {
+                    return {
+                        prodi: prodi,
+                        cari: params.term
+                    }
+                },
+                processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                },
+            }
+        });
+    }
 
     function load_select_mhs(selectElementObj) {
         selectElementObj.select2({
