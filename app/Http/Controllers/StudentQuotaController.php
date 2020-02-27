@@ -8,6 +8,7 @@ use App\StudyProgram;
 use App\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class StudentQuotaController extends Controller
 {
@@ -20,11 +21,18 @@ class StudentQuotaController extends Controller
     {
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $quota        = StudentQuota::with('academicYear','studyProgram')
-                                    ->whereHas('studyProgram', function($query){
-                                        $query->where('kd_jurusan',setting('app_department_id'));
-                                    })
-                                    ->orderBy('created_at','desc')->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $quota        = StudentQuota::whereHas('studyProgram', function($query){
+                                            $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                        })
+                                        ->orderBy('created_at','desc')->get();
+        } else {
+            $quota        = StudentQuota::whereHas('studyProgram', function($query){
+                                            $query->where('kd_jurusan',setting('app_department_id'));
+                                        })
+                                        ->orderBy('created_at','desc')->get();
+        }
 
         $ayExist = array();
 

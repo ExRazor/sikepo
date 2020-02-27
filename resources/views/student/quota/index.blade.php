@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('student') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('student-quota') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -42,13 +42,21 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
-                <h6 class="card-title">{{ setting('app_department_name') }}</h6>
+                <h6 class="card-title">
+                    @if(Auth::user()->hasRole('kaprodi'))
+                    {{ Auth::user()->studyProgram->nama }}
+                    @else
+                    {{ setting('app_department_name') }}
+                    @endif
+                </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_student_quota" class="table display responsive nowrap datatable" data-sort="desc">
                     <thead>
                         <tr>
+                            @if(!Auth::user()->hasRole('kaprodi'))
                             <th class="text-center">Program Studi</th>
+                            @endif
                             <th class="text-center defaultSort">Tahun Akademik</th>
                             <th class="text-center">Daya Tampung</th>
                             <th class="text-center">Calon Mahasiswa<br>Pendaftar</th>
@@ -59,7 +67,9 @@
                     <tbody>
                         @foreach ($quota as $q)
                         <tr>
+                            @if(!Auth::user()->hasRole('kaprodi'))
                             <td>{{ $q->studyProgram->nama }}</td>
+                            @endif
                             <td class="text-center">{{ $q->academicYear->tahun_akademik }}</td>
                             <td class="text-center">{{ $q->daya_tampung }}</td>
                             <td class="text-center">{{ $q->calon_pendaftar }}</td>
