@@ -2083,6 +2083,10 @@ $(document).ready(function() {
     /****************************************************************************************/
 
     /********************************* DATA PRESTASI MAHASISWA *********************************/
+    $('#modal-student-acv').on('shown.bs.modal', function () {
+        $(this).find('select#selectProdi').trigger('change');
+    })
+
     $('#modal-student-acv').on('hidden.bs.modal', function () {
         $(this).find('form').trigger('reset');
         $(this).find('select[name=nidn]').children('option:not(:first)').remove();
@@ -2091,7 +2095,7 @@ $(document).ready(function() {
         $(this).find('select[name=nim] option').remove().trigger('change');
     })
 
-    $('#modal-student-acv').on('change','select[name=kd_prodi]', function() {
+    $('#modal-student-acv').on('change','select#selectProdi', function() {
         var cont    = $('#modal-student-acv');
         var target  = cont.find('.select-mhs-prodi');
         var prodi   = $(this).val();

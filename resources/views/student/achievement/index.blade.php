@@ -77,7 +77,14 @@
         <div class="card shadow-base mb-3">
             <div class="card-header">
                 <h6 class="card-title">
-                    Prestasi/Pengakuan yang Diraih Dosen
+                    <span class="nm_jurusan">
+                    @if(Auth::user()->role=='kaprodi')
+                    {{ Auth::user()->studyProgram->nama }}
+
+                    @else
+                    {{ setting('app_department_name') }}
+                    @endif
+                     </span>
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">

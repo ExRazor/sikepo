@@ -17,10 +17,10 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Program Studi:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="kd_prodi" required>
+                            <select id="selectProdi" class="form-control" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
                                 <option value="">- Pilih Program Studi -</option>
                                 @foreach ($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                <option value="{{$sp->kd_prodi}}" {{Auth::user()->kd_prodi==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -28,7 +28,7 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Nama Mahasiswa:</label>
                         <div class="col-sm-8">
-                            <select class="form-control select-mhs-prodi" name="nim" data-placeholder="Pilih Mahasiswa" disabled>
+                            <select class="form-control select-mhs-prodi" name="nim" data-placeholder="Pilih Mahasiswa" {{Auth::user()->role=='kaprodi' ? '' : 'disabled'}}>
                             </select>
                         </div>
                     </div>
