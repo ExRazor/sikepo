@@ -378,7 +378,9 @@ class StudentController extends Controller
                                     return $d->latestStatus->status;
                                 })
                                 ->addColumn('aksi', function($d) {
-                                    return view('student.table-button', compact('d'))->render();
+                                    if(!Auth::user()->hasRole('kajur')) {
+                                        return view('student.table-button', compact('d'))->render();
+                                    }
                                 })
                                 ->escapeColumns([])
                                 ->make(true);

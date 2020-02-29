@@ -100,7 +100,7 @@
                             <th class="text-center">Program Studi</th>
                             <th class="text-center">Ikatan Kerja</th>
                             <th class="text-center">Jabatan<br>Akademik</th>
-                            @if(Auth::user()->role!='kajur')
+                            @if(!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort">Aksi</th>
                             @endif
                         </tr>
@@ -119,7 +119,7 @@
                             </td>
                             <td>{{$d->ikatan_kerja}}</td>
                             <td>{{$d->jabatan_akademik}}</td>
-                            @if(Auth::user()->role!='kajur')
+                            @if(!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

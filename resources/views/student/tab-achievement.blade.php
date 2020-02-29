@@ -1,11 +1,13 @@
 <div class="tab-pane fade" id="achievement">
         <div class="profil-judul d-flex align-items-center">
+            @if(!Auth::user()->hasRole('kajur'))
             <div class="ml-auto">
                 <button class="btn btn-primary mg-b-10 text-white btn-add" data-toggle="modal" data-target="#modal-student-acv"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
             </div>
+            @endif
         </div>
         <div class="bd rounded table-responsive">
-            <table id="table-studentAcv" class="table datatable table-bordered mb-0">
+            <table id="table-studentAcv" class="table table-bordered mb-0">
                 <thead>
                     <tr>
                         <th class="text-center align-middle" width="115">Tahun</th>
@@ -13,7 +15,9 @@
                         <th class="text-center align-middle">Tingkat</th>
                         <th class="text-center align-middle" width="300">Prestasi</th>
                         <th class="text-center align-middle" width="125">Jenis</th>
+                        @if(!Auth::user()->hasRole('kajur'))
                         <th class="text-center align-middle" width="50">Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -24,6 +28,7 @@
                         <td>{{ $acv->kegiatan_tingkat }}</td>
                         <td>{{ $acv->prestasi }}</td>
                         <td>{{ $acv->prestasi_jenis }}</td>
+                        @if(!Auth::user()->hasRole('kajur'))
                         <td class="text-center">
                             <div class="btn-group" role="group">
                                 <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,6 +43,7 @@
                                 </div>
                             </div>
                         </td>
+                        @endif
                     </tr>
                     @empty
                     <tr>

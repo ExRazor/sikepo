@@ -30,7 +30,7 @@
                     Program Studi: <strong>{{ $data->studyProgram->nama }}</strong>
                 </p>
 
-                @if(!Auth::user()->role=='kajur')
+                @if(!Auth::user()->hasRole('kajur'))
                 <p class="mg-b-0 tx-24">
                     <form method="POST">
                         <input type="hidden" value="{{encode_id($data->nidn)}}" name="id">

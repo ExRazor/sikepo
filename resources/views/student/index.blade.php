@@ -111,7 +111,11 @@
                             <th class="text-center">Kelas</th>
                             <th class="text-center">Program</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center no-sort">Aksi</th>
+                            <th class="text-center no-sort">
+                                @if(!Auth::user()->hasRole('kajur'))
+                                Aksi
+                                @endif
+                            </th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -146,10 +150,12 @@
                     { data: 'aksi', }
                 ],
         order: [[3, 'desc']],
-        columnDefs: [ {
-                    "targets": 7,
-                    "orderable": false
-                    } ],
+        columnDefs: [
+                        {
+                            "targets": 7,
+                            "orderable": false
+                        }
+                    ],
         pageLength: 25,
         responsive: true,
         autoWidth: false,

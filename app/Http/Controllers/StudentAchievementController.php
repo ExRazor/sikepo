@@ -5,17 +5,29 @@ namespace App\Http\Controllers;
 use App\StudentAchievement;
 use App\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentAchievementController extends Controller
 {
     public function index()
     {
-        $achievement    = StudentAchievement::whereHas(
-                                                'student.studyProgram',function($query) {
-                                                    $query->where('kd_jurusan',setting('app_department_id'));
-                                                }
-                                            )
-                                            ->orderBy('id_ta','desc')->get();
+        if(Auth::user()->role=='kaprodi') {
+            $achievement    = StudentAchievement::whereHas(
+                                                    'student.studyProgram',function($query) {
+                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                                    }
+                                                )
+                                                ->orderBy('id_ta','desc')->get();
+        } else {
+            $achievement    = StudentAchievement::whereHas(
+                                                    'student.studyProgram',function($query) {
+                                                        $query->where('kd_jurusan',setting('app_department_id'));
+                                                    }
+                                                )
+                                                ->orderBy('id_ta','desc')->get();
+        }
+
+
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
         return view('student.achievement.index',compact(['achievement','studyProgram']));

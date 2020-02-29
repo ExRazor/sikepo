@@ -26,9 +26,11 @@
         <h4>Prestasi Mahasiswa</h4>
         <p class="mg-b-0">Daftar Prestasi Mahasiswa</p>
     </div>
+    @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-student-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi</button>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -46,7 +48,7 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.student.achievement.filter')}}" id="filter-studentAcv" method="POST">
+            <form action="{{route('ajax.student.achievement.filter')}}" id="filter-studentAcv" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
@@ -88,7 +90,9 @@
                             <th class="text-center align-middle">Tingkat Kegiatan</th>
                             <th class="text-center align-middle no-sort">Prestasi yang Diraih</th>
                             <th class="text-center align-middle no-sort">Jenis Prestasi</th>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <th class="text-center align-middle no-sort">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -107,6 +111,7 @@
                             <td>{{ $acv->kegiatan_tingkat }}</td>
                             <td>{{ $acv->prestasi }}</td>
                             <td>{{ $acv->prestasi_jenis }}</td>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <td width="50" class="text-center">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -121,6 +126,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @empty
                         <tr>
@@ -133,7 +139,9 @@
         </div>
     </div>
 </div>
-@include('student.achievement.form')
+@if (!Auth::user()->hasRole('kajur'))
+    @include('student.achievement.form')
+@endif
 @endsection
 
 @section('js')

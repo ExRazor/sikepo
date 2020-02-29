@@ -51,6 +51,7 @@
                     </div>
                     @endif
                 </div>
+                @if(!Auth::user()->hasRole('kajur'))
                 <div class="profil-tombol">
                     <ul class="profil-menu">
                         <li class="profil-menu-list">
@@ -66,8 +67,8 @@
                             </a>
                         </li>
                     </ul>
-
                 </div>
+                @endif
             </div>
         </div>
         <div class="col-lg-9 mg-t-30 mg-lg-t-0">
@@ -97,7 +98,7 @@
                                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                     @include('student.tab-status')
                                     @include('student.tab-achievement')
-                                    @endif
+                                @endif
                                 @include('student.tab-minithesis')
                                 @include('student.tab-research')
                                 @include('student.tab-service')

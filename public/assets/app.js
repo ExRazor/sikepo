@@ -2185,6 +2185,7 @@ $(document).ready(function() {
         var tabel   = $('#table-studentAcv');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -2219,6 +2220,24 @@ $(document).ready(function() {
                         var tingkat     = val.kegiatan_tingkat;
                         var prestasi    = val.prestasi;
                         var jenis       = val.prestasi_jenis;
+                        var aksi;
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<button class="dropdown-item btn-edit" data-id="'+encode_id(id)+'">Sunting</button>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/student/achievement">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
 
                         html +='<tr>'+
                                     '<td class="text-center">'+tahun+'</td>'+
@@ -2232,20 +2251,7 @@ $(document).ready(function() {
                                     '<td>'+tingkat+'</td>'+
                                     '<td>'+prestasi+'</td>'+
                                     '<td>'+jenis+'</td>'+
-                                    '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<button class="dropdown-item btn-edit" data-id="'+encode_id(id)+'">Sunting</button>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/student/achievement">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
+                                    aksi+
                                 '</tr>';
                     })
                 }

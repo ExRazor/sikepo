@@ -3,18 +3,22 @@
         <div class="alert alert-warning" role="alert">
             <span>Status akademik yang aktif akan diambil berdasarkan status terbaru</span>
         </div>
+        @if(!Auth::user()->hasRole('kajur'))
         <div class="ml-auto">
             <button class="btn btn-primary mg-b-10 text-white btn-add btn-add-studentStatus" data-toggle="modal" data-target="#modal-student-status"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
         </div>
+        @endif
     </div>
     <div class="bd rounded table-responsive">
-        <table id="table_student_status" class="table datatable table-bordered mb-0">
+        <table id="table_student_status" class="table table-bordered mb-0">
             <thead>
                 <tr>
                     <th class="text-center align-middle">Tahun Akademik</th>
                     <th class="text-center align-middle">Status</th>
                     <th class="text-center align-middle">IPK Terakhir</th>
+                    @if(!Auth::user()->hasRole('kajur'))
                     <th class="text-center align-middle">Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +27,7 @@
                     <td>{{ $sl->academicYear->tahun_akademik }} - {{ $sl->academicYear->semester }}</td>
                     <td class="text-center">{{ $sl->status }}</td>
                     <td class="text-center">{{ $sl->ipk_terakhir }}</td>
+                    @if(!Auth::user()->hasRole('kajur'))
                     <td width="50">
                         @if(!$loop->first)
                         <div class="btn-group hidden-xs-down">
@@ -36,6 +41,7 @@
                         </div>
                         @endif
                     </td>
+                    @endif
                 </tr>
                 @empty
                 <tr>
