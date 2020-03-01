@@ -25,9 +25,11 @@
         <h4>Jadwal Kurikulum</h4>
         <p class="mg-b-0">Olah Data Jadwal Kurikulum</p>
     </div>
+    @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('academic.schedule.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Jadwal Matkul</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -39,9 +41,10 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if (!Auth::user()->hasRole('kaprodi'))
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.schedule.filter')}}" id="filter-schedule" method="POST">
+            <form action="{{route('ajax.schedule.filter')}}" id="filter-schedule" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
@@ -72,6 +75,7 @@
             </form>
         </div>
     </div>
+    @endif
     <div id="accordion_schedule" class="accordion accordion-head-colored accordion-info" role="tablist" aria-multiselectable="false">
         @foreach($academicYear as $ay)
         <div class="card">
@@ -93,7 +97,9 @@
                                 <th class="text-center">Nama Dosen</th>
                                 <th class="text-center">Sesuai Prodi</th>
                                 <th class="text-center">Sesuai Bidang</th>
+                                @if (!Auth::user()->hasRole('kajur'))
                                 <th class="text-center no-sort">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -106,7 +112,7 @@
                                 </td>
                                 <td class="text-center">{{$schedule->curriculum->sks_teori+$schedule->curriculum->sks_seminar+$schedule->curriculum->sks_praktikum}}</td>
                                 <td>
-                                    <a href="{{ route('teacher.profile',encode_id($schedule->teacher->nip)) }}">
+                                    <a href="{{ route('teacher.profile',encode_id($schedule->teacher->nidn)) }}">
                                         {{$schedule->teacher->nama}}<br>
                                         <small>NIDN. {{$schedule->teacher->nidn.' / '.$schedule->teacher->studyProgram->singkatan}}</small>
                                     </a>
@@ -121,6 +127,7 @@
                                     <i class="fa fa-check"></i>
                                     @endisset
                                 </td>
+                                @if (!Auth::user()->hasRole('kajur'))
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -135,6 +142,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

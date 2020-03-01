@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class AcademicYear extends Model
 {
@@ -29,7 +30,14 @@ class AcademicYear extends Model
 
     public function curriculumSchedule()
     {
-        return $this->hasMany('App\CurriculumSchedule','id_ta');
+        if(Auth::user()->hasRole('kaprodi')) {
+            return $this->hasMany('App\CurriculumSchedule','id_ta')
+                        ->whereHas('curriculum.studyProgram', function($q) {
+                            $q->where('kd_prodi',Auth::user()->kd_prodi);
+                        });
+        } else {
+            return $this->hasMany('App\CurriculumSchedule','id_ta');
+        }
     }
 
     public function studentQuota()

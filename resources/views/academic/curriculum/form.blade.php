@@ -59,10 +59,13 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select id="prodi_dosen" class="form-control" name="kd_prodi" required>
+                                    @if(Auth::user()->hasRole('kaprodi'))
+                                    <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+                                    @endif
+                                    <select id="prodi_dosen" class="form-control" name="kd_prodi" {{Auth::user()->hasRole('kaprodi') ? 'disabled' : 'required'}}>
                                         <option value="">- Pilih Prodi -</option>
                                         @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi)) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
                                         @endforeach
                                     </select>
                                 </div>

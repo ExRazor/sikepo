@@ -446,37 +446,37 @@ Route::middleware('auth')->group(function () {
     Route::prefix('alumnus')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         //Alumnus - Attainment
-        Route::get('alumnus/attainment','AlumnusAttainmentController@attainment')->name('alumnus.attainment');
-        Route::get('alumnus/attainment/{id}','AlumnusAttainmentController@attainment_show')->name('alumnus.attainment.show');
+        Route::get('attainment','AlumnusAttainmentController@attainment')->name('alumnus.attainment');
+        Route::get('attainment/{id}','AlumnusAttainmentController@attainment_show')->name('alumnus.attainment.show');
 
         //Alumnus - Idle
-        Route::get('alumnus/idle','AlumnusIdleController@index')->name('alumnus.idle');
-        Route::get('alumnus/idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
-        Route::post('alumnus/idle','AlumnusIdleController@store')->name('alumnus.idle.store');
-        Route::put('alumnus/idle','AlumnusIdleController@update')->name('alumnus.idle.update');
-        Route::delete('alumnus/idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
+        Route::get('idle','AlumnusIdleController@index')->name('alumnus.idle');
+        Route::get('idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
+        Route::post('idle','AlumnusIdleController@store')->name('alumnus.idle.store');
+        Route::put('idle','AlumnusIdleController@update')->name('alumnus.idle.update');
+        Route::delete('idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
 
         //Alumnus - Suitable
-        Route::get('alumnus/suitable','AlumnusSuitableController@index')->name('alumnus.suitable');
-        Route::get('alumnus/suitable/{id}','AlumnusSuitableController@show')->name('alumnus.suitable.show');
-        Route::post('alumnus/suitable','AlumnusSuitableController@store')->name('alumnus.suitable.store');
-        Route::put('alumnus/suitable','AlumnusSuitableController@update')->name('alumnus.suitable.update');
-        Route::delete('alumnus/suitable','AlumnusSuitableController@destroy')->name('alumnus.suitable.delete');
+        Route::get('suitable','AlumnusSuitableController@index')->name('alumnus.suitable');
+        Route::get('suitable/{id}','AlumnusSuitableController@show')->name('alumnus.suitable.show');
+        Route::post('suitable','AlumnusSuitableController@store')->name('alumnus.suitable.store');
+        Route::put('suitable','AlumnusSuitableController@update')->name('alumnus.suitable.update');
+        Route::delete('suitable','AlumnusSuitableController@destroy')->name('alumnus.suitable.delete');
 
         //Alumnus - Workplace
-        Route::get('alumnus/workplace','AlumnusWorkplaceController@index')->name('alumnus.workplace');
-        Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@show')->name('alumnus.workplace.show');
-        Route::post('alumnus/workplace','AlumnusWorkplaceController@store')->name('alumnus.workplace.store');
-        Route::put('alumnus/workplace','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
-        Route::delete('alumnus/workplace','AlumnusWorkplaceController@destroy')->name('alumnus.workplace.delete');
+        Route::get('workplace','AlumnusWorkplaceController@index')->name('alumnus.workplace');
+        Route::get('workplace/{id}','AlumnusWorkplaceController@show')->name('alumnus.workplace.show');
+        Route::post('workplace','AlumnusWorkplaceController@store')->name('alumnus.workplace.store');
+        Route::put('workplace','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
+        Route::delete('workplace','AlumnusWorkplaceController@destroy')->name('alumnus.workplace.delete');
 
         //Alumnus - Satisfaction
-        Route::get('alumnus/satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
-        Route::get('alumnus/satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
-        Route::get('alumnus/satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
-        Route::post('alumnus/satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
-        Route::put('alumnus/satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
-        Route::delete('alumnus/satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
+        Route::get('satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
+        Route::get('satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
+        Route::get('satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
+        Route::post('satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
+        Route::put('satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
+        Route::delete('satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
     });
 
     //Download

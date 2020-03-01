@@ -85,7 +85,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    @if(Auth::user()->role=='kaprodi')
+                                    @if(Auth::user()->hasRole('kaprodi'))
                                     <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                                     @endif
                                     <select class="form-control" name="kd_prodi" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>

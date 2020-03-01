@@ -8,18 +8,39 @@ use App\AcademicYear;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 class AcademicSatisfactionController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
-        $satisfaction = AcademicSatisfaction::groupBy('kd_prodi')
-                                            ->groupBy('id_ta')
-                                            ->groupBy('kd_kepuasan')
-                                            ->orderBy('id_ta','desc')
-                                            ->get(['kd_prodi','id_ta','kd_kepuasan']);
-
-                                            // dd($satisfaction);
+        if(Auth::user()->hasRole('kaprodi')) {
+            $satisfaction = AcademicSatisfaction::where('kd_prodi',Auth::user()->kd_prodi)
+                                                ->groupBy('kd_prodi')
+                                                ->groupBy('id_ta')
+                                                ->groupBy('kd_kepuasan')
+                                                ->orderBy('id_ta','desc')
+                                                ->get(['kd_prodi','id_ta','kd_kepuasan']);
+        } else {
+            $satisfaction = AcademicSatisfaction::groupBy('kd_prodi')
+                                                ->groupBy('id_ta')
+                                                ->groupBy('kd_kepuasan')
+                                                ->orderBy('id_ta','desc')
+                                                ->get(['kd_prodi','id_ta','kd_kepuasan']);
+        }
 
         foreach($satisfaction as $s) {
             $persen[$s->kd_kepuasan]  = DB::table('academic_satisfactions as satisfaction')

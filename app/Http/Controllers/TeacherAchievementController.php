@@ -30,7 +30,7 @@ class TeacherAchievementController extends Controller
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $teacher = null;
 
-        if(Auth::user()->role=='kaprodi') {
+        if(Auth::user()->hasRole('kaprodi')) {
 
             $achievement    = TeacherAchievement::whereHas(
                                                     'teacher.studyProgram',function($query) {

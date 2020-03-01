@@ -9,6 +9,7 @@ use App\StudyProgram;
 use App\Faculty;
 use App\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommunityServiceController extends Controller
 {
@@ -313,6 +314,14 @@ class CommunityServiceController extends Controller
                 $q->whereHas(
                     'serviceTeacher', function($q) use($request) {
                         $q->jurusanKetua($request->kd_jurusan);
+                    }
+                );
+            }
+
+            if(Auth::user()->hasRole('kaprodi')) {
+                $q->whereHas(
+                    'serviceTeacher', function($q) use ($request) {
+                        $q->prodiKetua(Auth::user()->kd_prodi);
                     }
                 );
             }

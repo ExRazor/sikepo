@@ -25,6 +25,7 @@
         <h4>Data Kurikulum</h4>
         <p class="mg-b-0">Olah Data Kurikulum atau Mata Kuliah</p>
     </div>
+    @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <div class="row">
             <div class="col-6 pr-1">
@@ -35,6 +36,7 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -48,8 +50,9 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.curriculum.filter')}}" id="filter-curriculum" method="POST">
+            <form action="{{route('ajax.curriculum.filter')}}" id="filter-curriculum" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    @if (!Auth::user()->hasRole('kaprodi'))
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
@@ -59,6 +62,7 @@
                             @endforeach
                         </select>
                     </div>
+                    @endif
                     <div class="mg-r-10">
                         <select class="form-control" name="kurikulum" style="width:200px;">
                             <option value="">- Tahun Kurikulum -</option>
@@ -92,7 +96,16 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
-                <h6 class="card-title">{{ setting('app_department_name') }}</h6>
+                <h6 class="card-title">
+                    <span class="nm_jurusan">
+                    @if(Auth::user()->hasRole('kaprodi'))
+                    {{ Auth::user()->studyProgram->nama }}
+
+                    @else
+                    {{ setting('app_department_name') }}
+                    @endif
+                     </span>
+                </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_curriculum" class="table display responsive datatable" data-sort="asc" style="width:100%">
@@ -101,10 +114,10 @@
                             <th class="text-center all defaultSort" width="50">#</th>
                             <th class="text-center all" width="200">Program Studi</th>
                             <th class="text-center all" width="100">Kode</th>
-                            <th class="text-center all" width="600">Nama</th>
+                            <th class="text-center all" width="500">Nama</th>
                             <th class="text-center all">Semester</th>
-                            <th class="text-center all" width="200">Jenis</th>
-                            <th class="text-center all">Sesuai<br>Kompetensi</th>
+                            <th class="text-center all" width="100">Jenis</th>
+                            <th class="text-center all" width="100">Sesuai<br>Kompetensi</th>
                             <th class="text-center none">Tahun Kurikulum</th>
                             <th class="text-center none">SKS Teori</th>
                             <th class="text-center none">SKS Seminar</th>
@@ -112,7 +125,9 @@
                             <th class="text-center none">Capaian Pembelajaran</th>
                             <th class="text-center none">Dokumen Rencana Pembelajaran</th>
                             <th class="text-center none">Unit Penyelenggara</th>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort all" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -136,6 +151,7 @@
                                 <td>{{ implode(', ',$c->capaian) }}</td>
                                 <td>{{$c->dokumen_nama}}</td>
                                 <td>{{$c->unit_penyelenggara}}</td>
+                                @if (!Auth::user()->hasRole('kajur'))
                                 <td class="text-center" width="50">
                                     <div class="btn-group" role="group">
                                         <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -150,6 +166,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -158,7 +175,9 @@
         </div>
     </div>
 </div>
+@if (!Auth::user()->hasRole('kajur'))
 @include('academic.curriculum.form-import')
+@endif
 @endsection
 
 @section('js')

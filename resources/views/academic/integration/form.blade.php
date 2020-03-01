@@ -98,6 +98,9 @@
                                 <label class="col-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div id="pilihDosen" class="parsley-select">
+                                        @if(Auth::user()->hasRole('kaprodi'))
+                                        <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+                                        @endif
                                         <select class="form-control select-dsn" name="nidn" data-parsley-class-handler="#pilihDosen" data-parsley-errors-container="#errorsPilihDosen" required>
                                             @isset($data)
                                             <option value="{{$data->nidn}}">{{$data->teacher->nama.' ('.$data->teacher->nidn.')'}}</option>
@@ -108,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Judul Kegiatan: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Mata Kuliah: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div id="curriculum" class="parsley-select">
                                         <select class="form-control select-curriculum" name="kd_matkul" data-parsley-class-handler="#curriculum" data-parsley-errors-container="#errorsCurriculum" required>

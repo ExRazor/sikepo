@@ -10,9 +10,23 @@ use App\Faculty;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class CurriculumScheduleController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $faculty      = Faculty::all();
@@ -27,6 +41,21 @@ class CurriculumScheduleController extends Controller
         $faculty      = Faculty::all();
 
         return view('academic.schedule.form',compact(['faculty']));
+    }
+
+    public function edit($id)
+    {
+        $id             = decode_id($id);
+        $faculty        = Faculty::all();
+        $data           = CurriculumSchedule::with('teacher.studyProgram','curriculum','academicYear')->where('id',$id)->first();
+        $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->studyProgram->kd_jurusan)->get();
+        $teacher        = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+
+        if(request()->ajax()) {
+            return response()->json($data);
+        } else {
+            return view('academic.schedule.form',compact(['faculty','data','studyProgram','teacher']));
+        }
     }
 
     public function store(Request $request)
@@ -95,21 +124,6 @@ class CurriculumScheduleController extends Controller
             }
         } else {
             return redirect($url_tujuan)->with('flash.message', 'Data jadwal kurikulum berhasil ditambahkan!')->with('flash.class', 'success');
-        }
-    }
-
-    public function edit($id)
-    {
-        $id             = decode_id($id);
-        $faculty        = Faculty::all();
-        $data           = CurriculumSchedule::with('teacher.studyProgram','curriculum','academicYear')->where('id',$id)->first();
-        $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->studyProgram->kd_jurusan)->get();
-        $teacher        = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
-
-        if(request()->ajax()) {
-            return response()->json($data);
-        } else {
-            return view('academic.schedule.form',compact(['faculty','data','studyProgram','teacher']));
         }
     }
 
@@ -218,8 +232,15 @@ class CurriculumScheduleController extends Controller
                     $query->where('kd_jurusan',$request->kd_jurusan);
                 };
 
-                $q->whereHas(
-                    'curriculumSchedule.curriculum.studyProgram', $callback);
+                $q->whereHas('curriculumSchedule.curriculum.studyProgram', $callback);
+            }
+
+            if(Auth::user()->hasRole('kaprodi')) {
+                $callback = function ($query) use ($request) {
+                    $query->curriculumProdi(Auth::user()->kd_prodi);
+                };
+
+                $q->with(['curriculumSchedule' => $callback]);
             }
 
             if($request->kd_prodi){
@@ -229,8 +250,6 @@ class CurriculumScheduleController extends Controller
                 };
 
                 $q->with(['curriculumSchedule' => $callback]);
-
-                // $q->scheduleCurriculumProdi($request->kd_prodi);
 
             }
 

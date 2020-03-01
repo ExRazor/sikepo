@@ -326,6 +326,10 @@ class StudentController extends Controller
                     });
             }
 
+            if(Auth::user()->hasRole('kaprodi')) {
+                $q->where('kd_prodi',Auth::user()->kd_prodi);
+            }
+
             if($request->kd_prodi){
                 $q->where('kd_prodi',$request->kd_prodi);
             }

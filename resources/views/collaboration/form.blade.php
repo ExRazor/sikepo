@@ -55,7 +55,7 @@
                             <div class="form-group">
                                 <label class="form-control-label">Program Studi:<span class="tx-danger">*</span></label>
                                 <div id="prodi" class="parsley-select">
-                                    @if(Auth::user()->role=='kaprodi')
+                                    @if(Auth::user()->hasRole('kaprodi'))
                                     <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                                     @endif
                                     <select class="form-control select2" name="kd_prodi" data-placeholder="Pilih Prodi" data-parsley-class-handler="#prodi"

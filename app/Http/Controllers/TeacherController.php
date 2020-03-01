@@ -43,7 +43,7 @@ class TeacherController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $faculty      = Faculty::all();
 
-        if(Auth::user()->role=='kaprodi') {
+        if(Auth::user()->hasRole('kaprodi')) {
             $data         = Teacher::whereHas(
                                 'studyProgram', function($query) {
                                     $query->where('kd_prodi',Auth::user()->kd_prodi);
@@ -410,6 +410,10 @@ class TeacherController extends Controller
                     });
             }
 
+            if(Auth::user()->hasRole('kaprodi')) {
+                $q->where('kd_prodi',Auth::user()->kd_prodi);
+            }
+
             if($request->kd_prodi){
                 $q->where('kd_prodi',$request->kd_prodi);
             }
@@ -427,6 +431,10 @@ class TeacherController extends Controller
         if($request->ajax()) {
 
             $q = Teacher::where('kd_prodi',$request->kd_prodi);
+
+            if($request->prodi) {
+                $q->where('kd_prodi',$request->prodi);
+            }
 
             if($request->cari) {
                 $q->where(function($query) use ($request) {
@@ -452,8 +460,22 @@ class TeacherController extends Controller
     public function loadData(Request $request)
     {
         if($request->has('cari')){
-            $cari = $request->cari;
-            $data = Teacher::where('nidn', 'LIKE', '%'.$cari.'%')->orWhere('nama', 'LIKE', '%'.$cari.'%')->get();
+            $cari  = $request->cari;
+            $prodi = $request->prodi;
+
+            $q = Teacher::select('nidn','nama');
+
+            if($prodi) {
+                $q->where('kd_prodi',$prodi);
+            }
+
+            if($cari) {
+                $q->where(function($query) use ($request) {
+                    $query->where('nidn', 'LIKE', '%'.$request->cari.'%')->orWhere('nama', 'LIKE', '%'.$request->cari.'%');
+                });
+            }
+
+            $data = $q->get();
 
             $response = array();
             foreach($data as $d){

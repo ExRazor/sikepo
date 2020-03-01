@@ -5,13 +5,22 @@ namespace App\Http\Controllers;
 use App\Minithesis;
 use App\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MinithesisController extends Controller
 {
     public function index()
     {
-        $minithesis = Minithesis::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $minithesis = Minithesis::whereHas('student.studyProgram', function($q) {
+                                            $q->where('kd_prodi',Auth::user()->kd_prodi);
+                                        })
+                                        ->get();
+        } else {
+            $minithesis = Minithesis::all();
+        }
 
         return view('academic.minithesis.index',compact(['minithesis','studyProgram']));
     }

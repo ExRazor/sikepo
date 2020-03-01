@@ -9,9 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentAchievementController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
-        if(Auth::user()->role=='kaprodi') {
+        if(Auth::user()->hasRole('kaprodi')) {
             $achievement    = StudentAchievement::whereHas(
                                                     'student.studyProgram',function($query) {
                                                         $query->where('kd_prodi',Auth::user()->kd_prodi);
@@ -26,7 +39,6 @@ class StudentAchievementController extends Controller
                                                 )
                                                 ->orderBy('id_ta','desc')->get();
         }
-
 
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 

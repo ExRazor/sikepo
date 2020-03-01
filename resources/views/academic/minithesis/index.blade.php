@@ -25,9 +25,11 @@
         <h4>Tugas Akhir</h4>
         <p class="mg-b-0">Olah Data Tugas Akhir atau Skripsi Mahasiswa</p>
     </div>
+    @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('academic.minithesis.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tugas Akhir</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -41,8 +43,9 @@
     @endif
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.minithesis.filter')}}" id="filter-minithesis" method="POST">
+            <form action="{{route('ajax.minithesis.filter')}}" id="filter-minithesis" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    @if(!Auth::user()->hasRole('kaprodi'))
                     <div class="mg-r-10">
                         <select class="form-control" name="prodi_mahasiswa">
                             <option value="">- Prodi Mahasiswa -</option>
@@ -51,6 +54,7 @@
                             @endforeach
                         </select>
                     </div>
+                    @endif
                     <div class="mg-r-10">
                         <select class="form-control" name="prodi_pembimbing">
                             <option value="">- Prodi Pembimbing Utama -</option>
@@ -80,7 +84,9 @@
                             <th class="text-center defaultSort" width="150">Tahun Diangkat</th>
                             <th class="text-center none">Pembimbing Utama</th>
                             <th class="text-center none">Pembimbing Pendamping</th>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort all" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -106,6 +112,7 @@
                                     {{$m->pembimbingPendamping->nama}} ({{$m->pembimbingPendamping->nidn}})
                                 </a>
                             </td>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -120,6 +127,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

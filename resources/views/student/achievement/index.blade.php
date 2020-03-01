@@ -78,7 +78,7 @@
             <div class="card-header">
                 <h6 class="card-title">
                     <span class="nm_jurusan">
-                    @if(Auth::user()->role=='kaprodi')
+                    @if(Auth::user()->hasRole('kaprodi'))
                     {{ Auth::user()->studyProgram->nama }}
 
                     @else

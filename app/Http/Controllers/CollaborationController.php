@@ -233,6 +233,13 @@ class CollaborationController extends Controller
                                 }
                             );
 
+            if(Auth::user()->hasRole('kaprodi')) {
+                $q->whereHas(
+                    'studyProgram', function($query) use ($request) {
+                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                });
+            }
+
             if($request->kd_prodi){
                 $q->whereHas(
                     'studyProgram', function($query) use ($request) {

@@ -7,11 +7,19 @@ use Illuminate\Http\Request;
 
 class CurriculumIntegrationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $integration = CurriculumIntegration::all();
@@ -22,6 +30,14 @@ class CurriculumIntegrationController extends Controller
     public function create()
     {
         return view('academic.integration.form');
+    }
+
+    public function edit($id)
+    {
+        $id = decrypt($id);
+        $data       = CurriculumIntegration::find($id);
+
+        return view('academic.integration.form',compact(['data']));
     }
 
     public function store(Request $request)
@@ -45,15 +61,6 @@ class CurriculumIntegrationController extends Controller
         $data->save();
 
         return redirect()->route('academic.integration')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-
-    public function edit($id)
-    {
-        $id = decrypt($id);
-        $data       = CurriculumIntegration::find($id);
-
-        return view('academic.integration.form',compact(['data']));
     }
 
     public function update(Request $request)

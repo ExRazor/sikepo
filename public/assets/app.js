@@ -537,53 +537,6 @@ $(document).ready(function() {
         })
     })
 
-    $('#select-prodi-dsn').change(function(){
-        var cont    = $(this);
-        var target  = $('select[name=nidn]');
-        var id      = cont.val();
-
-        target.find('option').remove();
-
-        $.ajax({
-            url: base_url+'/ajax/teacher/get_by_studyProgram',
-            data: {kd_prodi:id},
-            type: 'POST',
-            dataType: 'json',
-            beforeSend: function() {
-                if(cont.data('type') == 'form') {
-                    target.prop('disabled',true);
-                }
-            },
-            success: function (data) {
-
-                var html = '';
-
-                if(data.length > 0) {
-                    html += '<option value="">- Pilih Dosen -</option>';
-                    $.each(data,function(i){
-                        html += '<option value="'+data[i].nidn+'">'+data[i].nama+'</option>';
-                    })
-
-                    if(cont.data('type') == 'form') {
-                        target.prop('disabled',false);
-                        target.prop('required',true);
-                        cont.prop('required',false);
-                    }
-
-                } else {
-                    html = '<option value="">- Pilih Dosen -</option>';
-                    if(cont.data('type') == 'form') {
-                        target.prop('disabled',true);
-                        target.prop('required',false);
-                        cont.prop('required',true);
-                    }
-                }
-
-                target.append(html);
-            }
-        })
-    })
-
     $('.select-prodi').select2({
         language: "id",
         minimumInputLength: 5,
@@ -654,6 +607,7 @@ $(document).ready(function() {
     });
 
     var prodi = $('input[name=kd_prodi]').val();
+    var prodi_mhs_bim = $('input[name=prodi_mhs_bim]').val();
     $('.select-mhs').select2({
         width: "100%",
         language: "id",
@@ -663,6 +617,78 @@ $(document).ready(function() {
         ajax: {
             dataType: 'json',
             url: base_url+'/ajax/student/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    prodi: prodi,
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
+
+    $('.select-mhs-bimbingan').select2({
+        width: "100%",
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan nama mahasiswa',
+        ajax: {
+            dataType: 'json',
+            url: base_url+'/ajax/student/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    prodi: prodi_mhs_bim,
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
+
+    $('.select-dsn').select2({
+        width: "100%",
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan nidn/nama dosen',
+        ajax: {
+            dataType: 'json',
+            url: base_url+'/ajax/teacher/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    prodi: prodi,
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
+
+    $('.select-curriculum').select2({
+        width: "100%",
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan kode/nama mata kuliah',
+        ajax: {
+            dataType: 'json',
+            url: base_url+'/ajax/curriculum/loadData',
             delay: 800,
             data: function(params) {
                 return {
@@ -703,29 +729,6 @@ $(document).ready(function() {
         });
     }
 
-    $('.select-dsn').select2({
-        width: "100%",
-        language: "id",
-        minimumInputLength: 3,
-        allowClear: true,
-        placeholder: 'Masukkan nidn/nama dosen',
-        ajax: {
-            dataType: 'json',
-            url: base_url+'/ajax/teacher/loadData',
-            delay: 800,
-            data: function(params) {
-                return {
-                    cari: params.term
-                }
-            },
-            processResults: function (response) {
-                return {
-                    results: response
-                };
-            },
-        }
-    });
-
     function load_select_dsn(selectElementObj) {
         selectElementObj.select2({
             width: "100%",
@@ -750,29 +753,6 @@ $(document).ready(function() {
             }
         });
     }
-
-    $('.select-curriculum').select2({
-        width: "100%",
-        language: "id",
-        minimumInputLength: 3,
-        allowClear: true,
-        placeholder: 'Masukkan kode/nama mata kuliah',
-        ajax: {
-            dataType: 'json',
-            url: base_url+'/ajax/curriculum/loadData',
-            delay: 800,
-            data: function(params) {
-                return {
-                    cari: params.term
-                }
-            },
-            processResults: function (response) {
-                return {
-                    results: response
-                };
-            },
-        }
-    });
 
 
     /****************************************************************************/
@@ -1744,7 +1724,7 @@ $(document).ready(function() {
             },
             success: function (data) {
                 var html          = '';
-                var status_filter = datacon[2].value;
+                var status_filter = $('#status_mahasiswa').val();
 
                 if(data.length > 0) {
                     $.each(data, function(i,val){
@@ -2761,6 +2741,7 @@ $(document).ready(function() {
         var tabel   = $('#table_curriculum');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -2799,9 +2780,27 @@ $(document).ready(function() {
                         var dokumen       = val.dokumen_nama;
                         var unit          = val.unit_penyelenggara;
                         var kompetensi_prodi = '';
+                        var aksi;
 
                         if(val.kompetensi_prodi!=null) {
                             kompetensi_prodi = '<i class="fa fa-check"></i>';
+                        }
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/academic/curriculum/'+encode_id(kd_matkul)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(kd_matkul)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="/academic/curriculum">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
                         }
 
                         html += '<tr>'+
@@ -2819,20 +2818,7 @@ $(document).ready(function() {
                                     '<td>'+capaian.join(', ')+'</td>'+
                                     '<td>'+dokumen+'</td>'+
                                     '<td>'+unit+'</td>'+
-                                    '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="'+base_url+'/academic/curriculum/'+encode_id(kd_matkul)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(kd_matkul)+'" name="id">'+
-                                                    '<button class="dropdown-item btn-delete" data-dest="/academic/curriculum">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
+                                    aksi+
                                 '</tr>';
                     })
                 }
@@ -2860,6 +2846,7 @@ $(document).ready(function() {
         var btn         = cont.find('button[type=submit]');
         var datacon     = cont.serializeArray();
         var url         = cont.attr('action');
+        var role        = decode_id(cont.data('token'));
         var opsi_prodi  = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -2897,11 +2884,11 @@ $(document).ready(function() {
                                 var nm_matkul     = schedule.curriculum.nama;
                                 var prodi_matkul  = schedule.curriculum.study_program.department.nama+' - '+schedule.curriculum.study_program.singkatan;
                                 var nm_dosen      = schedule.teacher.nama;
-                                var nip_dosen     = schedule.teacher.nip;
                                 var nidn_dosen    = schedule.teacher.nidn;
                                 var prodi_dosen   = schedule.teacher.study_program.singkatan;
                                 var sesuai_prodi  = '';
                                 var sesuai_bidang = '';
+                                var aksi;
 
 
                                 var sks_teori     = parseInt(schedule.curriculum.sks_teori);
@@ -2917,22 +2904,8 @@ $(document).ready(function() {
                                     sesuai_bidang = '<i class="fa fa-check"></i>';
                                 }
 
-                                html += '<tr>'+
-                                            '<td>'+kd_matkul+'</td>'+
-                                            '<td>'+
-                                                nm_matkul+'<br>'+
-                                                '<small>'+prodi_matkul+'</small>'+
-                                            '</td>'+
-                                            '<td class="text-center">'+sks+'</td>'+
-                                            '<td>'+
-                                                '<a href="'+base_url+'/teacher/list/'+encode_id('+nip_dosen+')+'">'+
-                                                    nm_dosen+'<br>'+
-                                                    '<small>NIDN. '+nidn_dosen+' / '+prodi_dosen+'</small>'+
-                                                '</a>'+
-                                            '</td>'+
-                                            '<td class="text-center">'+sesuai_prodi+'</td>'+
-                                            '<td class="text-center">'+sesuai_bidang+'</td>'+
-                                            '<td class="text-center">'+
+                                if(role!='kajur') {
+                                    aksi = '<td class="text-center">'+
                                                 '<div class="btn-group" role="group">'+
                                                     '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                                                         '<div><span class="fa fa-caret-down"></span></div>'+
@@ -2945,7 +2918,25 @@ $(document).ready(function() {
                                                         '</form>'+
                                                     '</div>'+
                                                 '</div>'+
+                                            '</td>'
+                                }
+
+                                html += '<tr>'+
+                                            '<td>'+kd_matkul+'</td>'+
+                                            '<td>'+
+                                                nm_matkul+'<br>'+
+                                                '<small>'+prodi_matkul+'</small>'+
                                             '</td>'+
+                                            '<td class="text-center">'+sks+'</td>'+
+                                            '<td>'+
+                                                '<a href="'+base_url+'/teacher/list/'+encode_id(nidn_dosen)+'">'+
+                                                    nm_dosen+'<br>'+
+                                                    '<small>NIDN. '+nidn_dosen+' / '+prodi_dosen+'</small>'+
+                                                '</a>'+
+                                            '</td>'+
+                                            '<td class="text-center">'+sesuai_prodi+'</td>'+
+                                            '<td class="text-center">'+sesuai_bidang+'</td>'+
+                                            aksi+
                                         '</tr>'
                             // }
                         });
@@ -2968,6 +2959,45 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#curriculumSchedule_form').on('change','select#selectProdiDsn', function() {
+        var cont   = $('#curriculumSchedule_form');
+        var prodi  = $(this).val();
+        var target = cont.find('.select-dsn');
+
+        if(prodi=='' || prodi==null) {
+            target.prop('disabled',true);
+            target.prop('required',false);
+        } else {
+            target.prop('disabled',false);
+            target.prop('required',true);
+
+            target.select2({
+                width: "100%",
+                language: "id",
+                minimumInputLength: 3,
+                allowClear: true,
+                placeholder: 'Masukkan nidn/nama dosen',
+                ajax: {
+                    method: 'post',
+                    dataType: 'json',
+                    url: base_url+'/ajax/teacher/get_by_studyProgram',
+                    delay: 800,
+                    data: function(params) {
+                        return {
+                            kd_prodi: prodi,
+                            cari: params.term
+                        }
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                }
+            });
+        }
+    })
 
     // JADWAL DI PROFIL DOSEN
     $('#schedule').on('click','.btn-add',function(){
@@ -3017,14 +3047,18 @@ $(document).ready(function() {
         var tabel       = $('#table-minithesis');
         var datacon     = cont.serializeArray();
         var url         = cont.attr('action');
+        var role        = decode_id(cont.data('token'));
         var opsi_mahasiswa  = cont.find('select[name=prodi_mahasiswa] option:selected');
         var opsi_pembimbing = cont.find('select[name=prodi_pembimbing] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
-        if(opsi_mahasiswa.val()) {
-            var teks = 'Prodi Mahasiswa: '+opsi_mahasiswa.text();
+        if(opsi_mahasiswa.val() && opsi_pembimbing.val()) {
+            var teks = 'Prodi Mahasiswa: '+opsi_mahasiswa.text()+ ' || Prodi Pembimbing: '+opsi_pembimbing.text();
             $('h6.card-title').text(teks);
         } else if(opsi_mahasiswa.val()) {
+            var teks = 'Prodi Mahasiswa: '+opsi_mahasiswa.text();
+            $('h6.card-title').text(teks);
+        } else if(opsi_pembimbing.val()) {
             var teks = 'Prodi Pembimbing Utama: '+opsi_pembimbing.text();
             $('h6.card-title').text(teks);
         } else {
@@ -3056,6 +3090,24 @@ $(document).ready(function() {
                         var nidn_utama       = val.pembimbing_utama.nidn;
                         var nama_pendamping  = val.pembimbing_pendamping.nama;
                         var nidn_pendamping  = val.pembimbing_pendamping.nidn;
+                        var aksi;
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/academic/minithesis/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="encode_id(id)" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/academic/minithesis">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
 
                         html += '<tr>'+
                                     '<td>'+judul+'</td>'+
@@ -3076,20 +3128,7 @@ $(document).ready(function() {
                                             nama_pendamping+' ('+nidn_pendamping+')'+
                                         '</a>'+
                                     '</td>'+
-                                    '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="'+base_url+'/academic/minithesis/'+encode_id(id)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="encode_id(id)" name="id">'+
-                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/academic/minithesis">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'+
+                                    aksi+
                                 '</tr>';
                     })
                 }
@@ -3110,6 +3149,61 @@ $(document).ready(function() {
     /******************************************************************************************/
 
     /********************************* INTEGRASI KEGIATAN - KURIKULUM *********************************/
+    if($('#curriculumIntegration_form select[name=kegiatan]').length) {
+        load_select_activity();
+    }
+
+    $('#curriculumIntegration_form').on('change','select[name=kegiatan]', function(){
+        load_select_activity();
+    });
+
+    function load_select_activity() {
+        var select_src  = $('select[name=kegiatan]');
+        var select      = $('.select-activity');
+        var value       = select_src.val();
+
+        if(value=="Penelitian") {
+            var url_select2 = base_url+'/ajax/research/get_by_department';
+            var placeholder = 'Masukkan nama penelitian';
+
+            select.attr('name','id_penelitian');
+            select.prop('disabled',false)
+        } else if(value=="Pengabdian") {
+            var url_select2 = base_url+'/ajax/community-service/get_by_department';
+            var placeholder = 'Masukkan nama pengabdian';
+
+            select.attr('name','id_pengabdian');
+            select.prop('disabled',false)
+        } else {
+            select.removeAttr('name');
+            select.prop('disabled',true)
+        }
+
+        if(value!='' || value!=null) {
+            select.select2({
+                width: '100%',
+                language: "id",
+                minimumInputLength: 5,
+                allowClear: true,
+                placeholder: placeholder,
+                ajax: {
+                    dataType: 'json',
+                    url: url_select2,
+                    delay: 800,
+                    data: function(params) {
+                        return {
+                            cari: params.term
+                        }
+                    },
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                }
+            });
+        }
+    }
 
     /**************************************************************************************************/
 
@@ -3501,58 +3595,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    if($('select[name=kegiatan]').length) {
-        load_select_activity();
-    }
-
-    function load_select_activity() {
-        var select_src  = $('select[name=kegiatan]');
-        var select      = $('.select-activity');
-        var value       = select_src.val();
-
-        if(value=="Penelitian") {
-            var url_select2 = base_url+'/ajax/research/get_by_department';
-            var placeholder = 'Masukkan nama penelitian';
-
-            select.attr('name','id_penelitian');
-            select.prop('disabled',false)
-        } else if(value=="Pengabdian") {
-            var url_select2 = base_url+'/ajax/community-service/get_by_department';
-            var placeholder = 'Masukkan nama pengabdian';
-
-            select.attr('name','id_pengabdian');
-            select.prop('disabled',false)
-        } else {
-            select.removeAttr('name');
-            select.prop('disabled',true)
-        }
-
-        if(value!='' || value!=null) {
-            select.select2({
-                width: '100%',
-                language: "id",
-                minimumInputLength: 5,
-                allowClear: true,
-                placeholder: placeholder,
-                ajax: {
-                    dataType: 'json',
-                    url: url_select2,
-                    delay: 800,
-                    data: function(params) {
-                        return {
-                            cari: params.term
-                        }
-                    },
-                    processResults: function (response) {
-                        return {
-                            results: response
-                        };
-                    },
-                }
-            });
-        }
-    }
 
     /****************************************************************************************/
 

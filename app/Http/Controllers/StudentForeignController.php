@@ -171,6 +171,13 @@ class StudentForeignController extends Controller
                                 }
                             );
 
+            if(Auth::user()->hasRole('kaprodi')) {
+                $q->whereHas(
+                    'student.studyProgram', function($query) use ($request) {
+                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                });
+            }
+
             if($request->kd_prodi){
                 $q->whereHas(
                     'student.studyProgram', function($query) use ($request) {

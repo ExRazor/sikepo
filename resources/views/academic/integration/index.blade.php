@@ -25,9 +25,11 @@
         <h4>Integrasi Kurikulum</h4>
         <p class="mg-b-0">Integrasi Kegiatan Penelitian/Pengabdian dalam Pembelajaran</p>
     </div>
+    @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('academic.integration.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Integrasi</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -50,7 +52,9 @@
                             <th class="text-center" width="150">Nama Dosen</th>
                             <th class="text-center" width="300">Mata Kuliah</th>
                             <th class="text-center" width="125">Bentuk Integrasi</th>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -78,6 +82,7 @@
                             </td>
                             <td>{{$ci->curriculum->nama.' ('.$ci->curriculum->studyProgram->singkatan.')'}}</td>
                             <td>{{$ci->bentuk_integrasi}}</td>
+                            @if (!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -92,6 +97,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

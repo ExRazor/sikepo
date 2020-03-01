@@ -81,7 +81,7 @@
                         </select>
                     </div>
                     <div class="mg-r-10">
-                        <select class="form-control" name="status" style="width:200px">
+                        <select class="form-control" id="status_mahasiswa" name="status" style="width:200px">
                             <option value="">- Pilih Status -</option>
                             @foreach($status as $s)
                                 <option value="{{$s->status}}">{{$s->status}}</option>
@@ -100,7 +100,7 @@
             <div class="card-header nm_jurusan">
                 <h6 class="card-title">
                     <span class="nm_jurusan">
-                    @if(Auth::user()->role=='kaprodi')
+                    @if(Auth::user()->hasRole('kaprodi'))
                     {{ Auth::user()->studyProgram->nama }}
 
                     @else

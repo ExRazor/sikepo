@@ -9,33 +9,49 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class CurriculumController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'import',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $curriculum     = Curriculum::whereHas(
-                            'studyProgram', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            })
-                            ->with('studyProgram')
-                            ->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $curriculum     = Curriculum::whereHas(
+                                            'studyProgram', function($query) {
+                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                            }
+                                        )
+                                        ->get();
+        } else {
+            $curriculum     = Curriculum::whereHas(
+                                            'studyProgram', function($query) {
+                                                $query->where('kd_jurusan',setting('app_department_id'));
+                                            }
+                                        )
+                                        ->get();
+        }
         $thn_kurikulum  = Curriculum::groupBy('versi')->get('versi');
 
         return view('academic.curriculum.index',compact(['studyProgram','curriculum','thn_kurikulum']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -43,12 +59,6 @@ class CurriculumController extends Controller
         return view('academic.curriculum.form',compact('studyProgram'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Curriculum  $curriculum
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $id             = decode_id($id);
@@ -58,12 +68,6 @@ class CurriculumController extends Controller
         return view('academic.curriculum.form',compact(['studyProgram','data']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -137,13 +141,6 @@ class CurriculumController extends Controller
         }
 	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Curriculum  $curriculum
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id = decrypt($request->id);
@@ -183,12 +180,6 @@ class CurriculumController extends Controller
         return redirect()->route('academic.curriculum')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Curriculum  $curriculum
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if($request->ajax()) {
@@ -221,6 +212,10 @@ class CurriculumController extends Controller
                                 }
                             );
 
+            if(Auth::user()->hasRole('kaprodi')) {
+                $q->where('kd_prodi',Auth::user()->kd_prodi);
+            }
+
             if($request->kd_prodi){
                 $q->where('kd_prodi',$request->kd_prodi);
             }
@@ -248,8 +243,22 @@ class CurriculumController extends Controller
     public function loadData(Request $request)
     {
         if($request->has('cari')){
-            $cari = $request->cari;
-            $data = Curriculum::where('kd_matkul', 'LIKE', '%'.$cari.'%')->orWhere('nama', 'LIKE', '%'.$cari.'%')->get();
+            $cari  = $request->cari;
+            $prodi = $request->prodi;
+
+            $q = Curriculum::select('*');
+
+            if($prodi) {
+                $q->where('kd_prodi',$prodi);
+            }
+
+            if($cari) {
+                $q->where(function($query) use ($cari) {
+                    $query->where('kd_matkul', 'LIKE', '%'.$cari.'%')->orWhere('nama', 'LIKE', '%'.$cari.'%');
+                });
+            }
+
+            $data = $q->get();
 
             $response = array();
             foreach($data as $d){

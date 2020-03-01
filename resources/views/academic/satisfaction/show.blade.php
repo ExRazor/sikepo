@@ -25,6 +25,7 @@
         <h4>{{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
         <p class="mg-b-0">Tingkat Kepuasan Mahasiswa Terhadap Akademik Program Studi {{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</p>
     </div>
+    @if (!Auth::user()->hasRole('kajur'))
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
@@ -36,6 +37,7 @@
             <a href="{{ route('academic.satisfaction.edit',encrypt($data->kd_kepuasan)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">

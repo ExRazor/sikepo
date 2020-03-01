@@ -54,7 +54,7 @@
                     @endisset
                 </h6>
             </div>
-            <form id="teacher_form" action="{{route('academic.schedule.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="curriculumSchedule_form" action="{{route('academic.schedule.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-9 mx-auto">
@@ -68,8 +68,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-3 form-control-label">Asal Dosen: <span class="tx-danger">*</span></label>
+                                <div class="col-4">
                                     <select class="form-control" name="kd_jurusan" data-type="form" required>
                                         <option value="">- Pilih Jurusan -</option>
                                         @foreach($faculty as $f)
@@ -83,11 +83,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    <select id="select-prodi-dsn" class="form-control" name="kd_prodi" required>
+                                <div class="col-4">
+                                    <select id="selectProdiDsn" class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
                                         @isset($data)
                                             @foreach($studyProgram as $sp)
@@ -100,7 +97,7 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select id="select-dosen" class="form-control" name="nidn" required>
+                                    <select class="form-control select-dsn" name="nidn" {{isset($data) ? 'required' : 'disabled'}}>
                                         <option value="">- Pilih Dosen -</option>
                                         @isset($data)
                                             @foreach($teacher as $t)
