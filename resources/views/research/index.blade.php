@@ -25,9 +25,11 @@
         <h4>Data Penelitian</h4>
         <p class="mg-b-0">Olah Data Penelitian</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -81,17 +83,13 @@
                 <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="600">Judul Penelitian</th>
-                            <th class="text-center defaultSort all" width="100">Tahun Penelitian</th>
-                            <th class="text-center all" width="250">Ketua Peneliti</th>
-                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
-                            <th class="text-center none">Tema Penelitian</th>
-                            <th class="text-center none">SKS Penelitian</th>
-                            <th class="text-center none">Dosen Terlibat</th>
-                            <th class="text-center none">Mahasiswa Terlibat</th>
-                            <th class="text-center none">Sumber Biaya</th>
-                            <th class="text-center none">Nominal Biaya</th>
-                            <th class="text-center no-sort all" width="50">Aksi</th>
+                            <th class="text-center" width="600">Judul Penelitian</th>
+                            <th class="text-center defaultSort" width="100">Tahun Penelitian</th>
+                            <th class="text-center" width="250">Ketua Peneliti</th>
+                            <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
+                            @if(!Auth::user()->hasRole('kajur'))
+                            <th class="text-center no-sort" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -114,32 +112,7 @@
                                     <i class="fa fa-check"></i>
                                 @endisset
                             </td>
-                            <td>{{ $p->tema_penelitian }}</td>
-                            <td class="text-center">{{ $p->sks_penelitian }}</td>
-                            <td>
-                                @if($p->researchAnggota->count())
-                                <ol>
-                                    @foreach ($p->researchAnggota as $ap)
-                                    <li>{{$ap->teacher->nama}} - NIDN.{{$ap->teacher->nidn}} ({{$ap->teacher->studyProgram->department->nama }} - {{$ap->teacher->studyProgram->nama }})</li>
-                                    @endforeach
-                                </ol>
-                                @else
-                                -
-                                @endif
-                            </td>
-                            <td>
-                                @if($p->researchStudent->count())
-                                <ol>
-                                    @foreach ($p->researchStudent as $rs)
-                                    <li>{{$rs->student->nama}} - NIM.{{$rs->student->nim}} ({{$rs->student->studyProgram->department->nama }} - {{$rs->student->studyProgram->nama }})</li>
-                                    @endforeach
-                                </ol>
-                                @else
-                                -
-                                @endif
-                            </td>
-                            <td>{{ $p->sumber_biaya }} {{ $p->sumber_biaya_nama!='' ? '('.$p->sumber_biaya_nama.')' : ''}}</td>
-                            <td>{{rupiah($p->jumlah_biaya)}}</td>
+                            @if(!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -154,6 +127,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

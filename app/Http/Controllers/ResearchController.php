@@ -10,26 +10,47 @@ use App\ResearchStudent;
 use App\ResearchTeacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ResearchController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'destroy_teacher',
+            'destroy_students',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        $penelitian   = Research::whereHas(
+        if(Auth::user()->hasRole('kaprodi')) {
+            $penelitian   = Research::whereHas(
+                                        'researchTeacher', function($q) {
+                                            $q->prodiKetua(Auth::user()->kd_prodi);
+                                        }
+                                    )
+                                    ->get();
+
+        } else {
+            $penelitian   = Research::whereHas(
                                         'researchTeacher', function($q) {
                                             $q->jurusanKetua(setting('app_department_id'));
                                         }
                                     )
                                     ->get();
+        }
 
         return view('research.index',compact(['penelitian','studyProgram','faculty']));
     }
@@ -47,6 +68,16 @@ class ResearchController extends Controller
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         return view('research.form',compact(['studyProgram','faculty']));
+    }
+
+    public function edit($id)
+    {
+        $id   = decode_id($id);
+
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $data         = Research::where('id',$id)->first();
+
+        return view('research.form',compact(['data','studyProgram']));
     }
 
     public function store(Request $request)
@@ -119,16 +150,6 @@ class ResearchController extends Controller
         }
 
         return redirect()->route('research')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-    public function edit($id)
-    {
-        $id   = decode_id($id);
-
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $data         = Research::where('id',$id)->first();
-
-        return view('research.form',compact(['data','studyProgram']));
     }
 
     public function update(Request $request)

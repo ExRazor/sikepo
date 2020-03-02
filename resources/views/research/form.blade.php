@@ -154,6 +154,21 @@
                                         </div>
                                         <div id="errorsPilihDosen{{$i}}"></div>
                                     </div>
+                                    {{-- <div class="col-2">
+                                        <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ isset($rt) ? $rt->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN Dosen" value="3" required>
+                                    </div>
+                                    <div class="col-4">
+                                        <input class="form-control" type="text" name="anggota_nama_lain[]" value="{{ isset($rt) ? $rt->nama_lain : Request::old('nama_lain')}}" placeholder="Masukkan Nama Dosen" value="3" required>
+                                    </div>
+                                    <div class="col-3">
+                                        <input class="form-control" type="text" name="anggota_asal_lain[]" value="{{ isset($rt) ? $rt->asal_lain : Request::old('asal_lain')}}" placeholder="Masukkan Asal Dosen" value="3" required>
+                                    </div>
+                                    <div clas="col-1">
+                                        <label class="ckbox ckbox-inline mb-0 mr-4">
+                                            <input name="sesuai_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->sesuai_prodi) || Request::old('sesuai_prodi')=='1' ? 'checked' : ''}}>
+                                            <span class="pl-0">Custom?</span>
+                                        </label>
+                                    </div> --}}
                                 </div>
                                 @endforeach
                             </div>

@@ -25,9 +25,11 @@
         <h4>Data Pengabdian</h4>
         <p class="mg-b-0">Olah Data Pengabdian</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('community-service.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Pengabdian</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -81,17 +83,13 @@
                 <table id="table_communityService" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="600">Judul Pengabdian</th>
-                            <th class="text-center defaultSort all" width="100">Tahun Pengabdian</th>
-                            <th class="text-center all" width="250">Ketua Pelaksana</th>
-                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
-                            <th class="text-center none">Tema Pengabdian</th>
-                            <th class="text-center none">SKS Pengabdian</th>
-                            <th class="text-center none">Dosen Terlibat</th>
-                            <th class="text-center none">Mahasiswa Terlibat</th>
-                            <th class="text-center none">Sumber Biaya</th>
-                            <th class="text-center none">Nominal Biaya</th>
-                            <th class="text-center no-sort all" width="50">Aksi</th>
+                            <th class="text-center" width="600">Judul Pengabdian</th>
+                            <th class="text-center defaultSort" width="100">Tahun Pengabdian</th>
+                            <th class="text-center" width="250">Ketua Pelaksana</th>
+                            <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
+                            @if(!Auth::user()->hasRole('kajur'))
+                            <th class="text-center no-sort" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -114,32 +112,7 @@
                                     <i class="fa fa-check"></i>
                                 @endisset
                             </td>
-                            <td>{{ $p->tema_pengabdian }}</td>
-                            <td class="text-center">{{ $p->sks_pengabdian }}</td>
-                            <td>
-                                @if($p->serviceAnggota->count())
-                                <ol>
-                                    @foreach ($p->serviceAnggota as $ap)
-                                    <li>{{$ap->teacher->nama}} - NIDN.{{$ap->teacher->nidn}} ({{$ap->teacher->studyProgram->department->nama }} - {{$ap->teacher->studyProgram->nama }})</li>
-                                    @endforeach
-                                </ol>
-                                @else
-                                -
-                                @endif
-                            </td>
-                            <td>
-                                @if($p->serviceStudent->count())
-                                <ol>
-                                    @foreach ($p->serviceStudent as $mp)
-                                    <li>{{$mp->student->nama}} - NIM.{{$mp->student->nim}} ({{$mp->student->studyProgram->department->nama }} - {{$mp->student->studyProgram->nama }})</li>
-                                    @endforeach
-                                </ol>
-                                @else
-                                -
-                                @endif
-                            </td>
-                            <td>{{ $p->sumber_biaya }} {{ $p->sumber_biaya_nama!='' ? '('.$p->sumber_biaya_nama.')' : ''}}</td>
-                            <td>{{rupiah($p->jumlah_biaya)}}</td>
+                            @if(!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -154,6 +127,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

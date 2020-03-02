@@ -37,13 +37,14 @@ class ResearchTeacherSeeder extends Seeder
 
                 $asal       = ['dalam','luar'];
                 $rand_asal  = $asal[array_rand($asal)];
+                $nidn       = Teacher::all()->random()->nidn;
 
-                if($rand_asal=='dalam') {
-                    $nidn       = Teacher::all()->random()->nidn;
+                if($rand_asal=='dalam' || $status=='Ketua') {
+                    // $nidn       = Teacher::all()->random()->nidn;
                     $nama_lain  = null;
                     $asal_lain  = null;
                 } else {
-                    $nidn       = rand(111111111,999999999);
+                    // $nidn       = rand(111111111,999999999);
                     $nama_lain  = $faker->name;
                     $asal_lain  = 'Luar program studi';
                 }
@@ -51,8 +52,8 @@ class ResearchTeacherSeeder extends Seeder
                 DB::table('research_teachers')->insert([
                     'id_penelitian' => $r->id,
                     'nidn'          => $nidn,
-                    'nama_lain'     => $nama_lain,
-                    'asal_lain'     => $asal_lain,
+                    // 'nama_lain'     => $nama_lain,
+                    // 'asal_lain'     => $asal_lain,
                     'status'        => $status,
                     'sks'           => $sks
                 ]);

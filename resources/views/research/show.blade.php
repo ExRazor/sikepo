@@ -25,6 +25,7 @@
         <h4>Rincian Penelitian</h4>
         <p class="mg-b-0">Rincian data penelitian</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
@@ -36,6 +37,7 @@
             <a href="{{ route('research.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -100,24 +102,34 @@
                                     <thead class="text-center">
                                         <tr>
                                             <td>Nama Dosen</td>
-                                            <td>Asal Program Studi</td>
+                                            <td>Asal/Program Studi</td>
                                             <td>Status Anggota</td>
                                             <td>SKS</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data->researchTeacher as $rt)
+                                        @forelse($data->researchTeacher as $rt)
                                         <tr>
+                                            @if(!$rt->nama_lain)
                                             <td>
-                                                <a href="{{route('teacher.profile',encode_id($rt->teacher->nip))}}">
+                                                <a href="{{route('teacher.profile',encode_id($rt->teacher->nidn))}}">
                                                     {{$rt->teacher->nama}}<br>
-                                                    <small>NIDN. {{$rt->nidn}}</small>
+                                                    <small>NIDN. {{$rt->teacher->nidn}}</small>
                                                 </a>
                                             </td>
                                             <td>
                                                 {{$rt->teacher->studyProgram->nama}}<br>
                                                 <small>{{$rt->teacher->studyProgram->department->nama.' / '.$rt->teacher->studyProgram->department->faculty->singkatan}}</small>
                                             </td>
+                                            @else
+                                            <td>
+                                                {{$rt->nama_lain}}<br>
+                                                <small>NIDN. {{$rt->nidn}}</small>
+                                            </td>
+                                            <td>
+                                                {{$rt->asal_lain}}<br>
+                                            </td>
+                                            @endif
                                             <td class="text-center">
                                                 {{$rt->status}}
                                             </td>
@@ -125,7 +137,13 @@
                                                 {{$rt->sks}}
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        @empty
+                                        <tr>
+                                            <td colspan="4">
+                                                BELUM ADA DATA
+                                            </td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </td>
@@ -138,24 +156,38 @@
                                     <thead class="text-center">
                                         <tr>
                                             <td>Nama Mahasiswa</td>
-                                            <td>Asal Program Studi</td>
+                                            <td>Asal/Program Studi</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data->researchStudent as $rs)
+                                        @forelse($data->researchStudent as $rs)
                                         <tr>
+                                            @if(!$rs->nama_lain)
                                             <td>
                                                 <a href="{{route('student.profile',encode_id($rs->student->nim))}}">
                                                     {{$rs->student->nama}}<br>
-                                                    <small>NIDN. {{$rs->nim}}</small>
+                                                    <small>NIM. {{$rs->student->nim}}</small>
                                                 </a>
                                             </td>
                                             <td>
                                                 {{$rs->student->studyProgram->nama}}<br>
                                                 <small>{{$rs->student->studyProgram->department->nama.' / '.$rs->student->studyProgram->department->faculty->singkatan}}</small>
                                             </td>
+                                            @else
+                                            <td>
+                                                {{$rs->nama_lain}}<br>
+                                                <small>NIM. {{$rs->nim}}</small>
+                                            </td>
+                                            <td>
+                                                {{$rs->asal_lain}}<br>
+                                            </td>
+                                            @endif
                                         </tr>
-                                        @endforeach
+                                        @empty
+                                        <tr>
+                                            <td class="text-center" colspan="2">BELUM ADA DATA</td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </td>

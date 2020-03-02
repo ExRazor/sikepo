@@ -17,11 +17,11 @@ class CreateResearchStudentsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('id_penelitian');
             $table->char('nim',10);
-            $table->string('nama_lain')->nullable();
-            $table->string('asal_lain')->nullable();
+            // $table->string('nama_lain')->nullable();
+            // $table->string('asal_lain')->nullable();
 
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

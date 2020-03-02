@@ -62,7 +62,6 @@ class ResearchSeeder extends Seeder
                     'id_ta'             => AcademicYear::all()->random()->id,
                     'tema_penelitian'   => 'Analisis dan Perancangan',
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
-                    'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
                     'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'sks_penelitian'    => $sks_penelitian[array_rand($sks_penelitian)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],

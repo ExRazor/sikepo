@@ -13,11 +13,21 @@ use Illuminate\Support\Facades\Auth;
 
 class CommunityServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'destroy_teacher',
+            'destroy_students',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $faculty = Faculty::all();
@@ -34,6 +44,14 @@ class CommunityServiceController extends Controller
         return view('community-service.index',compact(['pengabdian','studyProgram','faculty']));
     }
 
+    public function show($id)
+    {
+        $id   = decode_id($id);
+        $data = CommunityService::where('id',$id)->first();
+
+        return view('community-service.show',compact(['data']));
+    }
+
     public function create()
     {
         $faculty      = Faculty::all();
@@ -41,12 +59,14 @@ class CommunityServiceController extends Controller
         return view('community-service.form',compact(['studyProgram','faculty']));
     }
 
-    public function show($id)
+    public function edit($id)
     {
         $id   = decode_id($id);
-        $data = CommunityService::where('id',$id)->first();
 
-        return view('community-service.show',compact(['data']));
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $data         = CommunityService::where('id',$id)->first();
+
+        return view('community-service.form',compact(['data','studyProgram']));
     }
 
     public function store(Request $request)
@@ -120,30 +140,6 @@ class CommunityServiceController extends Controller
         return redirect()->route('community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\CommunityService  $communityService
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $id   = decode_id($id);
-
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $data         = CommunityService::where('id',$id)->first();
-
-        return view('community-service.form',compact(['data','studyProgram']));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CommunityService  $communityService
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id = decrypt($request->id);
@@ -230,12 +226,6 @@ class CommunityServiceController extends Controller
         return redirect()->route('community-service.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\CommunityService  $communityService
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if($request->ajax()) {

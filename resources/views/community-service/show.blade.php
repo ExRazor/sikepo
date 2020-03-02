@@ -25,6 +25,7 @@
         <h4>Rincian Pengabdian</h4>
         <p class="mg-b-0">Rincian data pengabdian</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
@@ -36,6 +37,7 @@
             <a href="{{ route('community-service.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -100,14 +102,15 @@
                                     <thead class="text-center">
                                         <tr>
                                             <td>Nama Dosen</td>
-                                            <td>Asal Program Studi</td>
+                                            <td>Asal/Program Studi</td>
                                             <td>Status Anggota</td>
                                             <td>SKS</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data->serviceTeacher as $st)
+                                        @forelse($data->serviceTeacher as $st)
                                         <tr>
+                                            @if(!$st->nama_lain)
                                             <td>
                                                 <a href="{{route('teacher.profile',encode_id($st->teacher->nip))}}">
                                                     {{$st->teacher->nama}}<br>
@@ -118,6 +121,15 @@
                                                 {{$st->teacher->studyProgram->nama}}<br>
                                                 <small>{{$st->teacher->studyProgram->department->nama.' / '.$st->teacher->studyProgram->department->faculty->singkatan}}</small>
                                             </td>
+                                            @else
+                                            <td>
+                                                {{$st->nama_lain}}<br>
+                                                <small>NIDN. {{$st->nidn}}</small>
+                                            </td>
+                                            <td>
+                                                {{$st->asal_lain}}<br>
+                                            </td>
+                                            @endif
                                             <td class="text-center">
                                                 {{$st->status}}
                                             </td>
@@ -125,7 +137,13 @@
                                                 {{$st->sks}}
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        @empty
+                                        <tr>
+                                            <td colspan="4">
+                                                BELUM ADA DATA
+                                            </td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </td>
@@ -138,12 +156,13 @@
                                     <thead class="text-center">
                                         <tr>
                                             <td>Nama Mahasiswa</td>
-                                            <td>Asal Program Studi</td>
+                                            <td>Asal/Program Studi</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data->serviceStudent as $ss)
+                                        @forelse($data->serviceStudent as $ss)
                                         <tr>
+                                            @if(!$ss->nama_lain)
                                             <td>
                                                 <a href="{{route('student.profile',encode_id($ss->student->nim))}}">
                                                     {{$ss->student->nama}}<br>
@@ -154,8 +173,23 @@
                                                 {{$ss->student->studyProgram->nama}}<br>
                                                 <small>{{$ss->student->studyProgram->department->nama.' / '.$ss->student->studyProgram->department->faculty->singkatan}}</small>
                                             </td>
+                                            @else
+                                            <td>
+                                                {{$ss->nama_lain}}<br>
+                                                <small>NIM. {{$ss->nim}}</small>
+                                            </td>
+                                            <td>
+                                                {{$ss->asal_lain}}<br>
+                                            </td>
+                                            @endif
                                         </tr>
-                                        @endforeach
+                                        @empty
+                                        <tr>
+                                            <td colspan="2">
+                                                BELUM ADA DATA
+                                            </td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </td>
