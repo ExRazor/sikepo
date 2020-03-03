@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentPublicationController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'destroy_member',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
 
     public function index()
     {
@@ -50,12 +63,18 @@ class StudentPublicationController extends Controller
         return view('publication.student.show',compact(['data']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function edit($id)
+    {
+        $id   = decode_id($id);
+
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $jenis        = PublicationCategory::all();
+        $data         = StudentPublication::with('student','publicationMembers')->where('id',$id)->first();
+        $student      = Student::where('kd_prodi',$data->student->kd_prodi)->get();
+
+        return view('publication.student.form',compact(['jenis','data','studyProgram','student']));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -103,18 +122,6 @@ class StudentPublicationController extends Controller
         }
 
         return redirect()->route('publication.student')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-    public function edit($id)
-    {
-        $id   = decode_id($id);
-
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $jenis        = PublicationCategory::all();
-        $data         = StudentPublication::with('student','publicationMembers')->where('id',$id)->first();
-        $student      = Student::where('kd_prodi',$data->student->kd_prodi)->get();
-
-        return view('publication.student.form',compact(['jenis','data','studyProgram','student']));
     }
 
     public function update(Request $request)

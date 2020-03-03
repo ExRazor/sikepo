@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Auth;
 
 class TeacherPublicationController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'destroy_member',
+            'destroy_student',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
 
     public function index()
     {
@@ -53,12 +67,18 @@ class TeacherPublicationController extends Controller
         return view('publication.teacher.show',compact(['data']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function edit($id)
+    {
+        $id   = decode_id($id);
+
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $jenis        = PublicationCategory::all();
+        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
+        $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+
+        return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -123,18 +143,6 @@ class TeacherPublicationController extends Controller
         }
 
         return redirect()->route('publication.teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-    public function edit($id)
-    {
-        $id   = decode_id($id);
-
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $jenis        = PublicationCategory::all();
-        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
-        $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
-
-        return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
     }
 
     public function update(Request $request)
