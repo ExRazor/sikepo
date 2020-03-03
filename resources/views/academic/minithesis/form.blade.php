@@ -61,9 +61,9 @@
                                 <div class="col-8">
                                     <div id="pilihMhs" class="parsley-select">
                                         @if(Auth::user()->hasRole('kaprodi'))
-                                        <input type="hidden" name="prodi_mhs_bim" value="{{Auth::user()->kd_prodi}}">
+                                        <input type="hidden" name="prodi_mhs" value="{{Auth::user()->kd_prodi}}">
                                         @endif
-                                        <select class="form-control select-mhs-bimbingan" name="nim" data-parsley-class-handler="#pilihMhs" data-parsley-errors-container="#errorsPilihMhs" required>
+                                        <select class="form-control select-mhs-prodi" name="nim" data-parsley-class-handler="#pilihMhs" data-parsley-errors-container="#errorsPilihMhs" required>
                                             @isset($data)
                                             <option value="{{$data->nim}}">{{$data->student->nama.' ('.$data->student->nim.')'}}</option>
                                             @endisset

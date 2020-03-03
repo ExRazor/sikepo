@@ -10,6 +10,21 @@ use File;
 
 class TeacherOutputActivityController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+            'delete_file',
+            'delete_all_file',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -82,7 +97,7 @@ class TeacherOutputActivityController extends Controller
 
         if($file = $request->file('file_karya')) {
             $tujuan_upload = public_path('upload/output-activity/teacher');
-            $filename = $request->jenis_luaran.'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
+            $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $data->update([
                     'file_karya' => $filename
@@ -138,14 +153,17 @@ class TeacherOutputActivityController extends Controller
             }
 
             $tujuan_upload = public_path('upload/output-activity/teacher');
-            $filename = $request->jenis_luaran.'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
+            $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $data->update([
                 'file_karya' => $filename
             ]);
-        } else {
+        }
+
+        if(isset($data->file_karya) && File::exists($storagePath))
+        {
             $ekstensi = File::extension($storagePath);
-            $filename = $request->jenis_luaran.'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$ekstensi;
+            $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$ekstensi;
             File::move($storagePath,public_path('upload/output-activity/teacher/'.$filename));
             $data->update([
                 'file_karya' => $filename

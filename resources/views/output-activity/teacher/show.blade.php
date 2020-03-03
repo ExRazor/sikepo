@@ -178,11 +178,19 @@
                                     <td>:</td>
                                     <td>{{$data->tgl_sah}}</td>
                                 </tr>
+                                @elseif($data->jenis_luaran=='Lainnya')
+                                <tr>
+                                    <td>Nama Karya</td>
+                                    <td>:</td>
+                                    <td>{{$data->nama_karya}}</td>
+                                </tr>
                                 @endif
                                 <tr>
                                     <td>Keterangan</td>
                                     <td>:</td>
-                                    <td>{{$data->keterangan}}</td>
+                                    <td>
+                                        {!!nl2br($data->keterangan)!!}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>File Karya</td>

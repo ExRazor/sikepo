@@ -78,8 +78,11 @@
                                     <div class="row mb-3">
                                         <label class="col-3 form-control-label">Pemilik Luaran: <span class="tx-danger">*</span></label>
                                         <div class="col-8">
+                                            @if(Auth::user()->hasRole('kaprodi'))
+                                                <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
+                                            @endif
                                             <div id="pilihDosen" class="parsley-select">
-                                                <select class="form-control select-dsn" name="nidn"  data-parsley-class-handler="#pilihDosen" data-parsley-errors-container="#errorsPilihDosen" required>
+                                                <select class="form-control select-dsn-prodi" name="nidn"  data-parsley-class-handler="#pilihDosen" data-parsley-errors-container="#errorsPilihDosen" required>
                                                     @isset($data)
                                                     <option value="{{$data->nidn}}" selected>{{$data->teacher->nama.' ('.$data->nidn.')'}}</option>
                                                     @endisset
@@ -198,7 +201,8 @@
                                         <div class="row mb-3 {{isset($data) ? '' : 'd-none'}}" id="keterangan">
                                             <label class="col-3 form-control-label">Keterangan:</label>
                                             <div class="col-8">
-                                                <input class="form-control" type="text" name="keterangan" value="{{ isset($data) ? $data->keterangan : Request::old('keterangan')}}" placeholder="Isikan keterangan tambahan">
+                                                {{-- <input class="form-control" type="text" name="keterangan" value="{{ isset($data) ? $data->keterangan : Request::old('keterangan')}}" placeholder="Isikan keterangan tambahan"> --}}
+                                                <textarea class="form-control" name="keterangan" placeholder="Isikan keterangan tambahan" rows="6">{{ isset($data) ? $data->keterangan : Request::old('keterangan')}}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row mg-t-20 {{isset($data) ? '' : 'd-none'}}" id="file">

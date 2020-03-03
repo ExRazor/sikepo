@@ -607,7 +607,7 @@ $(document).ready(function() {
     });
 
     var prodi = $('input[name=kd_prodi]').val();
-    var prodi_mhs_bim = $('input[name=prodi_mhs_bim]').val();
+    var prodi_mhs = $('input[name=prodi_mhs]').val();
     $('.select-mhs').select2({
         width: "100%",
         language: "id",
@@ -632,7 +632,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.select-mhs-bimbingan').select2({
+    $('.select-mhs-prodi').select2({
         width: "100%",
         language: "id",
         minimumInputLength: 3,
@@ -644,7 +644,7 @@ $(document).ready(function() {
             delay: 800,
             data: function(params) {
                 return {
-                    prodi: prodi_mhs_bim,
+                    prodi: prodi_mhs,
                     cari: params.term
                 }
             },
@@ -3532,6 +3532,19 @@ $(document).ready(function() {
             $('#file').removeClass('d-none');
             $('#file').find('input').prop('disabled',false);
         }
+        else if(jenis == 'Lainnya')
+        {
+            $('#nama_karya').removeClass('d-none');
+            $('#nama_karya').find('label').html('Nama Karya: <span class="tx-danger">*</span>');
+            $('#nama_karya').find('input').prop('disabled',false);
+            $('#nama_karya').find('input').prop('required',true);
+
+            $('#keterangan').removeClass('d-none');
+            $('#keterangan').find('input').prop('disabled',false);
+
+            $('#file').removeClass('d-none');
+            $('#file').find('input').prop('disabled',false);
+        }
     })
 
     $('form#filter-outputActivity').submit(function(e){
@@ -3542,6 +3555,7 @@ $(document).ready(function() {
         var tabel   = $('#table_outputActivity');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
         var type    = cont.data('type');
@@ -3587,6 +3601,24 @@ $(document).ready(function() {
                         var kategori    = val.output_activity_category.nama;
                         var tahun       = val.thn_luaran;
                         var kegiatan    = val.kegiatan;
+                        var aksi;
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/output-activity/'+type+'/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/output-activity/'+type+'">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
 
                         html +='<tr>'+
                                 '<td>'+
@@ -3597,20 +3629,7 @@ $(document).ready(function() {
                                 '<td class="text-center">'+kategori+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td class="text-center">'+kegiatan+'</td>'+
-                                '<td class="text-center" width="50">'+
-                                    '<div class="btn-group" role="group">'+
-                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                            '<div><span class="fa fa-caret-down"></span></div>'+
-                                        '</button>'+
-                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="'+base_url+'/output-activity/'+type+'/'+encode_id(id)+'/edit">Sunting</a>'+
-                                            '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/output-activity/'+type+'">Hapus</button>'+
-                                            '</form>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</td>'+
+                                aksi+
                             '</tr>';
                     })
                 }

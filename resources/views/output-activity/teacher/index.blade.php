@@ -25,9 +25,11 @@
         <h4>Luaran Kegiatan</h4>
         <p class="mg-b-0">Olah Data Luaran Kegiatan</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('output-activity.teacher.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -50,9 +52,10 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.output-activity.teacher.filter')}}" id="filter-outputActivity" data-type="teacher" method="POST">
+            <form action="{{route('ajax.output-activity.teacher.filter')}}" id="filter-outputActivity" data-token="{{encode_id(Auth::user()->role)}}" data-type="teacher" method="POST">
                 <input type="hidden" id="nm_jurusan" value="{{ setting('app_department_name') }}">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
@@ -70,6 +73,7 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
@@ -93,7 +97,9 @@
                             <th class="text-center" width="300">Kategori</th>
                             <th class="text-center defaultSort" width="150">Tahun</th>
                             <th class="text-center" width="125">Jenis Kegiatan</th>
+                            @if(!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -111,6 +117,7 @@
                             <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
                             <td class="text-center">{{$activity->thn_luaran}}</td>
                             <td class="text-center">{{$activity->kegiatan}}</td>
+                            @if(!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -125,6 +132,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

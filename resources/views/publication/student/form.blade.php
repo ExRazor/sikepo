@@ -71,9 +71,9 @@
                                 <label class="col-3 form-control-label">Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     @if(Auth::user()->hasRole('kaprodi'))
-                                        <input type="hidden" name="prodi_mhs_bim" value="{{Auth::user()->kd_prodi}}">
+                                        <input type="hidden" name="prodi_mhs" value="{{Auth::user()->kd_prodi}}">
                                     @endif
-                                    <select id="select-mahasiswa" class="form-control select-mhs-bimbingan" name="nim" required>
+                                    <select id="select-mahasiswa" class="form-control select-mhs-prodi" name="nim" required>
                                         <option value="">- Pilih Mahasiswa -</option>
                                         @isset($data)
                                         @foreach ($student as $s)

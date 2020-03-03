@@ -391,24 +391,24 @@ Route::middleware('auth')->group(function () {
     Route::prefix('output-activity')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         //Output Activity - Teacher
-        Route::get('output-activity/teacher','TeacherOutputActivityController@index')->name('output-activity.teacher');
-        Route::get('output-activity/teacher/add','TeacherOutputActivityController@create')->name('output-activity.teacher.add');
-        Route::get('output-activity/teacher/{id}','TeacherOutputActivityController@show')->name('output-activity.teacher.show');
-        Route::get('output-activity/teacher/{id}/edit','TeacherOutputActivityController@edit')->name('output-activity.teacher.edit');
-        Route::post('output-activity/teacher','TeacherOutputActivityController@store')->name('output-activity.teacher.store');
-        Route::put('output-activity/teacher','TeacherOutputActivityController@update')->name('output-activity.teacher.update');
-        Route::delete('output-activity/teacher','TeacherOutputActivityController@destroy')->name('output-activity.teacher.delete');
+        Route::get('teacher','TeacherOutputActivityController@index')->name('output-activity.teacher');
+        Route::get('teacher/add','TeacherOutputActivityController@create')->name('output-activity.teacher.add');
+        Route::get('teacher/{id}','TeacherOutputActivityController@show')->name('output-activity.teacher.show');
+        Route::get('teacher/{id}/edit','TeacherOutputActivityController@edit')->name('output-activity.teacher.edit');
+        Route::post('teacher','TeacherOutputActivityController@store')->name('output-activity.teacher.store');
+        Route::put('teacher','TeacherOutputActivityController@update')->name('output-activity.teacher.update');
+        Route::delete('teacher','TeacherOutputActivityController@destroy')->name('output-activity.teacher.delete');
         Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('output-activity.file.download');
         Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('output-activity.file.delete');
 
         //Output Activity - Student
-        Route::get('output-activity/student','StudentOutputActivityController@index')->name('output-activity.student');
-        Route::get('output-activity/student/add','StudentOutputActivityController@create')->name('output-activity.student.add');
-        Route::get('output-activity/student/{id}','StudentOutputActivityController@show')->name('output-activity.student.show');
-        Route::get('output-activity/student/{id}/edit','StudentOutputActivityController@edit')->name('output-activity.student.edit');
-        Route::post('output-activity/student','StudentOutputActivityController@store')->name('output-activity.student.store');
-        Route::put('output-activity/student','StudentOutputActivityController@update')->name('output-activity.student.update');
-        Route::delete('output-activity/student','StudentOutputActivityController@destroy')->name('output-activity.student.delete');
+        Route::get('student','StudentOutputActivityController@index')->name('output-activity.student');
+        Route::get('student/add','StudentOutputActivityController@create')->name('output-activity.student.add');
+        Route::get('student/{id}','StudentOutputActivityController@show')->name('output-activity.student.show');
+        Route::get('student/{id}/edit','StudentOutputActivityController@edit')->name('output-activity.student.edit');
+        Route::post('student','StudentOutputActivityController@store')->name('output-activity.student.store');
+        Route::put('student','StudentOutputActivityController@update')->name('output-activity.student.update');
+        Route::delete('student','StudentOutputActivityController@destroy')->name('output-activity.student.delete');
     });
 
     //Funding
