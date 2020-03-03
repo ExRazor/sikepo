@@ -656,6 +656,7 @@ $(document).ready(function() {
         }
     });
 
+    var prodi_dsn = $('input[name=prodi_dsn]').val();
     $('.select-dsn').select2({
         width: "100%",
         language: "id",
@@ -669,6 +670,30 @@ $(document).ready(function() {
             data: function(params) {
                 return {
                     prodi: prodi,
+                    cari: params.term
+                }
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            },
+        }
+    });
+
+    $('.select-dsn-prodi').select2({
+        width: "100%",
+        language: "id",
+        minimumInputLength: 3,
+        allowClear: true,
+        placeholder: 'Masukkan nidn/nama dosen',
+        ajax: {
+            dataType: 'json',
+            url: base_url+'/ajax/teacher/loadData',
+            delay: 800,
+            data: function(params) {
+                return {
+                    prodi: prodi_dsn,
                     cari: params.term
                 }
             },
@@ -2460,7 +2485,7 @@ $(document).ready(function() {
     });
 
 
-    $('#research_form')
+    $('#research_form, #communityService_form')
         .on('change','#sumber_biaya_select',function(){
             var value = $(this).val();
 

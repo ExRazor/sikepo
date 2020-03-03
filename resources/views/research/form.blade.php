@@ -69,7 +69,10 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Ketua Peneliti: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control select-dsn" name="ketua_nidn" required>
+                                    @if(Auth::user()->hasRole('kaprodi'))
+                                        <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
+                                    @endif
+                                    <select class="form-control select-dsn-prodi" name="ketua_nidn" required>
                                         @isset($data)
                                         <option value="{{$data->researchKetua->nidn}}">{{$data->researchKetua->teacher->nama.' ('.$data->researchKetua->nidn.')'}}</option>
                                         @endisset

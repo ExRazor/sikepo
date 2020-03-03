@@ -32,12 +32,22 @@ class CommunityServiceController extends Controller
     {
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $pengabdian   = CommunityService::whereHas(
-                                            'serviceTeacher', function($q) {
-                                                $q->jurusanKetua(setting('app_department_id'));
-                                            }
-                                        )
-                                        ->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $pengabdian   = CommunityService::whereHas(
+                                                'serviceTeacher', function($q) {
+                                                    $q->prodiKetua(Auth::user()->kd_prodi);
+                                                }
+                                            )
+                                            ->get();
+        } else {
+            $pengabdian   = CommunityService::whereHas(
+                                                'serviceTeacher', function($q) {
+                                                    $q->jurusanKetua(setting('app_department_id'));
+                                                }
+                                            )
+                                            ->get();
+        }
 
         // return response()->json($pengabdian);die;
 
