@@ -404,38 +404,42 @@ class StudentController extends Controller
 
     public function loadData(Request $request)
     {
-        if($request->has('cari')){
-            $prodi = $request->prodi;
-            $cari = $request->cari;
+        if($request->ajax()) {
+            if($request->has('cari')){
+                $prodi = $request->prodi;
+                $cari = $request->cari;
 
-            $q = Student::select('nim','nama');
+                $q = Student::select('nim','nama');
 
-            if($prodi) {
-                $q->where('kd_prodi',$prodi);
+                if($prodi) {
+                    $q->where('kd_prodi',$prodi);
+                }
+
+                if($cari) {
+                    $q->where(function($query) use($cari) {
+                        $query->where('nim', 'LIKE', '%'.$cari.'%')->orWhere('nama','LIKE','%'.$cari.'%');
+                    });
+                }
+
+                $data = $q->get();
+
+                $response = array();
+                foreach($data as $d){
+                    $response[] = array(
+                        "id"    => $d->nim,
+                        "text"  => $d->nama.' ('.$d->nim.')'
+                    );
+                }
+                return response()->json($response);
             }
-
-            if($cari) {
-                $q->where(function($query) use($cari) {
-                    $query->where('nim', 'LIKE', '%'.$cari.'%')->orWhere('nama','LIKE','%'.$cari.'%');
-                });
-            }
-
-            $data = $q->get();
-
-            $response = array();
-            foreach($data as $d){
-                $response[] = array(
-                    "id"    => $d->nim,
-                    "text"  => $d->nama.' ('.$d->nim.')'
-                );
-            }
-            return response()->json($response);
+        } else {
+            abort(404);
         }
     }
 
     public function select_by_studyProgram(Request $request)
     {
-        // if($request->ajax()) {
+        if($request->ajax()) {
             $prodi  = $request->prodi;
             $cari   = $request->cari;
 
@@ -458,9 +462,9 @@ class StudentController extends Controller
             }
 
             return response()->json($response);
-        // } else {
-        //     abort(404);
-        // }
+        } else {
+            abort(404);
+        }
     }
 
     public function get_by_studyProgram(Request $request)

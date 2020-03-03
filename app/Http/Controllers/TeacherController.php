@@ -458,32 +458,36 @@ class TeacherController extends Controller
 
     public function loadData(Request $request)
     {
-        if($request->has('cari')){
-            $cari  = $request->cari;
-            $prodi = $request->prodi;
+        if($request->ajax()) {
+            if($request->has('cari')){
+                $cari  = $request->cari;
+                $prodi = $request->prodi;
 
-            $q = Teacher::select('nidn','nama');
+                $q = Teacher::select('nidn','nama');
 
-            if($prodi) {
-                $q->where('kd_prodi',$prodi);
+                if($prodi) {
+                    $q->where('kd_prodi',$prodi);
+                }
+
+                if($cari) {
+                    $q->where(function($query) use ($request) {
+                        $query->where('nidn', 'LIKE', '%'.$request->cari.'%')->orWhere('nama', 'LIKE', '%'.$request->cari.'%');
+                    });
+                }
+
+                $data = $q->get();
+
+                $response = array();
+                foreach($data as $d){
+                    $response[] = array(
+                        "id"    => $d->nidn,
+                        "text"  => $d->nama.' ('.$d->nidn.')'
+                    );
+                }
+                return response()->json($response);
             }
-
-            if($cari) {
-                $q->where(function($query) use ($request) {
-                    $query->where('nidn', 'LIKE', '%'.$request->cari.'%')->orWhere('nama', 'LIKE', '%'.$request->cari.'%');
-                });
-            }
-
-            $data = $q->get();
-
-            $response = array();
-            foreach($data as $d){
-                $response[] = array(
-                    "id"    => $d->nidn,
-                    "text"  => $d->nama.' ('.$d->nidn.')'
-                );
-            }
-            return response()->json($response);
+        } else {
+            abort(404);
         }
     }
 }
