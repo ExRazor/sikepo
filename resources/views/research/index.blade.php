@@ -41,10 +41,12 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.research.filter')}}" id="filter-research" method="POST">
+            <form action="{{route('ajax.research.filter')}}" id="filter-research" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                    @if(!Auth::user()->hasRole('kajur'))
                     <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">Semua Jurusan</option>
@@ -59,6 +61,7 @@
                             @endforeach
                         </select>
                     </div>
+                    @endif
                     <div class="mg-r-10">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Pilih Program Studi -</option>
@@ -74,10 +77,20 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
-                <h6 class="card-title">{{ setting('app_department_name') }}</h6>
+                <h6 class="card-title">
+                    <span class="nm_jurusan">
+                    @if(Auth::user()->hasRole('kaprodi'))
+                    {{ Auth::user()->studyProgram->nama }}
+
+                    @else
+                    {{ setting('app_department_name') }}
+                    @endif
+                     </span>
+                </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">

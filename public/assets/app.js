@@ -2363,6 +2363,7 @@ $(document).ready(function() {
         var tabel   = $('#table_research');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -2403,6 +2404,7 @@ $(document).ready(function() {
                         var daftar_dsn  = '';
                         var daftar_mhs  = '';
                         var sesuai_prodi = '';
+                        var aksi;
 
                         if(val.sesuai_prodi!=null) {
                             sesuai_prodi = '<i class="fa fa-check"></i>';
@@ -2435,6 +2437,24 @@ $(document).ready(function() {
                             var sumber_biaya = sumber;
                         }
 
+                        //Tombol Aksi
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/research/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="/research">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
+
                         //Draw tabel
                         html +='<tr>'+
                                 '<td>'+judul+'</td>'+
@@ -2446,26 +2466,7 @@ $(document).ready(function() {
                                     '</a>'+
                                 '</td>'+
                                 '<td class="text-center">'+sesuai_prodi+'</td>'+
-                                '<td>'+tema+'</td>'+
-                                '<td class="text-center">'+sks+'</td>'+
-                                '<td>'+dosen+'</td>'+
-                                '<td>'+mahasiswa+'</td>'+
-                                '<td>'+sumber_biaya+'</td>'+
-                                '<td>'+rupiah(jumlah_biaya)+'</td>'+
-                                '<td class="text-center" width="50">'+
-                                    '<div class="btn-group" role="group">'+
-                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                            '<div><span class="fa fa-caret-down"></span></div>'+
-                                        '</button>'+
-                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="'+base_url+'/research/'+encode_id(id)+'/edit">Sunting</a>'+
-                                            '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                '<button class="dropdown-item btn-delete" data-dest="/research">Hapus</button>'+
-                                            '</form>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</td>'+
+                                aksi+
                             '</tr>';
                     })
                 }
@@ -2634,6 +2635,7 @@ $(document).ready(function() {
         var tabel   = $('#table_communityService');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
 
@@ -2674,6 +2676,7 @@ $(document).ready(function() {
                         var daftar_dsn  = '';
                         var daftar_mhs  = '';
                         var sesuai_prodi = '';
+                        var aksi;
 
                         if(val.sesuai_prodi!=null) {
                             sesuai_prodi = '<i class="fa fa-check"></i>';
@@ -2706,6 +2709,24 @@ $(document).ready(function() {
                             var sumber_biaya = sumber;
                         }
 
+                        //Tombol Aksi
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/community-service/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="/community-service">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
+                        }
+
                         //Draw tabel
                         html +='<tr>'+
                                 '<td>'+judul+'</td>'+
@@ -2717,26 +2738,7 @@ $(document).ready(function() {
                                     '</a>'+
                                 '</td>'+
                                 '<td class="text-center">'+sesuai_prodi+'</td>'+
-                                '<td>'+tema+'</td>'+
-                                '<td class="text-center">'+sks+'</td>'+
-                                '<td>'+dosen+'</td>'+
-                                '<td>'+mahasiswa+'</td>'+
-                                '<td>'+sumber_biaya+'</td>'+
-                                '<td>'+rupiah(jumlah_biaya)+'</td>'+
-                                '<td class="text-center" width="50">'+
-                                    '<div class="btn-group" role="group">'+
-                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                            '<div><span class="fa fa-caret-down"></span></div>'+
-                                        '</button>'+
-                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="'+base_url+'/community-service/'+encode_id(id)+'/edit">Sunting</a>'+
-                                            '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                '<button class="dropdown-item btn-delete" data-dest="/community-service">Hapus</button>'+
-                                            '</form>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</td>'+
+                                aksi+
                             '</tr>';
                     })
                 }
