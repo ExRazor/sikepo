@@ -25,9 +25,11 @@
         <h4>Data Publikasi Mahasiswa</h4>
         <p class="mg-b-0">Olah data publikasi mahasiswa</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <a href="{{ route('publication.student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -39,9 +41,10 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
         <div class="col-12">
-            <form action="{{route('ajax.publication.student.filter')}}" id="filter-publication" data-type="student" method="POST">
+            <form action="{{route('ajax.publication.student.filter')}}" id="filter-publication" data-token="{{encode_id(Auth::user()->role)}}" data-type="student" method="POST">
                 <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
                     <div class="mg-r-10">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
@@ -59,10 +62,20 @@
             </form>
         </div>
     </div>
+    @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
-                <h6 class="card-title">{{ setting('app_department_name') }}</h6>
+                <h6 class="card-title">
+                    <span class="nm_jurusan">
+                    @if(Auth::user()->hasRole('kaprodi'))
+                    {{ Auth::user()->studyProgram->nama }}
+
+                    @else
+                    {{ setting('app_department_name') }}
+                    @endif
+                     </span>
+                </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
@@ -73,7 +86,9 @@
                             <th class="text-center all" width="250">Jenis Publikasi</th>
                             <th class="text-center defaultSort all" width="100">Tahun Terbit</th>
                             <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
+                            @if(!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort all" width="50">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -93,6 +108,7 @@
                                     <i class="fa fa-check"></i>
                                 @endisset
                             </td>
+                            @if(!Auth::user()->hasRole('kajur'))
                             <td class="text-center" width="50">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -107,6 +123,7 @@
                                     </div>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

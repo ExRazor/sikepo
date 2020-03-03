@@ -65,7 +65,11 @@
                         <tr>
                             <td>Penulis Utama</td>
                             <td>:</td>
-                            <td>{{$data->student->nama}} / NIM. {{$data->nim}}</td>
+                            <td>
+                                <a href="{{route('student.profile',encode_id($data->nim))}}" target="_blank">
+                                    {{$data->student->nama}} / NIM. {{$data->nim}}
+                                </a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Penulis Lain</td>

@@ -65,7 +65,11 @@
                         <tr>
                             <td>Penulis Utama</td>
                             <td>:</td>
-                            <td>{{$data->teacher->nama}} / NIDN. {{$data->nidn}}</td>
+                            <td>
+                                <a href="{{route('teacher.profile',encode_id($data->nidn))}}" target="_blank">
+                                    {{$data->teacher->nama}} / NIDN. {{$data->nidn}}
+                                </a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Penulis Lain</td>

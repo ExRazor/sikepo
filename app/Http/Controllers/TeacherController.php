@@ -15,6 +15,7 @@ use App\CommunityService;
 use App\Minithesis;
 use App\User;
 use App\Imports\TeacherImport;
+use App\TeacherPublication;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
@@ -78,12 +79,7 @@ class TeacherController extends Controller
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
 
-        $research       = Research::with([
-                                        'researchTeacher' => function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    ])
-                                    ->whereHas(
+        $research       = Research::whereHas(
                                         'researchTeacher', function($q1) use ($data) {
                                             $q1->where('nidn',$data->nidn);
                                         }
@@ -91,12 +87,7 @@ class TeacherController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
-        $service        = CommunityService::with([
-                                        'serviceTeacher' => function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    ])
-                                    ->whereHas(
+        $service        = CommunityService::whereHas(
                                         'serviceTeacher', function($q1) use ($data) {
                                             $q1->where('nidn',$data->nidn);
                                         }
@@ -104,10 +95,18 @@ class TeacherController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
+        $publication        = TeacherPublication::whereHas(
+                                                'teacher', function($q1) use ($data) {
+                                                    $q1->where('nidn',$data->nidn);
+                                                }
+                                            )
+                                            ->orderBy('tahun','desc')
+                                            ->get();
+
         // dd($research);
         // return response()->json($research);die;
 
-        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','research','service','minithesis']));
+        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','minithesis','research','service','publication']));
     }
 
     public function create()

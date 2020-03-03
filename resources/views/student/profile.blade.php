@@ -88,6 +88,7 @@
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Tugas Akhir</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#community-service" role="tab">Pengabdian</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#publication" role="tab">Publikasi</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -102,6 +103,7 @@
                                 @include('student.tab-minithesis')
                                 @include('student.tab-research')
                                 @include('student.tab-service')
+                                @include('student.tab-publication')
                             </div>
                         </div>
                     </div>

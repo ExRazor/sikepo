@@ -3269,6 +3269,7 @@ $(document).ready(function() {
         var tabel   = $('#table_publication');
         var datacon = cont.serializeArray();
         var url     = cont.attr('action');
+        var role    = decode_id(cont.data('token'));
         var opsi    = cont.find('select[name=kd_prodi] option:selected');
         var jurusan = cont.find('input#nm_jurusan').val();
         var type    = cont.data('type');
@@ -3313,9 +3314,27 @@ $(document).ready(function() {
                         var kategori    = val.publication_category.nama;
                         var tahun       = val.tahun;
                         var sesuai_prodi = '';
+                        var aksi;
 
                         if(val.sesuai_prodi!=null) {
                             sesuai_prodi = '<i class="fa fa-check"></i>';
+                        }
+
+                        if(role!='kajur') {
+                            aksi = '<td class="text-center" width="50">'+
+                                        '<div class="btn-group" role="group">'+
+                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                                                '<div><span class="fa fa-caret-down"></span></div>'+
+                                            '</button>'+
+                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+                                                '<a class="dropdown-item" href="'+base_url+'/publication/'+type+'/'+encode_id(id)+'/edit">Sunting</a>'+
+                                                '<form method="POST">'+
+                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
+                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/publication/'+type+'">Hapus</button>'+
+                                                '</form>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</td>'
                         }
 
                         html +='<tr>'+
@@ -3329,20 +3348,7 @@ $(document).ready(function() {
                                 '<td>'+kategori+'</td>'+
                                 '<td class="text-center">'+tahun+'</td>'+
                                 '<td class="text-center">'+sesuai_prodi+'</td>'+
-                                '<td class="text-center" width="50">'+
-                                    '<div class="btn-group" role="group">'+
-                                        '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                            '<div><span class="fa fa-caret-down"></span></div>'+
-                                        '</button>'+
-                                        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                            '<a class="dropdown-item" href="'+base_url+'/publication/'+type+'/'+encode_id(id)+'/edit">Sunting</a>'+
-                                            '<form method="POST">'+
-                                                '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/publication/'+type+'">Hapus</button>'+
-                                            '</form>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</td>'+
+                                aksi+
                             '</tr>';
                     })
                 }

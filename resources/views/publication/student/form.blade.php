@@ -56,7 +56,7 @@
                             @else
                                 @method('post')
                             @endif
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <select id="prodi_mahasiswa" class="form-control" name="kd_prodi" required>
@@ -66,11 +66,14 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select id="select-mahasiswa" class="form-control" name="nim" required>
+                                    @if(Auth::user()->hasRole('kaprodi'))
+                                        <input type="hidden" name="prodi_mhs_bim" value="{{Auth::user()->kd_prodi}}">
+                                    @endif
+                                    <select id="select-mahasiswa" class="form-control select-mhs-bimbingan" name="nim" required>
                                         <option value="">- Pilih Mahasiswa -</option>
                                         @isset($data)
                                         @foreach ($student as $s)
@@ -84,7 +87,7 @@
                                 <label class="col-3 form-control-label">Jenis Publikasi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <div class="row">
-                                        <div class="col-9">
+                                        <div class="{{Auth::user()->hasRole('admin') ? 'col-9' : 'col-12'}}">
                                             <select class="form-control" name="jenis_publikasi" required>
                                                 <option value="">- Pilih Jenis Publikasi -</option>
                                                 @foreach ($jenis as $j)
@@ -92,9 +95,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        @if(Auth::user()->hasRole('admin'))
                                         <div class="col-3">
-                                            <a href="{{ route('publication.category') }}" class="btn btn-teal btn-block mg-b-10" style="color:white">Tambah Kategori</a>
+                                            <a href="{{ route('master.publication-category') }}" class="btn btn-teal btn-block mg-b-10" style="color:white">Tambah Kategori</a>
                                         </div>
+                                        @endif
                                     </div>
 
                                 </div>

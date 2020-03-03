@@ -8,6 +8,7 @@ use App\StudentPublicationMember;
 use App\StudyProgram;
 use App\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentPublicationController extends Controller
 {
@@ -15,11 +16,20 @@ class StudentPublicationController extends Controller
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $publikasi    = StudentPublication::whereHas(
-                            'student.studyProgram', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            }
-                        )->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $publikasi    = StudentPublication::whereHas(
+                                                    'student.studyProgram', function($query) {
+                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                                    }
+                                                )->get();
+        } else {
+            $publikasi    = StudentPublication::whereHas(
+                                                    'student.studyProgram', function($query) {
+                                                        $query->where('kd_jurusan',setting('app_department_id'));
+                                                    }
+                                                )->get();
+        }
 
         return view('publication.student.index',compact(['publikasi','studyProgram']));
     }

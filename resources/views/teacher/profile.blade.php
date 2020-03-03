@@ -53,6 +53,7 @@
                 @endif
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#research" role="tab">Penelitian</a></li>
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#community-service" role="tab">Pengabdian</a></li>
+                <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#publication" role="tab">Publikasi</a></li>
             </ul>
         </div>
         <div class="row br-profile-body">
@@ -76,6 +77,7 @@
                     @endif
                     @include('teacher.tab-research')
                     @include('teacher.tab-service')
+                    @include('teacher.tab-publication')
                 </div>
             </div>
             <div class="col-lg-3 mg-t-30 mg-lg-t-0">

@@ -9,6 +9,7 @@ use App\TeacherPublicationStudent;
 use App\StudyProgram;
 use App\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherPublicationController extends Controller
 {
@@ -16,12 +17,22 @@ class TeacherPublicationController extends Controller
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $publikasi    = TeacherPublication::whereHas(
-                            'teacher.studyProgram', function($query) {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            }
-                        )
-                        ->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $publikasi    = TeacherPublication::whereHas(
+                                                    'teacher.studyProgram', function($query) {
+                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                                    }
+                                                )
+                                                ->get();
+        } else {
+            $publikasi    = TeacherPublication::whereHas(
+                                                    'teacher.studyProgram', function($query) {
+                                                        $query->where('kd_jurusan',setting('app_department_id'));
+                                                    }
+                                                )
+                                                ->get();
+        }
 
         return view('publication.teacher.index',compact(['publikasi','studyProgram']));
     }

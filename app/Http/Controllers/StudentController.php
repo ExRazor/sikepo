@@ -12,6 +12,7 @@ use App\CommunityService;
 use App\StudentAchievement;
 use App\Minithesis;
 use App\Imports\StudentImport;
+use App\StudentPublication;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
@@ -84,7 +85,15 @@ class StudentController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
-        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','minithesis','research','service']));
+        $publication        = StudentPublication::whereHas(
+                                                'student', function($q1) use ($data) {
+                                                    $q1->where('nim',$data->nim);
+                                                }
+                                            )
+                                            ->orderBy('tahun','desc')
+                                            ->get();
+
+        return view('student.profile',compact(['data','status','statusList','academicYear','achievement','minithesis','research','service','publication']));
     }
 
     public function create()
