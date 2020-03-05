@@ -25,11 +25,13 @@
         <h4>Program Studi: {{$studyProgram->nama}}</h4>
         <p class="mg-b-0">Rincian Tempat Kerja Lulusan</p>
     </div>
+    @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto d-inline-flex">
         <button class="btn btn-teal btn-block mg-y-10 text-white btn-add" data-toggle="modal" data-target="#modal-alumnus-workplace">
             <i class="fa fa-plus mg-r-10"></i> Tambah
         </button>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -48,7 +50,9 @@
                 <th class="text-center align-middle" rowspan="2">Jumlah Lulusan</th>
                 <th class="text-center align-middle" rowspan="2">Jumlah Lulusan<br>Bekerja/Berwirausaha</th>
                 <th class="text-center" colspan="3">Jumlah Lulusan yang Bekerja Berdasarkan Tingkat/Tempat Kerja/Berwirausaha</th>
+                @if(!Auth::user()->hasRole('kajur'))
                 <th class="text-center align-middle" rowspan="2">Aksi</th>
+                @endif
             </tr>
             <tr>
                 <th class="text-center">Lokal/Wilayah/<br>Berwirausaha tidak Berizin</th>
@@ -65,6 +69,7 @@
                 <td class="text-center">{{$d->kerja_lokal}}</td>
                 <td class="text-center">{{$d->kerja_nasional}}</td>
                 <td class="text-center">{{$d->kerja_internasional}}</td>
+                @if(!Auth::user()->hasRole('kajur'))
                 <td class="text-center">
                     <div class="btn-group hidden-xs-down">
                         <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit" data-id="{{encrypt($d->id)}}">
@@ -78,6 +83,7 @@
                         </form>
                     </div>
                 </td>
+                @endif
             </tr>
             @empty
             <tr>
@@ -87,7 +93,9 @@
         </tbody>
     </table>
 </div>
+@if(!Auth::user()->hasRole('kajur'))
 @include('alumnus.workplace.form')
+@endif
 @endsection
 
 @section('js')

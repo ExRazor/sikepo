@@ -7,14 +7,63 @@ use App\AcademicYear;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class AlumnusWorkplaceController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
+        if(Auth::user()->hasRole('kaprodi')) {
+            return redirect()->route('alumnus.workplace.show',encrypt(Auth::user()->kd_prodi));
+        }
+
         return view('alumnus.workplace.index',compact(['studyProgram']));
+    }
+
+    public function show($id)
+    {
+        $id = decrypt($id);
+
+        $studyProgram = StudyProgram::find($id);
+        $data         = AlumnusWorkplace::where('kd_prodi',$id)->orderBy('tahun_lulus','desc')->get();
+
+        $ayExist = array();
+        foreach($data as $d) {
+            $ayExist[] = $d->tahun_lulus;
+        }
+
+        $tahun = AcademicYear::whereNotIn('tahun_akademik',$ayExist)
+                             ->groupBy('tahun_akademik')
+                             ->orderBy('tahun_akademik','desc')
+                             ->get('tahun_akademik');
+
+        return view('alumnus.workplace.show',compact(['studyProgram','data','tahun']));
+    }
+
+    public function edit($id)
+    {
+        $id = decrypt($id);
+        $data = AlumnusWorkplace::find($id);
+
+        if(request()->ajax()) {
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 
     public function store(Request $request)
@@ -60,38 +109,6 @@ class AlumnusWorkplaceController extends Controller
                     'type'    => 'success'
                 ]);
             }
-        }
-    }
-
-    public function show($id)
-    {
-        $id = decrypt($id);
-
-        $studyProgram = StudyProgram::find($id);
-        $data         = AlumnusWorkplace::where('kd_prodi',$id)->orderBy('tahun_lulus','desc')->get();
-
-        $ayExist = array();
-        foreach($data as $d) {
-            $ayExist[] = $d->tahun_lulus;
-        }
-
-        $tahun = AcademicYear::whereNotIn('tahun_akademik',$ayExist)
-                             ->groupBy('tahun_akademik')
-                             ->orderBy('tahun_akademik','desc')
-                             ->get('tahun_akademik');
-
-        return view('alumnus.workplace.show',compact(['studyProgram','data','tahun']));
-    }
-
-    public function edit($id)
-    {
-        $id = decrypt($id);
-        $data = AlumnusWorkplace::find($id);
-
-        if(request()->ajax()) {
-            return response()->json($data);
-        } else {
-            abort(404);
         }
     }
 

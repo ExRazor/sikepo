@@ -33,12 +33,12 @@
         <div class="card">
             <div class="card-header" role="tab" id="heading_attainment_{{$sp->kd_prodi}}">
                 <h6 class="mg-b-0">
-                    <a class="collapsed transition" data-toggle="collapse" data-parent="#accordion_alumnusAttainment" href="#schedule_attainment_{{$sp->kd_prodi}}" aria-expanded="true" aria-controls="schedule_attainment_{{$sp->kd_prodi}}">
+                    <a class="transition {{Auth::user()->hasRole('kaprodi') ? '' : 'collapsed'}}" data-toggle="collapse" data-parent="#accordion_alumnusAttainment" href="#schedule_attainment_{{$sp->kd_prodi}}">
                         {{$sp->nama}}
                     </a>
                 </h6>
             </div><!-- card-header -->
-            <div id="schedule_attainment_{{$sp->kd_prodi}}" class="collapse" role="tabpanel" aria-labelledby="heading_attainment_{{$sp->kd_prodi}}">
+            <div id="schedule_attainment_{{$sp->kd_prodi}}" class="collapse {{Auth::user()->hasRole('kaprodi') ? 'show' : ''}}" role="tabpanel" aria-labelledby="heading_attainment_{{$sp->kd_prodi}}">
                 <div class="card-block pd-20">
                     <table id="table_attainment_{{$sp->kd_prodi}}" class="table table-colored table-dark" >
                         <thead>

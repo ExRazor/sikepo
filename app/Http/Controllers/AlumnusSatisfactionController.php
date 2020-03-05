@@ -9,18 +9,39 @@ use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class AlumnusSatisfactionController extends Controller
 {
+    public function __construct()
+    {
+        $method = [
+            'create',
+            'edit',
+            'store',
+            'update',
+            'destroy',
+        ];
+
+        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+    }
+
     public function index()
     {
-        $satisfaction = AlumnusSatisfaction::groupBy('kd_prodi')
-                                            ->groupBy('id_ta')
-                                            ->groupBy('kd_kepuasan')
-                                            ->orderBy('id_ta','desc')
-                                            ->get(['kd_prodi','id_ta','kd_kepuasan']);
-
-                                            // dd($satisfaction);
+        if(Auth::user()->hasRole('kaprodi')) {
+            $satisfaction = AlumnusSatisfaction::where('kd_prodi',Auth::user()->kd_prodi)
+                                                ->groupBy('kd_prodi')
+                                                ->groupBy('id_ta')
+                                                ->groupBy('kd_kepuasan')
+                                                ->orderBy('id_ta','desc')
+                                                ->get(['kd_prodi','id_ta','kd_kepuasan']);
+        } else {
+            $satisfaction = AlumnusSatisfaction::groupBy('kd_prodi')
+                                                ->groupBy('id_ta')
+                                                ->groupBy('kd_kepuasan')
+                                                ->orderBy('id_ta','desc')
+                                                ->get(['kd_prodi','id_ta','kd_kepuasan']);
+        }
 
         foreach($satisfaction as $s) {
             $persen[$s->kd_kepuasan]  = DB::table('alumnus_satisfactions as satisfaction')
@@ -46,40 +67,6 @@ class AlumnusSatisfactionController extends Controller
         $academicYear = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
 
         return view('alumnus.satisfaction.form',compact(['studyProgram','academicYear','category']));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'kd_prodi'          => [
-                'required',
-                Rule::unique('alumnus_satisfactions')->where(function ($query) use($request) {
-                    return $query->where('id_ta', $request->id_ta);
-                }),
-            ],
-            'id_ta'             => [
-                'required',
-                Rule::unique('alumnus_satisfactions')->where(function ($query) use($request) {
-                    return $query->where('kd_prodi', $request->kd_prodi);
-                }),
-            ],
-        ]);
-
-        foreach($request->sangat_baik as $index => $value) {
-            $query                 = new AlumnusSatisfaction;
-            $query->kd_kepuasan    = 'alumnus_'.$request->id_ta.'_'.$request->kd_prodi;
-            $query->kd_prodi       = $request->kd_prodi;
-            $query->id_ta          = $request->id_ta;
-            $query->id_kategori    = $index;
-            $query->sangat_baik    = ($request->sangat_baik[$index]) ? $request->sangat_baik[$index] : '0';
-            $query->baik           = ($request->baik[$index]) ? $request->baik[$index] : '0';
-            $query->cukup          = ($request->cukup[$index]) ? $request->cukup[$index]: '0';
-            $query->kurang         = ($request->kurang[$index]) ? $request->kurang[$index] : '0';
-            $query->tindak_lanjut  = $request->tindak_lanjut[$index];
-            $query->save();
-        }
-
-        return redirect()->route('alumnus.satisfaction')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function show($kd_kepuasan)
@@ -124,6 +111,40 @@ class AlumnusSatisfactionController extends Controller
 
         return view('alumnus.satisfaction.form',compact(['studyProgram','academicYear','category','data','persen']));
 
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'kd_prodi'          => [
+                'required',
+                Rule::unique('alumnus_satisfactions')->where(function ($query) use($request) {
+                    return $query->where('id_ta', $request->id_ta);
+                }),
+            ],
+            'id_ta'             => [
+                'required',
+                Rule::unique('alumnus_satisfactions')->where(function ($query) use($request) {
+                    return $query->where('kd_prodi', $request->kd_prodi);
+                }),
+            ],
+        ]);
+
+        foreach($request->sangat_baik as $index => $value) {
+            $query                 = new AlumnusSatisfaction;
+            $query->kd_kepuasan    = 'alumnus_'.$request->id_ta.'_'.$request->kd_prodi;
+            $query->kd_prodi       = $request->kd_prodi;
+            $query->id_ta          = $request->id_ta;
+            $query->id_kategori    = $index;
+            $query->sangat_baik    = ($request->sangat_baik[$index]) ? $request->sangat_baik[$index] : '0';
+            $query->baik           = ($request->baik[$index]) ? $request->baik[$index] : '0';
+            $query->cukup          = ($request->cukup[$index]) ? $request->cukup[$index]: '0';
+            $query->kurang         = ($request->kurang[$index]) ? $request->kurang[$index] : '0';
+            $query->tindak_lanjut  = $request->tindak_lanjut[$index];
+            $query->save();
+        }
+
+        return redirect()->route('alumnus.satisfaction')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)

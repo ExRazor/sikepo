@@ -6,13 +6,19 @@ use App\AcademicYear;
 use App\StudentStatus;
 use App\StudyProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AlumnusAttainmentController extends Controller
 {
     public function attainment()
     {
         $academicYear = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $studyProgram = StudyProgram::where('kd_prodi',Auth::user()->kd_prodi)->get();
+        } else {
+            $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        }
 
         foreach($studyProgram as $sp) {
             foreach($academicYear as $ay) {

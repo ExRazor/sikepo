@@ -474,6 +474,7 @@ Route::middleware('auth')->group(function () {
         Route::get('satisfaction','AlumnusSatisfactionController@index')->name('alumnus.satisfaction');
         Route::get('satisfaction/add','AlumnusSatisfactionController@create')->name('alumnus.satisfaction.add');
         Route::get('satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
+        Route::get('satisfaction/{id}/edit','AlumnusSatisfactionController@edit')->name('alumnus.satisfaction.edit');
         Route::post('satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
         Route::put('satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
         Route::delete('satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');

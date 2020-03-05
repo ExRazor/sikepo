@@ -61,10 +61,13 @@
                                 <div class="col-9">
                                     <div class="row">
                                         <div class="col-6">
-                                            <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" {{isset($data) ? 'disabled' : 'required'}}>
+                                            @if(Auth::user()->hasRole('kaprodi'))
+                                                <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+                                            @endif
+                                            <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" {{isset($data) || Auth::user()->hasRole('kaprodi') ? 'disabled' : 'required'}}>
                                                 <option value="">- Pilih Prodi -</option>
                                                 @foreach($studyProgram as $sp)
-                                                <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                                <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi)) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
                                                 @endforeach
                                             </select>
                                             @if($errors->has('kd_prodi'))
