@@ -112,12 +112,12 @@
                             </td>
                             <td class="text-center">{{$m->academicYear->tahun_akademik.' - '.$m->academicYear->semester}}</td>
                             <td>
-                                <a href="{{route('teacher.profile',encode_id($m->pembimbingUtama->nidn))}}">
+                                <a href="{{route('teacher.show',encode_id($m->pembimbingUtama->nidn))}}">
                                     {{$m->pembimbingUtama->nama}} ({{$m->pembimbingUtama->nidn}})
                                 </a>
                             </td>
                             <td>
-                                <a href="{{route('teacher.profile',encode_id($m->pembimbingPendamping->nidn))}}">
+                                <a href="{{route('teacher.show',encode_id($m->pembimbingPendamping->nidn))}}">
                                     {{$m->pembimbingPendamping->nama}} ({{$m->pembimbingPendamping->nidn}})
                                 </a>
                             </td>

@@ -34,7 +34,7 @@ Breadcrumbs::for('teacher-add', function ($trail) {
 
 Breadcrumbs::for('teacher-profile', function ($trail,$data) {
     $trail->parent('teacher');
-    $trail->push($data->nidn.' : '.$data->nama,route('teacher.profile',encode_id($data->nidn)));
+    $trail->push($data->nidn.' : '.$data->nama,route('teacher.show',encode_id($data->nidn)));
 });
 
 Breadcrumbs::for('teacher-edit', function ($trail,$data) {
@@ -533,6 +533,22 @@ Breadcrumbs::for('setting-general', function ($trail) {
 Breadcrumbs::for('setting-user', function ($trail) {
     $trail->parent('setting');
     $trail->push('Manajemen User',route('setting.user'));
+});
+
+// Profile Dosen
+Breadcrumbs::for('profile', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Profil');
+});
+
+Breadcrumbs::for('profile-biodata', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Ubah Biodata', route('profile.biodata'));
+});
+
+Breadcrumbs::for('profile-achievement', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Prestasi', route('profile.achievement'));
 });
 
 // // Home > About

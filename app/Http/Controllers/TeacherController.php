@@ -62,7 +62,7 @@ class TeacherController extends Controller
         return view('teacher/index',compact(['studyProgram','faculty','data']));
     }
 
-    public function profile($nidn)
+    public function show($nidn)
     {
         $nidn = decode_id($nidn);
         $data = Teacher::where('nidn',$nidn)->first();
@@ -249,7 +249,10 @@ class TeacherController extends Controller
             $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
-        } else {
+        }
+
+        if(isset($Teacher->foto) && File::exists($storagePath))
+        {
             $ekstensi = File::extension($storagePath);
             $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$ekstensi;
             File::move($storagePath,public_path('upload/teacher/'.$filename));
@@ -263,7 +266,7 @@ class TeacherController extends Controller
         $user->name    = $request->nama;
         $user->save();
 
-        return redirect()->route('teacher.profile',encode_id($Teacher->nidn))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.show',encode_id($Teacher->nidn))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)

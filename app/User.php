@@ -28,6 +28,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\StudyProgram','kd_prodi');
     }
 
+    public function teacher()
+    {
+        return $this->belongsTo('App\Teacher','username');
+    }
+
     public function hasRole(...$roles)
     {
         $userRole = Auth::user()->role;

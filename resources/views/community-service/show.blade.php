@@ -112,7 +112,7 @@
                                         <tr>
                                             @if(!$st->nama_lain)
                                             <td>
-                                                <a href="{{route('teacher.profile',encode_id($st->teacher->nip))}}">
+                                                <a href="{{route('teacher.show',encode_id($st->teacher->nip))}}">
                                                     {{$st->teacher->nama}}<br>
                                                     <small>NIDN. {{$st->nidn}}</small>
                                                 </a>

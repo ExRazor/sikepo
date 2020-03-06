@@ -2,56 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\StudyProgram;
-use App\TeacherAchievement;
 use App\Teacher;
+use App\User;
+use App\TeacherAchievement;
+use App\Research;
+use App\ResearchTeacher;
+use App\ResearchStudent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
-class TeacherAchievementController extends Controller
+class TeacherProfileController extends Controller
 {
-    public function __construct()
+    public function biodata()
     {
-        $method = [
-            'create',
-            'edit',
-            'store',
-            'update',
-            'destroy',
-            'delete_file',
-        ];
+        $nidn         = Auth::user()->username;
+        $data         = Teacher::where('nidn',$nidn)->first();
 
-        $this->middleware('role:admin,kaprodi', ['only' => $method]);
+        $bidang       = json_decode($data->bidang_ahli);
+        $data->bidang_ahli   = implode(', ',$bidang);
+
+        return view('teacher-view.profile',compact(['data']));
     }
 
-    public function index()
+    public function achievement()
     {
-        $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $teacher = null;
+        $nidn        = Auth::user()->username;
+        $achievement = TeacherAchievement::where('nidn',$nidn)->orderBy('id_ta','desc')->get();
 
-        if(Auth::user()->hasRole('kaprodi')) {
-
-            $achievement    = TeacherAchievement::whereHas(
-                                                    'teacher.studyProgram',function($query) {
-                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                                    }
-                                                )
-                                                ->orderBy('id_ta','desc')->get();
-        } else {
-            $achievement    = TeacherAchievement::whereHas(
-                                                    'teacher.studyProgram',function($query) {
-                                                        $query->where('kd_jurusan',setting('app_department_id'));
-                                                    }
-                                                )
-                                                ->orderBy('id_ta','desc')->get();
-        }
-
-
-        return view('teacher.achievement.index',compact(['achievement','studyProgram']));
+        return view('teacher-view.achievement.index',compact(['achievement']));
     }
 
-    public function edit($id)
+    public function achievement_edit($id)
     {
         if(request()->ajax()) {
             $id = decode_id($id);
@@ -63,11 +45,104 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function research()
     {
+        $penelitian   = Research::whereHas(
+                                        'researchTeacher', function($q) {
+                                            $q->where('nidn',Auth::user()->username);
+                                        }
+                                    )
+                                    ->get();
+
+        
+
+        return view('teacher-view.research.index',compact(['penelitian']));
+    }
+
+    public function show($id)
+    {
+        $id   = decode_id($id);
+        $data         = Research::where('id',$id)->first();
+
+        return view('teacher-view.research.show',compact(['data']));
+    }
+
+    public function update_biodata(Request $request)
+    {
+        $id = Auth::user()->username;
+        $request->validate([
+            'nip'                   => 'nullable|numeric|digits:18',
+            'nama'                  => 'required',
+            'jk'                    => 'required',
+            'agama'                 => 'nullable',
+            'tpt_lhr'               => 'nullable',
+            'tgl_lhr'               => 'nullable',
+            'email'                 => 'email|nullable',
+            'pend_terakhir_jenjang' => 'nullable',
+            'pend_terakhir_jurusan' => 'nullable',
+            'bidang_ahli'           => 'nullable',
+            'sesuai_bidang_ps'      => 'nullable',
+            'ikatan_kerja'          => 'required',
+            'jabatan_akademik'      => 'required',
+            'foto'                  => 'mimes:jpeg,jpg,png',
+        ]);
+
+        $bidang_ahli = explode(", ",$request->bidang_ahli);
+
+        $Teacher                            = Teacher::find($id);
+        $Teacher->nip                       = $request->nip;
+        $Teacher->nama                      = $request->nama;
+        $Teacher->jk                        = $request->jk;
+        $Teacher->agama                     = $request->agama;
+        $Teacher->tpt_lhr                   = $request->tpt_lhr;
+        $Teacher->tgl_lhr                   = $request->tgl_lhr;
+        $Teacher->alamat                    = $request->alamat;
+        $Teacher->no_telp                   = $request->no_telp;
+        $Teacher->email                     = $request->email;
+        $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
+        $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
+        $Teacher->bidang_ahli               = json_encode($bidang_ahli);
+        $Teacher->ikatan_kerja              = $request->ikatan_kerja;
+        $Teacher->jabatan_akademik          = $request->jabatan_akademik;
+        $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
+        $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
+
+        $storagePath = public_path('upload/teacher/'.$Teacher->foto);
+        if($request->file('foto')) {
+            if(File::exists($storagePath)) {
+                File::delete($storagePath);
+            }
+
+            $file = $request->file('foto');
+            $tujuan_upload = public_path('upload/teacher');
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
+            $Teacher->foto = $filename;
+        }
+
+        if(isset($Teacher->foto) && File::exists($storagePath))
+        {
+            $ekstensi = File::extension($storagePath);
+            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$ekstensi;
+            File::move($storagePath,public_path('upload/teacher/'.$filename));
+            $Teacher->foto = $filename;
+        }
+
+        $Teacher->save();
+
+        //Update User Dosen
+        $user          = User::where('username',$id)->first();
+        $user->name    = $request->nama;
+        $user->save();
+
+        return redirect()->route('profile.biodata')->with('flash.message', 'Biodata berhasil diperbarui!')->with('flash.class', 'success');
+    }
+
+    public function store_achievement(Request $request)
+    {
+        $nidn = Auth::user()->username;
         if(request()->ajax()) {
             $request->validate([
-                'nidn'              => 'required',
                 'id_ta'             => 'required',
                 'prestasi'          => 'required',
                 'tingkat_prestasi'  => 'required',
@@ -77,12 +152,13 @@ class TeacherAchievementController extends Controller
             ]);
 
             $acv                    = new TeacherAchievement;
-            $acv->nidn              = $request->nidn;
+            $acv->nidn              = $nidn;
             $acv->id_ta             = $request->id_ta;
             $acv->prestasi          = $request->prestasi;
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
             $acv->bukti_nama        = $request->bukti_nama;
 
+            $storagePath = public_path('upload/teacher/achievement'.$acv->bukti_file);
             if($file = $request->file('bukti_file')) {
                 $tgl_skrg = date('Y_m_d_H_i_s');
                 $tujuan_upload = public_path('upload/teacher/achievement');
@@ -109,7 +185,7 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function update_achievement(Request $request)
     {
         if(request()->ajax()) {
             $id  = decode_id($request->_id);
@@ -123,7 +199,6 @@ class TeacherAchievementController extends Controller
             ]);
 
             $acv                    = TeacherAchievement::find($id);
-            $acv->nidn              = $request->nidn;
             $acv->id_ta             = $request->id_ta;
             $acv->prestasi          = $request->prestasi;
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
@@ -170,7 +245,7 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy_achievement(Request $request)
     {
         if(request()->ajax()) {
             $id     = decode_id($request->_id);
@@ -184,7 +259,7 @@ class TeacherAchievementController extends Controller
                     'type'    => 'error'
                 ]);
             } else {
-                $this->delete_file($data->bukti_file);
+                $this->delete_file_achievement($data->bukti_file);
                 return response()->json([
                     'title'   => 'Berhasil',
                     'message' => 'Data berhasil dihapus',
@@ -196,61 +271,12 @@ class TeacherAchievementController extends Controller
         }
     }
 
-    public function download($filename)
-    {
-        $file = decode_id($filename);
-
-        $storagePath = public_path('upload/teacher/achievement/'.$file);
-        if( ! File::exists($storagePath)) {
-            abort(404);
-        } else {
-            $mimeType = File::mimeType($storagePath);
-            $headers = array(
-                'Content-Type' => $mimeType,
-                'Content-Disposition' => 'inline; filename="'.$file.'"'
-            );
-
-            return response(file_get_contents($storagePath), 200, $headers);
-        }
-    }
-
-    public function delete_file($file)
+    public function delete_file_achievement($file)
     {
         $storagePath = public_path('upload/teacher/achievement/'.$file);
 
         if(File::exists($storagePath)) {
             File::delete($storagePath);
-        }
-    }
-
-    public function get_by_filter(Request $request)
-    {
-        if($request->ajax()) {
-
-            $q   = TeacherAchievement::with([
-                                        'teacher.studyProgram.department' => function($q) {
-                                            $q->where('kd_jurusan',setting('app_department_id'));
-                                        },
-                                        'academicYear'
-                                    ])
-                                    ->whereHas(
-                                        'teacher.studyProgram', function($query) {
-                                            $query->where('kd_jurusan',setting('app_department_id'));
-                                        }
-                                    );
-
-            if($request->kd_prodi){
-                $q->whereHas(
-                    'teacher.studyProgram', function($query) use ($request) {
-                        $query->where('kd_prodi',$request->kd_prodi);
-                });
-            }
-
-            $data = $q->orderBy('id_ta','desc')->get();
-
-            return response()->json($data);
-        } else {
-            abort(404);
         }
     }
 }

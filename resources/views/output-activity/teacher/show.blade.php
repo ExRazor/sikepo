@@ -68,7 +68,7 @@
                                     <td>Pembuat Luaran</td>
                                     <td>:</td>
                                     <td>
-                                        <a href="{{ route('teacher.profile',encode_id($data->nidn)) }}">
+                                        <a href="{{ route('teacher.show',encode_id($data->nidn)) }}">
                                             {{$data->teacher->nama}}<br>
                                             <small>NIDN. {{$data->nidn}} / {{$data->teacher->studyProgram->singkatan}}</small>
                                         </a>

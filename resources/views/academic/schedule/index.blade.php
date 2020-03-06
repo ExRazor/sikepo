@@ -112,7 +112,7 @@
                                 </td>
                                 <td class="text-center">{{$schedule->curriculum->sks_teori+$schedule->curriculum->sks_seminar+$schedule->curriculum->sks_praktikum}}</td>
                                 <td>
-                                    <a href="{{ route('teacher.profile',encode_id($schedule->teacher->nidn)) }}">
+                                    <a href="{{ route('teacher.show',encode_id($schedule->teacher->nidn)) }}">
                                         {{$schedule->teacher->nama}}<br>
                                         <small>NIDN. {{$schedule->teacher->nidn.' / '.$schedule->teacher->studyProgram->singkatan}}</small>
                                     </a>

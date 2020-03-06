@@ -219,7 +219,7 @@ Route::middleware('auth')->group(function () {
         Route::get('list','TeacherController@index')->name('teacher');
         Route::get('list/add','TeacherController@create')->name('teacher.add');
         Route::get('list/import','TeacherController@import')->name('teacher.import');
-        Route::get('list/{id}','TeacherController@profile')->name('teacher.profile');
+        Route::get('list/{id}','TeacherController@show')->name('teacher.show');
         Route::get('list/{id}/edit','TeacherController@edit')->name('teacher.edit');
         Route::post('list','TeacherController@store')->name('teacher.store');
         Route::put('list','TeacherController@update')->name('teacher.update');
@@ -478,6 +478,37 @@ Route::middleware('auth')->group(function () {
         Route::post('satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
         Route::put('satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
         Route::delete('satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
+    });
+
+    //Teacher Profile
+    Route::prefix('profile')->name('profile.')->middleware('role:dosen')->group(function () {
+        //Biodata
+        Route::get('biodata','TeacherProfileController@biodata')->name('biodata');
+        Route::put('biodata','TeacherProfileController@update_biodata')->name('biodata.update');
+
+        //Achievement
+        Route::get('achievement','TeacherProfileController@achievement')->name('achievement');
+        Route::get('achievement/{id}','TeacherProfileController@achievement_edit')->name('achievement.edit');
+        Route::post('achievement','TeacherProfileController@store_achievement')->name('achievement.store');
+        Route::put('achievement','TeacherProfileController@update_achievement')->name('achievement.update');
+        Route::delete('achievement','TeacherProfileController@destroy_achievement')->name('achievement.delete');
+
+        Route::get('ewmp','TeacherProfileController@create')->name('ewmp');
+
+        //Research
+        Route::get('research','TeacherProfileController@research')->name('research');
+        Route::get('research/add','TeacherProfileController@research_create')->name('research.add');
+        Route::get('research/{id}','TeacherProfileController@research_show')->name('research.show');
+        Route::get('research/{id}/edit','TeacherProfileController@research_edit')->name('research.edit');
+        Route::post('research','TeacherProfileController@research_store')->name('research.store');
+        Route::put('research','TeacherProfileController@research_update')->name('research.update');
+        Route::delete('research','TeacherProfileController@research_destroy')->name('research.delete');
+        Route::get('research/delete_teacher/{id}','TeacherProfileController@research_destroy_teacher')->name('research.teacher.delete');
+        Route::get('research/delete_student/{id}','TeacherProfileController@research_destroy_students')->name('research.students.delete');
+
+
+        Route::get('community-service','TeacherProfileController@show')->name('community-service');
+        Route::get('publication','TeacherProfileController@edit')->name('publication');
     });
 
     //Download

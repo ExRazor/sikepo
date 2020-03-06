@@ -66,7 +66,7 @@
                             <td>Penulis Utama</td>
                             <td>:</td>
                             <td>
-                                <a href="{{route('teacher.profile',encode_id($data->nidn))}}" target="_blank">
+                                <a href="{{route('teacher.show',encode_id($data->nidn))}}" target="_blank">
                                     {{$data->teacher->nama}} / NIDN. {{$data->nidn}}
                                 </a>
                             </td>

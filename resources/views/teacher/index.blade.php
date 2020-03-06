@@ -110,7 +110,7 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.profile',encode_id($d->nidn)) }}">{{$d->nidn}}</a></td>
+                            <td><a href="{{ route('teacher.show',encode_id($d->nidn)) }}">{{$d->nidn}}</a></td>
                             <td>
                                 {{$d->nama}}<br>
                                 <small>NIP. {{$d->nip}}</small>

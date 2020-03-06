@@ -1,16 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Prestasi Dosen')
-
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
+@section('title', 'Prestasi')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('teacher-achievement') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('profile-achievement') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -26,11 +21,9 @@
         <h4>Prestasi Dosen</h4>
         <p class="mg-b-0">Daftar Prestasi Dosen</p>
     </div>
-    @if (Auth::user()->role!='kajur')
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
     </div>
-    @endif
 </div>
 
 <div class="br-pagebody">
@@ -46,66 +39,23 @@
         </ul>
     </div>
     @endif
-    @if (Auth::user()->role!='kaprodi')
-    <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.teacher.achievement.filter')}}" id="filter-teacherAcv" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Semua Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    @endif
     <div class="widget-2">
         <div class="card shadow-base mb-3">
-            <div class="card-header">
-                <h6 class="card-title">
-                    <span class="nm_jurusan">
-                    @if(Auth::user()->hasRole('kaprodi'))
-                    {{ Auth::user()->studyProgram->nama }}
-
-                    @else
-                    {{ setting('app_department_name') }}
-                    @endif
-                     </span>
-                </h6>
-            </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table-teacherAcv" class="table table-bordered mb-0 datatable" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle defaultSort" width="100">Tanggal Diperoleh</th>
-                            <th class="text-center align-middle">Nama Dosen</th>
                             <th class="text-center align-middle">Prestasi</th>
                             <th class="text-center align-middle">Tingkat</th>
                             <th class="text-center align-middle no-sort">Bukti<br>Pendukung</th>
-                            @if(Auth::user()->role!='kajur')
                             <th class="text-center align-middle no-sort">Aksi</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($achievement as $acv)
                         <tr>
                             <td class="text-center">{{ $acv->academicYear->tahun_akademik.' - '.$acv->academicYear->semester }}</td>
-                            <td>
-                                <a href="{{route('teacher.show',encode_id($acv->teacher->nidn))}}">
-                                    {{ $acv->teacher->nama }}<br>
-                                    <small>NIDN.{{$acv->teacher->nidn}} / {{$acv->teacher->studyProgram->singkatan}}</small>
-                                </a>
-                            </td>
                             <td>{{ $acv->prestasi }}</td>
                             <td>{{ $acv->tingkat_prestasi }}</td>
                             <td class="text-center align-middle">
@@ -113,24 +63,22 @@
                                     {{$acv->bukti_nama}}
                                 </a>
                             </td>
-                            @if(Auth::user()->role!='kajur')
                             <td width="50" class="text-center">
                                 <div class="btn-group" role="group">
                                     <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item btn-edit" href="#" data-id="{{ encode_id($acv->id) }}" data-dest="{{ route('teacher.achievement') }}">Sunting</a>
+                                        <a class="dropdown-item btn-edit" href="#" data-id="{{ encode_id($acv->id) }}" data-dest="{{ route('profile.achievement') }}">Sunting</a>
                                         <form method="POST">
                                             @method('delete')
                                             @csrf
                                             <input type="hidden" value="{{encode_id($acv->id)}}" name="_id">
-                                            <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.delete') }}">Hapus</a>
+                                            <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('profile.achievement.delete') }}">Hapus</a>
                                         </form>
                                     </div>
                                 </div>
                             </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -139,7 +87,12 @@
         </div>
     </div>
 </div>
-@include('teacher.achievement.form')
+@include('teacher-view.achievement.form')
+@endsection
+
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
 @endsection
 
 @section('js')

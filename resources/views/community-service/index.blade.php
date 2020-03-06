@@ -115,7 +115,7 @@
                             </td>
                             <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
                             <td>
-                                <a href="{{route('teacher.profile',encode_id($p->serviceKetua->teacher->nip))}}#community-service">
+                                <a href="{{route('teacher.show',encode_id($p->serviceKetua->teacher->nip))}}#community-service">
                                     {{ $p->serviceKetua->teacher->nama }}<br>
                                     <small>NIDN.{{ $p->serviceKetua->teacher->nidn }} / {{ $p->serviceKetua->teacher->studyProgram->singkatan }}</small>
                                 </a>

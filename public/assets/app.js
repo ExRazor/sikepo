@@ -1464,8 +1464,9 @@ $(document).ready(function() {
     $('#table-teacherAcv').on('click','.btn-edit',function(e){
         e.preventDefault();
 
-        var id  = $(this).data('id');
-        var url = base_url+'/teacher/achievement/'+id;
+        var id   = $(this).data('id');
+        var url  = $(this).data('dest')+'/'+id;
+        // var url = base_url+'/teacher/achievement/'+id;
 
         $.ajax({
             url: url,

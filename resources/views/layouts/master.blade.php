@@ -55,7 +55,11 @@
     <!-- START: LEFT SIDEBAR -->
     <div class="br-logo"><a href="#"><span><i>[</i></span>{{setting('app_short')}}<span><i>]</i></span></a></div>
     <div class="br-sideleft sideleft-scrollbar">
+        @if(Auth::user()->hasRole('dosen'))
+        @include('layouts.sidebar-teacher')
+        @else
         @include('layouts.sidebar')
+        @endif
     </div>
     <!-- END: LEFT SIDEBAR -->
 
