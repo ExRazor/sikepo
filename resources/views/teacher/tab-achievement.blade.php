@@ -5,7 +5,7 @@
                 <div class="pt-1">
                     <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">Prestasi/Pengakuan/Rekognisi Dosen</h6>
                 </div>
-                @if(!Auth::user()->role=='kajur')
+                @if(!Auth::user()->hasRole('kajur'))
                 <div class="ml-auto">
                     <button href="#" class="btn btn-sm btn-primary mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
                 </div>
@@ -20,7 +20,7 @@
                                 <th class="text-center align-middle">Tingkat Prestasi</th>
                                 <th class="text-center align-middle">Tahun Diperoleh</th>
                                 <th class="text-center align-middle">Bukti Pendukung</th>
-                                @if(Auth::user()->role!='kajur')
+                                @if(!Auth::user()->hasRole('kajur'))
                                 <th class="text-center align-middle">Aksi</th>
                                 @endif
                             </tr>
@@ -36,7 +36,7 @@
                                         {{$acv->bukti_nama}}
                                     </a>
                                 </td>
-                                @if(!Auth::user()->role=='kajur')
+                                @if(!Auth::user()->hasRole('kajur'))
                                 <td width="50">
                                     <div class="btn-group" role="group">
                                         <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

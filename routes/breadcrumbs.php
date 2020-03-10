@@ -553,6 +553,12 @@ Breadcrumbs::for('profile-achievement', function ($trail) {
     $trail->push('Prestasi', route('profile.achievement'));
 });
 
+// Profile - Prestasi
+Breadcrumbs::for('profile-ewmp', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Ekuivalen Waktu Mengajar Penuh', route('profile.ewmp'));
+});
+
 // Profile - Penelitian
 Breadcrumbs::for('profile-research', function ($trail) {
     $trail->parent('profile');

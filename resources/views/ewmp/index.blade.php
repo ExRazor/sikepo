@@ -21,12 +21,12 @@
 </div>
 
 <div class="br-pagetitle">
-        <i class="icon fa fa-stopwatch"></i>
-        <div>
-            <h4>Ekuivalen Waktu Mengajar Dosen</h4>
-            <p class="mg-b-0">Daftar EWMP Dosen</p>
-        </div>
+    <i class="icon fa fa-stopwatch"></i>
+    <div>
+        <h4>Ekuivalen Waktu Mengajar Dosen</h4>
+        <p class="mg-b-0">Daftar EWMP Dosen</p>
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())

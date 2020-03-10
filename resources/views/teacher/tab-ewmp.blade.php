@@ -5,7 +5,7 @@
                 <div class="pt-1">
                     <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">EWMP Per Semester Akademik</h6>
                 </div>
-                @if(!Auth::user()->role=='kajur')
+                @if(!Auth::user()->hasRole('kajur'))
                 <div class="ml-auto">
                     <button href="#" class="btn btn-sm btn-primary mg-b-10 btn-add text-white" data-toggle="modal" data-target="#modal-teach-ewmp"><i class="fa fa-plus mg-r-10"></i> Tambah</button>
                 </div>
@@ -20,14 +20,14 @@
                                 <th colspan="6" class="text-center align-middle">Ekuivalen Waktu Mengajar Penuh (EWMP)<br>dalam satuan kredit semester (sks)</th>
                                 <th rowspan="3" class="text-center align-middle">Jumlah<br>(sks)</th>
                                 <th rowspan="3" class="text-center align-middle">Rata-rata<br>(sks)</th>
-                                @if(!Auth::user()->role=='kajur')
+                                @if(!Auth::user()->hasRole('kajur'))
                                 <th rowspan="3" class="text-center align-middle">Aksi</th>
                                 @endif
                             </tr>
                             <tr>
                                 <th colspan="3" class="text-center align-middle" style="border-left-width: 1px;">Pendidikan</th>
                                 <th rowspan="2" class="text-center align-middle" width="100">Penelitian</th>
-                                <th rowspan="2" class="text-center align-middle">PKM</th>
+                                <th rowspan="2" class="text-center align-middle">Pengabdian</th>
                                 <th rowspan="2" class="text-center align-middle" width="100">Tugas Tambahan/<br>Penunjang</th>
                             </tr>
                             <tr>
@@ -39,7 +39,7 @@
                         <tbody>
                             @forelse ($ewmp as $e)
                             <tr>
-                                <td>{{ $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester }}</td>
+                                <td class="text-center">{{ $e->academicYear->tahun_akademik.' - '.$e->academicYear->semester }}</td>
                                 <td class="text-center">{{ $e->ps_intra }}</td>
                                 <td class="text-center">{{ $e->ps_lain }}</td>
                                 <td class="text-center">{{ $e->ps_luar }}</td>
@@ -48,7 +48,7 @@
                                 <td class="text-center">{{ $e->tugas_tambahan }}</td>
                                 <td class="text-center">{{ $total = $e->ps_intra+$e->ps_lain+$e->ps_luar+$e->penelitian+$e->pkm+$e->tugas_tambahan}}</td>
                                 <td class="text-center">{{ number_format($total/6, 1, ',', ' ') }}</td>
-                                @if(!Auth::user()->role=='kajur')
+                                @if(!Auth::user()->hasRole('kajur'))
                                 <td width="50">
                                     <div class="btn-group" role="group">
                                         <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,7 +58,7 @@
                                             <button class="dropdown-item btn-edit" data-id="{{encrypt($e->id)}}">Sunting</button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encrypt($e->id)}}" name="_id">
-                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('ewmp.delete') }}">Hapus</a>
+                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('ajax.ewmp.delete') }}">Hapus</a>
                                             </form>
                                         </div>
                                     </div>

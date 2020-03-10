@@ -1636,9 +1636,12 @@ $(document).ready(function() {
             type: 'GET',
             dataType: 'json',
             success: function (data) {
+                var option_ta     = $("<option selected></option>").val(data.id_ta).text(data.academic_year.tahun_akademik+' - '+data.academic_year.semester);
+
                 $('#modal-teach-ewmp')
                     .find('input[name=_id]').val(id).end()
-                    .find('select[name=id_ta]').val(data.id_ta).end()
+                    // .find('select[name=id_ta]').val(data.id_ta).end()
+                    .find('select[name=id_ta]').append(option_ta).trigger('change').end()
                     .find('input[name=tahun_akademik]').val(data.tahun_akademik).end()
                     .find('input[name=ps_intra]').val(data.ps_intra).end()
                     .find('input[name=ps_lain]').val(data.ps_lain).end()

@@ -493,7 +493,10 @@ Route::middleware('auth')->group(function () {
         Route::put('achievement','Teacher\AchievementController@update')->name('achievement.update');
         Route::delete('achievement','Teacher\AchievementController@destroy')->name('achievement.delete');
 
-        Route::get('ewmp','TeacherProfileController@create')->name('ewmp');
+        //EWMP
+        Route::get('ewmp','Teacher\EwmpController@index')->name('ewmp');
+        Route::post('ewmp','Teacher\EwmpController@store')->name('ewmp.store');
+        Route::put('ewmp','Teacher\EwmpController@update')->name('ewmp.update');
 
         //Research
         Route::get('research','Teacher\ResearchController@index')->name('research');

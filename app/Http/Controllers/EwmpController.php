@@ -33,12 +33,18 @@ class EwmpController extends Controller
         return view('ewmp.index',compact(['studyProgram','academicYear','ewmp','filter']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function edit($id)
+    {
+        if(request()->ajax()) {
+            $id = decrypt($id);
+            $data = Ewmp::where('id',$id)->with('teacher.studyProgram','academicYear')->first();
+
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
     public function store(Request $request)
     {
         $nidn = decrypt($request->nidn);
@@ -51,22 +57,75 @@ class EwmpController extends Controller
                         return $query->where('nidn', $nidn);
                     }),
                 ],
-                'ps_intra'              => 'required|numeric',
-                'ps_lain'               => 'required|numeric',
+                'ps_intra'              => 'nullable|numeric',
+                'ps_lain'               => 'nullable|numeric',
                 'ps_luar'               => 'required|numeric',
-                'penelitian'            => 'required|numeric',
-                'pkm'                   => 'required|numeric',
+                'penelitian'            => 'nullable|numeric',
+                'pkm'                   => 'nullable|numeric',
                 'tugas_tambahan'        => 'required|numeric',
             ]);
+
+            $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
             $ewmp                   = new Ewmp;
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
-            $ewmp->ps_intra         = $request->ps_intra;
-            $ewmp->ps_lain          = $request->ps_lain;
+            $ewmp->ps_intra         = $sks['schedule_ps'];
+            $ewmp->ps_lain          = $sks['schedule_pt'];
             $ewmp->ps_luar          = $request->ps_luar;
-            $ewmp->penelitian       = $request->penelitian;
-            $ewmp->pkm              = $request->pkm;
+            $ewmp->penelitian       = $sks['penelitian'];
+            $ewmp->pkm              = $sks['pengabdian'];
+            $ewmp->tugas_tambahan   = $request->tugas_tambahan;
+
+            $q = $ewmp->save();
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil disimpan',
+                    'type'    => 'success'
+                ]);
+            }
+        }
+    }
+
+    public function update(Request $request)
+    {
+        if(request()->ajax()) {
+            $id   = decrypt($request->_id);
+            $nidn = decrypt($request->nidn);
+
+            $request->validate([
+                'id_ta'             => [
+                    'required',
+                    Rule::unique('ewmps')->where(function ($query) use($nidn) {
+                        return $query->where('nidn', $nidn);
+                    })->ignore($id,'id'),
+                ],
+                'ps_intra'              => 'nullable|numeric',
+                'ps_lain'               => 'nullable|numeric',
+                'ps_luar'               => 'required|numeric',
+                'penelitian'            => 'nullable|numeric',
+                'pkm'                   => 'nullable|numeric',
+                'tugas_tambahan'        => 'required|numeric',
+            ]);
+
+            $sks = $this->countSKS_manual($nidn,$request->id_ta);
+
+            $ewmp                   = Ewmp::find($id);
+            $ewmp->nidn             = $nidn;
+            $ewmp->id_ta            = $request->id_ta;
+            $ewmp->ps_intra         = $sks['schedule_ps'];
+            $ewmp->ps_lain          = $sks['schedule_pt'];
+            $ewmp->ps_luar          = $request->ps_luar;
+            $ewmp->penelitian       = $sks['penelitian'];
+            $ewmp->pkm              = $sks['pengabdian'];
             $ewmp->tugas_tambahan   = $request->tugas_tambahan;
             $q = $ewmp->save();
 
@@ -86,12 +145,29 @@ class EwmpController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Ewmp  $ewmp
-     * @return \Illuminate\Http\Response
-     */
+    public function destroy(Request $request)
+    {
+        if(request()->ajax()) {
+            $id = decrypt($request->_id);
+            $q  = Ewmp::destroy($id);
+
+            if(!$q) {
+                return response()->json([
+                    'title'   => 'Gagal',
+                    'message' => 'Terjadi kesalahan saat menghapus',
+                    'type'    => 'error'
+                ]);
+            } else {
+                return response()->json([
+                    'title'   => 'Berhasil',
+                    'message' => 'Data berhasil dihapus',
+                    'type'    => 'success'
+                ]);
+            }
+        } else {
+            return redirect()->route('collaboration');
+        }
+    }
 
     public function show_by_filter(Request $request)
     {
@@ -147,109 +223,6 @@ class EwmpController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Ewmp  $ewmp
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        if(request()->ajax()) {
-            $id = decrypt($id);
-            $data = Ewmp::find($id);
-
-            return response()->json($data);
-        } else {
-            abort(404);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Ewmp  $ewmp
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        if(request()->ajax()) {
-            $id   = decrypt($request->_id);
-            $nidn = decrypt($request->nidn);
-
-            $request->validate([
-                'id_ta'             => [
-                    'required',
-                    Rule::unique('ewmps')->where(function ($query) use($nidn) {
-                        return $query->where('nidn', $nidn);
-                    })->ignore($id,'id'),
-                ],
-                'ps_intra'              => 'required|numeric',
-                'ps_lain'               => 'required|numeric',
-                'ps_luar'               => 'required|numeric',
-                'penelitian'            => 'required|numeric',
-                'pkm'                   => 'required|numeric',
-                'tugas_tambahan'        => 'required|numeric',
-            ]);
-
-            $ewmp                   = Ewmp::find($id);
-            $ewmp->nidn             = $nidn;
-            $ewmp->id_ta            = $request->id_ta;
-            $ewmp->ps_intra         = $request->ps_intra;
-            $ewmp->ps_lain          = $request->ps_lain;
-            $ewmp->ps_luar          = $request->ps_luar;
-            $ewmp->penelitian       = $request->penelitian;
-            $ewmp->pkm              = $request->pkm;
-            $ewmp->tugas_tambahan   = $request->tugas_tambahan;
-            $q = $ewmp->save();
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Ewmp  $ewmp
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
-    {
-        if(request()->ajax()) {
-            $id = decrypt($request->_id);
-            $q  = Ewmp::destroy($id);
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->route('collaboration');
-        }
-    }
-
     public function countSKS(Request $request)
     {
         $nidn           = decrypt($request->nidn);
@@ -295,11 +268,15 @@ class EwmpController extends Controller
         }
 
         foreach($penelitian as $p) {
-            $count_penelitian[] = $p->researchTeacher[0]->sks;
+            foreach($p->researchTeacher as $pt) {
+                $count_penelitian[] = $pt->sks;
+            }
         }
 
         foreach($pengabdian as $p) {
-            $count_pengabdian[] = $p->serviceTeacher[0]->sks;
+            foreach($p->serviceTeacher as $st) {
+                $count_pengabdian[] = $st->sks;
+            }
         }
 
         $data = array(
@@ -314,5 +291,70 @@ class EwmpController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    public function countSKS_manual($nidn,$id_ta)
+    {
+        $curriculum_ps  = CurriculumSchedule::where('nidn',$nidn)->where('id_ta',$id_ta)->whereNotNull('sesuai_prodi')->get();
+        $curriculum_pt  = CurriculumSchedule::where('nidn',$nidn)->where('id_ta',$id_ta)->whereNull('sesuai_prodi')->get();
+
+        $penelitian     = Research::where('id_ta',$id_ta)
+                                    ->with([
+                                        'researchTeacher' => function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'researchTeacher', function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    )
+                                    ->get();
+
+        $pengabdian     = CommunityService::where('id_ta',$id_ta)
+                                    ->with([
+                                        'serviceTeacher' => function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
+                                        'serviceTeacher', function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    )
+                                    ->get();
+
+        $count_ps = array(0);
+        $count_pt = array(0);
+        $count_penelitian = array(0);
+        $count_pengabdian = array(0);
+
+        foreach($curriculum_ps as $ps) {
+            $count_ps[] = $ps->curriculum->sks_teori + $ps->curriculum->sks_seminar + $ps->curriculum->sks_praktikum;
+        }
+        foreach($curriculum_pt as $pt) {
+            $count_pt[] = $pt->curriculum->sks_teori + $pt->curriculum->sks_seminar + $pt->curriculum->sks_praktikum;
+        }
+
+        foreach($penelitian as $p) {
+            foreach($p->researchTeacher as $pt) {
+                $count_penelitian[] = $pt->sks;
+            }
+        }
+
+        foreach($pengabdian as $p) {
+            foreach($p->serviceTeacher as $st) {
+                $count_pengabdian[] = $st->sks;
+            }
+        }
+
+        $data = array(
+            'schedule_ps'   => array_sum($count_ps),
+            'schedule_pt'   => array_sum($count_pt),
+            'penelitian'    => array_sum($count_penelitian),
+            'pengabdian'    => array_sum($count_pengabdian)
+        );
+
+        return $data;
     }
 }
