@@ -32,6 +32,11 @@ class Research extends Model
         return $this->hasOne('App\ResearchTeacher','id_penelitian')->where('status','Ketua');
     }
 
+    public function researchStatus($nidn)
+    {
+        return $this->hasOne('App\ResearchTeacher','id_penelitian')->where('nidn',$nidn);
+    }
+
     public function researchAnggota()
     {
         return $this->hasMany('App\ResearchTeacher','id_penelitian')->where('status','Anggota');

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Penelitian')
+@section('title', 'Data Pengabdian')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('research') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('community-service') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,13 +20,13 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-book-reader"></i>
+    <i class="icon fa fa-american-sign-language-interpreting"></i>
     <div>
-        <h4>Data Penelitian</h4>
-        <p class="mg-b-0">Olah Data Penelitian</p>
+        <h4>Data Pengabdian</h4>
+        <p class="mg-b-0">Olah Data Pengabdian</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('profile.research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+        <a href="{{ route('profile.community-service.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Pengabdian</a>
     </div>
 </div>
 
@@ -43,25 +43,25 @@
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
                 <h6 class="card-title">
-                    Penelitian yang Diketuai
+                    Pengabdian yang Diketuai
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_communityService" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center" width="600">Judul Penelitian</th>
-                            <th class="text-center defaultSort" width="100">Tahun Penelitian</th>
+                            <th class="text-center" width="600">Judul Pengabdian</th>
+                            <th class="text-center defaultSort" width="100">Tahun Pengabdian</th>
                             <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
                             <th class="text-center no-sort" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($penelitianKetua as $p)
+                        @foreach ($pengabdianKetua as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.research.show',encode_id($p->id))}}">
-                                    {{ $p->judul_penelitian }}
+                                <a href="{{route('profile.community-service.show',encode_id($p->id))}}">
+                                    {{ $p->judul_pengabdian }}
                                 </a>
                             </td>
                             <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
@@ -76,10 +76,10 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('profile.research.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('profile.community-service.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('profile.research.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('profile.community-service.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>
@@ -91,28 +91,29 @@
             </div><!-- card-body -->
         </div>
     </div>
+
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
                 <h6 class="card-title">
-                    Penelitian yang Dianggotai
+                    Pengabdian yang Dianggotai
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_communityService" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center" width="600">Judul Penelitian</th>
-                            <th class="text-center defaultSort" width="100">Tahun Penelitian</th>
+                            <th class="text-center" width="600">Judul Pengabdian</th>
+                            <th class="text-center defaultSort" width="100">Tahun Pengabdian</th>
                             <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($penelitianAnggota as $p)
+                        @foreach ($pengabdianAnggota as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.research.show',encode_id($p->id))}}">
-                                    {{ $p->judul_penelitian }}
+                                <a href="{{route('profile.community-service.show',encode_id($p->id))}}">
+                                    {{ $p->judul_pengabdian }}
                                 </a>
                             </td>
                             <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>

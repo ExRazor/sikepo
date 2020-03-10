@@ -2503,6 +2503,10 @@ $(document).ready(function() {
             }
         })
 
+    if('#research_form, #communityService_form') {
+        $('#sumber_biaya_select').change();
+    }
+
     /******************* TOMBOL TAMBAH DOSEN *******************/
     $('button.add-dosen').on('click', function (){
         var panel = $('div#panelDosen'); /* target untuk menampilkan form */

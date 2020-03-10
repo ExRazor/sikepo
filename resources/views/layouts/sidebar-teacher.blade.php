@@ -25,19 +25,19 @@
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('profile.research') }}" class="br-menu-link {{ (request()->segment(1) == 'profile/research') ? 'active' : '' }}">
+        <a href="{{ route('profile.research') }}" class="br-menu-link {{ (request()->is('profile/research*')) ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-book-reader"></i>
           <span class="menu-item-label">Penelitian</span>
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('profile.community-service') }}" class="br-menu-link {{ (request()->segment(1) == 'profile/community-service') ? 'active' : '' }}">
+        <a href="{{ route('profile.community-service') }}" class="br-menu-link {{ (request()->is('profile/community-service*')) ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-american-sign-language-interpreting"></i>
           <span class="menu-item-label">Pengabdian</span>
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('profile.publication') }}" class="br-menu-link {{ (request()->segment(1) == 'profile/publication') ? 'active' : '' }}">
+        <a href="{{ route('profile.publication') }}" class="br-menu-link {{ (request()->is('profile/publication*')) ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-newspaper"></i>
           <span class="menu-item-label">Publikasi</span>
         </a><!-- br-menu-link -->

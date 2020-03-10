@@ -506,8 +506,17 @@ Route::middleware('auth')->group(function () {
         Route::get('research/delete_teacher/{id}','TeacherProfileController@research_destroy_teacher')->name('research.teacher.delete');
         Route::get('research/delete_student/{id}','TeacherProfileController@research_destroy_students')->name('research.students.delete');
 
+        //Community Service
+        Route::get('community-service','TeacherProfileController@commuService')->name('community-service');
+        Route::get('community-service/add','TeacherProfileController@commuService_create')->name('community-service.add');
+        Route::get('community-service/{id}','TeacherProfileController@commuService_show')->name('community-service.show');
+        Route::get('community-service/{id}/edit','TeacherProfileController@commuService_edit')->name('community-service.edit');
+        Route::post('community-service','TeacherProfileController@commuService_store')->name('community-service.store');
+        Route::put('community-service','TeacherProfileController@commuService_update')->name('community-service.update');
+        Route::delete('community-service','TeacherProfileController@commuService_destroy')->name('community-service.delete');
+        Route::get('community-service/delete_teacher/{id}','TeacherProfileController@commuService_destroy_teacher')->name('community-service.teacher.delete');
+        Route::get('community-service/delete_student/{id}','TeacherProfileController@commuService_destroy_students')->name('community-service.students.delete');
 
-        Route::get('community-service','TeacherProfileController@show')->name('community-service');
         Route::get('publication','TeacherProfileController@edit')->name('publication');
     });
 
