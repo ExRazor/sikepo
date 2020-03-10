@@ -79,7 +79,12 @@ class TeacherController extends Controller
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
 
-        $research       = Research::whereHas(
+        $research       = Research::with([
+                                        'researchTeacher' => function($q1) use ($nidn) {
+                                            $q1->where('nidn',$nidn);
+                                        }
+                                    ])
+                                    ->whereHas(
                                         'researchTeacher', function($q1) use ($data) {
                                             $q1->where('nidn',$data->nidn);
                                         }
@@ -87,11 +92,16 @@ class TeacherController extends Controller
                                     ->orderBy('id_ta','desc')
                                     ->get();
 
-        $service        = CommunityService::whereHas(
-                                        'serviceTeacher', function($q1) use ($data) {
-                                            $q1->where('nidn',$data->nidn);
-                                        }
-                                    )
+        $service        = CommunityService::with([
+                                                'serviceTeacher' => function($q1) use ($nidn) {
+                                                    $q1->where('nidn',$nidn);
+                                                }
+                                            ])
+                                            ->whereHas(
+                                                'serviceTeacher', function($q1) use ($data) {
+                                                    $q1->where('nidn',$data->nidn);
+                                                }
+                                            )
                                     ->orderBy('id_ta','desc')
                                     ->get();
 

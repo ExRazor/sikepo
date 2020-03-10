@@ -31,10 +31,14 @@
                                     {{ $rs->sks_penelitian }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $rs->researchTeacher[0]->status }}
+                                    @foreach($rs->researchTeacher as $rt)
+                                    {{ $rt->status }}
+                                    @endforeach
                                 </td>
                                 <td class="text-center">
-                                    {{ $rs->researchTeacher[0]->sks }}
+                                    @foreach($rs->researchTeacher as $rt)
+                                    {{ $rt->sks }}
+                                    @endforeach
                                 </td>
                             </tr>
                             @endforeach

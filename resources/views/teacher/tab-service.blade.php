@@ -31,10 +31,14 @@
                                     {{ $s->sks_pengabdian }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $s->serviceTeacher[0]->status }}
+                                    @foreach($s->serviceTeacher as $st)
+                                    {{ $st->status }}
+                                    @endforeach
                                 </td>
                                 <td class="text-center">
-                                    {{ $s->serviceTeacher[0]->sks }}
+                                    @foreach($s->serviceTeacher as $st)
+                                    {{ $st->sks }}
+                                    @endforeach
                                 </td>
                             </tr>
                             @endforeach
