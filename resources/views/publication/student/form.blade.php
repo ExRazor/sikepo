@@ -132,7 +132,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Nama Jurnal:</label>
+                                <label class="col-3 form-control-label">Nama Terbitan:</label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="jurnal" value="{{ isset($data) ? $data->jurnal : Request::old('jurnal')}}" placeholder="Contoh: Asian Social Science Vol.9, No.12">
                                 </div>

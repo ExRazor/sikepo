@@ -117,7 +117,7 @@
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="3" class="text-center">DATA KOSONG</td>
+                                                <td colspan="3" class="text-center">BELUM ADA DATA</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -140,12 +140,12 @@
                             <td>{{$data->penerbit}}</td>
                         </tr>
                         <tr>
-                            <td>Nama Jurnal</td>
+                            <td>Nama Terbitan</td>
                             <td>:</td>
                             <td>{{$data->jurnal}}</td>
                         </tr>
                         <tr>
-                            <td>Akreditasi Jurnal</td>
+                            <td>Akreditasi</td>
                             <td>:</td>
                             <td>{{$data->akreditasi}}</td>
                         </tr>
@@ -155,7 +155,7 @@
                             <td>{{$data->sitasi}}</td>
                         </tr>
                         <tr>
-                            <td>Tautan Jurnal</td>
+                            <td>Tautan</td>
                             <td>:</td>
                             <td><a href="{{$data->tautan}}">{{$data->tautan}}</a></td>
                         </tr>

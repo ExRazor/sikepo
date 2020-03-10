@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('community-service-show',$data) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('profile-community-service-show',$data) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -137,7 +137,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="4">
+                                            <td class="text-center" colspan="4">
                                                 BELUM ADA DATA
                                             </td>
                                         </tr>
@@ -181,7 +181,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="2">
+                                            <td class="text-center" colspan="2">
                                                 BELUM ADA DATA
                                             </td>
                                         </tr>

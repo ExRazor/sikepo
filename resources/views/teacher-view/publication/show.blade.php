@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('publication-student-show',$data) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('profile-publication-show',$data) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -23,17 +23,17 @@
     <i class="icon fa fa-newspaper"></i>
     <div>
         <h4>Rincian Publikasi</h4>
-        <p class="mg-b-0">Rincian data publikasi atau karya ilmiah mahasiswa</p>
+        <p class="mg-b-0">Rincian data publikasi dosen</p>
     </div>
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.student.delete') }}" data-redir="{{ route('publication.student') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('profile.publication.delete') }}" data-redir="{{ route('profile.publication') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('publication.student.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('profile.publication.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
 </div>
@@ -66,9 +66,7 @@
                             <td>Penulis Utama</td>
                             <td>:</td>
                             <td>
-                                <a href="{{route('student.profile',encode_id($data->nim))}}" target="_blank">
-                                    {{$data->student->nama}} / NIM. {{$data->nim}}
-                                </a>
+                                {{$data->teacher->nama}} / NIDN. {{$data->nidn}}
                             </td>
                         </tr>
                         <tr>
@@ -80,25 +78,44 @@
                                         <tr>
                                             <td>Nama</td>
                                             <td>Asal Program Studi</td>
+                                            <td>Status</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if($data->publicationMembers->count() )
+                                        @if($data->publicationMembers->count() || $data->publicationStudents->count() )
                                             @foreach($data->publicationMembers as $pm)
                                             <tr>
                                                 <td>
                                                     {{$pm->nama}}<br>
-                                                    <small>NIM. {{$pm->nim}}</small>
+                                                    <small>NIDN. {{$pm->nidn}}</small>
                                                 </td>
                                                 <td>
                                                     {{$pm->studyProgram->nama}}<br>
                                                     <small>{{$pm->studyProgram->department->nama.' / '.$pm->studyProgram->department->faculty->singkatan}}</small>
                                                 </td>
+                                                <td class="text-center">
+                                                    Dosen
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                            @foreach($data->publicationStudents as $ps)
+                                            <tr>
+                                                <td>
+                                                    {{$ps->nama}}<br>
+                                                    <small>NIM. {{$ps->nim}}</small>
+                                                </td>
+                                                <td>
+                                                    {{$ps->studyProgram->nama}}<br>
+                                                    <small>{{$ps->studyProgram->department->nama.' / '.$ps->studyProgram->department->faculty->singkatan}}</small>
+                                                </td>
+                                                <td class="text-center">
+                                                    Mahasiswa
+                                                </td>
                                             </tr>
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="3" class="text-center">BELUM ADA DATA</td>
+                                                <td colspan="3" class="text-center">DATA KOSONG</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -136,7 +153,7 @@
                             <td>{{$data->sitasi}}</td>
                         </tr>
                         <tr>
-                            <td>Tautan</td>
+                            <td>Tautan Jurnal</td>
                             <td>:</td>
                             <td><a href="{{$data->tautan}}">{{$data->tautan}}</a></td>
                         </tr>

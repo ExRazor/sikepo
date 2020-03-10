@@ -11,6 +11,8 @@ use App\ResearchStudent;
 use App\CommunityService;
 use App\CommunityServiceTeacher;
 use App\CommunityServiceStudent;
+use App\TeacherPublication;
+use App\TeacherPublicationMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -144,6 +146,48 @@ class TeacherProfileController extends Controller
         } else {
             return abort(404);
         }
+    }
+
+    public function publication()
+    {
+        $publikasiKetua    = TeacherPublication::where('nidn',Auth::user()->username)->get();
+
+        $publikasiAnggota  = TeacherPublication::whereHas(
+                                                    'publicationMembers', function($query) {
+                                                        $query->where('nidn',Auth::user()->username);
+                                                    }
+                                                )
+                                                ->get();
+
+        return view('teacher-view.publication.index',compact(['publikasiKetua','publikasiAnggota']));
+    }
+
+    public function publication_create()
+    {
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $jenis        = PublicationCategory::all();
+
+        return view('teacher-view.publication.form',compact(['studyProgram','jenis']));
+    }
+
+    public function publication_show($id)
+    {
+        $id   = decode_id($id);
+        $data = TeacherPublication::find($id);
+
+        return view('teacher-view.publication.show',compact(['data']));
+    }
+
+    public function publication_edit($id)
+    {
+        $id   = decode_id($id);
+
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $jenis        = PublicationCategory::all();
+        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
+        $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+
+        return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
     }
 
     public function update_biodata(Request $request)

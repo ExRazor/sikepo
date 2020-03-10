@@ -139,7 +139,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="4">
+                                            <td class="text-center" colspan="4">
                                                 BELUM ADA DATA
                                             </td>
                                         </tr>

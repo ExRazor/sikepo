@@ -535,21 +535,87 @@ Breadcrumbs::for('setting-user', function ($trail) {
     $trail->push('Manajemen User',route('setting.user'));
 });
 
-// Profile Dosen
+// Profile
 Breadcrumbs::for('profile', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Profil');
 });
 
+// Profile - Biodata
 Breadcrumbs::for('profile-biodata', function ($trail) {
     $trail->parent('profile');
     $trail->push('Ubah Biodata', route('profile.biodata'));
 });
 
+// Profile - Prestasi
 Breadcrumbs::for('profile-achievement', function ($trail) {
     $trail->parent('profile');
     $trail->push('Prestasi', route('profile.achievement'));
 });
+
+// Profile - Penelitian
+Breadcrumbs::for('profile-research', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Data Penelitian', route('profile.research'));
+});
+
+Breadcrumbs::for('profile-research-add', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Tambah Data Penelitian', route('profile.research.add'));
+});
+
+Breadcrumbs::for('profile-research-show', function ($trail,$data) {
+    $trail->parent('profile');
+    $trail->push('Data Penelitian: '.$data->judul_penelitian, route('profile.research.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('profile-research-edit', function ($trail,$data) {
+    $trail->parent('profile-research-show',$data);
+    $trail->push('Sunting Data Penelitian');
+});
+
+// Profile - Pengabdian
+Breadcrumbs::for('profile-community-service', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Data Pengabdian', route('profile.community-service'));
+});
+
+Breadcrumbs::for('profile-community-service-add', function ($trail) {
+    $trail->parent('profile-community-service');
+    $trail->push('Tambah Data Pengabdian', route('profile.community-service.add'));
+});
+
+Breadcrumbs::for('profile-community-service-show', function ($trail,$data) {
+    $trail->parent('profile-community-service');
+    $trail->push('Data Pengabdian: '.$data->judul_pengabdian, route('profile.community-service.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('profile-community-service-edit', function ($trail,$data) {
+    $trail->parent('profile-community-service-show',$data);
+    $trail->push('Sunting Data Pengabdian');
+});
+
+// Profile - Publikasi
+Breadcrumbs::for('profile-publication', function ($trail) {
+    $trail->parent('profile');
+    $trail->push('Data Publikasi', route('profile.publication'));
+});
+
+Breadcrumbs::for('profile-publication-add', function ($trail) {
+    $trail->parent('profile-publication');
+    $trail->push('Tambah Publikasi', route('profile.publication.add'));
+});
+
+Breadcrumbs::for('profile-publication-show', function ($trail,$data) {
+    $trail->parent('profile-publication');
+    $trail->push('Data Publikasi: '.$data->judul, route('profile.publication.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('profile-publication-edit', function ($trail,$data) {
+    $trail->parent('profile-publication');
+    $trail->push('Sunting Publikasi');
+});
+
 
 // // Home > About
 // Breadcrumbs::for('about', function ($trail) {

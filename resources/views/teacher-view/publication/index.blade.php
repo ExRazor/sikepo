@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Data Penelitian')
+@section('title', 'Publikasi Dosen')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('profile-research') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('profile-publication') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -20,13 +20,13 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-book-reader"></i>
+    <i class="icon fa fa-newspaper"></i>
     <div>
-        <h4>Data Penelitian</h4>
-        <p class="mg-b-0">Olah Data Penelitian</p>
+        <h4>Data Publikasi Dosen</h4>
+        <p class="mg-b-0">Olah data publikasi dosen</p>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('profile.research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+        <a href="{{ route('profile.publication.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
     </div>
 </div>
 
@@ -43,28 +43,28 @@
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
                 <h6 class="card-title">
-                    Penelitian yang Diketuai
+                    Publikasi Sendiri
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center" width="600">Judul Penelitian</th>
-                            <th class="text-center defaultSort" width="100">Tahun Penelitian</th>
-                            <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
-                            <th class="text-center no-sort" width="50">Aksi</th>
+                            <th class="text-center all" width="600">Judul Publikasi</th>
+                            <th class="text-center all" width="250">Jenis Publikasi</th>
+                            <th class="text-center defaultSort all" width="100">Tahun Terbit</th>
+                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
+                            <th class="text-center no-sort all" width="50">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($penelitianKetua as $p)
+                        @foreach ($publikasiKetua as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.research.show',encode_id($p->id))}}">
-                                    {{ $p->judul_penelitian }}
-                                </a>
+                                <a href="{{route('profile.publication.show',encode_id($p->id))}}">{{ $p->judul }}</a>
                             </td>
-                            <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
+                            <td>{{ $p->publicationCategory->nama }}</td>
+                            <td class="text-center">{{ $p->tahun }}</td>
                             <td class="text-center">
                                 @isset($p->sesuai_prodi)
                                     <i class="fa fa-check"></i>
@@ -76,10 +76,10 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('profile.research.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('profile.publication.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('profile.research.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('profile.publication.delete') }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>
@@ -95,27 +95,27 @@
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
                 <h6 class="card-title">
-                    Penelitian yang Dianggotai
+                    Publikasi Bersama
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_research" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center" width="600">Judul Penelitian</th>
-                            <th class="text-center defaultSort" width="100">Tahun Penelitian</th>
-                            <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
+                            <th class="text-center all" width="600">Judul Publikasi</th>
+                            <th class="text-center all" width="250">Jenis Publikasi</th>
+                            <th class="text-center defaultSort all" width="100">Tahun Terbit</th>
+                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($penelitianAnggota as $p)
+                        @foreach ($publikasiAnggota as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.research.show',encode_id($p->id))}}">
-                                    {{ $p->judul_penelitian }}
-                                </a>
+                                <a href="{{route('profile.publication.show',encode_id($p->id))}}">{{ $p->judul }}</a>
                             </td>
-                            <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
+                            <td>{{ $p->publicationCategory->nama }}</td>
+                            <td class="text-center">{{ $p->tahun }}</td>
                             <td class="text-center">
                                 @isset($p->sesuai_prodi)
                                     <i class="fa fa-check"></i>

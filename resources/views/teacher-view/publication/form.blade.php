@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-teacher-edit' : 'publication-teacher-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'profile-publication-edit' : 'profile-publication-add', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -45,7 +45,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="publication_form" action="{{route('publication.teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="publication_form" action="{{route('profile.publication.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-9 mx-auto">
@@ -56,33 +56,6 @@
                             @else
                                 @method('post')
                             @endif
-                            {{-- <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    <select id="prodi_dosen" class="form-control" name="kd_prodi" required>
-                                        <option value="">- Pilih Prodi -</option>
-                                        @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->teacher->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
-                            <div class="row mb-3">
-                                <label class="col-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    @if(Auth::user()->hasRole('kaprodi'))
-                                        <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
-                                    @endif
-                                    <select id="select-dosen" class="form-control select-dsn-prodi" name="nidn" required>
-                                        <option value="">- Pilih Dosen -</option>
-                                        @isset($data)
-                                        @foreach ($teacher as $t)
-                                            <option value="{{$t->nidn}}" {{$data->nidn == $t->nidn ? 'selected':''}}>{{$t->nama}}</option>
-                                        @endforeach
-                                        @endisset
-                                    </select>
-                                </div>
-                            </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jenis Publikasi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
@@ -165,7 +138,7 @@
                             <div id="daftarDosen">
                                 @foreach ($data->publicationMembers as $i => $pm)
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.member',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.publication.delete.member',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-2">
                                         <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ $pm->nidn }}" placeholder="NIDN" maxlength="9" readonly>
                                     </div>
@@ -200,7 +173,7 @@
                             <div id="daftarMahasiswa">
                                 @foreach ($data->publicationStudents as $i => $ps)
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.publication.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-2">
                                         <input class="form-control number" type="text" name="mahasiswa_nim[]" value="{{ $ps->nim }}" placeholder="NIM" maxlength="9" readonly>
                                     </div>
