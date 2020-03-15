@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\StudyProgram;
 use App\User;
+use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,7 +18,14 @@ class UserController extends Controller
     public function index()
     {
         $user   = User::where('role','!=','Dosen')->orderBy('created_at','asc')->get();
-        $dosen  = User::where('role','=','Dosen')->orderBy('created_at','asc')->get();
+        $dosen  = User::where('role','=','Dosen')
+                        ->whereHas(
+                            'teacher.studyProgram', function($q) {
+                                $q->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        )
+                        ->orderBy('created_at','asc')->get();
+
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
         foreach($user as $u) {
@@ -40,22 +48,14 @@ class UserController extends Controller
         return view('setting.user.index',compact(['user','studyProgram','dosen']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function edit($id)
     {
-        //
+        $id = decrypt($id);
+        $data = User::find($id);
+
+        return response()->json($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validateProdi = $request->has('kd_prodi') ? 'required' : 'nullable';
@@ -90,52 +90,6 @@ class UserController extends Controller
         }
     }
 
-    public function reset_password(Request $request)
-    {
-        $id         = decrypt($request->id);
-        $password   = generatePassword();
-
-        $data              = User::find($id);
-        $data->password    = Hash::make($password);
-        $data->defaultPass = 0;
-        $q = $data->save();
-
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Mohon ulangi lagi kembali',
-                'type'    => 'error'
-            ]);
-        } else {
-            return response()->json([
-                'title'     => 'Password baru Anda:',
-                'password'  => $password,
-                'type'      => 'success'
-            ]);
-        }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $id = decrypt($id);
-        $data = User::find($id);
-
-        return response()->json($data);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $id = decrypt($request->id);
@@ -170,12 +124,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if($request->ajax()) {
@@ -194,6 +142,31 @@ class UserController extends Controller
                     'type'    => 'success'
                 ]);
             }
+        }
+    }
+
+    public function reset_password(Request $request)
+    {
+        $id         = decrypt($request->id);
+        $password   = generatePassword();
+
+        $data              = User::find($id);
+        $data->password    = Hash::make($password);
+        $data->defaultPass = 0;
+        $q = $data->save();
+
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Mohon ulangi lagi kembali',
+                'type'    => 'error'
+            ]);
+        } else {
+            return response()->json([
+                'title'     => 'Password baru Anda:',
+                'password'  => $password,
+                'type'      => 'success'
+            ]);
         }
     }
 }

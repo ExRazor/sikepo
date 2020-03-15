@@ -12,14 +12,24 @@
 */
 
 // Login Routes...
-Route::get('login', 'Auth\LoginController@form')->middleware('guest')->name('login');
-Route::post('login', 'Auth\LoginController@login')->name('login_post');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('login', 'AuthController@login_form')->middleware('guest')->name('login');
+Route::post('login', 'AuthController@login_post')->name('login_post');
+Route::get('logout', 'AuthController@logout')->name('logout');
 
 Route::middleware('auth')->group(function () {
 
     //Pages Controller
     Route::get('/', 'PageController@dashboard')->name('dashboard');
+
+    Route::prefix('account')->name('account.')->group(function () {
+        //Edit Profile
+        Route::get('editprofile', 'AuthController@editprofile_form')->name('editprofile');
+        Route::post('editprofile', 'AuthController@editprofile_post')->name('editprofile_post');
+
+        //Edit Password
+        Route::get('editpassword', 'AuthController@editpassword_form')->name('editpassword');
+        Route::post('editpassword', 'AuthController@editpassword_post')->name('editpassword_post');
+    });
 
     //Master Data
     Route::prefix('master')->name('master.')->middleware('role:admin')->group(function () {

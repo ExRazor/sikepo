@@ -622,6 +622,24 @@ Breadcrumbs::for('profile-publication-edit', function ($trail,$data) {
     $trail->push('Sunting Publikasi');
 });
 
+// Akun
+Breadcrumbs::for('account', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Akun');
+});
+
+// Akun > Ganti Kata Sandi
+Breadcrumbs::for('account-editprofile', function ($trail) {
+    $trail->parent('account');
+    $trail->push('Ubah Profil',route('account.editprofile'));
+});
+
+// Akun > Ganti Kata Sandi
+Breadcrumbs::for('account-editpassword', function ($trail) {
+    $trail->parent('account');
+    $trail->push('Ubah Kata Sandi',route('account.editpassword'));
+});
+
 
 // // Home > About
 // Breadcrumbs::for('about', function ($trail) {

@@ -15,12 +15,13 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'id'       => Str::uuid()->toString(),
+                'id'         => Str::uuid()->toString(),
                 'username'   => 'admin',
                 'password'   => Hash::make('admin123'),
                 'role'       => 'admin',
                 'kd_prodi'   => null,
                 'name'       => 'Administrator',
+                'foto'       => 'administrator.jpg',
                 'created_at' => now()
             ],
             [
@@ -30,6 +31,7 @@ class UserSeeder extends Seeder
                 'role'       => 'admin',
                 'kd_prodi'   => null,
                 'name'       => 'Siddik Hatala',
+                'foto'       => null,
                 'created_at' => now()
             ],
             [
@@ -39,6 +41,7 @@ class UserSeeder extends Seeder
                 'role'       => 'kajur',
                 'kd_prodi'   => null,
                 'name'       => 'Kepala Jurusan',
+                'foto'       => null,
                 'created_at' => now()
             ],
             [
@@ -48,6 +51,7 @@ class UserSeeder extends Seeder
                 'role'       => 'kaprodi',
                 'kd_prodi'   => '57201',
                 'name'       => 'Kaprodi Sistem Informasi',
+                'foto'       => null,
                 'created_at' => now()
             ],
             [
@@ -57,6 +61,7 @@ class UserSeeder extends Seeder
                 'role'       => 'kaprodi',
                 'kd_prodi'   => '83207',
                 'name'       => 'Kaprodi PTI',
+                'foto'       => null,
                 'created_at' => now()
             ],
         ]);

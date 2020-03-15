@@ -19,9 +19,10 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('role');
             $table->string('kd_prodi')->nullable();
+            $table->string('name');
+            $table->string('foto')->nullable();
             $table->char('defaultPass',1)->nullable();
             $table->string('remember_token')->nullable();
-            $table->string('name');
             $table->timestamps();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

@@ -15,23 +15,30 @@
         <div class="dropdown">
             <a href="" class="nav-link nav-link-profile" data-toggle="dropdown">
             <span class="logged-name hidden-md-down">{{Auth::user()->name}}</span>
-            <img src="https://via.placeholder.com/500" class="wd-32 rounded-circle" alt="">
+            @if(!Auth::user()->hasRole('dosen'))
+                <img class="wd-32 rounded-circle" src="{{isset(Auth::user()->foto) ? route('download.avatar','type=user&id='.encrypt(Auth::user()->foto)) : route('download.avatar','type=avatar&id='.encrypt('user.png'))}}" alt="{{Auth::user()->name}}">
+            @else
+                <img class="wd-32 rounded-circle" src="{{isset(Auth::user()->teacher->foto) ? route('download.avatar','type=teacher&id='.encrypt(Auth::user()->teacher->foto)) : route('download.avatar','type=avatar&id='.encrypt('user.png'))}}" alt="{{Auth::user()->name}}">
+            @endif
             <span class="square-10 bg-success"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-header wd-250">
             <div class="tx-center">
-                <a href=""><img src="https://via.placeholder.com/500" class="wd-80 rounded-circle" alt=""></a>
+                @if(!Auth::user()->hasRole('dosen'))
+                    <img class="wd-80 rounded-circle" src="{{isset(Auth::user()->foto) ? route('download.avatar','type=user&id='.encrypt(Auth::user()->foto)) : route('download.avatar','type=avatar&id='.encrypt('user.png'))}}" alt="{{Auth::user()->name}}">
+                @else
+                    <img class="wd-80 rounded-circle" src="{{isset(Auth::user()->teacher->foto) ? route('download.avatar','type=teacher&id='.encrypt(Auth::user()->teacher->foto)) : route('download.avatar','type=avatar&id='.encrypt('user.png'))}}" alt="{{Auth::user()->name}}">
+                @endif
                 <h6 class="logged-fullname">{{Auth::user()->name}}</h6>
                 <p>{{ucfirst(Auth::user()->role)}}{{isset(Auth::user()->kd_prodi) ? ' - '.Auth::user()->studyProgram->nama : ''}}</p>
             </div>
             <hr>
             <ul class="list-unstyled user-profile-nav">
-                <li><a href=""><i class="icon ion-ios-person"></i> Edit Profile</a></li>
-                <li><a href=""><i class="icon ion-ios-gear"></i> Settings</a></li>
-                <li><a href=""><i class="icon ion-ios-download"></i> Downloads</a></li>
-                <li><a href=""><i class="icon ion-ios-star"></i> Favorites</a></li>
-                <li><a href=""><i class="icon ion-ios-folder"></i> Collections</a></li>
-                <li><a href="{{route('logout')}}"><i class="icon ion-power"></i> Sign Out</a></li>
+                @if(!Auth::user()->hasRole('dosen'))
+                <li><a href="{{route('account.editprofile')}}"><i class="icon ion-ios-person"></i> Ubah Profil</a></li>
+                @endif
+                <li><a href="{{route('account.editpassword')}}"><i class="icon ion-ios-gear"></i> Ganti Kata Sandi</a></li>
+                <li><a href="{{route('logout')}}"><i class="icon ion-power"></i> Keluar</a></li>
             </ul>
             </div><!-- dropdown-menu -->
         </div><!-- dropdown -->

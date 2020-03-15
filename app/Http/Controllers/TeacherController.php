@@ -58,7 +58,6 @@ class TeacherController extends Controller
                             ->get();
         }
 
-
         return view('teacher/index',compact(['studyProgram','faculty','data']));
     }
 
@@ -256,7 +255,7 @@ class TeacherController extends Controller
 
             $file = $request->file('foto');
             $tujuan_upload = public_path('upload/teacher');
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
+            $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
         }

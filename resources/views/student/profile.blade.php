@@ -80,7 +80,7 @@
                                 <h4>-</h4>
                                 <div class="ml-auto">
                                     <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
-                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Biodata Mahasiswa</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Biodata</a></li>
                                         @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>

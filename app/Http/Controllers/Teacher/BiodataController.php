@@ -70,18 +70,18 @@ class BiodataController extends Controller
 
             $file = $request->file('foto');
             $tujuan_upload = public_path('upload/teacher');
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
+            $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
         }
 
-        if(isset($Teacher->foto) && File::exists($storagePath))
-        {
-            $ekstensi = File::extension($storagePath);
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$ekstensi;
-            File::move($storagePath,public_path('upload/teacher/'.$filename));
-            $Teacher->foto = $filename;
-        }
+        // if(isset($Teacher->foto) && File::exists($storagePath))
+        // {
+        //     $ekstensi = File::extension($storagePath);
+        //     $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$ekstensi;
+        //     File::move($storagePath,public_path('upload/teacher/'.$filename));
+        //     $Teacher->foto = $filename;
+        // }
 
         $Teacher->save();
 
@@ -90,7 +90,7 @@ class BiodataController extends Controller
         $user->name    = $request->nama;
         $user->save();
 
-        return redirect()->route('teacher-view.biodata')->with('flash.message', 'Biodata berhasil diperbarui!')->with('flash.class', 'success');
+        return redirect()->route('profile.biodata')->with('flash.message', 'Biodata berhasil diperbarui!')->with('flash.class', 'success');
     }
 
 }

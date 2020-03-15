@@ -19,8 +19,9 @@ class User extends Authenticatable
         'role'                ,
         'kd_prodi'            ,
         'name'                ,
-        'remember_token'      ,
+        'foto'                ,
         'defaultPass'         ,
+        'remember_token'      ,
     ];
 
     public function studyProgram()
