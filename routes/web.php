@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     //Pages Controller
     Route::get('/', 'PageController@dashboard')->name('dashboard');
 
+    //Account Setting
     Route::prefix('account')->name('account.')->group(function () {
         //Edit Profile
         Route::get('editprofile', 'AuthController@editprofile_form')->name('editprofile');
@@ -547,4 +548,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
     Route::get('/download/teacher/achievement/{filename}','TeacherAchievementController@download')->name('teacher.achievement.download');
     Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');
+
+
+    //Penilaian
+    Route::prefix('assessment')->name('assessment.')->group(function () {
+        //Kerja Sama
+        Route::get('collaboration', 'Perhitungan\KerjaSamaController@kerjasama')->name('collaboration');
+
+        //Mahasiswa
+        Route::get('student', 'Perhitungan\MahasiswaController@index')->name('student');
+    });
 });

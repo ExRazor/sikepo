@@ -628,7 +628,7 @@ Breadcrumbs::for('account', function ($trail) {
     $trail->push('Akun');
 });
 
-// Akun > Ganti Kata Sandi
+// Akun > Ganti Profil
 Breadcrumbs::for('account-editprofile', function ($trail) {
     $trail->parent('account');
     $trail->push('Ubah Profil',route('account.editprofile'));

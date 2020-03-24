@@ -49,21 +49,21 @@ class StudyProgramSeeder extends Seeder
         $faker = Faker::create('id_ID');
         $jenjang = ['D3','S1','S2','S3'];
 
-        for($i = 0; $i < 20; $i++){
-            $kd_prodi = rand(22222, 59999);
-            DB::table('study_programs')->insert([
-                [
-                    'kd_prodi'      => $kd_prodi,
-                    'kd_jurusan'    => Department::where('kd_jurusan','!=',setting('app_department_id'))->inRandomOrder()->first()->kd_jurusan,
-                    'kd_unik'       => substr($kd_prodi, 0, -1),
-                    'nama'          => 'Program Studi Random '.$i,
-                    'singkatan'     => 'PSR'.$i,
-                    'jenjang'       => $jenjang[array_rand($jenjang)],
-                    'nip_kaprodi'   => rand(197201011982010101, 199001012000010101),
-                    'nm_kaprodi'    => $faker->name,
-                    'created_at'    => now()
-                ],
-            ]);
-        }
+        // for($i = 0; $i < 20; $i++){
+        //     $kd_prodi = rand(22222, 59999);
+        //     DB::table('study_programs')->insert([
+        //         [
+        //             'kd_prodi'      => $kd_prodi,
+        //             'kd_jurusan'    => Department::where('kd_jurusan','!=',setting('app_department_id'))->inRandomOrder()->first()->kd_jurusan,
+        //             'kd_unik'       => substr($kd_prodi, 0, -1),
+        //             'nama'          => 'Program Studi Random '.$i,
+        //             'singkatan'     => 'PSR'.$i,
+        //             'jenjang'       => $jenjang[array_rand($jenjang)],
+        //             'nip_kaprodi'   => rand(197201011982010101, 199001012000010101),
+        //             'nm_kaprodi'    => $faker->name,
+        //             'created_at'    => now()
+        //         ],
+        //     ]);
+        // }
     }
 }

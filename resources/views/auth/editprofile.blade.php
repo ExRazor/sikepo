@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Ubah Kata Sandi')
+@section('title', 'Ubah Profil')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('account-editpassword') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('account-editprofile') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -18,8 +18,8 @@
 <div class="br-pagetitle">
         <i class="icon fa fa-pen-square"></i>
         <div>
-            <h4>Kata Sandi</h4>
-            <p class="mg-b-0">Ubah Kata Sandi</p>
+            <h4>Profil</h4>
+            <p class="mg-b-0">Ubah Setelan Profil</p>
         </div>
     </div>
 
