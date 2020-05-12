@@ -187,10 +187,92 @@
         </div>
     </div>
 </div>
+@include('simulasi.kerjasama.modal')
 @endsection
 
+
 @section('js')
-<script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+<script src="{{asset('assets')}}/simulasi.js"></script>
+@endsection
+
+@section('custom-js')
+<script>
+    $(document).ready(hitung);
+
+    $('.form-isi').on('keyup', function(){
+        hitung();
+    })
+
+    function hitung(){
+        var dosen 	   	= $('#sim_dosen').val();
+        var pendidikan 	= $('#sim_pendidikan').val();
+        var penelitian 	= $('#sim_penelitian').val();
+        var pkm		   	= $('#sim_pkm').val();
+        var NI 	   		= $('#sim_internasional').val();
+        var NN   		= $('#sim_nasional').val();
+        var NL 			= $('#sim_lokal').val();
+        var faktor_jenis_a 		= 3;
+        var faktor_jenis_b 		= 2;
+        var faktor_jenis_c 		= 1;
+        var faktor_tingkat_a 	= 2;
+        var faktor_tingkat_b 	= 6;
+        var faktor_tingkat_c 	= 9;
+        var skor_a;
+        var skor_b;
+        var skor;
+
+        var RPend  = (faktor_jenis_a*pendidikan);
+        var RPene  = (faktor_jenis_b*penelitian);
+        var RPkm   = (faktor_jenis_c*pkm);
+
+        $('span.rata_pendidikan').text(RPend.toFixed(2));
+        $('span.rata_penelitian').text(RPene.toFixed(2));
+        $('span.rata_pkm').text(RPkm.toFixed(2));
+
+        //Skor A
+        rata_a = (RPend+RPene+RPkm)/dosen;
+        if(rata_a >= 4) {
+            skor_a  = 4;
+            rumus_a = "4";
+        } else if(rata_a < 4) {
+            skor_a  = rata_a;
+            rumus_a = "((a x N1) + (b x N2) + (c x N3)) / NDTPS"
+        } else {
+            skor_a = 0;
+            rumus_a = null;
+        }
+        $('#rumus_a').text(rumus_a);
+        $('#skor_a').val(skor_a.toFixed(2));
+
+        //Skor B
+        if(NI >= faktor_tingkat_a) {
+            skor_b  = 4;
+            rumus_b = "4";
+        } else if(NI < faktor_tingkat_a && NN >= faktor_tingkat_b) {
+            skor_b  = 3 + (NI/faktor_tingkat_a);
+            rumus_b = "3 + (NI / a)";
+        } else if((NI > 0 && NI < faktor_tingkat_a) || (NN > 0 && NN < faktor_tingkat_b)) {
+            skor_b  = 2 + (2 * (NI/faktor_tingkat_a)) + (NN/faktor_tingkat_b) - ((NI * NN)/(faktor_tingkat_a * faktor_tingkat_b));
+            rumus_b = "2 + (2 x (NI/a)) + (NN/b) - ((NI x NN)/(a x b))"
+        } else if (NI == 0 && NN == 0 && NL >= faktor_tingkat_c) {
+            skor_b  = 2;
+            rumus_b = "2";
+        } else if (NI == 0 && NN == 0 && NL < faktor_tingkat_c) {
+            skor_b  = (2 * NL) / faktor_tingkat_c;
+            rumus_b = "(2 x NL) / c";
+        } else {
+            skor_b = 0;
+            rumus_b = null;
+        }
+        $('#rumus_b').text(rumus_b);
+        $('#skor_b').val(skor_b.toFixed(2));
+
+        //Skor Total
+        skor  = ((2*skor_a)+skor_b)/3
+        rumus = "((2 x A) + B) / 3"
+        $('#rumus').text(rumus);
+        $('#skor').val(skor.toFixed(2));
+
+    }
+</script>
 @endsection

@@ -557,5 +557,8 @@ Route::middleware('auth')->group(function () {
 
         //Mahasiswa
         Route::get('student', 'Perhitungan\MahasiswaController@index')->name('student');
+
+        //Sumber Daya Manusia
+        Route::get('resource', 'Perhitungan\SdmController@index')->name('resource');
     });
 });

@@ -1,7 +1,7 @@
 <label class="sidebar-label pd-x-10 mg-t-20 op-3">Navigation</label>
 <ul class="br-sideleft-menu">
     <li class="br-menu-item">
-    <a href="{{ route('dashboard') }}" class="br-menu-link {{ (request()->segment(1) == 'dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard') }}" class="br-menu-link {{ (request()->is('/')) ? 'active' : '' }}">
         <i class="menu-item-icon icon ion-ios-home-outline tx-24"></i>
         <span class="menu-item-label">Beranda</span>
     </a><!-- br-menu-link -->
@@ -114,6 +114,7 @@
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('assessment.collaboration') }}" class="sub-link {{ (request()->is('assessment/collaboration*')) ? 'active' : '' }}">Kerja Sama</a></li>
             <li class="sub-item"><a href="{{ route('assessment.student') }}" class="sub-link {{ (request()->is('assessment/student')) ? 'active' : '' }}">Mahasiswa</a></li>
+            <li class="sub-item"><a href="{{ route('assessment.resource') }}" class="sub-link {{ (request()->is('assessment/resource')) ? 'active' : '' }}">Sumber Daya Manusia</a></li>
         </ul>
     </li>
     @endif
