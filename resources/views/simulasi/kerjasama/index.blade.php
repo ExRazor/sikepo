@@ -36,49 +36,42 @@
             {{ session('flash.message') }}
         </div>
     @endif
-    @if(!Auth::user()->hasRole('kaprodi'))
-    <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.research.filter')}}" id="filter-research" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    @if(!Auth::user()->hasRole('kajur'))
-                    <div class="mg-r-10">
-                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                            <option value="0">Semua Jurusan</option>
-                            @foreach($faculty as $f)
-                                @if($f->department->count())
-                                <optgroup label="{{$f->nama}}">
-                                    @foreach($f->department as $d)
-                                    <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
+    <div class="card shadow-base mb-3">
+        <form id="form_penilaian" method="POST" enctype="application/x-www-form-urlencoded">
+            <div class="card-body bd-color-gray-lighter">
+                <div class="row">
+                    <div class="col-md-4 offset-md-4">
+                        <div class="form-group">
+                            <label>Program Studi:<span class="tx-danger">*</span></label>
+                            <div id="prodi" class="parsley-select">
+                                <select class="form-control" name="kd_prodi" data-placeholder="Pilih Prodi" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
+                                    {{-- <option value="0">Semua</option> --}}
+                                    @foreach ($studyProgram as $sp)
+                                    <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->kd_prodi==$sp->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi  ? 'selected' : ''}}>{{$sp->nama}}</option>
                                     @endforeach
-                                </optgroup>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
-                    <div class="mg-r-10">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="card-footer bd-color-gray-lighter">
+                <div class="row">
+                    <div class="col-6 mx-auto">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-info btn-submit">Tampilkan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    @endif
-    <div class="widget-2">
+    <div id="penilaian_kerjasama" class="widget-2 hasil-penilaian d-none">
         <div class="card shadow-base mb-3">
             <div class="card-header">
                 <div class="card-title">
                     <h6 class="mg-b-0">
-                        Kerja Sama
+                        Kerja Sama 3 Tahun Terakhir
                     </h6>
                 </div>
                 <div class="ml-auto">
@@ -97,14 +90,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Jumlah Dosen Tetap Program Studi (NDTPS)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['dtps']}}" disabled>
+                                    <input type="text" class="form-control" id="dtps" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 ml-auto">
                                 <div class="form-group">
                                     <label>Skor</label>
-                                        <input type="text" class="form-control" value="{{number_format ( $skor['total'], 2 )}}" disabled>
-                                    <small class="form-text text-muted">Skor = {{$rumus['total']}}</small>
+                                        <input type="text" class="form-control" id="skor" disabled>
+                                    <small class="form-text text-muted">Skor = <span id="rumus"></span></small>
                                 </div>
                             </div>
                         </div>
@@ -112,29 +105,29 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="pendidikan">Kerja Sama Pendidikan (N1)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['pendidikan']}}" disabled>
-                                    <small class="form-text text-muted">a * N1 = {{number_format ( $rata['pendidikan'], 2 )}}</small>
+                                    <input type="text" class="form-control" id="pendidikan" disabled>
+                                    <small class="form-text text-muted">a * N1 = <span class="rata_pendidikan">0</span></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="penelitian">Kerja Sama Penelitian (N2)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['penelitian']}}" disabled>
-                                    <small class="form-text text-muted">b * N2 = {{number_format ( $rata['penelitian'], 2 )}}</small>
+                                    <input type="text" class="form-control" id="penelitian" disabled>
+                                    <small class="form-text text-muted">b * N2 = <span class="rata_penelitian">0</span></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="pkm">Kerja Sama PkM (N3)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['pengabdian']}}" disabled>
-                                    <small class="form-text text-muted">c * N3 = {{number_format ( $rata['pengabdian'], 2 )}}</small>
+                                    <input type="text" class="form-control" id="pkm" disabled>
+                                    <small class="form-text text-muted">c * N3 = <span class="rata_pkm">0</span></small>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="skor_a">Skor A (RK)</label>
-                                    <input type="text" class="form-control" value="{{number_format ( $skor['a'], 2 )}}" disabled>
-                                    <small class="form-text text-muted">A = {{$rumus['a']}}</small>
+                                    <input type="text" class="form-control" id="skor_a" disabled>
+                                    <small class="form-text text-muted">A = <span id="rumus_a"></span></small>
                                 </div>
                             </div>
                         </div>
@@ -142,29 +135,29 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="internasional">Kerjasama Internasional (NI)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['internasional']}}" disabled>
+                                    <input type="text" class="form-control" id="internasional" disabled>
                                     <!-- <small class="form-text text-muted">RI = NI/NDT = <span class="rata_inter">0</span></small> -->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="nasional">Kerjasama Nasional (NN)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['nasional']}}" disabled>
+                                    <input type="text" class="form-control" id="nasional" disabled>
                                     <!-- <small class="form-text text-muted">RN = NN/NDT = <span class="rata_nasional">0</span></small> -->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="lokal">Kerjasama Lokal (NL)</label>
-                                    <input type="text" class="form-control" value="{{$jumlah['lokal']}}" disabled>
+                                    <input type="text" class="form-control" id="lokal" disabled>
                                     <!-- <small class="form-text text-muted">RL = NL/NDT = <span class="rata_lokal">0</span></small> -->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="skor_b">Skor B</label>
-                                    <input type="text" class="form-control" value="{{number_format ( $skor['b'], 2 )}}" readonly>
-                                    <small class="form-text text-muted">B = {{$rumus['b']}}</small>
+                                    <input type="text" class="form-control" id="skor_b" readonly>
+                                    <small class="form-text text-muted">B = <span id="rumus_b"></span></small>
                                 </div>
                             </div>
                         </div>
@@ -197,82 +190,51 @@
 
 @section('custom-js')
 <script>
-    $(document).ready(hitung);
 
-    $('.form-isi').on('keyup', function(){
-        hitung();
-    })
+$('#form_penilaian').submit(function(e){
+    e.preventDefault();
 
-    function hitung(){
-        var dosen 	   	= $('#sim_dosen').val();
-        var pendidikan 	= $('#sim_pendidikan').val();
-        var penelitian 	= $('#sim_penelitian').val();
-        var pkm		   	= $('#sim_pkm').val();
-        var NI 	   		= $('#sim_internasional').val();
-        var NN   		= $('#sim_nasional').val();
-        var NL 			= $('#sim_lokal').val();
-        var faktor_jenis_a 		= 3;
-        var faktor_jenis_b 		= 2;
-        var faktor_jenis_c 		= 1;
-        var faktor_tingkat_a 	= 2;
-        var faktor_tingkat_b 	= 6;
-        var faktor_tingkat_c 	= 9;
-        var skor_a;
-        var skor_b;
-        var skor;
+    var data      = $(this).serialize();
+    // var indikator = $(this).find('select[name=indikator]').val();
+    var indikator = "penilaian_kerjasama";
+    var button    = $(this).find('button[type=submit]');
 
-        var RPend  = (faktor_jenis_a*pendidikan);
-        var RPene  = (faktor_jenis_b*penelitian);
-        var RPkm   = (faktor_jenis_c*pkm);
+    button.html('<i class="fa fa-circle-notch fa-spin"></i>');
+    button.attr('disabled',true);
 
-        $('span.rata_pendidikan').text(RPend.toFixed(2));
-        $('span.rata_penelitian').text(RPene.toFixed(2));
-        $('span.rata_pkm').text(RPkm.toFixed(2));
+    $.ajax({
+        url: '/assessment/collaboration',
+        type: 'POST',
+        data: data,
+        dataType: 'json',
+        success: function (data) {
 
-        //Skor A
-        rata_a = (RPend+RPene+RPkm)/dosen;
-        if(rata_a >= 4) {
-            skor_a  = 4;
-            rumus_a = "4";
-        } else if(rata_a < 4) {
-            skor_a  = rata_a;
-            rumus_a = "((a x N1) + (b x N2) + (c x N3)) / NDTPS"
-        } else {
-            skor_a = 0;
-            rumus_a = null;
+            $('#penilaian_kerjasama')
+                .find('#dtps').val(data.jumlah['dtps']).end()
+                .find('#skor').val(data.skor['total']).end()
+                .find('#pendidikan').val(data.jumlah['pendidikan']).end()
+                .find('#penelitian').val(data.jumlah['penelitian']).end()
+                .find('#pkm').val(data.jumlah['pengabdian']).end()
+                .find('#skor_a').val(data.skor['a']).end()
+                .find('#internasional').val(data.jumlah['internasional']).end()
+                .find('#nasional').val(data.jumlah['nasional']).end()
+                .find('#lokal').val(data.jumlah['lokal']).end()
+                .find('#skor_b').val(data.skor['b']).end()
+                .find('span.rumus').val(data.rumus['total']).end()
+                .find('span.rata_pendidikan').val(data.rata['pendidikan']).end()
+                .find('span.rata_penelitian').val(data.rata['penelitian']).end()
+                .find('span.rata_pkm').val(data.rata['pengabdian']).end()
+                .find('span.rumus_a').val(data.rumus['a']).end()
+                .find('span.rumus_b').val(data.rumus['b']).end();
+
+            button.attr('disabled', false);
+            button.text('Tampilkan');
+            $('.hasil-penilaian').addClass('d-none');
+            $('#'+indikator).removeClass('d-none');
         }
-        $('#rumus_a').text(rumus_a);
-        $('#skor_a').val(skor_a.toFixed(2));
+    });
+})
 
-        //Skor B
-        if(NI >= faktor_tingkat_a) {
-            skor_b  = 4;
-            rumus_b = "4";
-        } else if(NI < faktor_tingkat_a && NN >= faktor_tingkat_b) {
-            skor_b  = 3 + (NI/faktor_tingkat_a);
-            rumus_b = "3 + (NI / a)";
-        } else if((NI > 0 && NI < faktor_tingkat_a) || (NN > 0 && NN < faktor_tingkat_b)) {
-            skor_b  = 2 + (2 * (NI/faktor_tingkat_a)) + (NN/faktor_tingkat_b) - ((NI * NN)/(faktor_tingkat_a * faktor_tingkat_b));
-            rumus_b = "2 + (2 x (NI/a)) + (NN/b) - ((NI x NN)/(a x b))"
-        } else if (NI == 0 && NN == 0 && NL >= faktor_tingkat_c) {
-            skor_b  = 2;
-            rumus_b = "2";
-        } else if (NI == 0 && NN == 0 && NL < faktor_tingkat_c) {
-            skor_b  = (2 * NL) / faktor_tingkat_c;
-            rumus_b = "(2 x NL) / c";
-        } else {
-            skor_b = 0;
-            rumus_b = null;
-        }
-        $('#rumus_b').text(rumus_b);
-        $('#skor_b').val(skor_b.toFixed(2));
 
-        //Skor Total
-        skor  = ((2*skor_a)+skor_b)/3
-        rumus = "((2 x A) + B) / 3"
-        $('#rumus').text(rumus);
-        $('#skor').val(skor.toFixed(2));
-
-    }
 </script>
 @endsection

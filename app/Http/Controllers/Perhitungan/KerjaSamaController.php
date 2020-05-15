@@ -5,20 +5,33 @@ namespace App\Http\Controllers\Perhitungan;
 use App\Collaboration;
 use App\Http\Controllers\Controller;
 use App\Teacher;
+use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class KerjaSamaController extends Controller
 {
-    public function kerjasama()
+    public function index()
     {
-        $dtps       = Teacher::where('kd_prodi',Auth::user()->kd_prodi)->where('ikatan_kerja','Dosen Tetap PS')->count();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_Id'))->get();
+
+        return view('simulasi.kerjasama.index',compact('jumlah','rata','skor','rumus','studyProgram'));
+    }
+
+    public function kerjasama(Request $request)
+    {
+        if(Auth::user()->hasRole('kaprodi')) {
+            $prodi = Auth::user()->kd_prodi;
+        } else {
+            $prodi = $request->post('kd_prodi');
+        }
+
         $kerjasama  = Collaboration::whereHas(
                                         'academicYear', function($q) {
                                             $q->whereBetween('tahun_akademik', [date('Y',strtotime('-3 year')),date('Y')]);
                                         }
                                     )
-                                    ->where('kd_prodi',Auth::user()->kd_prodi)
+                                    ->where('kd_prodi',$prodi)
                                     ->get();
 
         $faktor_jenis = array(
@@ -34,7 +47,7 @@ class KerjaSamaController extends Controller
         );
 
         $jumlah = array(
-            'dtps'          => $dtps,
+            'dtps'          => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->count(),
             'pendidikan'    => $kerjasama->where('jenis','Pendidikan')->count(),
             'penelitian'    => $kerjasama->where('jenis','Penelitian')->count(),
             'pengabdian'    => $kerjasama->where('jenis','Pengabdian')->count(),
@@ -86,9 +99,15 @@ class KerjaSamaController extends Controller
         }
 
         //SKOR
-        $skor['total']  = ((2*$skor['a'])+$skor['b'])/3;
+        $skor['total']  = rata( ((2*$skor['a'])+$skor['b'])/3 );
         $rumus['total'] = "((2 x A) + B) / 3";
 
-        return view('simulasi.kerjasama.index',compact('jumlah','rata','skor','rumus'));
+        $data = compact(['jumlah','rata','skor','rumus']);
+
+        if($request->ajax()) {
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
     }
 }

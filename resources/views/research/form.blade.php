@@ -92,6 +92,31 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
+                                <label class="col-3 form-control-label">Tingkat Penelitian: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-lg-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_penelitian" type="radio" value="Internasional" {{ isset($data) && ($data->tingkat_penelitian=='Internasional' || Request::old('tingkat_penelitian')=='Internasional') ? 'checked' : ''}} required>
+                                                <span>Internasional</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_penelitian" type="radio" value="Nasional" {{ isset($data) && ($data->tingkat_penelitian=='Nasional' || Request::old('tingkat_penelitian')=='Nasional') ? 'checked' : ''}} required>
+                                                <span>Nasional</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_penelitian" type="radio" value="Lokal" {{ isset($data) && ($data->tingkat_penelitian=='Lokal' || Request::old('tingkat_penelitian')=='Lokal') ? 'checked' : ''}} required>
+                                                <span>Lokal/Wilayah</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label class="col-3 form-control-label">Bidang: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <label class="ckbox ckbox-inline mb-0 mr-4">

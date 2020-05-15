@@ -16,8 +16,9 @@ class CreateResearchesTable extends Migration
         Schema::create('researches', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_ta');
-            $table->string('tema_penelitian');
             $table->string('judul_penelitian');
+            $table->string('tema_penelitian');
+            $table->string('tingkat_penelitian');
             $table->integer('sks_penelitian');
             $table->char('sesuai_prodi',1)->nullable();
             $table->string('sumber_biaya');

@@ -92,4 +92,16 @@ if (!function_exists('generatePassword')) {
     }
 }
 
+if (!function_exists('rata')) {
+    /**
+     * description
+     *
+     * @param
+     * @return
+     */
+    function rata($angka) {
+        return number_format($angka,2);
+    }
+}
+
 

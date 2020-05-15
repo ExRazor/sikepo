@@ -65,6 +65,11 @@
                             <td>{{$data->tema_penelitian}}</td>
                         </tr>
                         <tr>
+                            <td>Tingkat Penelitian</td>
+                            <td>:</td>
+                            <td>{{$data->tingkat_penelitian}}</td>
+                        </tr>
+                        <tr>
                             <td>Bidang Program Studi</td>
                             <td>:</td>
                             <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>

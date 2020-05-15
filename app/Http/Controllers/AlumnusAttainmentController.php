@@ -32,7 +32,7 @@ class AlumnusAttainmentController extends Controller
                                             $q->where('kd_prodi',$sp->kd_prodi);
                                         }
                                     )
-                                    ->where('status','Lulus');
+                                    ->where('status','Lulus')->get();
                 $jumlah[$sp->kd_prodi][$ay->tahun_akademik]    = $q->count();
                 $min_ipk[$sp->kd_prodi][$ay->tahun_akademik]   = $q->min('ipk_terakhir') ? $q->min('ipk_terakhir') : 0;
                 $rata_ipk[$sp->kd_prodi][$ay->tahun_akademik]  = $q->avg('ipk_terakhir') ? $q->avg('ipk_terakhir') :0;

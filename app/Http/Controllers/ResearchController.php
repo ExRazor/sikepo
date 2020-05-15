@@ -87,6 +87,7 @@ class ResearchController extends Controller
             'ketua_nidn'        => 'required',
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
+            'tingkat_penelitian'=> 'required',
             'sks_penelitian'    => 'required|numeric',
             'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
@@ -99,6 +100,7 @@ class ResearchController extends Controller
         $research->id_ta             = $request->id_ta;
         $research->judul_penelitian  = $request->judul_penelitian;
         $research->tema_penelitian   = $request->tema_penelitian;
+        $research->tingkat_penelitian= $request->tema_penelitian;
         $research->sks_penelitian    = $request->sks_penelitian;
         $research->sesuai_prodi      = $request->sesuai_prodi;
         $research->sumber_biaya      = $request->sumber_biaya;
@@ -163,6 +165,7 @@ class ResearchController extends Controller
             // 'ketua_nidn'        => 'required|unique:research_teachers,nidn,'.$id.',id_penelitian',
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
+            'tingkat_penelitian'=> 'required',
             'sks_penelitian'    => 'required|numeric',
             'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
@@ -175,6 +178,7 @@ class ResearchController extends Controller
         $research->id_ta             = $request->id_ta;
         $research->judul_penelitian  = $request->judul_penelitian;
         $research->tema_penelitian   = $request->tema_penelitian;
+        $research->tingkat_penelitian= $request->tingkat_penelitian;
         $research->sks_penelitian    = $request->sks_penelitian;
         $research->sesuai_prodi      = $request->sesuai_prodi;
         $research->sumber_biaya      = $request->sumber_biaya;

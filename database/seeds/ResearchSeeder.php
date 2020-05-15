@@ -41,6 +41,12 @@ class ResearchSeeder extends Seeder
             'Dna Barcoding Jagung Lokal Sulawesi Utara Berdasarkan Gen Matk'
         ];
 
+        $tingkat = [
+            'Internasional',
+            'Nasional',
+            'Lokal',
+        ];
+
         $sks_penelitian = [3,4,5,6];
 
         $sesuai = [0,1];
@@ -60,8 +66,9 @@ class ResearchSeeder extends Seeder
                 $nominal = rand(1000, 50000).'000';
                 DB::table('researches')->insert([
                     'id_ta'             => AcademicYear::all()->random()->id,
-                    'tema_penelitian'   => 'Analisis dan Perancangan',
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
+                    'tema_penelitian'   => 'Analisis dan Perancangan',
+                    'tingkat_penelitian'=> $tingkat[array_rand($tingkat)],
                     'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'sks_penelitian'    => $sks_penelitian[array_rand($sks_penelitian)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],

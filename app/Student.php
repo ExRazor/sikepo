@@ -48,7 +48,6 @@ class Student extends Model
         return $this->hasMany('App\StudentStatus','nim')->toArray();
     }
 
-
     public function latestStatus()
     {
         return $this->hasOne('App\StudentStatus','nim')->orderBy('id_ta','desc')->orderBy('id','desc')->limit(1);

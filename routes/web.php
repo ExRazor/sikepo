@@ -553,12 +553,25 @@ Route::middleware('auth')->group(function () {
     //Penilaian
     Route::prefix('assessment')->name('assessment.')->group(function () {
         //Kerja Sama
-        Route::get('collaboration', 'Perhitungan\KerjaSamaController@kerjasama')->name('collaboration');
+        Route::get('collaboration', 'Perhitungan\KerjaSamaController@index')->name('collaboration');
+        Route::post('collaboration', 'Perhitungan\KerjaSamaController@kerjasama');
 
         //Mahasiswa
         Route::get('student', 'Perhitungan\MahasiswaController@index')->name('student');
+        Route::post('student/seleksi', 'Perhitungan\MahasiswaController@mahasiswa_seleksi');
+        Route::post('student/asing', 'Perhitungan\MahasiswaController@mahasiswa_asing');
 
         //Sumber Daya Manusia
         Route::get('resource', 'Perhitungan\SdmController@index')->name('resource');
+
+        //Penelitian
+        Route::get('research', 'Perhitungan\PenelitianController@index')->name('research');
+        Route::post('research', 'Perhitungan\PenelitianController@penelitian');
+
+        //Capaian Tridharma
+        Route::get('tridharma', 'Perhitungan\TridharmaController@index')->name('tridharma');
+        Route::post('tridharma/ipk', 'Perhitungan\TridharmaController@capaian_ipk');
+        Route::post('tridharma/prestasi', 'Perhitungan\TridharmaController@prestasi_mahasiswa');
+        Route::post('tridharma/tempat_lulusan', 'Perhitungan\TridharmaController@tempat_kerja_lulusan');
     });
 });

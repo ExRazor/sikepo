@@ -115,6 +115,8 @@
             <li class="sub-item"><a href="{{ route('assessment.collaboration') }}" class="sub-link {{ (request()->is('assessment/collaboration*')) ? 'active' : '' }}">Kerja Sama</a></li>
             <li class="sub-item"><a href="{{ route('assessment.student') }}" class="sub-link {{ (request()->is('assessment/student')) ? 'active' : '' }}">Mahasiswa</a></li>
             <li class="sub-item"><a href="{{ route('assessment.resource') }}" class="sub-link {{ (request()->is('assessment/resource')) ? 'active' : '' }}">Sumber Daya Manusia</a></li>
+            <li class="sub-item"><a href="{{ route('assessment.research') }}" class="sub-link {{ (request()->is('assessment/research')) ? 'active' : '' }}">Penelitian</a></li>
+            <li class="sub-item"><a href="{{ route('assessment.tridharma') }}" class="sub-link {{ (request()->is('assessment/tridharma')) ? 'active' : '' }}">Capaian Tridharma</a></li>
         </ul>
     </li>
     @endif

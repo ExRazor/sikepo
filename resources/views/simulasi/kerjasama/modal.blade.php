@@ -15,7 +15,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Jumlah Dosen Tetap Program Studi (NDTPS)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_dosen" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_dosen">
                                     </div>
                                 </div>
                                 <div class="col-md-4 ml-auto">
@@ -30,28 +30,28 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="pendidikan">Kerja Sama Pendidikan<br>(N1)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_pendidikan" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_pendidikan">
                                         <small class="form-text text-muted">a * N1 = <span class="rata_pendidikan">0</span></small>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="penelitian">Kerja Sama Penelitian<br>(N2)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_penelitian" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_penelitian">
                                         <small class="form-text text-muted">b * N2 = <span class="rata_penelitian">0</span></small>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="pkm">Kerja Sama PkM<br>(N3)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_pkm" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_pkm">
                                         <small class="form-text text-muted">c * N3 = <span class="rata_pkm">0</span></small>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="skor_a">&nbsp;<br>Skor A</label>
-                                        <input type="text" class="form-control" id="skor_a" value="0" disabled>
+                                        <input type="text" class="form-control" id="skor_a" disabled>
                                         <small class="form-text text-muted">A = <span id="rumus_a"></span></small>
                                     </div>
                                 </div>
@@ -60,20 +60,20 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="internasional">Kerjasama Internasional<br>(NI)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_internasional" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_internasional">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="nasional">Kerjasama Nasional<br>(NN)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_nasional" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_nasional">
                                         <!-- <small class="form-text text-muted">RN = NN/NDT = <span class="rata_nasional">0</span></small> -->
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="lokal">Kerjasama Lokal<br>(NL)</label>
-                                        <input type="text" class="form-control form-isi" id="sim_lokal" value="0">
+                                        <input type="text" class="form-control form-isi" id="sim_lokal">
                                         <!-- <small class="form-text text-muted">RL = NL/NDT = <span class="rata_lokal">0</span></small> -->
                                     </div>
                                 </div>

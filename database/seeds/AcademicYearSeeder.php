@@ -12,11 +12,17 @@ class AcademicYearSeeder extends Seeder
     public function run()
     {
         for($i=2010;$i<=date('Y');$i++) {
+            if($i==date('Y')) {
+                $status = 'Aktif';
+            } else {
+                $status = 'Tidak Aktif';
+            }
+
             DB::table('academic_years')->insert([
                 [
                     'tahun_akademik' => $i,
                     'semester' => 'Ganjil',
-                    'status' => 'Tidak Aktif',
+                    'status' => $status,
                     'created_at' => now()
                 ],
                 [
