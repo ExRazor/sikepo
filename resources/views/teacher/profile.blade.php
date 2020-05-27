@@ -45,9 +45,9 @@
             <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#schedule" role="tab">Mata Kuliah</a></li>
                 <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Bimbingan</a></li>
+                <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
                 @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                     @if($data->ikatan_kerja=='Dosen Tetap PS')
-                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                     @endif
                 @endif
@@ -69,9 +69,9 @@
                     @endif
                     @include('teacher.tab-schedule')
                     @include('teacher.tab-minithesis')
+                    @include('teacher.tab-achievement')
                     @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
                         @if($data->ikatan_kerja=='Dosen Tetap PS')
-                            @include('teacher.tab-achievement')
                             @include('teacher.tab-ewmp')
                         @endif
                     @endif
