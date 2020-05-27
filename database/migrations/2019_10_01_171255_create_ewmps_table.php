@@ -23,6 +23,8 @@ class CreateEwmpsTable extends Migration
             $table->float('penelitian')->default(0);
             $table->float('pkm')->default(0);
             $table->float('tugas_tambahan')->default(0);
+            $table->float('total_sks')->default(0);
+            $table->float('rata_sks')->default(0);
             $table->timestamps();
 
             $table->unique(['id_ta','nidn']);

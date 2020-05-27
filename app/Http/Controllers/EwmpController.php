@@ -67,6 +67,9 @@ class EwmpController extends Controller
 
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
+            $total_sks = $sks['schedule_ps']+$sks['schedule_pt']+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
+            $rata_sks  = $total_sks/6;
+
             $ewmp                   = new Ewmp;
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
@@ -76,6 +79,8 @@ class EwmpController extends Controller
             $ewmp->penelitian       = $sks['penelitian'];
             $ewmp->pkm              = $sks['pengabdian'];
             $ewmp->tugas_tambahan   = $request->tugas_tambahan;
+            $ewmp->total_sks        = $total_sks;
+            $ewmp->rata_sks         = $rata_sks;
 
             $q = $ewmp->save();
 
@@ -118,6 +123,9 @@ class EwmpController extends Controller
 
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
+            $total_sks = $sks['schedule_ps']+$sks['schedule_pt']+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
+            $rata_sks  = $total_sks/6;
+
             $ewmp                   = Ewmp::find($id);
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
@@ -127,6 +135,9 @@ class EwmpController extends Controller
             $ewmp->penelitian       = $sks['penelitian'];
             $ewmp->pkm              = $sks['pengabdian'];
             $ewmp->tugas_tambahan   = $request->tugas_tambahan;
+            $ewmp->total_sks        = $total_sks;
+            $ewmp->rata_sks         = $rata_sks;
+
             $q = $ewmp->save();
 
             if(!$q) {

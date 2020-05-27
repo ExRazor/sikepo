@@ -16,6 +16,8 @@ class Ewmp extends Model
         'penelitian',
         'pkm',
         'tugas_tambahan',
+        'total_sks',
+        'rata_sks'
     ];
 
     public function academicYear()

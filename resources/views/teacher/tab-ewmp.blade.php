@@ -46,8 +46,10 @@
                                 <td class="text-center">{{ $e->penelitian }}</td>
                                 <td class="text-center">{{ $e->pkm }}</td>
                                 <td class="text-center">{{ $e->tugas_tambahan }}</td>
-                                <td class="text-center">{{ $total = $e->ps_intra+$e->ps_lain+$e->ps_luar+$e->penelitian+$e->pkm+$e->tugas_tambahan}}</td>
-                                <td class="text-center">{{ number_format($total/6, 1, ',', ' ') }}</td>
+                                {{-- <td class="text-center">{{ $total = $e->ps_intra+$e->ps_lain+$e->ps_luar+$e->penelitian+$e->pkm+$e->tugas_tambahan}}</td> --}}
+                                <td class="text-center">{{ $e->total_sks }}</td>
+                                {{-- <td class="text-center">{{ number_format($total/6, 1, ',', ' ') }}</td> --}}
+                                <td class="text-center">{{ number_format($e->rata_sks, 1, ',', ' ') }}</td>
                                 @if(!Auth::user()->hasRole('kajur'))
                                 <td width="50">
                                     <div class="btn-group" role="group">

@@ -71,19 +71,31 @@ class EwmpSeeder extends Seeder
                 $count_pengabdian[] = $p->serviceTeacher[0]->sks;
             }
 
+            $ewmp_ps_intra      = array_sum($count_ps);
+            $ewmp_ps_lain       = array_sum($count_pt);
+            $ewmp_ps_luar       = rand(0, 85)/10;
+            $ewmp_penelitian    = array_sum($count_penelitian);
+            $ewmp_pkm           = array_sum($count_pengabdian);
+            $ewmp_tambahan      = rand(0.0, 5.5)/10;
+
+            $ewmp_total_sks  = $ewmp_ps_intra+$ewmp_ps_lain+$ewmp_ps_luar+$ewmp_penelitian+$ewmp_pkm+$ewmp_tambahan;
+            $ewmp_rata_sks   = $ewmp_total_sks/6;
+
             Ewmp::updateOrCreate(
                 [
-                    'nidn'                  => $nidn,
-                    'id_ta'                 => $id_ta,
+                    'nidn'              => $nidn,
+                    'id_ta'             => $id_ta,
                 ],
                 [
-                    'ps_intra'              => array_sum($count_ps),
-                    'ps_lain'               => array_sum($count_pt),
-                    'ps_luar'               => rand(0, 85)/10,
-                    'penelitian'            => array_sum($count_penelitian),
-                    'pkm'                   => array_sum($count_pengabdian),
-                    'tugas_tambahan'        => rand(0.0, 5.5)/10,
-                    'created_at'            => now()
+                    'ps_intra'          => $ewmp_ps_intra,
+                    'ps_lain'           => $ewmp_ps_lain,
+                    'ps_luar'           => $ewmp_ps_luar,
+                    'penelitian'        => $ewmp_penelitian,
+                    'pkm'               => $ewmp_pkm,
+                    'tugas_tambahan'    => $ewmp_tambahan,
+                    'total_sks'         => $ewmp_total_sks,
+                    'rata_sks'          => $ewmp_rata_sks,
+                    'created_at'        => now()
                 ]
             );
         }
