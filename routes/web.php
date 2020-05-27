@@ -563,6 +563,15 @@ Route::middleware('auth')->group(function () {
 
         //Sumber Daya Manusia
         Route::get('resource', 'Perhitungan\SdmController@index')->name('resource');
+        Route::post('resource/kecukupan_dosen', 'Perhitungan\SdmController@kecukupan_dosen');
+        Route::post('resource/persentase_dtps_s3', 'Perhitungan\SdmController@persentase_dtps_s3');
+        Route::post('resource/persentase_dtps_jabatan', 'Perhitungan\SdmController@persentase_dtps_jabatan');
+        Route::post('resource/persentase_dtps_sertifikat', 'Perhitungan\SdmController@persentase_dtps_sertifikat');
+        Route::post('resource/persentase_dtps_dtt', 'Perhitungan\SdmController@persentase_dtps_dtt');
+        Route::post('resource/rasio_mahasiswa_dtps', 'Perhitungan\SdmController@rasio_mahasiswa_dtps');
+        Route::post('resource/beban_bimbingan', 'Perhitungan\SdmController@beban_bimbingan');
+        Route::post('resource/waktu_mengajar', 'Perhitungan\SdmController@waktu_mengajar');
+        Route::post('resource/prestasi_dtps', 'Perhitungan\SdmController@prestasi_dtps');
 
         //Penelitian
         Route::get('research', 'Perhitungan\PenelitianController@index')->name('research');

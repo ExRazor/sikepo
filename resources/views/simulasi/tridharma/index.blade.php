@@ -112,60 +112,58 @@
                 </div>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <form class="form-perhitungan">
-                    <div class="row mg-b-20">
-                        <div class="col-md-12">
-                            <img class="w-100" src="{{ asset ('penilaian/img') }}/tridharma-2.jpg" />
+                <div class="row mg-b-20">
+                    <div class="col-md-12">
+                        <img class="w-100" src="{{ asset ('penilaian/img') }}/tridharma-2.jpg" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            <span>
+                                Faktor a = 0.05 || Faktor b = 0.5 || Faktor c = 2
+                            </span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-success">
-                                <span>
-                                    Faktor a = 0.05 || Faktor b = 0.5 || Faktor c = 2
-                                </span>
-                            </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="internasional">Prestasi Internasional (NI)</label>
+                            <input type="text" class="form-control" id="inter" disabled>
+                            <small class="form-text text-muted">RI = NI/NM = <span class="rata_inter">0</span></small>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="internasional">Prestasi Internasional (NI)</label>
-                                <input type="text" class="form-control" id="inter" disabled>
-                                <small class="form-text text-muted">RI = NI/NM = <span class="rata_inter">0</span></small>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Prestasi Nasional (NN)</label>
-                                <input type="text" class="form-control" id="nasional" disabled>
-                                <small class="form-text text-muted">RN = NN/NM = <span class="rata_nasional">0</span></small>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Prestasi Wilayah (NW)</label>
-                                <input type="text" class="form-control" id="lokal" disabled>
-                                <small class="form-text text-muted">RW = NW/NM = <span class="rata_lokal">0</span></small>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Prestasi Nasional (NN)</label>
+                            <input type="text" class="form-control" id="nasional" disabled>
+                            <small class="form-text text-muted">RN = NN/NM = <span class="rata_nasional">0</span></small>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Jumlah Mahasiswa Aktif (NM)</label>
-                                <input type="text" class="form-control" id="mahasiswa" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Skor</label>
-                                <input type="text" class="form-control" id="skor_prestasi" disabled>
-                                <small class="form-text text-muted">Skor = <span class="rumus_prestasi"></span></small>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Prestasi Wilayah (NW)</label>
+                            <input type="text" class="form-control" id="lokal" disabled>
+                            <small class="form-text text-muted">RW = NW/NM = <span class="rata_lokal">0</span></small>
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Jumlah Mahasiswa Aktif (NM)</label>
+                            <input type="text" class="form-control" id="mahasiswa" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Skor</label>
+                            <input type="text" class="form-control" id="skor_prestasi" disabled>
+                            <small class="form-text text-muted">Skor = <span class="rumus_prestasi"></span></small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="penilaian_tempat_lulusan" class="card shadow-base mb-3">

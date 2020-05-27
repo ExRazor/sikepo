@@ -69,9 +69,9 @@ class Teacher extends Model
         return $this->hasMany('App\Minithesis','pembimbing_utama');
     }
 
-    public function minithesis_akademik()
+    public function minithesis_pendamping()
     {
-        return $this->hasMany('App\Minithesis','pembimbing_akademik');
+        return $this->hasMany('App\Minithesis','pembimbing_pendamping');
     }
 
     public function curriculumIntegration()

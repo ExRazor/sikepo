@@ -77,51 +77,49 @@
                 </div>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <form class="form-perhitungan">
-                    <div class="row mg-b-20">
-                        <div class="col-md-12">
-                            <img class="w-100" src="{{ asset ('penilaian/img') }}/penelitian-1.jpg" />
+                <div class="row mg-b-20">
+                    <div class="col-md-12">
+                        <img class="w-100" src="{{ asset ('penilaian/img') }}/penelitian-1.jpg" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="internasional">Penelitian Internasional (NI)</label>
+                            <input type="text" class="form-control" id="ni" disabled>
+                            <small class="form-text text-muted">RI = NI/NDT = <span class="rata_inter">0</span></small>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="internasional">Penelitian Internasional (NI)</label>
-                                <input type="text" class="form-control" id="ni" disabled>
-                                <small class="form-text text-muted">RI = NI/NDT = <span class="rata_inter">0</span></small>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Penelitian Nasional (NN)</label>
-                                <input type="text" class="form-control" id="nn" disabled>
-                                <small class="form-text text-muted">RN = NN/NDT = <span class="rata_nasional">0</span></small>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Penelitian Lokal/PT (NL)</label>
-                                <input type="text" class="form-control" id="nl" disabled>
-                                <small class="form-text text-muted">RL = NL/NDT = <span class="rata_lokal">0</span></small>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Penelitian Nasional (NN)</label>
+                            <input type="text" class="form-control" id="nn" disabled>
+                            <small class="form-text text-muted">RN = NN/NDT = <span class="rata_nasional">0</span></small>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Jumlah Dosen Tetap (NDT)</label>
-                                <input type="text" class="form-control" id="dtps" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Skor</label>
-                                <input type="text" class="form-control" id="skor_penelitian" readonly>
-                                <small class="form-text text-muted">Skor = <span class="rumus_penelitian"></span></small>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Penelitian Lokal/PT (NL)</label>
+                            <input type="text" class="form-control" id="nl" disabled>
+                            <small class="form-text text-muted">RL = NL/NDT = <span class="rata_lokal">0</span></small>
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Jumlah Dosen Tetap (NDT)</label>
+                            <input type="text" class="form-control" id="dtps" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Skor</label>
+                            <input type="text" class="form-control" id="skor_penelitian" readonly>
+                            <small class="form-text text-muted">Skor = <span class="rumus_penelitian"></span></small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

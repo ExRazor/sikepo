@@ -206,26 +206,28 @@
                                     <div class="form-group">
                                         <label for="internasional">Jumlah DTPS</label>
                                         <input type="number" class="form-control form-isi" id="dtps">
+                                        <small class="form-text text-muted">Persentase: <span class="persentase_dtps"></span></small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="internasional">Jumlah Dosen Tidak Tetap</label>
-                                        <input type="number" class="form-control form-isi" id="dtps_ttp">
+                                        <input type="number" class="form-control form-isi" id="dtt">
+                                        <small class="form-text text-muted">Persentase: <span class="persentase_dtt"></span></small>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Persentase</label>
-                                        <input type="text" class="form-control" id="persentase_dtps_ttp" readonly>
+                                        <label>Jumlah Dosen PS</label>
+                                        <input type="number" class="form-control form-isi" id="dosen">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Bobot Skor</label>
-                                        <input type="text" class="form-control" id="skor_dtps_ttp" readonly>
+                                        <input type="text" class="form-control" id="skor" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -343,12 +345,12 @@
         </div><!-- modal-dialog -->
     </form>
 </div><!-- modal -->
-<div id="simulasi-ewmp-dtps" class="modal fade effect-scale">
+<div id="simulasi-swmp-dtps" class="modal fade effect-scale">
     <form>
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content bd-0 tx-14 modal-form">
                 <div class="modal-header pd-y-20 pd-x-25">
-                    <h6 class="tx-16 mg-b-0 tx-uppercase tx-inverse tx-bold">Simulasi Ekuivalen Waktu Mengajar DTPS</h6>
+                    <h6 class="tx-16 mg-b-0 tx-uppercase tx-inverse tx-bold">Simulasi Waktu Mengajar Penuh DTPS</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -363,22 +365,22 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Total Beban SKS</label>
-                                <input type="number" class="form-control form-isi" id="total_sks">
+                                <label>Total Rata SKS</label>
+                                <input type="text" class="form-control form-isi" id="total_rata_sks">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Rata-Rata Beban SKS</label>
+                                <label>Rata-Rata SKS per Dosen</label>
                                 <input type="text" class="form-control" id="rata_sks" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Bobot Skor</label>
-                                <input type="text" class="form-control" id="skor_ewmp" readonly>
+                                <input type="text" class="form-control" id="skor" readonly>
                             </div>
                         </div>
                     </div>

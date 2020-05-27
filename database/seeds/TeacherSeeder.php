@@ -21,14 +21,25 @@ class TeacherSeeder extends Seeder
         $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
         $sesuai = ['Ya','Tidak'];
         $bidang_ahli = ['PHP','Photoshop','Elektronika','OOP','Office'];
+        $ikatan = ['Dosen Tetap PS','Dosen Tidak Tetap','Dosen Tetap PT'];
+
+
+        $random = ['0','1','2'];
 
     	for($i = 0; $i < 50; $i++){
             $studyProgram = StudyProgram::all()->random();
+            $rand_numb    = array_rand($random);
 
-            if($studyProgram->kd_jurusan == setting('app_department_id')) {
-                $ikatan = ['Dosen Tetap PS'];
+            // if($studyProgram->kd_jurusan == setting('app_department_id')) {
+            //     $ikatan = ['Dosen Tetap PS'];
+            // } else {
+            //     $ikatan = ['Dosen Tidak Tetap','Dosen Tetap PT'];
+            // }
+
+            if($rand_numb == '1') {
+                $sertifikat = 'hehe';
             } else {
-                $ikatan = ['Dosen Tidak Tetap','Dosen Tetap PT'];
+                $sertifikat = null;
             }
 
             DB::table('teachers')->insert([
@@ -48,7 +59,7 @@ class TeacherSeeder extends Seeder
                 'bidang_ahli'           => json_encode($bidang_ahli),
                 'ikatan_kerja'          => $ikatan[array_rand($ikatan)],
                 'jabatan_akademik'      => $jabatan[array_rand($jabatan)],
-                'sertifikat_pendidik'   => 'hehe',
+                'sertifikat_pendidik'   => $sertifikat,
                 'sesuai_bidang_ps'      => $sesuai[array_rand($sesuai)],
                 'created_at'            => now()
             ]);

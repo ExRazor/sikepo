@@ -1,23 +1,52 @@
 $(document).ready(function() {
     var skor;
 
+    //Sumber Daya Manusia
+    function simulasi_penilaian_dosen() {
+        simulasi_hitung_dtps();
+        simulasi_persentase_dtps_s3();
+        simulasi_persentase_dtps_gblk();
+        simulasi_persentase_dtps_sp();
+        simulasi_persentase_dtps_dtt();
+        simulasi_rasio_mahasiswa_dtps();
+    }
+
+    function simulasi_kinerja_dosen()
+    {
+        simulasi_persentase_bimbingan();
+        simulasi_skor_ewmp();
+        simulasi_skor_prestasi();
+    }
+
+    function simulasi_pkm_dosen()
+    {
+        simulasi_publikasi_jurnal();
+        simulasi_publikasi_seminar();
+        simulasi_karya_ilmiah();
+        simulasi_luaran_pkm();
+    }
+
     $('.form-isi').bind('keyup change', function(){
 
-        //Kerja Sama
+        /**** Kerja Sama ****/
         simulasi_kerjasama();
 
-        //Mahasiswa
+        /**** Mahasiswa ****/
         simulasi_mhs_seleksi();
         simulasi_mhs_asing();
 
-        //Penelitian DTPS
+        /**** SDM ****/
+        simulasi_penilaian_dosen();
+        simulasi_kinerja_dosen();
+        simulasi_pkm_dosen();
+
+        /**** Penelitian DTPS ****/
         simulasi_penelitian_dtps();
 
-        //Tridharma
+        /**** Tridharma ****/
         simulasi_skor_ipk();
         simulasi_prestasi_mhs();
         simulasi_tingkat_lembaga();
-
     })
 
     /***************************************************************/
@@ -149,7 +178,326 @@ $(document).ready(function() {
     /****************************** FUNGSI SDM ******************************/
     /************************************************************************/
 
+    /******************** Penilaian Dosen ********************/
+    function simulasi_hitung_dtps()
+    {
+        var cont = $("#simulasi-kecukupan-dosen");
+        var dtps = cont.find("#dtps").val();
 
+        if(dtps>=12) {
+            skor = 4;
+        } else if(dtps>=6 && dtps<12) {
+            skor = dtps/3;
+        } else {
+            skor = 0;
+        }
+
+        cont.find("#skor_dtps").val(skor.toFixed(2));
+    }
+
+    function simulasi_persentase_dtps_s3()
+    {
+        var cont    = $("#simulasi-persentase-s3");
+        var dtps    = cont.find("#dtps").val();
+        var dtps_s3 = cont.find("#dtps_s3").val();
+        var persentase = (dtps_s3/dtps)*100;
+
+        if(persentase>=50) {
+            skor = 4;
+        } else if (persentase<50) {
+            skor = 2 + ((4*persentase)/100);
+        } else {
+            skor = 0;
+        }
+
+        cont.find("#persentase_dtps_s3").val(persentase.toFixed(2)+"%");
+        cont.find("#skor_dtps_s3").val(skor.toFixed(2));
+    }
+
+    function simulasi_persentase_dtps_gblk()
+    {
+        var cont      = $("#simulasi-persentase-gubes");
+        var dtps      = cont.find("#dtps").val();
+        var dtps_gblk = cont.find("#dtps_gblk").val();
+        var persentase = (dtps_gblk/dtps)*100;
+
+        if(persentase>=40) {
+            skor = 4;
+        } else if (persentase<40) {
+            skor = 2 + ((4*persentase)/100);
+        } else {
+            skor = 0;
+        }
+
+        cont.find("#persentase_dtps_gblk").val(persentase.toFixed(2)+"%");
+        cont.find("#skor_dtps_gblk").val(skor.toFixed(2));
+    }
+
+    function simulasi_persentase_dtps_sp()
+    {
+        var cont    = $("#simulasi-dtps-bersertifikat");
+        var dtps    = cont.find("#dtps").val();
+        var dtps_sp = cont.find("#dtps_sp").val();
+        var persentase = (dtps_sp/dtps)*100;
+
+        if(persentase>=80) {
+            skor = 4;
+        } else if (persentase<80) {
+            skor = 1 + (((15*persentase)/100)/4);
+        } else {
+            skor = 0;
+        }
+
+        cont.find("#persentase_dtps_sp").val(persentase.toFixed(2)+"%");
+        cont.find("#skor_dtps_sp").val(skor.toFixed(2));
+    }
+
+    function simulasi_persentase_dtps_dtt()
+    {
+        var cont    = $("#simulasi-persentase-dtt");
+        var dosen   = cont.find("#dosen").val();
+        var dtps    = cont.find("#dtps").val();
+        var dtt 	= cont.find("#dtt").val();
+        // var desimal 	= (dtps_ttp/dtps);
+        // var persentase 	= desimal*100;
+
+        var desimal         = (dtt/dosen);
+        var persentase      = desimal*100;
+        var persentase_dtps = (dtps/dosen)*100;
+
+        if(persentase<=10) {
+            skor = 4;
+        } else if (persentase>10 && persentase<=40) {
+            skor = (16 - (40*desimal))/3;
+        } else if (persentase > 40) {
+            skor = 0;
+        }
+
+        cont.find("span.persentase_dtps").text(persentase_dtps.toFixed(2)+"%");
+        cont.find("span.persentase_dtt").text(persentase.toFixed(2)+"%");
+        cont.find("#skor").val(skor.toFixed(2));
+    }
+
+    function simulasi_rasio_mahasiswa_dtps()
+    {
+        var cont        = $("#simulasi-rasio-mahasiswa");
+        var dtps        = cont.find("#dtps").val();
+        var mahasiswa   = cont.find("#mahasiswa").val();
+
+        var rasio_dosen 	= parseFloat((dtps/mahasiswa)*100);
+        var rasio_mahasiswa = 100-rasio_dosen;
+
+        if(rasio_dosen>=15 && rasio_dosen <= 25) {
+            skor=4;
+        } else if(rasio_dosen<15) {
+            skor = (4*rasio_dosen)/15;
+        } else if(rasio_dosen>25 && rasio_dosen<=35) {
+            skor = (70-(2*rasio_dosen))/5;
+        } else if (rasio_dosen>35) {
+            skor=0;
+        }
+
+        cont.find("#rasio_mahasiswa").val(rasio_mahasiswa.toFixed(0));
+        cont.find("#rasio_dtps").val(rasio_dosen.toFixed(0));
+        cont.find("#skor_rasio_dtpm").val(skor.toFixed(2));
+    }
+
+
+    /******************** Kinerja Dosen ********************/
+    function simulasi_persentase_bimbingan()
+    {
+        var cont           = $("#simulasi-beban-bimbingan");
+        var tot_pembimbing = cont.find("#total_pembimbing").val();
+        var tot_bimbingan  = cont.find("#total_bimbingan").val();
+
+        //Persentase Pembimbing <= 10 Mahasiswa dengan Total Pembimbing
+        var desimal    = (tot_bimbingan/tot_pembimbing);
+        var persentase = desimal*100;
+
+        if(persentase>20) {
+            skor = (5*desimal)-1;
+        } else if (persentase<=20) {
+            skor = 0;
+        }
+
+        cont.find("#persentase_bimbingan").val(persentase.toFixed(2)+'%');
+        cont.find("#skor_bimbingan").val(skor.toFixed(2));
+    }
+
+    function simulasi_skor_ewmp()
+    {
+        var cont        = $("#simulasi-swmp-dtps");
+        var tot_dosen   = cont.find("#total_dtps").val();
+        var tot_rata_sks= cont.find("#total_rata_sks").val();
+
+        var rata_sks  = tot_rata_sks/tot_dosen;
+
+        if(rata_sks>=12 && rata_sks<=13) {
+            skor = 4;
+        } else if(rata_sks>=6 && rata_sks<12) {
+            skor = ((4*rata_sks)-24)/5;
+        } else if(rata_sks>=13 && rata_sks<=18) {
+            skor = (72-(4*rata_sks))/5;
+        } else if(rata_sks<6 || rata_sks>18) {
+            skor = 0;
+        }
+
+        cont.find("#rata_sks").val(rata_sks.toFixed(2));
+        cont.find("#skor").val(skor.toFixed(2));
+    }
+
+    function simulasi_skor_prestasi()
+    {
+        var cont                = $("#simulasi-prestasi-dtps");
+        var dtps 				= parseInt(cont.find('#total_dtps').val());
+        var dtps_prestasi 		= parseInt(cont.find('#dtps_prestasi').val());
+        var dtps_prestasi_inter = parseInt(cont.find('#dtps_prestasi_inter').val());
+
+        var rata_prestasi = dtps_prestasi/dtps;
+
+        if(rata_prestasi>=0.5 || dtps_prestasi_inter>=1) {
+            skor = 4;
+        } else if(rata_prestasi<=0.5) {
+            skor = 2+(4*rata_prestasi);
+        } else {
+            skor = 0;
+        }
+
+        cont.find('#rata_prestasi_dtps').val(rata_prestasi.toFixed(2));
+        cont.find('#skor_prestasi_dtps').val(skor.toFixed(2));
+
+    }
+
+
+    /******************** PkM Dosen ********************/
+    function simulasi_publikasi_jurnal()
+    {
+        var cont    = $("#simulasi-publikasi-jurnal");
+        var dt      = parseInt(cont.find("#dtps").val());
+        var a1      = parseInt(cont.find("#jurnal_nonakre").val());
+        var a2      = parseInt(cont.find("#jurnal_nasional").val());
+        var a3      = parseInt(cont.find("#jurnal_inter").val());
+        var a4      = parseInt(cont.find("#jurnal_inter_rep").val());
+
+        var faktor_a = 0.1;
+        var faktor_b = 1;
+        var faktor_c = 2;
+        var skor = 0;
+
+        rl = a1/dt;
+        rn = (a2+a3)/dt;
+        ri = a4/dt;
+
+        cont.find("span.rata_a1").text(rl.toFixed(2));
+        cont.find("span.rata_a3").text(rn.toFixed(2));
+        cont.find("span.rata_a4").text(ri.toFixed(2));
+
+        if(ri >= faktor_a) {
+            skor = 4;
+            Rumus = "Skor = 4";
+        } else if(ri < faktor_a && rn >= faktor_b) {
+            skor = 3+(ri/faktor_a);
+            rumus = "3 + (RI / faktor a)";
+        } else if((ri > 0 && ri < faktor_a) || (rn > 0 && rn < faktor_b)) {
+            skor = 2+(2*(ri/faktor_a)) + (rn/faktor_b) - ((ri*rn) / (faktor_a*faktor_b));
+            rumus = "2 + (2 * (RI / a)) + (RN / b) 0 ((RI * RN) / (faktor a * faktor b))";
+        } else if(ri==0 && rn==0 && rl>=faktor_c) {
+            skor = 2;
+            rumus = "Skor = 2";
+        } else if(ri==0 && rn==0 && rl<faktor_c) {
+            skor = (2*rl)/faktor_c;
+            rumus = "Skor = (2*RL)/faktor c";
+        } else {
+            skor = 0;
+            rumus = 0;
+        }
+
+        cont.find("#skor_publikasi_jurnal").val(skor.toFixed(2));
+        cont.find("span.rumus_jurnal").text(rumus);
+    }
+
+    function simulasi_publikasi_seminar()
+    {
+        var cont    = $("#simulasi-publikasi-seminar");
+        var dt      = parseInt(cont.find("#dtps").val());
+        var b1      = parseInt(cont.find("#publikasi_lokal").val());
+        var b2      = parseInt(cont.find("#publikasi_nasional").val());
+        var b3      = parseInt(cont.find("#publikasi_inter").val());
+
+        var faktor_a = 0.1;
+        var faktor_b = 1;
+        var faktor_c = 2;
+        var skor = 0;
+
+        rl = b1/dt;
+        rn = b2/dt;
+        ri = b3/dt;
+
+        cont.find("span.rata_b1").text(rl.toFixed(2));
+        cont.find("span.rata_b2").text(rn.toFixed(2));
+        cont.find("span.rata_b3").text(ri.toFixed(2));
+
+        if(ri >= faktor_a) {
+            skor = 4;
+            Rumus = "4";
+        } else if(ri < faktor_a && rn >= faktor_b) {
+            skor = 3+(ri/faktor_a);
+            rumus = "3 + (RI / faktor a)";
+        } else if((ri > 0 && ri < faktor_a) || (rn > 0 && rn < faktor_b)) {
+            skor = 2+(2*(ri/faktor_a)) + (rn/faktor_b) - ((ri*rn) / (faktor_a*faktor_b));
+            rumus = "2 + (2 * (RI / a)) + (RN / b) 0 ((RI * RN) / (faktor a * faktor b))";
+        } else if(ri==0 && rn==0 && rl>=faktor_c) {
+            skor = 2;
+            rumus = "Skor = 2";
+        } else if(ri==0 && rn==0 && rl<faktor_c) {
+            skor = (2*rl)/faktor_c;
+            rumus = "Skor = (2*RL)/faktor c";
+        }
+
+        cont.find("#skor_publikasi_seminar").val(skor.toFixed(2));
+        cont.find("span.rumus_seminar").text(rumus);
+    }
+
+    function simulasi_karya_ilmiah()
+    {
+        var cont    = $("#simulasi-karya-sitasi");
+        var dt      = parseInt(cont.find("#dtps").val());
+        var as      = parseInt(cont.find("#karya_ilmiah").val());
+
+        rs = as/dt;
+
+        cont.find("span.rata_rs").text(rs.toFixed(2));
+
+        if(rs>=0.5) {
+            skor = 4;
+            rumus = "4";
+        } else if(rs<0.5) {
+            skor = 2+(4*rs);
+            rumus = "2 + (4 * RS)";
+        } else {
+            skor = 0;
+            rumus = "Tidak ada Skor kurang dari 2";
+        }
+
+        cont.find("#skor_karya_ilmiah").val(skor.toFixed(2));
+        cont.find("span.rumus_karya_ilmiah").text(rumus);
+    }
+
+    function simulasi_luaran_pkm()
+    {
+        var cont    = $("#simulasi-luaran-pkm");
+        var dt      = parseInt(cont.find("#dtps").val());
+        var na      = parseInt(cont.find("#pkm_paten").val());
+        var nb      = parseInt(cont.find("#pkm_cipta").val());
+        var nc      = parseInt(cont.find("#pkm_produk").val());
+        var nd      = parseInt(cont.find("#pkm_buku").val());
+
+        rlp   = ((4 * na) + (2 * (nb + nc)) + nd) / dt;
+        rumus = "(4 * NA + 2 * (NB + NC) + ND) / NDT";
+
+        cont.find("#skor_pkm").val(rlp.toFixed(2));
+        cont.find("span.rumus_pkm").text(rumus);
+    }
 
     /*************************************************************************/
     /*************************** FUNGSI PENELITIAN ***************************/

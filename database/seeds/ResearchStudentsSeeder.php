@@ -15,7 +15,7 @@ class ResearchStudentsSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $research = Research::all();
+        $research = Research::select('*')->get();
 
         foreach($research as $r) {
             for($i=0;$i<rand(0,5);$i++) {

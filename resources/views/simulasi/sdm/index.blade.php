@@ -35,7 +35,7 @@
         </div>
     @endif
     <div class="card shadow-base mb-3">
-        <form id="form_penilaian_sdm" method="POST" enctype="application/x-www-form-urlencoded">
+        <form id="form_penilaian" method="POST" enctype="application/x-www-form-urlencoded">
             <div class="card-body bd-color-gray-lighter">
                 <div class="row">
                     <div class="col-md-12">
@@ -104,385 +104,233 @@
 
 $(function(){
 
-$('form#form_penilaian_sdm').on('submit', function(e){
-    e.preventDefault();
+    $('form#form_penilaian').on('submit', function(e){
+        e.preventDefault();
 
-    var indikator = $('select[name=indikator_penilaian]').val();
-    var button    = $(this).find('button[type=submit]');
+        var kd_prodi  = $(this).find('select[name=kd_prodi]').val();
+        var indikator = $('select[name=indikator_penilaian]').val();
+        var button    = $(this).find('button[type=submit]');
 
-    button.html('<i class="fa fa-circle-notch fa-spin"></i>');
-    button.attr('disabled',true);
+        button.html('<i class="fa fa-circle-notch fa-spin"></i>');
+        button.attr('disabled',true);
 
-    setTimeout(function() {
-        button.attr('disabled', false);
-        button.text('Tampilkan');
-        $('.hasil-penilaian').addClass('d-none');
-        $('#'+indikator).removeClass('d-none');
-    }, 1000);
+        switch(indikator) {
+            case 'penilaian_dosen':
+                penilaian_kecukupan_dosen(kd_prodi);
+                penilaian_persentase_dtps_s3(kd_prodi);
+                penilaian_persentase_dtps_jabatan(kd_prodi);
+                penilaian_persentase_dtps_sertifikat(kd_prodi);
+                penilaian_persentase_dtps_dtt(kd_prodi);
+                penilaian_rasio_mahasiswa_dtps(kd_prodi);
+                break;
+            case 'kinerja_dosen':
+                penilaian_beban_bimbingan(kd_prodi);
+                penilaian_waktu_mengajar(kd_prodi);
+                penilaian_prestasi_dtps(kd_prodi);
+                break;
+            case 'pkm_dosen':
+                break;
+        }
 
+        setTimeout(function() {
+            button.attr('disabled', false);
+            button.text('Tampilkan');
+            $('.hasil-penilaian').addClass('d-none');
+            $('#'+indikator).removeClass('d-none');
+        }, 1000);
+
+    });
+
+    function penilaian_kecukupan_dosen(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/kecukupan_dosen',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+
+                $('#kecukupan_dosen')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_persentase_dtps_s3(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/persentase_dtps_s3',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#persentase_dtps_s3')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#dtps_s3').val(data.jumlah['dtps_s3']).end()
+                    .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_persentase_dtps_jabatan(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/persentase_dtps_jabatan',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#persentase_dtps_jabatan')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#dtps_gubes_lk').val(data.jumlah['dtps_gubes_lk']).end()
+                    .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_persentase_dtps_sertifikat(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/persentase_dtps_sertifikat',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#persentase_dtps_sertifikat')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#dtps_sertifikat').val(data.jumlah['dtps_sertifikat']).end()
+                    .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_persentase_dtps_dtt(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/persentase_dtps_dtt',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#persentase_dtps_dtt')
+                    .find('#dosen').val(data.jumlah['dosen']).end()
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#dtt').val(data.jumlah['dtt']).end()
+                    .find('span.persentase_dtps').text(data.persentase['dtps'].toFixed(2)+"%").end()
+                    .find('span.persentase_dtt').text(data.persentase['dtt'].toFixed(2)+"%").end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_rasio_mahasiswa_dtps(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/rasio_mahasiswa_dtps',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#rasio_mahasiswa_dtps')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#mahasiswa').val(data.jumlah['mahasiswa']).end()
+                    .find('#rasio_dtps').val(data.rasio['dtps'].toFixed(0)).end()
+                    .find('#rasio_mahasiswa').val(data.rasio['mahasiswa'].toFixed(0)).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_kecukupan_dosenss(kd_prodi) {
+        $.ajax({
+            url: '/resource/kecukupan_dosen',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+
+                $('#penelitian_dtps')
+                    .find('#ni').val(data.jumlah['dtps']).end()
+                    .find('#nn').val(data.jumlah['nn']).end()
+                    .find('#nl').val(data.jumlah['nl']).end()
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#skor_penelitian').val(data.skor.toFixed(2)).end()
+                    .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
+                    .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
+                    .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
+                    .find('span.rumus_penelitian').text(data.rumus);
+            }
+        });
+    }
+
+
+    function penilaian_beban_bimbingan(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/beban_bimbingan',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#beban_bimbingan')
+                    .find('#pembimbing_utama').val(data.jumlah['pembimbing_utama']).end()
+                    .find('#pembimbing_10').val(data.jumlah['pembimbing_10']).end()
+                    .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_waktu_mengajar(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/waktu_mengajar',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#waktu_mengajar')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#total_rata_sks').val(data.jumlah['rata_sks']).end()
+                    .find('#rata_sks').val(data.rata_sks.toFixed(2)).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_prestasi_dtps(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/prestasi_dtps',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#prestasi_dtps')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#dtps_berprestasi').val(data.jumlah['dtps_berprestasi']).end()
+                    .find('#dtps_prestasi_inter').val(data.jumlah['dtps_prestasi_inter']).end()
+                    .find('#rata').val(data.rata.toFixed(2)).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
 });
-
-function simulasi_dosen() {
-    hitung_dtps();
-    persentase_dtps_s3();
-    persentase_dtps_gblk();
-    persentase_dtps_sp();
-    persentase_dtps_ttp();
-    persentase_dtps_ttp();
-    rasio_mahasiswa_dtps();
-}
-
-function simulasi_kinerja()
-{
-    persentase_bimbingan();
-    skor_ewmp();
-    skor_prestasi();
-}
-
-function simulasi_pkm()
-{
-    publikasi_jurnal();
-    publikasi_seminar();
-    karya_ilmiah();
-    luaran_pkm();
-}
-
-$('.form-isi').bind('keyup change', function(){
-    simulasi_dosen();
-    simulasi_kinerja();
-    simulasi_pkm();
-});
-
-var skor;
-
-/*************************************************************************/
-/**************************** Penilaian Dosen ****************************/
-/*************************************************************************/
-
-function hitung_dtps()
-{
-    var cont = $("#simulasi-kecukupan-dosen");
-    var dtps = cont.find("#dtps").val();
-
-    if(dtps>=12) {
-        skor = 4;
-    } else if(dtps>=6 && dtps<12) {
-        skor = dtps/3;
-    } else {
-        skor = 0;
-    }
-
-    cont.find("#skor_dtps").val(skor.toFixed(2));
-}
-
-function persentase_dtps_s3()
-{
-    var cont    = $("#simulasi-persentase-s3");
-    var dtps    = cont.find("#dtps").val();
-    var dtps_s3 = cont.find("#dtps_s3").val();
-    var persentase = (dtps_s3/dtps)*100;
-
-    if(persentase>=50) {
-        skor = 4;
-    } else if (persentase<50) {
-        skor = 2 + ((4*persentase)/100);
-    } else {
-        skor = 0;
-    }
-
-    cont.find("#persentase_dtps_s3").val(persentase.toFixed(2)+"%");
-    cont.find("#skor_dtps_s3").val(skor.toFixed(2));
-}
-
-function persentase_dtps_gblk()
-{
-    var cont      = $("#simulasi-persentase-gubes");
-    var dtps      = cont.find("#dtps").val();
-    var dtps_gblk = cont.find("#dtps_gblk").val();
-    var persentase = (dtps_gblk/dtps)*100;
-
-    if(persentase>=40) {
-        skor = 4;
-    } else if (persentase<40) {
-        skor = 2 + ((4*persentase)/100);
-    } else {
-        skor = 0;
-    }
-
-    cont.find("#persentase_dtps_gblk").val(persentase.toFixed(2)+"%");
-    cont.find("#skor_dtps_gblk").val(skor.toFixed(2));
-}
-
-function persentase_dtps_sp()
-{
-    var cont    = $("#simulasi-dtps-bersertifikat");
-    var dtps    = cont.find("#dtps").val();
-    var dtps_sp = cont.find("#dtps_sp").val();
-    var persentase = (dtps_sp/dtps)*100;
-
-    if(persentase>=80) {
-        skor = 4;
-    } else if (persentase<80) {
-        skor = 1 + (((15*persentase)/100)/4);
-    } else {
-        skor = 0;
-    }
-
-    cont.find("#persentase_dtps_sp").val(persentase.toFixed(2)+"%");
-    cont.find("#skor_dtps_sp").val(skor.toFixed(2));
-}
-
-function persentase_dtps_ttp()
-{
-    var cont        = $("#simulasi-persentase-dtt");
-    var dtps        = cont.find("#dtps").val();
-    var dtps_ttp 	= cont.find("#dtps_ttp").val();
-    var desimal 	= (dtps_ttp/dtps);
-    var persentase 	= desimal*100;
-
-    if(persentase<=10) {
-        skor = 4;
-    } else if (persentase>10 && persentase<=40) {
-        skor = (16 - (40*desimal))/3;
-    } else if (persentase > 40) {
-        skor = 0;
-    }
-
-    cont.find("#persentase_dtps_ttp").val(persentase.toFixed(2)+"%");
-    cont.find("#skor_dtps_ttp").val(skor.toFixed(2));
-}
-
-function rasio_mahasiswa_dtps()
-{
-    var cont        = $("#simulasi-rasio-mahasiswa");
-    var dtps        = cont.find("#dtps").val();
-    var mahasiswa   = cont.find("#mahasiswa").val();
-
-    var rasio_dosen 	= parseFloat((dtps/mahasiswa)*100).toFixed(0);
-    var rasio_mahasiswa = 100-rasio_dosen;
-
-    if(rasio_dosen>=15 && rasio_dosen <= 25) {
-        skor=4;
-    } else if(rasio_dosen<15) {
-        skor = (4*rasio_dosen)/15
-    } else if(rasio_dosen>25 && rasio_dosen<=35) {
-        skor = (70-(2*rasio_dosen))/5;
-    } else if (rasio_dosen>35) {
-        skor=0;
-    }
-
-    cont.find("#rasio_mahasiswa").val(rasio_mahasiswa);
-    cont.find("#rasio_dtps").val(rasio_dosen);
-    cont.find("#skor_rasio_dtpm").val(skor.toFixed(2));
-
-}
-
-/*********************************************************************/
-/*************************** Kinerja Dosen ***************************/
-/*********************************************************************/
-
-function persentase_bimbingan()
-{
-    var cont           = $("#simulasi-beban-bimbingan");
-	var tot_pembimbing = cont.find("#total_pembimbing").val();
-	var tot_bimbingan  = cont.find("#total_bimbingan").val();
-
-	//Persentase Pembimbing <= 10 Mahasiswa dengan Total Pembimbing
-    var desimal    = (tot_bimbingan/tot_pembimbing);
-    var persentase = desimal*100;
-
-	if(persentase>20) {
-		skor = (5*desimal)-1
-	} else if (persentase<=20) {
-		skor = 0
-	}
-
-	cont.find("#persentase_bimbingan").val(persentase.toFixed(2)+'%');
-	cont.find("#skor_bimbingan").val(skor.toFixed(2));
-}
-
-function skor_ewmp()
-{
-    var cont      = $("#simulasi-ewmp-dtps");
-	var tot_dosen = cont.find("#total_dtps").val();
-	var tot_sks   = cont.find("#total_sks").val();
-
-	var rata_sks  = tot_sks/tot_dosen;
-
-	if(rata_sks>=12 && rata_sks<=13) {
-		skor = 4;
-	} else if(rata_sks>=6 && rata_sks<12) {
-		skor = ((4*rata_sks)-24)/5
-	} else if(rata_sks>=13 && rata_sks<=18) {
-		skor = (72-(4*rata_sks))/5
-	} else if(rata_sks<6 || rata_sks>18) {
-		skor = 0
-	}
-
-	cont.find("#total_sks").val(tot_sks);
-	cont.find("#rata_sks").val(rata_sks);
-	cont.find("#skor_ewmp").val(skor.toFixed(2));
-}
-
-function skor_prestasi()
-{
-    var cont                = $("#simulasi-prestasi-dtps");
-	var dtps 				= parseInt(cont.find('#total_dtps').val());
-	var dtps_prestasi 		= parseInt(cont.find('#dtps_prestasi').val());
-	var dtps_prestasi_inter = parseInt(cont.find('#dtps_prestasi_inter').val());
-
-	var rata_prestasi = (dtps_prestasi+dtps_prestasi_inter)/dtps;
-
-	if(rata_prestasi>=0.5 || dtps_prestasi_inter>=1) {
-		skor = 4;
-	} else if(rata_prestasi<=0.5) {
-		skor = 2+(4*rata_prestasi);
-	} else {
-		skor = 0;
-	}
-
-	cont.find('#rata_prestasi_dtps').val(rata_prestasi.toFixed(2));
-	cont.find('#skor_prestasi_dtps').val(skor.toFixed(2));
-
-}
-
-/*****************************************************************/
-/*************************** PkM Dosen ***************************/
-/*****************************************************************/
-
-function publikasi_jurnal()
-{
-    var cont    = $("#simulasi-publikasi-jurnal");
-	var dt      = parseInt(cont.find("#dtps").val());
-	var a1      = parseInt(cont.find("#jurnal_nonakre").val());
-	var a2      = parseInt(cont.find("#jurnal_nasional").val());
-	var a3      = parseInt(cont.find("#jurnal_inter").val());
-	var a4      = parseInt(cont.find("#jurnal_inter_rep").val());
-
-	var faktor_a = 0.1;
-	var faktor_b = 1;
-	var faktor_c = 2;
-	var skor = 0;
-
-	rl = a1/dt;
-	rn = (a2+a3)/dt;
-	ri = a4/dt;
-
-	cont.find("span.rata_a1").text(rl.toFixed(2));
-	cont.find("span.rata_a3").text(rn.toFixed(2));
-	cont.find("span.rata_a4").text(ri.toFixed(2));
-
-	if(ri >= faktor_a) {
-		skor = 4;
-		Rumus = "Skor = 4";
-	} else if(ri < faktor_a && rn >= faktor_b) {
-		skor = 3+(ri/faktor_a);
-		rumus = "3 + (RI / faktor a)";
-	} else if((ri > 0 && ri < faktor_a) || (rn > 0 && rn < faktor_b)) {
-		skor = 2+(2*(ri/faktor_a)) + (rn/faktor_b) - ((ri*rn) / (faktor_a*faktor_b));
-		rumus = "2 + (2 * (RI / a)) + (RN / b) 0 ((RI * RN) / (faktor a * faktor b))";
-	} else if(ri==0 && rn==0 && rl>=faktor_c) {
-		skor = 2;
-		rumus = "Skor = 2";
-	} else if(ri==0 && rn==0 && rl<faktor_c) {
-		skor = (2*rl)/faktor_c;
-		rumus = "Skor = (2*RL)/faktor c";
-	} else {
-        skor = 0;
-        rumus = 0;
-    }
-
-	cont.find("#skor_publikasi_jurnal").val(skor.toFixed(2));
-	cont.find("span.rumus_jurnal").text(rumus);
-}
-
-function publikasi_seminar()
-{
-    var cont    = $("#simulasi-publikasi-seminar");
-	var dt      = parseInt(cont.find("#dtps").val());
-	var b1      = parseInt(cont.find("#publikasi_lokal").val());
-	var b2      = parseInt(cont.find("#publikasi_nasional").val());
-	var b3      = parseInt(cont.find("#publikasi_inter").val());
-
-	var faktor_a = 0.1;
-	var faktor_b = 1;
-	var faktor_c = 2;
-	var skor = 0;
-
-	rl = b1/dt;
-	rn = b2/dt;
-	ri = b3/dt;
-
-	cont.find("span.rata_b1").text(rl.toFixed(2));
-	cont.find("span.rata_b2").text(rn.toFixed(2));
-	cont.find("span.rata_b3").text(ri.toFixed(2));
-
-	if(ri >= faktor_a) {
-		skor = 4;
-		Rumus = "4";
-	} else if(ri < faktor_a && rn >= faktor_b) {
-		skor = 3+(ri/faktor_a);
-		rumus = "3 + (RI / faktor a)";
-	} else if((ri > 0 && ri < faktor_a) || (rn > 0 && rn < faktor_b)) {
-		skor = 2+(2*(ri/faktor_a)) + (rn/faktor_b) - ((ri*rn) / (faktor_a*faktor_b));
-		rumus = "2 + (2 * (RI / a)) + (RN / b) 0 ((RI * RN) / (faktor a * faktor b))";
-	} else if(ri==0 && rn==0 && rl>=faktor_c) {
-		skor = 2;
-		rumus = "Skor = 2";
-	} else if(ri==0 && rn==0 && rl<faktor_c) {
-		skor = (2*rl)/faktor_c;
-		rumus = "Skor = (2*RL)/faktor c";
-	}
-
-	cont.find("#skor_publikasi_seminar").val(skor.toFixed(2));
-	cont.find("span.rumus_seminar").text(rumus);
-}
-
-function karya_ilmiah()
-{
-    var cont    = $("#simulasi-karya-sitasi");
-	var dt      = parseInt(cont.find("#dtps").val());
-	var as      = parseInt(cont.find("#karya_ilmiah").val());
-
-	rs = as/dt;
-
-	cont.find("span.rata_rs").text(rs.toFixed(2));
-
-	if(rs>=0.5) {
-		skor = 4;
-		rumus = "4";
-	} else if(rs<0.5) {
-		skor = 2+(4*rs);
-		rumus = "2 + (4 * RS)";
-	} else {
-		skor = 0;
-		rumus = "Tidak ada Skor kurang dari 2";
-	}
-
-	cont.find("#skor_karya_ilmiah").val(skor.toFixed(2));
-	cont.find("span.rumus_karya_ilmiah").text(rumus);
-}
-
-function luaran_pkm()
-{
-    var cont    = $("#simulasi-luaran-pkm");
-	var dt      = parseInt(cont.find("#dtps").val());
-	var na      = parseInt(cont.find("#pkm_paten").val());
-	var nb      = parseInt(cont.find("#pkm_cipta").val());
-	var nc      = parseInt(cont.find("#pkm_produk").val());
-	var nd      = parseInt(cont.find("#pkm_buku").val());
-
-	rlp   = ((4 * na) + (2 * (nb + nc)) + nd) / dt;
-	rumus = "(4 * NA + 2 * (NB + NC) + ND) / NDT";
-
-	cont.find("#skor_pkm").val(rlp.toFixed(2));
-	cont.find("span.rumus_pkm").text(rumus);
-
-}
-
-
-});
-
 
 </script>
 @endsection

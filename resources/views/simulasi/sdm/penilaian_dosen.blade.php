@@ -1,4 +1,4 @@
-<div class="card shadow-base mb-3">
+<div id="kecukupan_dosen" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -10,30 +10,28 @@
         </div>
     </div>
     <div class="card-body bd-color-gray-lighter">
-        <form class="form-perhitungan">
-            <div class="row mg-b-20">
-                <div class="col-md-12">
-                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1a.jpg" />
+        <div class="row mg-b-20">
+            <div class="col-md-12">
+                <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1a.jpg" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Jumlah Dosen Tetap Program Studi</label>
+                    <input type="text" class="form-control" id="dtps" disabled>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Jumlah Dosen Tetap Program Studi</label>
-                        <input type="text" class="form-control" value="10" disabled>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Bobot Skor</label>
-                        <input type="text" class="form-control" value="0" disabled>
-                    </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Bobot Skor</label>
+                    <input type="text" class="form-control" id="skor" disabled>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="persentase_dtps_s3" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -52,29 +50,37 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Jumlah DTPS</label>
+                        <input type="text" class="form-control" id="dtps" disabled>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Jumlah DTPS S3</label>
-                        <input type="text" class="form-control" value="3" disabled>
+                        <input type="text" class="form-control" id="dtps_s3" disabled>
                     </div>
                 </div>
-                <div class="col-md-4">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Persentase</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="persentase" disabled>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Bobot Skor</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="skor" disabled>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="persentase_dtps_jabatan" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -93,29 +99,37 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Jumlah DTPS</label>
+                        <input type="text" class="form-control" id="dtps" disabled>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Jumlah DTPS GB & LK</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="dtps_gubes_lk" disabled>
                     </div>
                 </div>
-                <div class="col-md-4">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Persentase</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="persentase" disabled>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Bobot Skor</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="skor" disabled>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="persentase_dtps_sertifikat" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -130,33 +144,41 @@
         <form class="form-perhitungan">
             <div class="row mg-b-20">
                 <div class="col-md-12">
-                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1d.jpg" />
+                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1e.jpg" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Jumlah DTPS</label>
+                        <input type="text" class="form-control" id="dtps" disabled>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Jumlah DTPS Bersertifikat Pendidik</label>
-                        <input type="text" class="form-control" value="2">
+                        <input type="text" class="form-control" id="dtps_sertifikat" disabled>
                     </div>
                 </div>
-                <div class="col-md-4">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Persentase</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="persentase" disabled>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label>Bobot Skor</label>
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="skor" disabled>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="persentase_dtps_dtt" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -171,33 +193,43 @@
         <form class="form-perhitungan">
             <div class="row mg-b-20">
                 <div class="col-md-12">
-                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1e.jpg" />
+                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1f.jpg" />
                 </div>
             </div>
             <div class="row">
-				<div class="col-md-4">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Jumlah DTPS</label>
+                        <input type="text" class="form-control" id="dtps" disabled>
+						<small class="form-text text-muted">Persentase: <span class="persentase_dtps"></span></small>
+					</div>
+				</div>
+				<div class="col-md-6">
 					<div class="form-group">
 						<label>Jumlah Dosen Tidak Tetap</label>
-						<input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" id="dtt" disabled>
+						<small class="form-text text-muted">Persentase: <span class="persentase_dtt"></span></small>
 					</div>
 				</div>
-				<div class="col-md-4">
+			</div>
+            <div class="row">
+                <div class="col-md-6">
 					<div class="form-group">
-						<label>Persentase</label>
-						<input type="text" class="form-control" disabled>
+						<label>Jumlah Dosen PS</label>
+						<input type="text" class="form-control" id="dosen" disabled>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label>Bobot Skor</label>
-						<input type="text" class="form-control" disabled>
+						<input type="text" class="form-control" id="skor" disabled>
 					</div>
 				</div>
 			</div>
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="rasio_mahasiswa_dtps" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -212,36 +244,44 @@
         <form class="form-perhitungan">
             <div class="row mg-b-20">
                 <div class="col-md-12">
-                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1f.jpg" />
+                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-1d.jpg" />
                 </div>
             </div>
             <div class="row">
-				<div class="col-md-4">
+				<div class="col-md-6">
 					<div class="form-group">
-						<label>Jumlah Mahasiswa</label>
-						<input type="text" class="form-control" value="135" disabled>
+						<label>Jumlah DTPS</label>
+						<input type="text" class="form-control" id="dtps" disabled>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Jumlah Mahasiswa</label>
+						<input type="text" class="form-control" id="mahasiswa" disabled>
+					</div>
+				</div>
+			</div>
+            <div class="row">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label>Rasio Perbandingan</label>
 						<div class="row">
 							<div class="col-md-6">
-								<input type="text" class="form-control" disabled>
+								<input type="text" class="form-control" id="rasio_dtps" disabled>
 								<small class="form-text text-muted">Rasio DTPS</small>
 							</div>
 							<div class="col-md-6">
-								<input type="text" class="form-control" disabled>
+								<input type="text" class="form-control" id="rasio_mahasiswa" disabled>
 								<small class="form-text text-muted">Rasio Mahasiswa</small>
 							</div>
 						</div>
 
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label>Bobot Skor</label>
-						<input type="text" class="form-control" disabled>
+						<input type="text" class="form-control" id="skor" disabled>
 					</div>
 				</div>
 			</div>
