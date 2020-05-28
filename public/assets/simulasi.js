@@ -452,6 +452,9 @@ $(document).ready(function() {
         } else if(ri==0 && rn==0 && rl<faktor_c) {
             skor = (2*rl)/faktor_c;
             rumus = "Skor = (2*RL)/faktor c";
+        } else {
+            skor = 0;
+            rumus = 0;
         }
 
         cont.find("#skor_publikasi_seminar").val(skor.toFixed(2));
@@ -493,10 +496,23 @@ $(document).ready(function() {
         var nd      = parseInt(cont.find("#pkm_buku").val());
 
         rlp   = ((4 * na) + (2 * (nb + nc)) + nd) / dt;
-        rumus = "(4 * NA + 2 * (NB + NC) + ND) / NDT";
+        rumus_rlp = "(4 * NA + 2 * (NB + NC) + ND) / NDT";
 
-        cont.find("#skor_pkm").val(rlp.toFixed(2));
-        cont.find("span.rumus_pkm").text(rumus);
+        if(rlp>=1) {
+            skor = 4;
+            rumus = 4;
+        } else if(rlp<1) {
+            skor = 2 + (2 * rlp);
+            rumus = "2 + (2 * RLP)";
+        } else {
+            skor = null;
+            rumus = "Tidak ada Skor kurang dari 2";
+        }
+
+        cont.find("#rlp").val(rlp.toFixed(2));
+        cont.find("span.rumus_rlp").text(rumus_rlp);
+        cont.find("#skor").val(skor.toFixed(2));
+        cont.find("span.rumus").text(rumus);
     }
 
     /*************************************************************************/

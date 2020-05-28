@@ -48,7 +48,7 @@
                                         <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                                         @endif
                                         <select class="form-control" name="kd_prodi" data-placeholder="Pilih Prodi" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
-                                            <option value="0">Semua</option>
+                                            {{-- <option value="0">Semua</option> --}}
                                             @foreach ($studyProgram as $sp)
                                             <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->kd_prodi==$sp->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi  ? 'selected' : ''}}>{{$sp->nama}}</option>
                                             @endforeach
@@ -129,6 +129,10 @@ $(function(){
                 penilaian_prestasi_dtps(kd_prodi);
                 break;
             case 'pkm_dosen':
+                penilaian_publikasi_jurnal(kd_prodi);
+                penilaian_publikasi_seminar(kd_prodi);
+                penilaian_publikasi_tersitasi(kd_prodi);
+                penilaian_luaran_pkm(kd_prodi);
                 break;
         }
 
@@ -326,6 +330,103 @@ $(function(){
                     .find('#dtps_berprestasi').val(data.jumlah['dtps_berprestasi']).end()
                     .find('#dtps_prestasi_inter').val(data.jumlah['dtps_prestasi_inter']).end()
                     .find('#rata').val(data.rata.toFixed(2)).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_publikasi_jurnal(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/publikasi_jurnal',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#publikasi_jurnal')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#na1').val(data.jumlah['na1']).end()
+                    .find('#na2').val(data.jumlah['na2']).end()
+                    .find('#na3').val(data.jumlah['na3']).end()
+                    .find('#na4').val(data.jumlah['na4']).end()
+                    .find('span.faktor_a').text(data.faktor['a']).end()
+                    .find('span.faktor_b').text(data.faktor['b']).end()
+                    .find('span.faktor_c').text(data.faktor['c']).end()
+                    .find('span.rata_rl').text(data.rata['rl'].toFixed(2)).end()
+                    .find('span.rata_rn').text(data.rata['rn'].toFixed(2)).end()
+                    .find('span.rata_ri').text(data.rata['ri'].toFixed(2)).end()
+                    .find('span.rumus').text(data.rumus).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_publikasi_seminar(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/publikasi_seminar',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#publikasi_seminar')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#nb1').val(data.jumlah['nb1']).end()
+                    .find('#nb2').val(data.jumlah['nb2']).end()
+                    .find('#nb3').val(data.jumlah['nb3']).end()
+                    .find('#nc1').val(data.jumlah['nc1']).end()
+                    .find('#nc2').val(data.jumlah['nc2']).end()
+                    .find('span.faktor_a').text(data.faktor['a']).end()
+                    .find('span.faktor_b').text(data.faktor['b']).end()
+                    .find('span.faktor_c').text(data.faktor['c']).end()
+                    .find('span.rata_rl').text(data.rata['rl'].toFixed(2)).end()
+                    .find('span.rata_rn').text(data.rata['rn'].toFixed(2)).end()
+                    .find('span.rata_ri').text(data.rata['ri'].toFixed(2)).end()
+                    .find('span.rumus').text(data.rumus).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_publikasi_tersitasi(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/publikasi_tersitasi',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#publikasi_tersitasi')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#nas').val(data.jumlah['nas']).end()
+                    .find('span.rata_rs').text(data.rata['rs'].toFixed(2)).end()
+                    .find('span.rumus').text(data.rumus).end()
+                    .find('#skor').val(data.skor.toFixed(2));
+            }
+        });
+    }
+
+    function penilaian_luaran_pkm(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/luaran_pkm',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#luaran_pkm')
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#na').val(data.jumlah['na']).end()
+                    .find('#nb').val(data.jumlah['nb']).end()
+                    .find('#nc').val(data.jumlah['nc']).end()
+                    .find('#nd').val(data.jumlah['nd']).end()
+                    .find('#rlp').val(data.rata.toFixed(2)).end()
+                    .find('span.rumus_rlp').text(data.rumus['rlp']).end()
+                    .find('span.rumus').text(data.rumus['skor']).end()
                     .find('#skor').val(data.skor.toFixed(2));
             }
         });

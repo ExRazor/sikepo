@@ -43,7 +43,7 @@
                             <label>Program Studi:<span class="tx-danger">*</span></label>
                             <div id="prodi" class="parsley-select">
                                 <select class="form-control" name="kd_prodi" data-placeholder="Pilih Prodi" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
-                                    <option value="0">Semua</option>
+                                    {{-- <option value="0">Semua</option> --}}
                                     @foreach ($studyProgram as $sp)
                                     <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->kd_prodi==$sp->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi  ? 'selected' : ''}}>{{$sp->nama}}</option>
                                     @endforeach

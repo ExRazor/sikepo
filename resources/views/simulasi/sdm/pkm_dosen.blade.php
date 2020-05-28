@@ -1,4 +1,4 @@
-<div class="card shadow-base mb-3">
+<div id="publikasi_jurnal" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -20,7 +20,7 @@
 				<div class="col-md-12">
 					<div class="alert alert-primary">
 					  <span>
-					  	Faktor a = 0.1 || Faktor b = 1 || Faktor c = 2
+					  	Faktor a = <span class="faktor_a"></span> || Faktor b = <span class="faktor_b"></span> || Faktor c = <span class="faktor_c"></span>
 					  </span>
 					</div>
 				</div>
@@ -31,28 +31,28 @@
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Jurnal Non Akreditasi<br>(NA1)</label>
-								<input type="text" class="form-control" id="jurnal_nonakre" disabled>
-								<small class="form-text text-muted">RL = NA1/NDT = <span class="rata_a1">0</span></small>
+								<input type="text" class="form-control" id="na1" disabled>
+								<small class="form-text text-muted">RL = NA1/NDT = <span class="rata_rl">0</span></small>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Jurnal Nasional<br>(NA2)</label>
-								<input type="text" class="form-control" id="jurnal_nasional" disabled>
+								<input type="text" class="form-control" id="na2" disabled>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Jurnal Internasional<br>(NA3)</label>
-								<input type="text" class="form-control" id="jurnal_inter" disabled>
-								<small class="form-text text-muted">RN = (NA2+NA3)/NDT = <span class="rata_a3">0</span></small>
+								<input type="text" class="form-control" id="na3" disabled>
+								<small class="form-text text-muted">RN = (NA2+NA3)/NDT = <span class="rata_rn">0</span></small>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Jurnal Internasional Bereputasi<br>(NA4)</label>
-								<input type="text" class="form-control" id="jurnal_inter_rep" disabled>
-								<small class="form-text text-muted">RI = NA4/NDT = <span class="rata_a4">0</span></small>
+								<input type="text" class="form-control" id="na4" disabled>
+								<small class="form-text text-muted">RI = NA4/NDT = <span class="rata_ri">0</span></small>
 							</div>
 						</div>
 					</div>
@@ -66,8 +66,8 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Skor</label>
-								<input type="text" class="form-control" id="skor_publikasi_jurnal" disabled>
-								<small class="form-text text-muted">Skor = <span class="rumus_jurnal"></span></small>
+								<input type="text" class="form-control" id="skor" disabled>
+								<small class="form-text text-muted">Skor = <span class="rumus"></span></small>
 							</div>
 						</div>
 					</div>
@@ -76,7 +76,7 @@
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="publikasi_seminar" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -107,22 +107,22 @@
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="internasional">Seminar Wilayah/Lokal/PT<br>(NB1)</label>
-						<input type="text" class="form-control" id="publikasi_lokal" disabled>
-						<small class="form-text text-muted">RL = NB1/NDT = <span class="rata_b1">0</span></small>
+						<input type="text" class="form-control" id="nb1" disabled>
+						<small class="form-text text-muted">RL = NB1/NDT = <span class="rata_rl">0</span></small>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="form-group">
 						<label>Seminar Penelitian Nasional<br>(NB2)</label>
-						<input type="text" class="form-control" id="publikasi_nasional" disabled>
-						<small class="form-text text-muted">RL = NB2/NDT = <span class="rata_b2">0</span></small>
+						<input type="text" class="form-control" id="nb2" disabled>
+						<small class="form-text text-muted">RN = NB2/NDT = <span class="rata_rn">0</span></small>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="form-group">
 						<label>Seminar Penelitian Internasional<br>(NB3)</label>
-						<input type="text" class="form-control" id="publikasi_inter" disabled>
-						<small class="form-text text-muted">RL = NB3/NDT = <span class="rata_b3">0</span></small>
+						<input type="text" class="form-control" id="nb3" disabled>
+						<small class="form-text text-muted">RI = NB3/NDT = <span class="rata_ri">0</span></small>
 					</div>
 				</div>
 			</div>
@@ -130,13 +130,13 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="internasional">Tulisan di Media Massa Nasional</label>
-						<input type="text" class="form-control" id="media_nasional" disabled>
+						<input type="text" class="form-control" id="nc1" disabled>
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label>Tulisan di Media Massa Internasional</label>
-						<input type="text" class="form-control" id="media_inter" disabled>
+						<input type="text" class="form-control" id="nc2" disabled>
 					</div>
 				</div>
 			</div>
@@ -150,15 +150,15 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label>Skor</label>
-						<input type="text" class="form-control" id="skor_publikasi_seminar" readonly>
-						<small class="form-text text-muted">Skor = <span class="rumus_seminar"></span></small>
+						<input type="text" class="form-control" id="skor" readonly>
+						<small class="form-text text-muted">Skor = <span class="rumus"></span></small>
 					</div>
 				</div>
 			</div>
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="publikasi_tersitasi" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -186,22 +186,22 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="internasional">Karya Ilmiah Tersitasi (NAS)</label>
-                        <input type="text" class="form-control form-isi" id="karya_ilmiah" disabled>
+                        <input type="text" class="form-control form-isi" id="nas" disabled>
                         <small class="form-text text-muted">RS = NAS/NDT = <span class="rata_rs">0</span></small>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Skor</label>
-                        <input type="text" class="form-control" id="skor_karya_ilmiah" readonly>
-                        <small class="form-text text-muted">Skor = <span class="rumus_karya_ilmiah"></span></small>
+                        <input type="text" class="form-control" id="skor" readonly>
+                        <small class="form-text text-muted">Skor = <span class="rumus"></span></small>
                     </div>
                 </div>
 			</div>
         </form>
     </div>
 </div>
-<div class="card shadow-base mb-3">
+<div id="luaran_pkm" class="card shadow-base mb-3">
     <div class="card-header">
         <div class="card-title">
             <h6 class="mg-b-0">
@@ -223,13 +223,13 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="internasional">HKI A (Paten/Paten Sederhana)<br>(NA)</label>
-						<input type="text" class="form-control form-pkm" id="pkm_paten" disabled>
+						<input type="text" class="form-control form-pkm" id="na" disabled>
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label>HKI B (Hak Cipta, Desain Produk Industri, dll)<br>(NB)</label>
-						<input type="text" class="form-control form-pkm" id="pkm_cipta" disabled>
+						<input type="text" class="form-control form-pkm" id="nb" disabled>
 					</div>
 				</div>
 			</div>
@@ -237,28 +237,35 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="internasional">Teknologi Tepat Guna, Produk, dll<br>(NC)</label>
-						<input type="text" class="form-control form-pkm" id="pkm_produk" disabled>
+						<input type="text" class="form-control form-pkm" id="nc" disabled>
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label>Buku ber-ISBN<br>(ND)</label>
-						<input type="text" class="form-control form-pkm" id="pkm_buku" disabled>
+						<input type="text" class="form-control form-pkm" id="nd" disabled>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="internasional">Total DTPS</label>
                         <input type="text" class="form-control form-isi" id="dtps" disabled>
                     </div>
                 </div>
-				<div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="internasional">Rata-Rata</label>
+                        <input type="text" class="form-control form-isi" id="rlp" disabled>
+						<small class="form-text text-muted">RLP = <span class="rumus_rlp"></span></small>
+                    </div>
+                </div>
+				<div class="col-md-4">
 					<div class="form-group">
 						<label>Skor</label>
-						<input type="text" class="form-control" id="skor_pkm" readonly>
-						<small class="form-text text-muted">Skor = <span class="rumus_pkm"></span></small>
+						<input type="text" class="form-control" id="skor" readonly>
+						<small class="form-text text-muted">Skor = <span class="rumus"></span></small>
 					</div>
 				</div>
 			</div>

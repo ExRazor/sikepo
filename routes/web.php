@@ -572,6 +572,10 @@ Route::middleware('auth')->group(function () {
         Route::post('resource/beban_bimbingan', 'Perhitungan\SdmController@beban_bimbingan');
         Route::post('resource/waktu_mengajar', 'Perhitungan\SdmController@waktu_mengajar');
         Route::post('resource/prestasi_dtps', 'Perhitungan\SdmController@prestasi_dtps');
+        Route::post('resource/publikasi_jurnal', 'Perhitungan\SdmController@publikasi_jurnal');
+        Route::post('resource/publikasi_seminar', 'Perhitungan\SdmController@publikasi_seminar');
+        Route::post('resource/publikasi_tersitasi', 'Perhitungan\SdmController@publikasi_tersitasi');
+        Route::post('resource/luaran_pkm', 'Perhitungan\SdmController@luaran_pkm');
 
         //Penelitian
         Route::get('research', 'Perhitungan\PenelitianController@index')->name('research');

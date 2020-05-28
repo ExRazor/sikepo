@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Perhitungan;
 
+use App\AcademicYear;
 use App\Ewmp;
 use App\Http\Controllers\Controller;
 use App\Minithesis;
@@ -9,6 +10,8 @@ use App\StudyProgram;
 use App\Teacher;
 use App\Student;
 use App\TeacherAchievement;
+use App\TeacherPublication;
+use App\TeacherOutputActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -387,6 +390,234 @@ class SdmController extends Controller
         }
 
         $data = compact(['jumlah','rata','skor']);
+
+        if($request->ajax()) {
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function publikasi_jurnal(Request $request)
+    {
+        if(Auth::user()->hasRole('kaprodi')) {
+            $prodi = Auth::user()->kd_prodi;
+        } else {
+            $prodi = $request->post('kd_prodi');
+        }
+
+        $thn_akademik = AcademicYear::where('status','Aktif')->first();
+        $publikasi = TeacherPublication::whereHas(
+                                            'teacher', function($q) use($prodi) {
+                                                $q->where('kd_prodi',$prodi);
+                                            }
+                                        )
+                                        ->whereBetween('tahun', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->get();
+
+        $jumlah = array(
+            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'na1'   => $publikasi->where('jenis_publikasi','1')->count(),
+            'na2'   => $publikasi->where('jenis_publikasi','2')->count(),
+            'na3'   => $publikasi->where('jenis_publikasi','3')->count(),
+            'na4'   => $publikasi->where('jenis_publikasi','4')->count()
+        );
+
+        $faktor = array(
+            'a' => 0.1,
+            'b' => 1,
+            'c' => 2
+        );
+
+        $rata = array(
+            'rl' => $jumlah['na1']/$jumlah['dtps'],
+            'rn' => ($jumlah['na2']+$jumlah['na3'])/$jumlah['dtps'],
+            'ri' => $jumlah['na4']/$jumlah['dtps']
+        );
+
+        if($rata['ri'] >= $faktor['a']) {
+            $skor = 4;
+            $rumus = "Skor = 4";
+        } else if($rata['ri'] < $faktor['a'] && $rata['rn'] >= $faktor['b']) {
+            $skor = 3+($rata['ri']/$faktor['a']);
+            $rumus = "3 + (RI / faktor a)";
+        } else if(($rata['ri'] > 0 && $rata['ri'] < $faktor['a']) || ($rata['rn'] > 0 && $rata['rn'] < $faktor['b'])) {
+            $skor = 2+(2*($rata['ri']/$faktor['a'])) + ($rata['rn']/$faktor['b']) - (($rata['ri']*$rata['rn']) / ($faktor['a']*$faktor['b']));
+            $rumus = "2 + (2 * (RI / a)) + (RN / b) 0 ((RI * RN) / (faktor a * faktor b))";
+        } else if($rata['ri']==0 && $rata['rn']==0 && $rata['rl']>=$faktor['c']) {
+            $skor = 2;
+            $rumus = "Skor = 2";
+        } else if($rata['ri']==0 && $rata['rn']==0 && $rata['rl']<$faktor['c']) {
+            $skor = (2*$rata['rl'])/$faktor['c'];
+            $rumus = "Skor = (2*RL)/faktor c";
+        } else {
+            $skor = 0;
+            $rumus = 0;
+        }
+
+        $data = compact(['jumlah','faktor','rata','skor','rumus']);
+
+        if($request->ajax()) {
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function publikasi_seminar(Request $request)
+    {
+        if(Auth::user()->hasRole('kaprodi')) {
+            $prodi = Auth::user()->kd_prodi;
+        } else {
+            $prodi = $request->post('kd_prodi');
+        }
+
+        $thn_akademik = AcademicYear::where('status','Aktif')->first();
+        $publikasi = TeacherPublication::whereHas(
+                                            'teacher', function($q) use($prodi) {
+                                                $q->where('kd_prodi',$prodi);
+                                            }
+                                        )
+                                        ->whereBetween('tahun', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->get();
+
+        $jumlah = array(
+            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'nb1'   => $publikasi->where('jenis_publikasi','5')->count(),
+            'nb2'   => $publikasi->where('jenis_publikasi','6')->count(),
+            'nb3'   => $publikasi->where('jenis_publikasi','7')->count(),
+            'nc1'   => $publikasi->where('jenis_publikasi','9')->count(),
+            'nc2'   => $publikasi->where('jenis_publikasi','10')->count()
+        );
+
+        $faktor = array(
+            'a' => 0.1,
+            'b' => 1,
+            'c' => 2
+        );
+
+        $rata = array(
+            'rl' => $jumlah['nb1']/$jumlah['dtps'],
+            'rn' => $jumlah['nb2']/$jumlah['dtps'],
+            'ri' => $jumlah['nb3']/$jumlah['dtps']
+        );
+
+        if($rata['ri'] >= $faktor['a']) {
+            $skor = 4;
+            $rumus = "Skor = 4";
+        } else if($rata['ri'] < $faktor['a'] && $rata['rn'] >= $faktor['b']) {
+            $skor = 3+($rata['ri']/$faktor['a']);
+            $rumus = "3 + (RI / faktor a)";
+        } else if(($rata['ri'] > 0 && $rata['ri'] < $faktor['a']) || ($rata['rn'] > 0 && $rata['rn'] < $faktor['b'])) {
+            $skor = 2+(2*($rata['ri']/$faktor['a'])) + ($rata['rn']/$faktor['b']) - (($rata['ri']*$rata['rn']) / ($faktor['a']*$faktor['b']));
+            $rumus = "2 + (2 * (RI / a)) + (RN / b) 0 ((RI * RN) / (faktor a * faktor b))";
+        } else if($rata['ri']==0 && $rata['rn']==0 && $rata['rl']>=$faktor['c']) {
+            $skor = 2;
+            $rumus = "Skor = 2";
+        } else if($rata['ri']==0 && $rata['rn']==0 && $rata['rl']<$faktor['c']) {
+            $skor = (2*$rata['rl'])/$faktor['c'];
+            $rumus = "Skor = (2*RL)/faktor c";
+        } else {
+            $skor = 0;
+            $rumus = 0;
+        }
+
+        $data = compact(['jumlah','faktor','rata','skor','rumus']);
+
+        if($request->ajax()) {
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function publikasi_tersitasi(Request $request)
+    {
+        if(Auth::user()->hasRole('kaprodi')) {
+            $prodi = Auth::user()->kd_prodi;
+        } else {
+            $prodi = $request->post('kd_prodi');
+        }
+
+        $thn_akademik = AcademicYear::where('status','Aktif')->first();
+        $publikasi = TeacherPublication::whereHas(
+                                            'teacher', function($q) use($prodi) {
+                                                $q->where('kd_prodi',$prodi);
+                                            }
+                                        )
+                                        ->whereBetween('tahun', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->get();
+
+        $jumlah = array(
+            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'nas'   => $publikasi->where('sitasi','!=',null)->count(),
+        );
+
+        $rata = array(
+            'rs' => $jumlah['nas']/$jumlah['dtps'],
+        );
+
+        if($rata['rs']>=0.5) {
+            $skor = 4;
+            $rumus = "4";
+        } else if($rata['rs']<0.5) {
+            $skor = 2+(4*$rata['rs']);
+            $rumus = "2 + (4 * RS)";
+        } else {
+            $skor = 0;
+            $rumus = "Tidak ada Skor kurang dari 2";
+        }
+
+        $data = compact(['jumlah','rata','skor','rumus']);
+
+        if($request->ajax()) {
+            return response()->json($data);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function luaran_pkm(Request $request)
+    {
+        if(Auth::user()->hasRole('kaprodi')) {
+            $prodi = Auth::user()->kd_prodi;
+        } else {
+            $prodi = $request->post('kd_prodi');
+        }
+
+        $thn_akademik = AcademicYear::where('status','Aktif')->first();
+
+        $luaran = TeacherOutputActivity::whereHas(
+                                            'teacher', function($q) use($prodi) {
+                                                $q->where('kd_prodi',$prodi);
+                                            }
+                                        )
+                                        ->whereBetween('thn_luaran', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->get();
+
+        $jumlah = array(
+            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'na'   => $luaran->where('id_kategori','1')->count(),
+            'nb'   => $luaran->where('id_kategori','2')->count(),
+            'nc'   => $luaran->where('id_kategori','3')->count(),
+            'nd'   => $luaran->where('id_kategori','4')->count(),
+        );
+
+        $rata = ((4 * $jumlah['na']) + (2 * ($jumlah['nb'] + $jumlah['nc'])) + $jumlah['nd']) / $jumlah['dtps'];
+        $rumus['rlp'] = "(4 * NA + 2 * (NB + NC) + ND) / NDT";
+
+        if($rata>=1) {
+            $skor = 4;
+            $rumus['skor'] = 4;
+        } else if($rata<1) {
+            $skor = 2 + (2 * $rata);
+            $rumus['skor'] = "2 + (2 * RLP)";
+        } else {
+            $skor = null;
+            $rumus['skor'] = "Tidak ada Skor kurang dari 2";
+        }
+
+        $data = compact(['jumlah','faktor','rata','skor','rumus']);
 
         if($request->ajax()) {
             return response()->json($data);

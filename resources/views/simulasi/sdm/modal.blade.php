@@ -669,17 +669,24 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="internasional">Total DTPS</label>
                                 <input type="number" class="form-control form-isi" id="dtps">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="internasional">Rata-Rata (RLP)</label>
+                                <input type="number" class="form-control" id="rlp" disabled>
+                                <small class="form-text text-muted">RLP = <span class="rumus_rlp"></span></small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Skor</label>
-                                <input type="text" class="form-control" id="skor_pkm" readonly>
-                                <small class="form-text text-muted">Skor = <span class="rumus_pkm"></span></small>
+                                <input type="text" class="form-control" id="skor" readonly>
+                                <small class="form-text text-muted">Skor = <span class="rumus"></span></small>
                             </div>
                         </div>
                     </div>
