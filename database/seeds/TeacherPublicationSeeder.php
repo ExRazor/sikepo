@@ -56,17 +56,21 @@ class TeacherPublicationSeeder extends Seeder
 
         $tahun = ['2013','2014','2015','2016','2017','2018','2019'];
 
+
+
         $sesuai = [0,1];
         $rand_sesuai = $sesuai[array_rand($sesuai)];
 
         foreach($teacher as $t) {
             for($i=0;$i<5;$i++) {
+                $sitasi = [null,rand(1,5)];
                 DB::table('teacher_publications')->insert([
                     'nidn'              => $t->nidn,
                     'jenis_publikasi'   => $jenis->random()->id,
                     'judul'             => $judul[array_rand($judul)],
                     'penerbit'          => $penerbit[array_rand($penerbit)],
                     'tahun'             => $tahun[array_rand($tahun)],
+                    'sitasi'            => $sitasi[array_rand($sitasi)],
                     'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'created_at'        => now()
                 ]);

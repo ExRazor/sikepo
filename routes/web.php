@@ -325,13 +325,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('integration','CurriculumIntegrationController@destroy')->name('academic.integration.delete');
 
         //Academic - Minithesis
-        Route::get('minithesis','MiniThesisController@index')->name('academic.minithesis');
-        Route::get('minithesis/add','MiniThesisController@create')->name('academic.minithesis.add');
-        Route::get('minithesis/{nidn}','MiniThesisController@show')->name('academic.minithesis.show');
-        Route::get('minithesis/{nidn}/edit','MiniThesisController@edit')->name('academic.minithesis.edit');
-        Route::post('minithesis','MiniThesisController@store')->name('academic.minithesis.store');
-        Route::put('minithesis','MiniThesisController@update')->name('academic.minithesis.update');
-        Route::delete('minithesis','MiniThesisController@destroy')->name('academic.minithesis.delete');
+        Route::get('minithesis','MinithesisController@index')->name('academic.minithesis');
+        Route::get('minithesis/add','MinithesisController@create')->name('academic.minithesis.add');
+        Route::get('minithesis/{nidn}','MinithesisController@show')->name('academic.minithesis.show');
+        Route::get('minithesis/{nidn}/edit','MinithesisController@edit')->name('academic.minithesis.edit');
+        Route::post('minithesis','MinithesisController@store')->name('academic.minithesis.store');
+        Route::put('minithesis','MinithesisController@update')->name('academic.minithesis.update');
+        Route::delete('minithesis','MinithesisController@destroy')->name('academic.minithesis.delete');
 
         //Academic - Satisfaction
         Route::get('satisfaction','AcademicSatisfactionController@index')->name('academic.satisfaction');
