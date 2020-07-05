@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-sort-amount-down"></i>
-    <div>
-        <h4>Kuota Mahasiswa</h4>
-        <p class="mg-b-0">Olah Data Kuota Mahasiswa</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-sort-amount-down"></i>
+        <div>
+            <h4>Kuota Mahasiswa</h4>
+            <p class="mg-b-0">Olah Data Kuota Mahasiswa</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -59,12 +61,12 @@
                             @if(!Auth::user()->hasRole('kaprodi'))
                             <th class="text-center">Program Studi</th>
                             @endif
-                            <th class="text-center defaultSort">Tahun Akademik</th>
-                            <th class="text-center">Daya Tampung</th>
-                            <th class="text-center">Calon Mahasiswa<br>Pendaftar</th>
-                            <th class="text-center">Calon mahasiswa<br>Lulus Seleksi</th>
+                            <th class="text-center defaultSort">Tahun</th>
+                            <th class="text-center none">Daya Tampung</th>
+                            <th class="text-center none">Calon Mahasiswa<br>Pendaftar</th>
+                            <th class="text-center none">Calon mahasiswa<br>Lulus Seleksi</th>
                             @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort">Aksi</th>
+                            <th class="text-center no-sort none">Aksi</th>
                             @endif
                         </tr>
                     </thead>

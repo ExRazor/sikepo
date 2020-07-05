@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master')
 
 @section('title', 'Data Dosen')
 
@@ -20,19 +20,20 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-chalkboard-teacher"></i>
-    <div>
-        <h4>Dosen Program Studi</h4>
-        <p class="mg-b-0">Olah Data Dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-chalkboard-teacher"></i>
+        <div>
+            <h4>Dosen Program Studi</h4>
+            <p class="mg-b-0">Olah Data Dosen</p>
+        </div>
     </div>
-    <div class="ml-auto d-inline-flex">
+    <div class="ml-auto">
         @if(!Auth::user()->hasRole('kajur'))
-        <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block mg-y-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
+        <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
         {{-- <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-y-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a> --}}
         @endif
     </div>
 </div>
-
 <div class="br-pagebody">
     @if (session()->has('flash.message'))
         <div class="alert alert-{{ session('flash.class') }}" role="alert">
@@ -43,12 +44,12 @@
         </div>
     @endif
     @if(Auth::user()->role!='kaprodi')
-    <div class="row">
-        <div class="col-12">
+    <div class="row mb-3">
+        <div class="col-md-12">
             <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                <div class="row">
                     @if(Auth::user()->role!='kajur')
-                    <div class="mg-r-10">
+                    {{-- <div class="col-md mb-2">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">- Semua Jurusan -</option>
                             @foreach($faculty as $f)
@@ -61,18 +62,20 @@
                                 @endif
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     @endif
-                    <div class="mg-r-10">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Semua Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Semua Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -90,14 +93,13 @@
                     @else
                     {{ setting('app_department_name') }}
                     @endif
-                     </span>
+                    </span>
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
                 <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="asc">
                     <thead>
                         <tr>
-                            <th class="text-center">NIDN</th>
                             <th class="text-center defaultSort">Nama</th>
                             <th class="text-center">Program Studi</th>
                             <th class="text-center">Ikatan Kerja</th>
@@ -110,10 +112,11 @@
                     <tbody>
                         @foreach ($data as $d)
                         <tr>
-                            <td><a href="{{ route('teacher.show',encode_id($d->nidn)) }}">{{$d->nidn}}</a></td>
                             <td>
-                                {{$d->nama}}<br>
-                                <small>NIP. {{$d->nip}}</small>
+                                <a href="{{ route('teacher.show',encode_id($d->nidn)) }}">
+                                    {{$d->nama}}<br>
+                                    <small>NIDN. {{$d->nidn}}</small>
+                                </a>
                             </td>
                             <td>
                                 {{$d->studyProgram->nama}}<br>
@@ -145,6 +148,7 @@
         </div>
     </div>
 </div>
+
 @endsection
 
 @section('js')

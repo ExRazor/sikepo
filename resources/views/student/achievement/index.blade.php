@@ -21,10 +21,12 @@
 </div>
 
 <div class="br-pagetitle">
-    <i class="icon fa fa-medal"></i>
-    <div>
-        <h4>Prestasi Mahasiswa</h4>
-        <p class="mg-b-0">Daftar Prestasi Mahasiswa</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-medal"></i>
+        <div>
+            <h4>Prestasi Mahasiswa</h4>
+            <p class="mg-b-0">Daftar Prestasi Mahasiswa</p>
+        </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -49,8 +51,8 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.student.achievement.filter')}}" id="filter-studentAcv" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
+                <div class="row">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Pilih Program Studi -</option>
@@ -59,15 +61,19 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" name="prestasi_jenis">
-                            <option value="">- Pilih Jenis Prestasi -</option>
-                            <option value="Akademik">Akademik</option>
-                            <option value="Non Akademik">Non Akademik</option>
-                        </select>
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="prestasi_jenis">
+                                <option value="">- Pilih Jenis Prestasi -</option>
+                                <option value="Akademik">Akademik</option>
+                                <option value="Non Akademik">Non Akademik</option>
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
                     </div>
                 </div>
             </form>

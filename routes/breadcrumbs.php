@@ -34,7 +34,7 @@ Breadcrumbs::for('teacher-add', function ($trail) {
 
 Breadcrumbs::for('teacher-profile', function ($trail,$data) {
     $trail->parent('teacher');
-    $trail->push($data->nidn.' : '.$data->nama,route('teacher.show',encode_id($data->nidn)));
+    $trail->push($data->nama,route('teacher.show',encode_id($data->nidn)));
 });
 
 Breadcrumbs::for('teacher-edit', function ($trail,$data) {

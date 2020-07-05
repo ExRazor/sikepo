@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-flag-usa"></i>
-    <div>
-        <h4>Mahasiswa Asing</h4>
-        <p class="mg-b-0">Olah Data Mahasiswa Asing</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-flag-usa"></i>
+        <div>
+            <h4>Mahasiswa Asing</h4>
+            <p class="mg-b-0">Olah Data Mahasiswa Asing</p>
+        </div>
     </div>
 </div>
 
@@ -59,7 +61,7 @@
     </div>
     @endif
     <div class="row widget-2">
-        <div class="{{Auth::user()->hasRole('kajur') ? 'col-12' : 'col-8' }}">
+        <div class="order-2 order-lg-1 {{Auth::user()->hasRole('kajur') ? 'col-md-12' : 'col-md-8' }}">
             <div class="card shadow-base mb-3">
                 <div class="card-header nm_jurusan">
                     <h6 class="card-title">
@@ -75,10 +77,10 @@
                         <thead>
                             <tr>
                                 <th class="text-center defaultSort">Mahasiswa</th>
-                                <th class="text-center">Asal Negara</th>
-                                <th class="text-center">Durasi Status Asing</th>
+                                <th class="text-center none">Asal Negara</th>
+                                <th class="text-center none">Durasi Status Asing</th>
                                 @if(!Auth::user()->hasRole('kajur'))
-                                <th class="text-center no-sort" width="50">Aksi</th>
+                                <th class="text-center no-sort none" width="50">Aksi</th>
                                 @endif
                             </tr>
                         </thead>
@@ -117,8 +119,8 @@
             </div>
         </div>
         @if(!Auth::user()->hasRole('kajur'))
-        <div class="col-4 widget-2">
-            <div class="card shadow-base">
+        <div class="col-md-4 order-1 order-lg-2 widget-2">
+            <div class="card shadow-base mb-3">
                 <div class="card-header">
                     <h6 class="card-title"><span class="title-action">Tambah</span> Mahasiswa Asing</h6>
                 </div>

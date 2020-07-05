@@ -94,41 +94,6 @@ button.dropdown-item {
 /* ----------------------------------------------- */
 /* ############### DATA TABLE CUSTOM ############### */
 /* ----------------------------------------------- */
-
-.custom-file-label {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
-}
-
-.widget-4 .card-profile-img {
-    top: -40px;
-    background-image: url('/upload/teacher/avatar.png')
-}
-
-.br-profile-page .br-profile-body {
-    max-width:none;
-}
-
-.widget-2 .card-header {
-    background: white;
-}
-
-.widget-2 .card-body {
-    background: white;
-}
-
-.widget-4 .card-profile-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 100%;
-    background: #eee no-repeat center;
-    background-size: cover;
-}
-
-/* ----------------------------------------------- */
-/* ############### DATA TABLE CUSTOM ############### */
-/* ----------------------------------------------- */
 table.dataTable thead th.sorting::after, table.dataTable thead th.sorting_asc::after, table.dataTable thead th.sorting_desc::after, table.dataTable thead td.sorting::after, table.dataTable thead td.sorting_asc::after, table.dataTable thead td.sorting_desc::after {
     display:none;
 }
@@ -239,6 +204,36 @@ select.parsley-success:focus {
 /* ----------------------------------------------- */
 /* ############### WIDGET CUSTOM ############### */
 /* ----------------------------------------------- */
+.custom-file-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.widget-4 .card-profile-img {
+    top: -40px;
+    background-image: url('/upload/teacher/avatar.png')
+}
+
+.br-profile-page .br-profile-body {
+    max-width:none;
+}
+
+.widget-2 .card-header {
+    background: white;
+}
+
+.widget-2 .card-body {
+    background: white;
+}
+
+.widget-4 .card-profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background: #eee no-repeat center;
+    background-size: cover;
+}
 
 .widget-custom-tab > .card {
     border: 0;
@@ -312,12 +307,43 @@ div.radio.is-invalid {
 }
 
 /* ----------------------------------------------- */
+/* ############### CUSTOM ############### */
+/* ----------------------------------------------- */
+.br-pagetitle .icon {
+    margin-top: 29px;
+    margin-right: 20px;
+
+}
+
+.br-pagetitle .title {
+    float:right;
+}
+
+
+
+/* ----------------------------------------------- */
 /* ############### MEDIA ############### */
 /* ----------------------------------------------- */
 
-@media (min-width: 480px) {
-    .br-profile-page .br-profile-body {
-        padding: 20px;
+@media (max-width: 600px) {
+    .br-pagetitle .icon {
+        margin-top: 26px;
+        margin-right: 10px;
+        font-size: 30pt;
     }
+
+    .br-profile-page {
+        margin-top: 50px;
+    }
+
+    .br-profile-page .br-profile-body {
+        padding: 20px 0;
+    }
+
 }
 
+@media (max-width: 992px) {
+    .form-control-label {
+        justify-content: flex-start;
+    }
+}

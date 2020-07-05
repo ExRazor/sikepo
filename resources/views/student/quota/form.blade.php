@@ -15,8 +15,8 @@
                         @endforeach
                     </div>
                     <div class="row mb-3">
-                        <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
-                        <div class="col-8">
+                        <label class="col-md-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
+                        <div class="col-md-8">
                             <select class="form-control" name="kd_jurusan" data-type="form" disabled>
                                 <option value="">- Pilih Jurusan -</option>
                                 @foreach($faculty as $f)
@@ -32,8 +32,8 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                        <div class="col-8">
+                        <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                        <div class="col-md-8">
                             @if(Auth::user()->hasRole('kaprodi'))
                             <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                             @endif
@@ -46,8 +46,8 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span> </label>
-                        <div class="col-sm-8">
+                        <label class="col-md-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span> </label>
+                        <div class="col-md-8">
                             <input type="hidden" name="_id">
                             <select class="form-control" name="id_ta">
                                 <option value="">- Pilih Tahun Akademik -</option>
@@ -58,20 +58,20 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Daya Tampung: <span class="tx-danger">*</span> </label>
-                        <div class="col-sm-8">
+                        <label class="col-md-3 form-control-label">Daya Tampung: <span class="tx-danger">*</span> </label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="daya_tampung" placeholder="Daya tampung mahasiswa per tahun akademik" value="0" required>
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Calon Pendaftar:</label>
-                        <div class="col-sm-8">
+                        <label class="col-md-3 form-control-label">Calon Pendaftar:</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="calon_pendaftar" placeholder="Jumlah calon mahasiswa yang mendaftar ke Program Studi" value="0">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Calon Lulus:</label>
-                        <div class="col-sm-8">
+                        <label class="col-md-3 form-control-label">Calon Lulus:</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" name="calon_lulus" placeholder="Jumlah calon mahasiswa yang lulus di Program Studi" value="0">
                         </div>
                     </div>

@@ -3,7 +3,7 @@
     <div class="navicon-left hidden-lg-up"><a id="btnLeftMenuMobile" href=""><i class="icon ion-navicon-round"></i></a></div>
     <div class="ht-65 pd-x-20 d-flex align-items-center justify-content-start">
         <ul class="nav nav-gray-600 active-info tx-uppercase tx-12 tx-medium tx-spacing-2 flex-column flex-sm-row" role="tablist">
-                <li class="nav-item">{{setting('app_faculty_name')}} - {{setting('app_department_name')}}</li>
+                <li class="nav-item">{{setting('app_department_name')}}</li>
 
                 {{-- <li class="nav-item {{ Session::get('prodi_aktif')==$p->kd_prodi ? 'active' : '' }}"><a class="nav-link btn-prodi-active" href="/setpro/{{encrypt($p->kd_prodi)}}" role="tab">{{$p->nama}}</a></li> --}}
 

@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-atom"></i>
-    <div>
-        <h4>Data Kurikulum</h4>
-        <p class="mg-b-0">Olah Data Kurikulum atau Mata Kuliah</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-atom"></i>
+        <div>
+            <h4>Data Kurikulum</h4>
+            <p class="mg-b-0">Olah Data Kurikulum atau Mata Kuliah</p>
+        </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -51,9 +53,9 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.curriculum.filter')}}" id="filter-curriculum" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                <div class="row">
                     @if (!Auth::user()->hasRole('kaprodi'))
-                    <div class="mg-r-10">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Program Studi -</option>
@@ -63,31 +65,33 @@
                         </select>
                     </div>
                     @endif
-                    <div class="mg-r-10">
-                        <select class="form-control" name="kurikulum" style="width:200px;">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <select class="form-control" name="kurikulum">
                             <option value="">- Tahun Kurikulum -</option>
                             @foreach($thn_kurikulum as $tk)
                             <option>{{$tk->versi}}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" name="semester" style="width:150px;">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <select class="form-control" name="semester">
                             <option value="">- Semester -</option>
                             @for($i=1;$i<=8;$i++)
                             <option>{{$i}}</option>
                             @endfor
                         </select>
                     </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" name="jenis" style="width:125px;">
-                            <option value="">- Jenis -</option>
-                            <option>Wajib</option>
-                            <option>Pilihan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="jenis">
+                                <option value="">- Jenis -</option>
+                                <option>Wajib</option>
+                                <option>Pilihan</option>
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -111,13 +115,12 @@
                 <table id="table_curriculum" class="table display responsive datatable" data-sort="asc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all defaultSort" width="50">#</th>
-                            <th class="text-center all" width="200">Program Studi</th>
-                            <th class="text-center all" width="100">Kode</th>
-                            <th class="text-center all" width="500">Nama</th>
-                            <th class="text-center all">Semester</th>
-                            <th class="text-center all" width="100">Jenis</th>
-                            <th class="text-center all" width="100">Sesuai<br>Kompetensi</th>
+                            <th class="text-center defaultSort" width="500">Nama</th>
+                            <th class="text-center none" width="100">Kode</th>
+                            <th class="text-center" width="200">Program Studi</th>
+                            <th class="text-center none">Semester</th>
+                            <th class="text-center none" width="100">Jenis</th>
+                            <th class="text-center none" width="100">Sesuai<br>Kompetensi</th>
                             <th class="text-center none">Tahun Kurikulum</th>
                             <th class="text-center none">SKS Teori</th>
                             <th class="text-center none">SKS Seminar</th>
@@ -126,17 +129,16 @@
                             <th class="text-center none">Dokumen Rencana Pembelajaran</th>
                             <th class="text-center none">Unit Penyelenggara</th>
                             @if (!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort all" width="50">Aksi</th>
+                            <th class="text-center no-sort none" width="50">Aksi</th>
                             @endif
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($curriculum as $c)
                             <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$c->studyProgram->nama}}</td>
-                                <td>{{$c->kd_matkul}}</td>
                                 <td>{{$c->nama}}</td>
+                                <td>{{$c->kd_matkul}}</td>
+                                <td>{{$c->studyProgram->nama}}</td>
                                 <td class="text-center">{{$c->semester}}</td>
                                 <td class="text-center">{{$c->jenis}}</td>
                                 <td class="text-center">

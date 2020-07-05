@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-user-graduate"></i>
-    <div>
-        <h4>Data Mahasiswa</h4>
-        <p class="mg-b-0">Olah Data Mahasiswa</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-user-graduate"></i>
+        <div>
+            <h4>Data Mahasiswa</h4>
+            <p class="mg-b-0">Olah Data Mahasiswa</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto d-inline-flex">
@@ -45,9 +47,9 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.student.filter')}}" id="filter-student" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                <div class="row">
                     @if(Auth::user()->hasRole('admin'))
-                    <div class="mg-r-10">
+                    {{-- <div class="mg-r-10">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">- Semua Jurusan -</option>
                             @foreach($faculty as $f)
@@ -60,10 +62,10 @@
                                 @endif
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     @endif
                     @if(!Auth::user()->hasRole('kaprodi'))
-                    <div class="mg-r-10">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <select class="form-control" name="kd_prodi">
                             <option value="">- Semua Program Studi -</option>
                             @foreach($studyProgram as $sp)
@@ -72,24 +74,26 @@
                         </select>
                     </div>
                     @endif
-                    <div class="mg-r-10">
-                        <select class="form-control" name="angkatan" style="width:200px">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <select class="form-control" name="angkatan">
                             <option value="">- Semua Angkatan -</option>
                             @foreach($angkatan as $a)
                             <option value="{{$a->tahun_akademik}}">{{$a->tahun_akademik}}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" id="status_mahasiswa" name="status" style="width:200px">
-                            <option value="">- Pilih Status -</option>
-                            @foreach($status as $s)
-                                <option value="{{$s->status}}">{{$s->status}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" id="status_mahasiswa" name="status">
+                                <option value="">- Pilih Status -</option>
+                                @foreach($status as $s)
+                                    <option value="{{$s->status}}">{{$s->status}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -114,13 +118,13 @@
                     <thead>
                         <tr>
                             <th class="text-center">Nama / NIM</th>
-                            <th class="text-center">Tanggal Lahir</th>
+                            <th class="text-center none">Tanggal Lahir</th>
                             <th class="text-center">Program Studi</th>
-                            <th class="text-center defaultSort">Angkatan</th>
-                            <th class="text-center">Kelas</th>
-                            <th class="text-center">Program</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center no-sort">
+                            <th class="text-center defaultSort none">Angkatan</th>
+                            <th class="text-center none">Kelas</th>
+                            <th class="text-center none">Program</th>
+                            <th class="text-center none">Status</th>
+                            <th class="text-center no-sort none">
                                 @if(!Auth::user()->hasRole('kajur'))
                                 Aksi
                                 @endif

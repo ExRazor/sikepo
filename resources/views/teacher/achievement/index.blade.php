@@ -21,14 +21,16 @@
 </div>
 
 <div class="br-pagetitle">
-    <i class="icon fa fa-medal"></i>
-    <div>
-        <h4>Prestasi Dosen</h4>
-        <p class="mg-b-0">Daftar Prestasi Dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-medal"></i>
+        <div>
+            <h4>Prestasi Dosen</h4>
+            <p class="mg-b-0">Daftar Prestasi Dosen</p>
+        </div>
     </div>
     @if (Auth::user()->role!='kajur')
     <div class="ml-auto">
-        <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
+        <button class="btn btn-teal btn-block btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>
     </div>
     @endif
 </div>
@@ -50,18 +52,19 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.teacher.achievement.filter')}}" id="filter-teacherAcv" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Semua Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                <div class="row">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Semua Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -86,13 +89,13 @@
                 <table id="table-teacherAcv" class="table table-bordered mb-0 datatable" data-sort="desc">
                     <thead>
                         <tr>
-                            <th class="text-center align-middle defaultSort" width="100">Tanggal Diperoleh</th>
-                            <th class="text-center align-middle">Nama Dosen</th>
-                            <th class="text-center align-middle">Prestasi</th>
-                            <th class="text-center align-middle">Tingkat</th>
-                            <th class="text-center align-middle no-sort">Bukti<br>Pendukung</th>
+                            <th class="text-center align-middle defaultSort all" width="100">Tahun Diperoleh</th>
+                            <th class="text-center align-middle all">Nama Dosen</th>
+                            <th class="text-center align-middle none">Prestasi</th>
+                            <th class="text-center align-middle none">Tingkat</th>
+                            <th class="text-center align-middle no-sort none">Bukti<br>Pendukung</th>
                             @if(Auth::user()->role!='kajur')
-                            <th class="text-center align-middle no-sort">Aksi</th>
+                            <th class="text-center align-middle no-sort none">Aksi</th>
                             @endif
                         </tr>
                     </thead>
@@ -103,7 +106,7 @@
                             <td>
                                 <a href="{{route('teacher.show',encode_id($acv->teacher->nidn))}}">
                                     {{ $acv->teacher->nama }}<br>
-                                    <small>NIDN.{{$acv->teacher->nidn}} / {{$acv->teacher->studyProgram->singkatan}}</small>
+                                    <small>Prodi: {{$acv->teacher->studyProgram->singkatan}}</small>
                                 </a>
                             </td>
                             <td>{{ $acv->prestasi }}</td>

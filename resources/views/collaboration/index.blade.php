@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-handshake"></i>
-    <div>
-        <h4>Daftar Kerja Sama</h4>
-        <p class="mg-b-0">Olah Data Kerja Sama</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-handshake"></i>
+        <div>
+            <h4>Daftar Kerja Sama</h4>
+            <p class="mg-b-0">Olah Data Kerja Sama</p>
+        </div>
     </div>
     @if (Auth::user()->role!='kajur')
     <div class="ml-auto">
@@ -45,18 +47,20 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.collaboration.filter')}}" id="filter-collaboration" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
+                <div class="row">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Pilih Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
