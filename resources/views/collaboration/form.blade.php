@@ -12,6 +12,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -25,6 +26,7 @@
             </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -39,9 +41,9 @@
         </ul>
     </div>
     @endif
-    <div class="card bd-0">
-        <div class="card-body bd bd-t-0 rounded-bottom">
-            <div class="form-layout form-layout-1">
+    <div class="widget-2">
+        <div class="card bd-0">
+            <div class="card-body bd bd-t-0 rounded-bottom">
                 <form action="/collaboration" method="POST" enctype="multipart/form-data" data-parsley-validate>
                     @csrf
                     @if(isset($data))
@@ -53,7 +55,7 @@
                     <div class="row mg-b-25">
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label class="form-control-label">Program Studi:<span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Program Studi:<span class="tx-danger">*</span></label>
                                 <div id="prodi" class="parsley-select">
                                     @if(Auth::user()->hasRole('kaprodi'))
                                     <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
@@ -71,7 +73,7 @@
                         </div><!-- col-4 -->
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label class="form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Tahun Akademik: <span class="tx-danger">*</span></label>
                                 <div id="tahun_akademik" class="parsley-select">
                                     <select class="form-control select2" name="id_ta" data-parsley-class-handler="#tahun_akademik"
                                     data-parsley-errors-container="#errorTahunAkademik"  required>
@@ -86,7 +88,7 @@
                         </div><!-- col-4 -->
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label class="form-control-label">Jenis Kerja Sama: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Jenis Kerja Sama: <span class="tx-danger">*</span></label>
                                 <div id="jenis" class="parsley-select">
                                     <select class="form-control select2" name="jenis" data-parsley-class-handler="#jenis"
                                     data-parsley-errors-container="#errorJenis"  required>
@@ -101,13 +103,13 @@
                         </div><!-- col-4 -->
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label">Nama Lembaga: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Nama Lembaga: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="nama_lembaga" value="{{ isset($data) ? $data->nama_lembaga : Request::old('nama_lembaga')}}" placeholder="Tuliskan nama lembaga" required>
                             </div>
                         </div><!-- col-4 -->
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label">Tingkat Kegiatan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Tingkat Kegiatan: <span class="tx-danger">*</span></label>
                                 <div class="row">
                                 <div class="col-lg-4 mg-t-15">
                                     <label class="rdiobox">
@@ -132,31 +134,31 @@
                         </div><!-- col-4 -->
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label">Judul Kegiatan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Judul Kegiatan: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="judul_kegiatan" value="{{ isset($data) ? $data->judul_kegiatan : Request::old('judul_kegiatan')}}" placeholder="Tuliskan judul kegiatan kerja sama" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label">Manfaat Kegiatan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Manfaat Kegiatan: <span class="tx-danger">*</span></label>
                                 <textarea rows="3" class="form-control" name="manfaat_kegiatan" placeholder="Tuliskan manfaat kegiatan" required>{{ isset($data) ? $data->manfaat_kegiatan : Request::old('manfaat_kegiatan')}}</textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label">Waktu Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Waktu Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <input class="form-control datepicker" type="text" name="waktu" value="{{ isset($data) ? $data->waktu : Request::old('waktu')}}" placeholder="Tuliskan waktu pelaksanaan" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label">Durasi Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Durasi Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="durasi" value="{{ isset($data) ? $data->durasi : Request::old('durasi')}}" placeholder="Tuliskan lama durasi kegiatan" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mg-b-10-force">
-                                <label class="form-control-label">Jenis Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Jenis Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="bukti_nama" value="{{ isset($data) ? $data->bukti_nama : Request::old('bukti_nama')}}" placeholder="Tuliskan lama durasi kegiatan" required>
                                 <small class="w-100">
                                     Bukti kerja sama dapat berupa Surat Penugasan, Surat Perjanjian Kerja Sama (SPK), bukti-bukti pelaksanaan (laporan, hasil kerja sama, luaran kerja sama), atau bukti lain yang relevan. Dokumen Memorandum of Understanding (MoU), Memorandum of Agreement (MoA) atau dokumen sejenis yang memayungi pelaksanaan kerja sama tidak dapat dijadikan bukti realisasi kerja sama.
@@ -165,7 +167,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mg-b-10-force">
-                                <label class="form-control-label">Berkas Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <label class="form-control-label justify-content-start">Berkas Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" name="bukti_file" accept=".pdf" {{ isset($data) ? '' : 'required'}}>
                                     <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">{{ isset($data->bukti_file) ? $data->bukti_file : 'Pilih fail'}}</label>
@@ -181,8 +183,8 @@
                         <a href="{{route('collaboration')}}" class="btn btn-secondary">Batal</a>
                     </div>
                 </form>
-            </div>
-        </div><!-- card-body -->
+            </div><!-- card-body -->
+        </div>
     </div>
 </div>
 @endsection

@@ -16,12 +16,14 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-cog"></i>
         <div>
             <h4>Setelan Umum</h4>
             <p class="mg-b-0">Kelola setelan umum aplikasi</p>
         </div>
     </div>
+</div>
 
 <div class="br-pagebody">
     @if (session()->has('flash.message'))
@@ -37,30 +39,30 @@
             <form id="setting_form" action="{{route('setting.general')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             @csrf
                             @method('put')
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Nama Aplikasi:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Nama Aplikasi:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="app_name" value="{{ isset($data) ? $data['app_name'] : Request::old('app_name')}}">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Singkatan Aplikasi:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Singkatan Aplikasi:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="app_short" value="{{ isset($data) ? $data['app_short'] : Request::old('app_short')}}">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Deskripsi Aplikasi:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Deskripsi Aplikasi:</label>
+                                <div class="col-md-8">
                                     <textarea class="form-control" name="app_description" rows="5">{{ isset($data) ? $data['app_description'] : Request::old('app_description')}}</textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="app_department_id" required>
                                         <option value="">- Pilih Jurusan Pengguna Aplikasi -</option>
                                         @foreach($faculty as $f)
@@ -78,8 +80,8 @@
                             <hr>
                             <h4 class="text-center mb-3">Rasio SKS</h4>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label align-items-start pd-t-12">Penelitian:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label align-items-start pd-t-12">Penelitian:</label>
+                                <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="input-group">
@@ -103,8 +105,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label align-items-start pd-t-12">Pengabdian:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label align-items-start pd-t-12">Pengabdian:</label>
+                                <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="input-group">

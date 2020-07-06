@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-building"></i>
-    <div>
-        <h4>Program Studi: {{$studyProgram->nama}}</h4>
-        <p class="mg-b-0">Rincian Tempat Kerja Lulusan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-building"></i>
+        <div>
+            <h4>Program Studi: {{$studyProgram->nama}}</h4>
+            <p class="mg-b-0">Rincian Tempat Kerja Lulusan</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto d-inline-flex">
@@ -71,7 +73,7 @@
                 <td class="text-center">{{$d->kerja_internasional}}</td>
                 @if(!Auth::user()->hasRole('kajur'))
                 <td class="text-center">
-                    <div class="btn-group hidden-xs-down">
+                    <div class="btn-group">
                         <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit" data-id="{{encrypt($d->id)}}">
                             <div><i class="fa fa-pencil-alt"></i></div>
                         </button>

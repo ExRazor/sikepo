@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -48,7 +50,7 @@
             <form id="curriculumIntegration_form" action="{{route('academic.integration.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-12 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
@@ -57,8 +59,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tahun Integrasi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Tahun Integrasi: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="pilihTahun" class="parsley-select">
                                         <select class="form-control select-academicYear" name="id_ta" data-parsley-class-handler="#pilihTahun" data-parsley-errors-container="#errorsPilihTahun" required>
                                             @isset($data)
@@ -70,8 +72,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jenis Kegiatan: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jenis Kegiatan: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="kegiatan" required>
                                         <option value="">- Pilih Jenis Kegiatan -</option>
                                         <option value="Penelitian" {{ isset($data) && $data->kegiatan=='Penelitian' ? 'selected' : ''}}>Penelitian</option>
@@ -80,8 +82,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Judul Kegiatan: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Judul Kegiatan: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="pilihJudulKegiatan" class="parsley-select">
                                         <select class="form-control select-activity" data-parsley-class-handler="#pilihJudulKegiatan" data-parsley-errors-container="#errorsPilihJudulKegiatan" required>
                                             @isset($data)
@@ -95,8 +97,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="pilihDosen" class="parsley-select">
                                         @if(Auth::user()->hasRole('kaprodi'))
                                         <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
@@ -111,8 +113,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Mata Kuliah: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Mata Kuliah: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="curriculum" class="parsley-select">
                                         <select class="form-control select-curriculum" name="kd_matkul" data-parsley-class-handler="#curriculum" data-parsley-errors-container="#errorsCurriculum" required>
                                             <option value="">- Pilih Mata Kuliah -</option>
@@ -125,8 +127,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Bentuk Integrasi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Bentuk Integrasi: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="bentuk_integrasi" value="{{ isset($data) ? $data->bentuk_integrasi : Request::old('bentuk_integrasi')}}" placeholder="Tuliskan bentuk integrasi" required>
                                     <small class="w-100">Dapat berupa tambahan materi perkuliahan, studi kasus, bab dalam buku ajar, atau bentuk lain yang relevan</small>
                                 </div>

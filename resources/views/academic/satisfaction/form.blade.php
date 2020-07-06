@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -57,8 +59,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-2 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-9">
+                                <label class="col-md-2 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                                <div class="col-md-9">
                                     <div class="row">
                                         <div class="col-6">
                                             @if(Auth::user()->hasRole('kaprodi'))
@@ -94,10 +96,10 @@
                             </div>
                             @foreach($category as $c)
                             <div class="row mb-3">
-                                <label class="col-2 form-control-label align-items-start pd-t-12">{{ $c->nama }}: </label>
-                                <div class="col-9">
+                                <label class="col-md-2 form-control-label align-items-start pd-t-12">{{ $c->nama }}: </label>
+                                <div class="col-md-9">
                                     <div class="row mb-3">
-                                        <div class="col-3">
+                                        <div class="col-md-3">
                                             <div class="input-group">
                                                 <input class="form-control" type="number" name="sangat_baik[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->sangat_baik : Request::old('sangat_baik['.$c->id.']')}}" placeholder="Sangat Baik">
                                                 <div class="input-group-append">
@@ -105,7 +107,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-md-3">
                                             <div class="input-group">
                                                 <input class="form-control" type="number" name="baik[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->baik : Request::old('baik['.$c->id.']')}}" placeholder="Baik">
                                                 <div class="input-group-append">
@@ -113,7 +115,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-md-3">
                                             <div class="input-group">
                                                 <input class="form-control" type="number" name="cukup[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->cukup : Request::old('cukup['.$c->id.']')}}" placeholder="Cukup">
                                                 <div class="input-group-append">
@@ -121,7 +123,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-md-3">
                                             <div class="input-group">
                                                 <input class="form-control" type="number" name="kurang[{{ $c->id }}]" value="{{ isset($data) ? $persen[$c->id]->kurang : Request::old('kurang['.$c->id.']')}}" placeholder="Kurang">
                                                 <div class="input-group-append">

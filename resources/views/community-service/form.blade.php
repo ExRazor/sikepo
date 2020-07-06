@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -48,7 +50,7 @@
             <form id="communityService_form" action="{{route('community-service.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
@@ -57,8 +59,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control select-academicYear" name="id_ta" required>
                                         @isset($data)
                                         <option value="{{$data->id_ta}}">{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</option>
@@ -67,8 +69,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Ketua Pelaksana: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Ketua Pelaksana: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     @if(Auth::user()->hasRole('kaprodi'))
                                         <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
                                     @endif
@@ -80,20 +82,20 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Judul Pengabdian: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Judul Pengabdian: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="judul_pengabdian" value="{{ isset($data) ? $data->judul_pengabdian : Request::old('judul_pengabdian')}}" placeholder="Masukkan judul pengabdian" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tema Pengabdian: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Tema Pengabdian: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="tema_pengabdian" value="{{ isset($data) ? $data->tema_pengabdian : Request::old('tema_pengabdian')}}" placeholder="Masukkan tema pengabdian sesuai roadmap" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Bidang: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Bidang: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <label class="ckbox ckbox-inline mb-0 mr-4">
                                         <input name="sesuai_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->sesuai_prodi) || Request::old('sesuai_prodi')=='1' ? 'checked' : ''}}>
                                         <span class="pl-0">Sesuai Bidang Prodi?</span>
@@ -101,16 +103,16 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jumlah SKS: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jumlah SKS: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control number" type="text" name="sks_pengabdian" value="{{ isset($data) ? $data->sks_pengabdian : Request::old('sks_pengabdian')}}" placeholder="Masukkan jumlah SKS" value="3" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Sumber Biaya: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Sumber Biaya: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-md-6">
                                             <select id="sumber_biaya_select" class="form-control" name="sumber_biaya" required>
                                                 <option value="">- Pilih Sumber Biaya -</option>
                                                 <option value="Perguruan Tinggi" {{ (isset($data) && $data->sumber_biaya == 'Perguruan Tinggi') ? 'selected' : '' }}>Perguruan Tinggi</option>
@@ -119,15 +121,15 @@
                                                 <option value="Lembaga Luar Negeri" {{ (isset($data) && $data->sumber_biaya == 'Lembaga Luar Negeri') ? 'selected' : '' }}>Lembaga Luar Negeri</option>
                                             </select>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-md-6">
                                             <input id="sumber_biaya_input" class="form-control" type="text" name="sumber_biaya_nama" value="{{ isset($data) ? $data->sumber_biaya_nama : Request::old('sumber_biaya_nama')}}" placeholder="Tuliskan nama lembaga" {{isset($data) && $data->sumber_biaya_nama!='' ? 'required' : 'disabled'}}>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jumlah Biaya: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jumlah Biaya: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
@@ -142,7 +144,7 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             <h3 class="text-center mb-3">Anggota Dosen</h3>
                             @isset($data)
                             <div id="daftarDosen">
@@ -171,7 +173,7 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             <h3 class="text-center mb-3">Daftar Mahasiswa</h3>
                             @isset($data)
                             <div id="daftarMahasiswa">

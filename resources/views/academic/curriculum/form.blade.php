@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -48,7 +50,7 @@
             <form id="research_form" action="{{route('academic.curriculum.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
@@ -57,8 +59,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     @if(Auth::user()->hasRole('kaprodi'))
                                     <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                                     @endif
@@ -71,26 +73,26 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tahun Kurikulum: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Tahun Kurikulum: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control number" type="text" name="versi" value="{{ isset($data) ? $data->versi : Request::old('versi')}}" placeholder="Masukkan edisi kurikulum" maxlength="4" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Kode Mata Kuliah: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Kode Mata Kuliah: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="kd_matkul" value="{{ isset($data) ? $data->kd_matkul : Request::old('kd_matkul')}}" placeholder="Masukkan kode unik mata kuliah" maxlength="10" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Nama Mata Kuliah: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Nama Mata Kuliah: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan tema penelitian sesuai roadmap" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Semester: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Semester: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="semester" required>
                                         <option value="">- Pilih Semester -</option>
                                         @for($i=1;$i<=8;$i++)
@@ -100,8 +102,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jenis Mata Kuliah: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jenis Mata Kuliah: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="jenis" class="radio">
                                         <label class="rdiobox rdiobox-inline mb-0">
                                             <input name="jenis" type="radio" value="Wajib" {{ isset($data) && ($data->jenis=='Wajib' || Request::old('jenis')=='Wajib') ? 'checked' : ''}} data-parsley-class-handler="#jenis"
@@ -121,20 +123,20 @@
                                 <div class="col-sm-8">
                                     <div class="row">
                                         <div class="col-4 pr-1">
-                                            <input type="text" class="form-control number" name="sks_teori" placeholder="SKS Teori" value="{{isset($data) || Request::old('sks_teori') ? $data->sks_teori : '0'}}" required>
+                                            <input type="text" class="form-control number" name="sks_teori" placeholder="SKS Teori" value="{{isset($data) || Request::old('sks_teori') ? $data->sks_teori : null}}" required>
                                         </div>
                                         <div class="col-4 px-1">
-                                            <input type="text" class="form-control number" name="sks_seminar" placeholder="SKS Seminar" value="{{isset($data) || Request::old('sks_seminar') ? $data->sks_seminar : '0'}}" required>
+                                            <input type="text" class="form-control number" name="sks_seminar" placeholder="SKS Seminar" value="{{isset($data) || Request::old('sks_seminar') ? $data->sks_seminar : null}}" required>
                                         </div>
                                         <div class="col-4 pl-1">
-                                            <input type="text" class="form-control number" name="sks_praktikum" placeholder="SKS Praktikum" value="{{isset($data) || Request::old('sks_praktikum') ? $data->sks_praktikum : '0'}}" required>
+                                            <input type="text" class="form-control number" name="sks_praktikum" placeholder="SKS Praktikum" value="{{isset($data) || Request::old('sks_praktikum') ? $data->sks_praktikum : null}}" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Capaian Mata Kuliah: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Capaian Mata Kuliah: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="capaian" class="checkbox">
                                         <label class="ckbox ckbox-inline mb-0 mr-4">
                                             <input name="capaian[]" type="checkbox" value="Sikap" {{ isset($data) && (in_array('Sikap',$data->capaian) || Request::old('capaian')=='Sikap') ? 'checked' : ''}} data-parsley-class-handler="#capaian"
@@ -158,8 +160,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Kompetensi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Kompetensi: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <label class="ckbox ckbox-inline mb-0 mr-4">
                                         <input name="kompetensi_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->kompetensi_prodi) || Request::old('kompetensi_prodi')=='1' ? 'checked' : ''}}>
                                         <span class="pl-0">Sesuai Kompetensi Prodi?</span>
@@ -167,14 +169,14 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Dokumen Rencana: </label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Dokumen Rencana: </label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="dokumen_nama" value="{{ isset($data) ? $data->dokumen_nama : Request::old('dokumen_nama')}}" placeholder="Masukkan nama dokumen rencana pembelajaran">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Unit Penyelenggara: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Unit Penyelenggara: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="unit_penyelenggara" required>
                                         <option value="">- Pilih Unit Penyelenggara -</option>
                                         <option value="Program Studi" {{ (isset($data) && $data->unit_penyelenggara == 'Program Studi') ? 'selected' : '' }}>Program Studi</option>

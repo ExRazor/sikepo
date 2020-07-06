@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-network-wired"></i>
-    <div>
-        <h4>Program Studi: {{$studyProgram->nama}}</h4>
-        <p class="mg-b-0">Rincian Bidang Kerja Lulusan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-network-wired"></i>
+        <div>
+            <h4>Program Studi: {{$studyProgram->nama}}</h4>
+            <p class="mg-b-0">Rincian Bidang Kerja Lulusan</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto d-inline-flex">
@@ -44,7 +46,7 @@
         </div>
     @endif
     <div class="row">
-        <div class="col-9">
+        <div class="col-md-9 order-2 order-md-1">
             <table id="table-alumnusSuitable" class="table table-colored table-dark" >
                 <thead>
                     <tr>
@@ -73,7 +75,7 @@
                         <td class="text-center">{{$d->sesuai_tinggi}}</td>
                         @if(!Auth::user()->hasRole('kajur'))
                         <td class="text-center">
-                            <div class="btn-group hidden-xs-down">
+                            <div class="btn-group">
                                 <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit" data-id="{{encrypt($d->id)}}">
                                     <div><i class="fa fa-pencil-alt"></i></div>
                                 </button>
@@ -95,7 +97,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-3">
+        <div class="col-md-3 order-1 order-md-2">
             <div class="alert alert-info">
                 <h5>Tingkat Kesesuaian Bidang Kerja</h5>
                 <hr>

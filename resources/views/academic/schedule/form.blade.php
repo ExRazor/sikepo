@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -24,11 +25,12 @@
         </div>
         @else
         <div>
-                <h4>Tambah</h4>
-                <p class="mg-b-0">Tambah Data Jadwal Kurikulum</p>
-            </div>
+            <h4>Tambah</h4>
+            <p class="mg-b-0">Tambah Data Jadwal Kurikulum</p>
+        </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -57,7 +59,7 @@
             <form id="curriculumSchedule_form" action="{{route('academic.schedule.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             @csrf
                             <input type="hidden" name="url_current" value="{{ url()->current() }}">
                             <input type="hidden" name="url_previous" value="{{ url()->previous() }}">
@@ -68,8 +70,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Asal Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-4">
+                                <label class="col-md-3 form-control-label">Asal Dosen: <span class="tx-danger">*</span></label>
+                                <div class="col-md-4 mb-2">
                                     <select class="form-control" name="kd_jurusan" data-type="form" required>
                                         <option value="">- Pilih Jurusan -</option>
                                         @foreach($faculty as $f)
@@ -83,7 +85,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <select id="selectProdiDsn" class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
                                         @isset($data)
@@ -95,8 +97,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control select-dsn" name="nidn" {{isset($data) ? 'required' : 'disabled'}}>
                                         <option value="">- Pilih Dosen -</option>
                                         @isset($data)
@@ -108,8 +110,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Tahun Akademik: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="academicYear" class="parsley-select">
                                         <select class="form-control select-academicYear" name="id_ta" data-parsley-class-handler="#academicYear" data-parsley-errors-container="#errorsAcademicYear" required>
                                             <option value="">- Pilih Tahun Akademik -</option>
@@ -122,10 +124,10 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Mata Kuliah: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Mata Kuliah: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div class="row align-items-center">
-                                        <div class="col-8">
+                                        <div class="col-md-8 mb-2">
                                             <div id="curriculum" class="parsley-select">
                                                 <select class="form-control select-curriculum" name="kd_matkul" data-parsley-class-handler="#curriculum" data-parsley-errors-container="#errorsCurriculum" required>
                                                     <option value="">- Pilih Mata Kuliah -</option>
@@ -136,7 +138,7 @@
                                                 <div id="errorsCurriculum"></div>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-md-4">
                                             <div id="sesuai_bidang" class="checkbox">
                                                 <label class="ckbox ckbox-inline mb-0 mr-4">
                                                     <input name="sesuai_bidang" type="checkbox" value="1" {{ (isset($data) && isset($data->sesuai_bidang)) || Request::old('sesuai_bidang')=='1' ? 'checked' : ''}}>

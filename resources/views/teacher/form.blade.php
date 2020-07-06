@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -24,11 +25,12 @@
         </div>
         @else
         <div>
-                <h4>Tambah</h4>
-                <p class="mg-b-0">Tambah Data Dosen</p>
-            </div>
+            <h4>Tambah</h4>
+            <p class="mg-b-0">Tambah Data Dosen</p>
+        </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -57,7 +59,7 @@
             <form id="teacher_form" action="{{route('teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-9 mx-auto">
+                        <div class="col-md-9 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
@@ -66,8 +68,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="kd_jurusan" data-type="form" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
                                         <option value="">- Pilih Jurusan -</option>
                                         @foreach($faculty as $f)
@@ -83,8 +85,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     @if(Auth::user()->hasRole('kaprodi'))
                                     <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                                     @endif
@@ -97,26 +99,26 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} minlength="8" maxlength="10" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">NIP: </label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">NIP: </label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="nip" value="{{ isset($data) ? $data->nip : Request::old('nip')}}" placeholder="Masukkan NIP" minlength="16" maxlength="18">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Nama Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Nama Dosen: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan Nama Dosen" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jenis Kelamin: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jenis Kelamin: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <div id="jenis_kelamin" class="radio">
                                         <label class="rdiobox rdiobox-inline mb-0">
                                             <input name="jk" type="radio" value="Laki-Laki" {{ isset($data) && ($data->jk=='Laki-Laki' || Request::old('jk')=='Laki-Laki') ? 'checked' : ''}} data-parsley-class-handler="#jenis_kelamin"
@@ -132,8 +134,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Agama:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Agama:</label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="agama">
                                         <option value="">- Pilih Agama -</option>
                                         <option value="Islam" {{ (isset($data) && ($data->agama=='Islam') || Request::old('agama')=='Islam') ? 'selected' : ''}}>Islam</option>
@@ -146,41 +148,41 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Tempat/Tanggal Lahir:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Tempat/Tanggal Lahir:</label>
+                                <div class="col-md-8">
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-sm-5 col-md-4 mb-2">
                                             <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-sm-7 col-md-8">
                                             <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Alamat:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Alamat:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="alamat" value="{{ isset($data) ? $data->alamat : Request::old('alamat')}}" placeholder="Masukkan Alamat Tempat Tinggal">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">No. Telepon:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">No. Telepon:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="no_telp" value="{{ isset($data) ? $data->no_telp : Request::old('no_telp')}}" placeholder="Masukkan Nomor Telepon yang Dapat Dihubungi">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Email:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Email:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="email" name="email" value="{{ isset($data) ? $data->email : Request::old('email')}}" placeholder="Masukkan Email Aktif">
                                 </div>
                             </div>
                             <div class="row mb-3 form-opsional">
-                                <label class="col-3 form-control-label">Pendidikan Terakhir:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Pendidikan Terakhir:</label>
+                                <div class="col-md-8">
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-md-4 mb-2">
                                             <select class="form-control" name="pend_terakhir_jenjang">
                                                 <option value="">- Pilih Pendidikan Terakhir -</option>
                                                 <option value="D3" {{ (isset($data) && ($data->pend_terakhir_jenjang=='D3') || Request::old('pend_terakhir_jenjang')=='D3') ? 'selected' : ''}}>Diploma D3</option>
@@ -190,21 +192,21 @@
                                                 <option value="S3" {{ (isset($data) && ($data->pend_terakhir_jenjang=='S3') || Request::old('pend_terakhir_jenjang')=='S3') ? 'selected' : ''}}>Strata 3 / Doktor</option>
                                             </select>
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-md-8">
                                             <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan Pendidikan Terakhir">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3 form-opsional">
-                                <label class="col-3 form-control-label">Bidang Keahlian:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Bidang Keahlian:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="bidang_ahli" value="{{ isset($data) ? $data->bidang_ahli : Request::old('bidang_ahli')}}" placeholder="Jika lebih dari satu, pisahkan dengan tanda koma.">
                                 </div>
                             </div>
                             <div class="row mb-3 form-opsional">
-                                <label class="col-3 form-control-label">Sesuai Bidang PS?</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Sesuai Bidang PS?</label>
+                                <div class="col-md-8">
                                     <div id="sesuai_bidang_ps" class="radio">
                                         <label class="rdiobox rdiobox-inline mb-0">
                                             <input name="sesuai_bidang_ps" type="radio" value="Ya" {{ isset($data) && ($data->sesuai_bidang_ps=='Ya' || Request::old('sesuai_bidang_ps')=='Ya') ? 'checked' : ''}} data-parsley-class-handler="#sesuai_bidang_ps"
@@ -220,8 +222,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Ikatan Kerja: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Ikatan Kerja: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="ikatan_kerja" required>
                                         <option value="">- Pilih Ikatan Kerja -</option>
                                         <option value="Dosen Tetap PS" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PS' || Request::old('ikatan_kerja')=='Dosen Tetap PS') ? 'selected' : ''}}>Dosen Tetap PS</option>
@@ -231,8 +233,8 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Jabatan Akademik: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Jabatan Akademik: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
                                     <select class="form-control" name="jabatan_akademik" required>
                                         <option value="">- Pilih Jabatan Akademik -</option>
                                         <option value="Tenaga Pengajar" {{ isset($data) && ($data->jabatan_akademik=='Tenaga Pengajar' || Request::old('jabatan_akademik')=='Tenaga Pengajar') ? 'selected' : ''}}>Tenaga Pengajar</option>
@@ -244,14 +246,14 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">No. Sertifikat Pendidik:</label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">No. Sertifikat Pendidik:</label>
+                                <div class="col-md-8">
                                     <input class="form-control" type="text" name="sertifikat_pendidik" value="{{ isset($data) ? $data->sertifikat_pendidik : Request::old('sertifikat_pendidik')}}" placeholder="Masukkan No. Sertifikat Pendidik">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Foto Profil<span class="tx-danger"></span></label>
-                                <div class="col-8">
+                                <label class="col-md-3 form-control-label">Foto Profil<span class="tx-danger"></span></label>
+                                <div class="col-md-8">
                                     <div class="form-group mg-b-10-force">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" name="foto" id="foto_profil">

@@ -75,7 +75,7 @@
                         <label class="col-sm-3 form-control-label align-items-start pd-t-12"><span class="tx-danger">*</span> Bukti Prestasi:</label>
                         <div class="col-sm-8">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     <input type="text" class="form-control" name="bukti_nama" placeholder="Tuliskan jenis bukti prestasi" required>
                                 </div>
                                 <div class="col-sm-6">

@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-percentage"></i>
-    <div>
-        <h4>{{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
-        <p class="mg-b-0">Tingkat Kepuasan Pengguna Terhadap Lulusan dari Program Studi {{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-percentage"></i>
+        <div>
+            <h4>{{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
+            <p class="mg-b-0">Tingkat Kepuasan Pengguna Terhadap Lulusan dari Program Studi {{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="row ml-auto" style="width:300px">

@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -48,7 +50,7 @@
             <form id="funding_faculty_form" action="{{route('funding.faculty.store')}}" method="POST" enctype="multipart/form-data">
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
-                        <div class="col-10 mx-auto">
+                        <div class="col-md-10 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
@@ -57,8 +59,8 @@
                                 @method('post')
                             @endif
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Periode Tahun: <span class="tx-danger">*</span></label>
-                                <div class="col-7">
+                                <label class="col-md-3 form-control-label">Periode Tahun: <span class="tx-danger">*</span></label>
+                                <div class="col-md-7">
                                     <input type="hidden" name="id_fakultas" value="{{ encrypt(setting('app_faculty_id'))}}">
                                     <select class="form-control {{ $errors->has('id_ta') ? 'is-invalid' : ''}}" name="id_ta" required>
                                         <option value="">- Pilih Tahun -</option>
@@ -75,11 +77,11 @@
                             </div>
                             @foreach($category as $c)
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">{{ $c->nama }}: </label>
-                                <div class="col-7">
+                                <label class="col-md-3 form-control-label">{{ $c->nama }}: </label>
+                                <div class="col-md-7">
                                     @if($c->children->count())
                                         @foreach($c->children as $child)
-                                        <div class="row my-3">
+                                        <div class="row mb-1">
                                             <div class="col-12">
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
