@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-percentage"></i>
-    <div>
-        <h4>Kepuasan Akademik</h4>
-        <p class="mg-b-0">Olah Data Kepuasan Akademik</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-percentage"></i>
+        <div>
+            <h4>Kepuasan Akademik</h4>
+            <p class="mg-b-0">Olah Data Kepuasan Akademik</p>
+        </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">

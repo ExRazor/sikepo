@@ -15,10 +15,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon ion-calendar"></i>
-    <div>
-        <h4>Tahun Akademik</h4>
-        <p class="mg-b-0">Olah Data Tahun Akademik</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-calendar"></i>
+        <div>
+            <h4>Tahun Akademik</h4>
+            <p class="mg-b-0">Olah Data Tahun Akademik</p>
+        </div>
     </div>
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#academicYear-form"><i class="fa fa-plus mg-r-10"></i> Tahun Akademik</button>
@@ -50,7 +52,7 @@
                             </div>
                         </td>
                         <td width="150">
-                            <div class="btn-group hidden-xs-down">
+                            <div class="btn-group">
                                 <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-ay" data-id="{{ encrypt($a->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
                                 <form action="{{ url()->current() }}" method="POST">
                                     <input type="hidden" value="{{ encrypt($a->id) }}" name="id">

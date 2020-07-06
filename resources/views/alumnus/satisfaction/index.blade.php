@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-percentage"></i>
-    <div>
-        <h4>Kepuasan Pengguna Lulusan</h4>
-        <p class="mg-b-0">Olah Data Kepuasan Pengguna Lulusan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-percentage"></i>
+        <div>
+            <h4>Kepuasan Pengguna Lulusan</h4>
+            <p class="mg-b-0">Olah Data Kepuasan Pengguna Lulusan</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -67,9 +69,7 @@
                             <th class="text-center">Baik</th>
                             <th class="text-center">Cukup</th>
                             <th class="text-center">Kurang</th>
-                            @if(!Auth::user()->hasRole('kajur'))
                             <th class="text-center">Aksi</th>
-                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -83,15 +83,13 @@
                             <td class="text-center">{{$persen[$s->kd_kepuasan]->baik}}%</td>
                             <td class="text-center">{{$persen[$s->kd_kepuasan]->cukup}}%</td>
                             <td class="text-center">{{$persen[$s->kd_kepuasan]->kurang}}%</td>
-                            @if(!Auth::user()->hasRole('kajur'))
                             <td class="text-center">
-                                <div class="btn-group hidden-xs-down">
+                                <div class="btn-group">
                                     <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.satisfaction.show',encrypt($s->kd_kepuasan))}}">
                                         <div><i class="fa fa-search-plus"></i></div>
                                     </a>
                                 </div>
                             </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>

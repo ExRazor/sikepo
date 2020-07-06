@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-newspaper"></i>
-    <div>
-        <h4>Data Publikasi Mahasiswa</h4>
-        <p class="mg-b-0">Olah data publikasi mahasiswa</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-newspaper"></i>
+        <div>
+            <h4>Data Publikasi Mahasiswa</h4>
+            <p class="mg-b-0">Olah data publikasi mahasiswa</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -45,18 +47,20 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.publication.student.filter')}}" id="filter-publication" data-token="{{encode_id(Auth::user()->role)}}" data-type="student" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
+                <div class="row">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Pilih Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -81,13 +85,13 @@
                 <table id="table_publication" class="table display responsive datatable" data-sort="desc" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="text-center all" width="250">Nama Dosen</th>
-                            <th class="text-center all" width="600">Judul Publikasi</th>
-                            <th class="text-center all" width="250">Jenis Publikasi</th>
-                            <th class="text-center defaultSort all" width="100">Tahun Terbit</th>
-                            <th class="text-center all" width="150">Sesuai Bidang<br>Prodi</th>
+                            <th class="text-center" width="600">Judul Publikasi</th>
+                            <th class="text-center none" width="250">Nama Mahasiswa</th>
+                            <th class="text-center none" width="250">Jenis Publikasi</th>
+                            <th class="text-center defaultSort" width="100">Tahun Terbit</th>
+                            <th class="text-center none" width="150">Sesuai Bidang<br>Prodi</th>
                             @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort all" width="50">Aksi</th>
+                            <th class="text-center no-sort none" width="50">Aksi</th>
                             @endif
                         </tr>
                     </thead>
@@ -95,11 +99,11 @@
                         @foreach ($publikasi as $p)
                         <tr>
                             <td>
-                                {{ $p->student->nama }}<br>
-                                <small>NIM.{{ $p->student->nim }} / {{ $p->student->studyProgram->singkatan }}</small>
+                                <a href="{{route('publication.student.show',encode_id($p->id))}}">{{ $p->judul }}</a>
                             </td>
                             <td>
-                                <a href="{{route('publication.student.show',encode_id($p->id))}}">{{ $p->judul }}</a>
+                                {{ $p->student->nama }}<br>
+                                <small>NIM.{{ $p->student->nim }} / {{ $p->student->studyProgram->singkatan }}</small>
                             </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
                             <td class="text-center">{{ $p->tahun }}</td>

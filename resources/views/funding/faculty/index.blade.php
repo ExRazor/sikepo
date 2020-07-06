@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-balance-scale"></i>
-    <div>
-        <h4>Keuangan Fakultas</h4>
-        <p class="mg-b-0">Olah Data Keuangan Fakultas</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-balance-scale"></i>
+        <div>
+            <h4>Keuangan Fakultas</h4>
+            <p class="mg-b-0">Olah Data Keuangan Fakultas</p>
+        </div>
     </div>
     <div class="ml-auto">
         <a href="{{ route('funding.faculty.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Keuangan</a>

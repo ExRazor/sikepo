@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-balance-scale"></i>
-    <div>
-        <h4>Keuangan Program Studi</h4>
-        <p class="mg-b-0">Olah Data Keuangan Program Studi</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-balance-scale"></i>
+        <div>
+            <h4>Keuangan Program Studi</h4>
+            <p class="mg-b-0">Olah Data Keuangan Program Studi</p>
+        </div>
     </div>
     @if(Auth::user()->hasRole('admin','kaprodi'))
     <div class="ml-auto">
@@ -60,9 +62,9 @@
                     <thead>
                         <tr>
                             @if(!Auth::user()->hasRole('kaprodi'))
-                            <th class="text-center align-middle">Program Studi</th>
+                            <th class="text-center align-middle all">Program Studi</th>
                             @endif
-                            <th class="text-center align-middle defaultSort">Tahun Akademik</th>
+                            <th class="text-center align-middle defaultSort all">Tahun Akademik</th>
                             <th class="text-center">Total Biaya<br>Operasional</th>
                             <th class="text-center">Total Biaya<br>Penelitian dan Pengabdian</th>
                             <th class="text-center">Total Biaya<br>Investasi dan Sarana</th>

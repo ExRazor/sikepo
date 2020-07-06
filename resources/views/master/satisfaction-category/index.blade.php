@@ -15,10 +15,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-paperclip"></i>
-    <div>
-        <h4>Aspek Kepuasan</h4>
-        <p class="mg-b-0">Olah Data Aspek Kepuasan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-paperclip"></i>
+        <div>
+            <h4>Aspek Kepuasan</h4>
+            <p class="mg-b-0">Olah Data Aspek Kepuasan</p>
+        </div>
     </div>
 </div>
 
@@ -37,7 +39,7 @@
         </div>
     @endif
     <div class="row widget-2">
-        <div class="col-8">
+        <div class="col-md-8 order-2 order-md-1">
             <div class="card shadow-base">
                 <div class="card-header">
                         <h6 class="card-title">Aspek Kepuasan</span></h6>
@@ -81,7 +83,7 @@
                 </div><!-- card-body -->
             </div>
         </div>
-        <div class="col-4 widget-2">
+        <div class="col-md-4 order-1 order-md-2 mb-3 widget-2">
             <div class="card shadow-base">
                 <div class="card-header">
                     <h6 class="card-title"><span class="title-action">Tambah</span> Aspek</h6>

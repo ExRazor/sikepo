@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-link"></i>
-    <div>
-        <h4>Integrasi Kurikulum</h4>
-        <p class="mg-b-0">Integrasi Kegiatan Penelitian/Pengabdian dalam Pembelajaran</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-link"></i>
+        <div>
+            <h4>Integrasi Kurikulum</h4>
+            <p class="mg-b-0">Integrasi Kegiatan Penelitian/Pengabdian dalam Pembelajaran</p>
+        </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -49,11 +51,11 @@
                         <tr>
                             <th class="text-center defaultSort" width="90">Tahun Akademik</th>
                             <th class="text-center" width="300">Judul Kegiatan</th>
-                            <th class="text-center" width="150">Nama Dosen</th>
-                            <th class="text-center" width="300">Mata Kuliah</th>
+                            <th class="text-center none" width="150">Nama Dosen</th>
+                            <th class="text-center none" width="300">Mata Kuliah</th>
                             <th class="text-center" width="125">Bentuk Integrasi</th>
                             @if (!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort" width="50">Aksi</th>
+                            <th class="text-center no-sort none" width="50">Aksi</th>
                             @endif
                         </tr>
                     </thead>

@@ -15,10 +15,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon ion-ios-briefcase"></i>
-    <div>
-        <h4>Data Jurusan</h4>
-        <p class="mg-b-0">Olah Data Jurusan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-briefcase"></i>
+        <div>
+            <h4>Data Jurusan</h4>
+            <p class="mg-b-0">Olah Data Jurusan</p>
+        </div>
     </div>
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add btn-add-department text-white" data-toggle="modal" data-target="#modal-master-department"><i class="fa fa-plus mg-r-10"></i> Jurusan</button>
@@ -43,17 +45,19 @@
             </div>
             <div class="card-body bd bd-t-0 rounded-bottom bd-color-gray-lighter">
                 <form action="{{route('master.department.show')}}" id="filter-department" method="POST">
-                    <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                        <div class="mg-r-10">
-                            <select id="fakultas" class="form-control" name="id_fakultas" required>
-                                <option value="0">Semua Fakultas</option>
-                                @foreach ($faculty as $f)
-                                <option value="{{encode_id($f->id)}}">{{$f->nama}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-purple btn-block btn-cari " style="color:white">Cari</a>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                            <div class="input-group">
+                                <select id="fakultas" class="form-control mr-3" name="id_fakultas" required>
+                                    <option value="0">Semua Fakultas</option>
+                                    @foreach ($faculty as $f)
+                                    <option value="{{encode_id($f->id)}}">{{$f->nama}}</option>
+                                    @endforeach
+                                </select>
+                                <div>
+                                    <button type="submit" class="btn btn-purple btn-block btn-cari " style="color:white">Cari</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

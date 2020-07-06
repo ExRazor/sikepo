@@ -61,7 +61,7 @@
     </div>
     @endif
     <div class="row widget-2">
-        <div class="order-2 order-lg-1 {{Auth::user()->hasRole('kajur') ? 'col-md-12' : 'col-md-8' }}">
+        <div class="order-2 order-md-1 {{Auth::user()->hasRole('kajur') ? 'col-md-12' : 'col-md-8' }}">
             <div class="card shadow-base mb-3">
                 <div class="card-header nm_jurusan">
                     <h6 class="card-title">
@@ -119,7 +119,7 @@
             </div>
         </div>
         @if(!Auth::user()->hasRole('kajur'))
-        <div class="col-md-4 order-1 order-lg-2 widget-2">
+        <div class="col-md-4 order-1 order-md-2 widget-2">
             <div class="card shadow-base mb-3">
                 <div class="card-header">
                     <h6 class="card-title"><span class="title-action">Tambah</span> Mahasiswa Asing</h6>

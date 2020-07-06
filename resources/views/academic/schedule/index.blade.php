@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-chalkboard-teacher"></i>
-    <div>
-        <h4>Jadwal Kurikulum</h4>
-        <p class="mg-b-0">Olah Data Jadwal Kurikulum</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-chalkboard-teacher"></i>
+        <div>
+            <h4>Jadwal Kurikulum</h4>
+            <p class="mg-b-0">Olah Data Jadwal Kurikulum</p>
+        </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -45,8 +47,8 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.schedule.filter')}}" id="filter-schedule" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
+                <div class="row">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">Semua Jurusan</option>
                             @foreach($faculty as $f)
@@ -60,16 +62,18 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mg-r-10">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Pilih Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -88,17 +92,17 @@
             </div><!-- card-header -->
             <div id="schedule_ay_{{$ay->id}}" class="collapse" role="tabpanel" aria-labelledby="heading_ay_{{$ay->id}}">
                 <div class="card-block pd-20">
-                    <table id="table-schedule-{{$ay->id}}" class="table display responsive nowrap datatable" data-sort="asc">
+                    <table id="table-schedule-{{$ay->id}}" class="table display responsive datatable" data-sort="asc">
                         <thead>
                             <tr>
                                 <th class="text-center">Kode Matkul</th>
                                 <th class="text-center defaultSort">Nama Matkul</th>
-                                <th class="text-center">Jumlah SKS</th>
-                                <th class="text-center">Nama Dosen</th>
-                                <th class="text-center">Sesuai Prodi</th>
-                                <th class="text-center">Sesuai Bidang</th>
+                                <th class="text-center none">Jumlah SKS</th>
+                                <th class="text-center none">Nama Dosen</th>
+                                <th class="text-center none">Sesuai Prodi</th>
+                                <th class="text-center none">Sesuai Bidang</th>
                                 @if (!Auth::user()->hasRole('kajur'))
-                                <th class="text-center no-sort">Aksi</th>
+                                <th class="text-center no-sort none">Aksi</th>
                                 @endif
                             </tr>
                         </thead>

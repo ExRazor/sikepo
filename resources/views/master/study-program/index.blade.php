@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon ion-ios-briefcase"></i>
-    <div>
-        <h4>Program Studi</h4>
-        <p class="mg-b-0">Olah Data Program Studi</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-briefcase"></i>
+        <div>
+            <h4>Program Studi</h4>
+            <p class="mg-b-0">Olah Data Program Studi</p>
+        </div>
     </div>
     <div class="ml-auto">
         <a href="{{ route('master.study-program.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Program Studi</a>
@@ -69,7 +71,7 @@
                             </div>
                         </div>
                     </form>
-                    <table id="table_studyProgram" class="table display responsive nowrap" data-sort="asc">
+                    <table id="table_studyProgram" class="table responsive" data-sort="asc">
                         <thead>
                             <tr>
                                 <th width="75"  class="defaultSort">Kode</th>

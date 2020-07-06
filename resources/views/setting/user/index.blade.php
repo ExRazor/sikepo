@@ -21,10 +21,12 @@
 </div>
 
 <div class="br-pagetitle">
-    <i class="icon fa fa-users"></i>
-    <div>
-        <h4>Manajemen User</h4>
-        <p class="mg-b-0">Daftar Manajemen User</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-users"></i>
+        <div>
+            <h4>Manajemen User</h4>
+            <p class="mg-b-0">Daftar Manajemen User</p>
+        </div>
     </div>
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-setting-user" style="color:white"><i class="fa fa-plus mg-r-10"></i> User</button>
@@ -45,7 +47,7 @@
     </div>
     @endif
     <div class="row widget-2">
-        <div class="col-9">
+        <div class="col-md-9 order-2 order-md-1">
             <div class="card shadow-base mb-3">
                 <div class="card-header">
                     <h6 class="card-title">
@@ -140,7 +142,7 @@
                 </div><!-- card-body -->
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-md-3 order-1 order-md-2">
             <div class="alert alert-info">
                 <h5>ROLE UNTUK USER</h5>
                 <hr>

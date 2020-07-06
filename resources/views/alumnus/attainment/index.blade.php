@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-list-alt"></i>
-    <div>
-        <h4>Capaian Pembelajaran Lulusan</h4>
-        <p class="mg-b-0">Data Capaian Pembelajaran Lulusan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-list-alt"></i>
+        <div>
+            <h4>Capaian Pembelajaran Lulusan</h4>
+            <p class="mg-b-0">Data Capaian Pembelajaran Lulusan</p>
+        </div>
     </div>
 </div>
 

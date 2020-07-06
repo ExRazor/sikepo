@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-book-reader"></i>
-    <div>
-        <h4>Data Penelitian</h4>
-        <p class="mg-b-0">Olah Data Penelitian</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-book-reader"></i>
+        <div>
+            <h4>Data Penelitian</h4>
+            <p class="mg-b-0">Olah Data Penelitian</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -45,9 +47,9 @@
     <div class="row">
         <div class="col-12">
             <form action="{{route('ajax.research.filter')}}" id="filter-research" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
+                <div class="row">
                     @if(!Auth::user()->hasRole('kajur'))
-                    <div class="mg-r-10">
+                    {{-- <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
                             <option value="0">Semua Jurusan</option>
                             @foreach($faculty as $f)
@@ -60,18 +62,20 @@
                                 @endif
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     @endif
-                    <div class="mg-r-10">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Pilih Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -98,10 +102,10 @@
                         <tr>
                             <th class="text-center" width="600">Judul Penelitian</th>
                             <th class="text-center defaultSort" width="100">Tahun Penelitian</th>
-                            <th class="text-center" width="250">Ketua Peneliti</th>
-                            <th class="text-center" width="150">Sesuai Bidang<br>Prodi</th>
+                            <th class="text-center none" width="250">Ketua Peneliti</th>
+                            <th class="text-center none" width="150">Sesuai Bidang<br>Prodi</th>
                             @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort" width="50">Aksi</th>
+                            <th class="text-center none no-sort" width="50">Aksi</th>
                             @endif
                         </tr>
                     </thead>

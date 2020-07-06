@@ -80,16 +80,16 @@
                             @if (Auth::user()->role!='kaprodi')
                             <th class="text-center align-middle all" width="250">Program Studi</th>
                             @endif
-                            <th class="text-center align-middle all" width="175">Jenis</th>
+                            <th class="text-center align-middle none" width="175">Jenis</th>
                             <th class="text-center align-middle all">Lembaga Mitra</th>
-                            <th class="text-center align-middle all" width="150">Tingkat</th>
+                            <th class="text-center align-middle none" width="150">Tingkat</th>
                             <th class="text-center align-middle none">Judul Kegiatan</th>
                             <th class="text-center align-middle no-sort none">Manfaat</th>
                             <th class="text-center align-middle none">Waktu</th>
                             <th class="text-center align-middle no-sort none">Durasi</th>
                             <th class="text-center align-middle no-sort none">Bukti Kerjasama</th>
                             @if (Auth::user()->role!='kajur')
-                            <th class="text-center align-middle no-sort all">Aksi</th>
+                            <th class="text-center align-middle no-sort none">Aksi</th>
                             @endif
                         </tr>
                     </thead>

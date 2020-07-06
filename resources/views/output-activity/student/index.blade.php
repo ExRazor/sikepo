@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-boxes"></i>
-    <div>
-        <h4>Luaran Kegiatan</h4>
-        <p class="mg-b-0">Olah data luaran kegiatan mahasiswa</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-boxes"></i>
+        <div>
+            <h4>Luaran Kegiatan</h4>
+            <p class="mg-b-0">Olah data luaran kegiatan mahasiswa</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
@@ -57,17 +59,19 @@
         <div class="col-12">
             <form action="{{route('ajax.output-activity.student.filter')}}" id="filter-outputActivity" data-token="{{encode_id(Auth::user()->role)}}" data-type="student" method="POST">
                 <input type="hidden" id="nm_jurusan" value="{{ setting('app_department_name') }}">
-                <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                    <div class="mg-r-10">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Pilih Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                <div class="row">
+                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                        <div class="input-group">
+                            <select class="form-control mr-3" name="kd_prodi">
+                                <option value="">- Pilih Program Studi -</option>
+                                @foreach($studyProgram as $sp)
+                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                @endforeach
+                            </select>
+                            <div>
+                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -93,12 +97,12 @@
                     <thead>
                         <tr>
                             <th class="text-center" width="500">Judul Luaran</th>
-                            <th class="text-center" width="125">Jenis Luaran</th>
-                            <th class="text-center" width="300">Kategori</th>
+                            <th class="text-center none" width="125">Jenis Luaran</th>
+                            <th class="text-center none" width="300">Kategori</th>
                             <th class="text-center defaultSort" width="150">Tahun</th>
-                            <th class="text-center" width="125">Jenis Kegiatan</th>
+                            <th class="text-center none" width="125">Jenis Kegiatan</th>
                             @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort" width="50">Aksi</th>
+                            <th class="text-center no-sort none" width="50">Aksi</th>
                             @endif
                         </tr>
                     </thead>

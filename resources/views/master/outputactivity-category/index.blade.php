@@ -15,10 +15,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-paperclip"></i>
-    <div>
-        <h4>Kategori Luaran Kegiatan</h4>
-        <p class="mg-b-0">Olah Data Kategori Luaran Kegiatan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-paperclip"></i>
+        <div>
+            <h4>Kategori Luaran Kegiatan</h4>
+            <p class="mg-b-0">Olah Data Kategori Luaran Kegiatan</p>
+        </div>
     </div>
 </div>
 
@@ -37,7 +39,7 @@
         </div>
     @endif
     <div class="row widget-2">
-        <div class="col-8">
+        <div class="col-md-8 order-2 order-md-1 mb-3">
             <div class="card shadow-base">
                 <div class="card-header">
                         <h6 class="card-title">Kategori Luaran Kegiatan</span></h6>
@@ -62,7 +64,7 @@
                                         @endisset
                                     </td>
                                     <td class="text-center">
-                                        <div class="btn-group hidden-xs-down">
+                                        <div class="btn-group">
                                             <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit" data-id="{{ encrypt($c->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encrypt($c->id)}}" name="_id">
@@ -79,7 +81,7 @@
                 </div><!-- card-body -->
             </div>
         </div>
-        <div class="col-4 widget-2">
+        <div class="col-md-4 order-1 order-md-2 mb-3 widget-2">
             <div class="card shadow-base">
                 <div class="card-header">
                     <h6 class="card-title"><span class="title-action">Tambah</span> Kategori</h6>

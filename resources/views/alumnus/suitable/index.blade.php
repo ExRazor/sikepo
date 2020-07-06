@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-network-wired"></i>
-    <div>
-        <h4>Bidang Kerja Lulusan</h4>
-        <p class="mg-b-0">Olah Data Bidang Kerja Lulusan</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-network-wired"></i>
+        <div>
+            <h4>Bidang Kerja Lulusan</h4>
+            <p class="mg-b-0">Olah Data Bidang Kerja Lulusan</p>
+        </div>
     </div>
 </div>
 
@@ -43,19 +45,15 @@
                     <thead>
                         <tr>
                             <th class="text-center align-middle">Program Studi</th>
-                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($studyProgram as $sp)
                         <tr>
-                            <td class="text-center">{{$sp->nama}}</td>
                             <td class="text-center">
-                                <div class="btn-group hidden-xs-down">
-                                    <a class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10" href="{{route('alumnus.suitable.show',encrypt($sp->kd_prodi))}}">
-                                        <div><i class="fa fa-search-plus"></i></div>
-                                    </a>
-                                </div>
+                                <a href="{{route('alumnus.suitable.show',encrypt($sp->kd_prodi))}}">
+                                    {{$sp->nama}}
+                                </a>
                             </td>
                         </tr>
                         @endforeach
