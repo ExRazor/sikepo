@@ -142,9 +142,10 @@ Route::middleware('auth')->group(function () {
         Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('collaboration.filter');
 
         //Teacher
+        Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
+        Route::get('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
         Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('teacher.filter');
         Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('teacher.studyProgram');
-        Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
 
         //Teacher - EWMP
         Route::get('ewmp/countsks','EwmpController@countSKS')->name('ewmp.countsks');
@@ -220,32 +221,33 @@ Route::middleware('auth')->group(function () {
     });
 
     //Teacher
-    Route::prefix('teacher')->middleware('role:admin,kaprodi,kajur')->group(function () {
+    Route::prefix('teacher')->name('teacher.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         Route::get('/',function(){
             return redirect(route('teacher'));
         });
 
         //Teacher - List
-        Route::get('list','TeacherController@index')->name('teacher');
-        Route::get('list/add','TeacherController@create')->name('teacher.add');
-        Route::get('list/import','TeacherController@import')->name('teacher.import');
-        Route::get('list/{id}','TeacherController@show')->name('teacher.show');
-        Route::get('list/{id}/edit','TeacherController@edit')->name('teacher.edit');
-        Route::post('list','TeacherController@store')->name('teacher.store');
-        Route::put('list','TeacherController@update')->name('teacher.update');
-        Route::delete('list','TeacherController@destroy')->name('teacher.delete');
+        Route::resource('list', 'TeacherController');
+        Route::get('list/import','TeacherController@import')->name('import');
+        // Route::get('list/add','TeacherController@create')->name('teacher.add');
+        // Route::get('list/{id}','TeacherController@show')->name('teacher.show');
+        // Route::get('list/{id}/edit','TeacherController@edit')->name('teacher.edit');
+        // Route::post('list','TeacherController@store')->name('teacher.store');
+        // Route::put('list','TeacherController@update')->name('teacher.update');
+        // Route::delete('list','TeacherController@destroy')->name('teacher.delete');
 
         //Teacher - Achievement
-        Route::get('achievement','TeacherAchievementController@index')->name('teacher.achievement');
-        Route::get('achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
-        Route::post('achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
-        Route::put('achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
-        Route::delete('achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
+        Route::resource('achievement', 'TeacherAchievementController');
+        // Route::get('achievement','TeacherAchievementController@index')->name('teacher.achievement');
+        // Route::get('achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
+        // Route::post('achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
+        // Route::put('achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
+        // Route::delete('achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
         Route::get('achievement/file/{nidn}','TeacherAchievementController@delete_file')->name('teacher.achievement.file');
 
         //EWMP
-        Route::get('ewmp', 'EwmpController@index')->name('teacher.ewmp');
+        Route::get('ewmp', 'EwmpController@index')->name('ewmp');
     });
 
     //Students

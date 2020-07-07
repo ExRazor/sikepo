@@ -21,33 +21,16 @@
     <link href="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.css" rel="stylesheet">
     @yield('style')
 
-    <!-- Bracket CSS -->
+    <!-- APP CSS -->
     <link rel="stylesheet" href="{{ asset ('assets/css') }}/bracket.css">
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset ('assets') }}/app.css">
 
-    <!-- Vendor JS -->
+    <!-- Custom CSS -->
+    @yield('custom-style')
+
+    <!-- APP JS -->
     <script src="{{ asset ('assets/lib') }}/jquery/jquery.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/jquery-ui/ui/widgets/datepicker.js"></script>
-    <script src="{{ asset ('assets/lib') }}/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/moment/min/moment.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/peity/jquery.peity.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/select2/js/select2.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/select2/js/i18n/id.js"></script>
-    <script src="{{ asset ('assets/lib') }}/alertify/alertify.min.js"></script>
-    <script src="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.js"></script>
-    <script src="{{ asset('assets/lib') }}/jquery.maskedinput/jquery.maskedinput.js"></script>
-    <script src="{{ asset('assets/lib') }}/jquery-maskMoney/jquery.maskMoney.min.js"></script>
-    <script src="{{ asset('assets/lib') }}/parsleyjs/parsley.min.js"></script>
-    <script src="{{ asset('assets/js') }}/encrypt_url.js"></script>
-    @yield('js')
-
-    <!-- BASE JS -->
     <script src="{{ asset ('assets/js') }}/bracket.js"></script>
-    <script src="{{ asset ('assets') }}/cust.func.js"></script>
-    <script src="{{ asset ('assets') }}/app.js"></script>
-
   </head>
 
   <body>
@@ -56,9 +39,9 @@
     <div class="br-logo"><a href="#"><span><i>[</i></span>{{setting('app_short')}}<span><i>]</i></span></a></div>
     <div class="br-sideleft sideleft-scrollbar">
         @if(Auth::user()->hasRole('dosen'))
-        @include('layouts.sidebar-teacher')
+            @include('layouts.sidebar-teacher')
         @else
-        @include('layouts.sidebar')
+            @include('layouts.sidebar')
         @endif
     </div>
     <!-- END: LEFT SIDEBAR -->
@@ -83,6 +66,26 @@
     </div>
     <!-- END: CONTENT -->
 
+    <!-- Vendor JS -->
+    <script src="{{ asset ('assets/lib') }}/jquery-ui/ui/widgets/datepicker.js"></script>
+    <script src="{{ asset ('assets/lib') }}/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/moment/min/moment.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/peity/jquery.peity.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/select2/js/select2.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/select2/js/i18n/id.js"></script>
+    <script src="{{ asset ('assets/lib') }}/alertify/alertify.min.js"></script>
+    <script src="{{ asset ('assets/lib') }}/sweetalert/sweetalert2.min.js"></script>
+    <script src="{{ asset('assets/lib') }}/jquery.maskedinput/jquery.maskedinput.js"></script>
+    <script src="{{ asset('assets/lib') }}/jquery-maskMoney/jquery.maskMoney.min.js"></script>
+    <script src="{{ asset('assets/lib') }}/parsleyjs/parsley.min.js"></script>
+    <script src="{{ asset('assets/js') }}/encrypt_url.js"></script>
+    @yield('js')
+
+    <!-- BASE JS -->
+    <script src="{{ asset ('assets') }}/cust.func.js"></script>
+    <script src="{{ asset ('assets') }}/app.js"></script>
+
+    <!-- CUSTOM JS -->
     @yield('custom-js')
   </body>
 </html>

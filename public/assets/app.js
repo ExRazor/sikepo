@@ -1,7 +1,7 @@
 // URL
-var base_url = window.location.origin;
-var host = window.location.host;
-var pathArray = window.location.pathname.split( '/' );
+var base_url    = window.location.origin;
+var host        = window.location.host;
+var pathArray   = window.location.pathname.split( '/' );
 
 $(document).ready(function() {
 
@@ -1226,95 +1226,7 @@ $(document).ready(function() {
         $(this).next('.custom-file-label').html(fileName);
     });
 
-    $('form#filter-teacher').submit(function(e){
-        e.preventDefault();
 
-        var cont = $(this);
-        var btn  = cont.find('button[type=submit]');
-        var data = cont.serialize();
-        var url  = cont.attr('action');
-        var role = decode_id(cont.data('token'));
-        var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
-
-        $.ajax({
-            url: url,
-            data: data,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                $('span.nm_jurusan').text(opsi);
-
-                var tabel = $('#table_teacher');
-                var html = '';
-
-                tabel.show();
-
-                if(data.length > 0) {
-                    $.each(data, function(i){
-
-                        var nidn        = data[i].nidn;
-                        var nama        = data[i].nama;
-                        var nip         = data[i].nip;
-                        var prodi       = data[i].study_program.nama;
-                        var jurusan     = data[i].study_program.department.nama;
-                        var fakultas    = data[i].study_program.department.faculty.singkatan;
-                        var ikatan      = data[i].ikatan_kerja;
-                        var jabatan     = data[i].jabatan_akademik;
-                        var aksi;
-
-                        if(role!='kajur') {
-                            aksi = '<td class="text-center no-sort" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="'+base_url+'/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
-                                                    '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'
-                        }
-
-                        html += '<tr>'+
-                                    '<td><a href="'+base_url+'/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
-                                    '<td>'+
-                                        nama+'<br>'+
-                                        '<small>NIP. '+nip+'</small>'+
-                                    '</td>'+
-                                    '<td>'+
-                                        prodi+'<br>'+
-                                        '<small>'+fakultas+' - '+jurusan+'</small>'+
-                                    '</td>'+
-                                    '<td>'+ikatan+'</td>'+
-                                    '<td>'+jabatan+'</td>'+
-                                    aksi+
-                                '</tr>';
-
-                    })
-                }
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    });
 
     $('#research_form, #communityService_form, #publication_form')
         .on('change','#prodi_dosen',function(){

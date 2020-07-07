@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\DataTables;
 
 class TeacherController extends Controller
 {
@@ -63,7 +64,7 @@ class TeacherController extends Controller
 
     public function show($nidn)
     {
-        $nidn = decode_id($nidn);
+        // $nidn = decode_id($nidn);
         $data = Teacher::where('nidn',$nidn)->first();
 
         if(!isset($data)) {
@@ -128,7 +129,7 @@ class TeacherController extends Controller
 
     public function edit($nidn)
     {
-        $nidn          = decode_id($nidn);
+        // $nidn          = decode_id($nidn);
         $data         = Teacher::where('nidn',$nidn)->first();
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
@@ -280,27 +281,27 @@ class TeacherController extends Controller
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
-            $id     = decode_id($request->id);
-            $data   = Teacher::find($id);
-            $q      = $data->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                $this->delete_file($data->foto);
-                $this->delete_user($id);
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
+        if(!request()->ajax()) {
             return redirect()->route('teacher');
+        }
+
+        $id     = decode_id($request->id);
+        $data   = Teacher::find($id);
+        $q      = $data->delete();
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan saat menghapus',
+                'type'    => 'error'
+            ]);
+        } else {
+            $this->delete_file($data->foto);
+            $this->delete_user($id);
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
         }
     }
 
@@ -466,6 +467,52 @@ class TeacherController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data         = Teacher::whereHas(
+                                'studyProgram', function($query) {
+                                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+                            })
+                            ->get();
+        } else {
+            $data         = Teacher::whereHas(
+                                'studyProgram', function($query) {
+                                    $query->where('kd_jurusan',setting('app_department_id'));
+                            })
+                            ->get();
+        }
+
+        // dd($request->prodi);
+
+        if($request->prodi) {
+            $data->where('kd_prodi',$request->prodi);
+        }
+
+        return DataTables::of($data)
+                            ->editColumn('nama', function($d) {
+                                return '<a href="'.route("teacher.list.show",$d->nidn).'">'.
+                                            $d->nama.
+                                        '<br><small>NIDN. '.$d->nidn.'</small></a>';
+                            })
+                            ->editColumn('study_program', function($d){
+                                return  $d->studyProgram->nama.
+                                        '<br>
+                                        <small>'.$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama.'</small>';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('teacher.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->escapeColumns([])
+                            ->make();
     }
 
     public function loadData(Request $request)

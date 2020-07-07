@@ -2,11 +2,6 @@
 
 @section('title', 'Data Dosen')
 
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -29,7 +24,7 @@
     </div>
     <div class="ml-auto">
         @if(!Auth::user()->hasRole('kajur'))
-        <a href="{{ route('teacher.add') }}" class="btn btn-teal btn-block" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
+        <a href="{{ route('teacher.list.create') }}" class="btn btn-teal btn-block" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
         {{-- <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-y-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a> --}}
         @endif
     </div>
@@ -66,14 +61,14 @@
                     @endif
                     <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
                         <div class="input-group">
-                            <select class="form-control mr-3" name="kd_prodi">
+                            <select class="form-control mr-3 filter-box" name="kd_prodi">
                                 <option value="">- Semua Program Studi -</option>
                                 @foreach($studyProgram as $sp)
                                 <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                                 @endforeach
                             </select>
                             <div>
-                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                                {{-- <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a> --}}
                             </div>
                         </div>
                     </div>
@@ -97,62 +92,183 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap datatable" data-sort="asc">
+                <div class="table-responsive">
+
+                </div>
+                <table id="table_teacher" class="table" data-order='[[ 0, "asc" ]]' data-page-length='25' data-ajax="{{route('ajax.teacher.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center defaultSort">Nama</th>
+                            <th class="text-center">Nama</th>
                             <th class="text-center">Program Studi</th>
                             <th class="text-center">Ikatan Kerja</th>
-                            <th class="text-center">Jabatan<br>Akademik</th>
                             @if(!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort">Aksi</th>
                             @endif
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($data as $d)
-                        <tr>
-                            <td>
-                                <a href="{{ route('teacher.show',encode_id($d->nidn)) }}">
-                                    {{$d->nama}}<br>
-                                    <small>NIDN. {{$d->nidn}}</small>
-                                </a>
-                            </td>
-                            <td>
-                                {{$d->studyProgram->nama}}<br>
-                                <small>{{$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama}}</small>
-                            </td>
-                            <td>{{$d->ikatan_kerja}}</td>
-                            <td>{{$d->jabatan_akademik}}</td>
-                            @if(!Auth::user()->hasRole('kajur'))
-                            <td class="text-center" width="50">
-                                <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div><span class="fa fa-caret-down"></span></div>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('teacher.edit',encode_id($d->nidn)) }}">Sunting</a>
-                                        <form method="POST">
-                                            <input type="hidden" value="{{encode_id($d->nidn)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('teacher.delete') }}">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                            @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div><!-- card-body -->
         </div>
     </div>
 </div>
+@endsection
 
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
 @endsection
 
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
+<script>
+    var bahasa = {
+            "sProcessing":   '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+            'searchPlaceholder': 'Cari...',
+            'sSearch': '',
+            "sUrl":          "",
+            "oPaginate": {
+                "sFirst":    "Awal",
+                "sPrevious": "Balik",
+                "sNext":     "Lanjut",
+                "sLast":     "Akhir"
+            }
+    };
+
+    var table = $('#table_teacher').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    columnDefs: [ {
+                        "targets"  : 'no-sort',
+                        "orderable": false,
+                    }],
+                    language: bahasa,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{route('ajax.teacher.datatable')}}?prodi=57201',
+                        type: "GET",
+                        data: function(d){
+                            var prodi = $('select.filter-box[name=kd_prodi]').val();
+
+                            d.prodi = prodi;
+                        }
+                    },
+                    columns: [
+                                { data: 'nama', },
+                                { data: 'study_program', },
+                                { data: 'ikatan_kerja', },
+                                { data: 'aksi', }
+                            ],
+                });
+
+    $('.filter-box').bind("keyup change", function(){
+        // hehe = $('select.filter-box[name=kd_prodi]').val();
+        // alert(hehe);
+        table.draw();
+    });
+
+
+
+// $('form#filter-teacher').submit(function(e){
+//     e.preventDefault();
+
+//     var cont = $(this);
+//     var btn  = cont.find('button[type=submit]');
+//     var data = cont.serialize();
+//     var url  = cont.attr('action');
+//     var role = decode_id(cont.data('token'));
+//     var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
+
+//     $.ajax({
+//         url: url,
+//         data: data,
+//         type: 'POST',
+//         async: true,
+//         dataType: 'json',
+//         beforeSend: function() {
+//             btn.addClass('disabled');
+//             btn.html('<i class="fa fa-spinner fa-spin"></i>');
+//         },
+//         success: function (data) {
+//             $('span.nm_jurusan').text(opsi);
+
+//             var tabel = $('#table_teacher');
+//             var html = '';
+
+//             tabel.show();
+
+//             if(data.length > 0) {
+//                 $.each(data, function(i){
+
+//                     var nidn        = data[i].nidn;
+//                     var nama        = data[i].nama;
+//                     var nip         = data[i].nip;
+//                     var prodi       = data[i].study_program.nama;
+//                     var jurusan     = data[i].study_program.department.nama;
+//                     var fakultas    = data[i].study_program.department.faculty.singkatan;
+//                     var ikatan      = data[i].ikatan_kerja;
+//                     var jabatan     = data[i].jabatan_akademik;
+//                     var aksi;
+
+//                     if(role!='kajur') {
+//                         aksi = '<td class="text-center no-sort" width="50">'+
+//                                     '<div class="btn-group" role="group">'+
+//                                         '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+//                                             '<div><span class="fa fa-caret-down"></span></div>'+
+//                                         '</button>'+
+//                                         '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
+//                                             '<a class="dropdown-item" href="'+base_url+'/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
+//                                             '<form method="POST">'+
+//                                                 '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
+//                                                 '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
+//                                             '</form>'+
+//                                         '</div>'+
+//                                     '</div>'+
+//                                 '</td>'
+//                     }
+
+//                     html += '<tr>'+
+//                                 '<td><a href="'+base_url+'/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
+//                                 '<td>'+
+//                                     nama+'<br>'+
+//                                     '<small>NIP. '+nip+'</small>'+
+//                                 '</td>'+
+//                                 '<td>'+
+//                                     prodi+'<br>'+
+//                                     '<small>'+fakultas+' - '+jurusan+'</small>'+
+//                                 '</td>'+
+//                                 '<td>'+ikatan+'</td>'+
+//                                 '<td>'+jabatan+'</td>'+
+//                                 aksi+
+//                             '</tr>';
+
+//                 })
+//             }
+//             // tabel.dataTable().fnDestroy();
+//             tabel.DataTable().clear().destroy();
+//             tabel.find('tbody').html(html);
+//             tabel.DataTable(datatable_opt);
+
+//             btn.removeClass('disabled');
+//             btn.html('Cari');
+//         },
+//         error: function (request) {
+//             btn.removeClass('disabled');
+//             btn.html('Cari');
+//         }
+//     });
+// });
+</script>
 @endsection

@@ -67,14 +67,14 @@ class EwmpController extends Controller
 
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
-            $total_sks = $sks['schedule_ps']+$sks['schedule_pt']+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
+            $total_sks = $sks['schedule_ps']+$request->ps_lain+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
             $rata_sks  = $total_sks/6;
 
             $ewmp                   = new Ewmp;
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
             $ewmp->ps_intra         = $sks['schedule_ps'];
-            $ewmp->ps_lain          = $sks['schedule_pt'];
+            $ewmp->ps_lain          = $request->ps_lain;
             $ewmp->ps_luar          = $request->ps_luar;
             $ewmp->penelitian       = $sks['penelitian'];
             $ewmp->pkm              = $sks['pengabdian'];
@@ -123,14 +123,14 @@ class EwmpController extends Controller
 
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
-            $total_sks = $sks['schedule_ps']+$sks['schedule_pt']+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
+            $total_sks = $sks['schedule_ps']+$request->ps_lain+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
             $rata_sks  = $total_sks/6;
 
             $ewmp                   = Ewmp::find($id);
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
             $ewmp->ps_intra         = $sks['schedule_ps'];
-            $ewmp->ps_lain          = $sks['schedule_pt'];
+            $ewmp->ps_lain          = $request->ps_lain;
             $ewmp->ps_luar          = $request->ps_luar;
             $ewmp->penelitian       = $sks['penelitian'];
             $ewmp->pkm              = $sks['pengabdian'];

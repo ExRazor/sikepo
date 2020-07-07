@@ -32,13 +32,12 @@
                                     <input type="text" class="form-control" name="ps_intra" placeholder="Dalam PS" disabled>
                                 </div>
                                 <div class="col-4 px-1">
-                                    <input type="text" class="form-control" name="ps_lain" placeholder="PS Lain dalam PT" disabled>
+                                    <input type="text" class="form-control" name="ps_lain" placeholder="PS Lain dalam PT" required>
                                 </div>
                                 <div class="col-4 pl-1">
-                                    <input type="text" class="form-control" name="ps_luar" placeholder="PS Lain luar PT"required>
+                                    <input type="text" class="form-control" name="ps_luar" placeholder="PS Lain luar PT" required>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">

@@ -46,7 +46,7 @@
                                             <button class="dropdown-item btn-edit" href="#" data-id="{{ encode_id($acv->id) }}">Sunting</button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encode_id($acv->id)}}" name="_id">
-                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.delete') }}">Hapus</a>
+                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.destroy',$acv->id) }}">Hapus</a>
                                             </form>
                                         </div>
                                     </div>

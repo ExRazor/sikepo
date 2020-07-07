@@ -56,7 +56,7 @@
                     @endisset
                 </h6>
             </div>
-            <form id="teacher_form" action="{{route('teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="teacher_form" action="{{route('teacher.list.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">

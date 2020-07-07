@@ -12,8 +12,8 @@
           <span class="menu-item-label">Data Dosen</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-          <li class="sub-item"><a href="{{ route('teacher') }}" class="sub-link {{ (request()->is('teacher/list*')) ? 'active' : '' }}">Profil Dosen</a></li>
-          <li class="sub-item"><a href="{{ route('teacher.achievement') }}" class="sub-link {{ (request()->is('teacher/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
+          <li class="sub-item"><a href="{{ route('teacher.list.index') }}" class="sub-link {{ (request()->is('teacher/list*')) ? 'active' : '' }}">Profil Dosen</a></li>
+          <li class="sub-item"><a href="{{ route('teacher.achievement.index') }}" class="sub-link {{ (request()->is('teacher/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
           {{-- <li class="sub-item"><a href="{{ route('teacher.ewmp') }}" class="sub-link {{ (request()->is('teacher/ewmp*')) ? 'active' : '' }}">EWMP</a></li> --}}
         </ul>
     </li>

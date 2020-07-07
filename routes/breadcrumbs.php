@@ -24,17 +24,17 @@ Breadcrumbs::for('collaboration-edit', function ($trail) {
 // Dosen
 Breadcrumbs::for('teacher', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Dosen', route('teacher'));
+    $trail->push('Data Dosen', route('teacher.list.index'));
 });
 
 Breadcrumbs::for('teacher-add', function ($trail) {
     $trail->parent('teacher');
-    $trail->push('Tambah Data Dosen', route('teacher.add'));
+    $trail->push('Tambah Data Dosen', route('teacher.list.create'));
 });
 
 Breadcrumbs::for('teacher-profile', function ($trail,$data) {
     $trail->parent('teacher');
-    $trail->push($data->nama,route('teacher.show',encode_id($data->nidn)));
+    $trail->push($data->nama,route('teacher.list.show',encode_id($data->nidn)));
 });
 
 Breadcrumbs::for('teacher-edit', function ($trail,$data) {
@@ -51,7 +51,7 @@ Breadcrumbs::for('teacher-ewmp', function ($trail) {
 //Dosen > Prestasi
 Breadcrumbs::for('teacher-achievement', function ($trail) {
     $trail->parent('teacher');
-    $trail->push('Daftar Prestasi Dosen', route('teacher.achievement'));
+    $trail->push('Daftar Prestasi Dosen', route('teacher.achievement.index'));
 });
 
 // Mahasiswa
