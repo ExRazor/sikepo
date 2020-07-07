@@ -143,7 +143,7 @@ Route::middleware('auth')->group(function () {
 
         //Teacher
         Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
-        Route::get('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
+        Route::post('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
         Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('teacher.filter');
         Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('teacher.studyProgram');
 

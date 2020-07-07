@@ -60,17 +60,12 @@
                     </div> --}}
                     @endif
                     <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <div class="input-group">
-                            <select class="form-control mr-3 filter-box" name="kd_prodi">
-                                <option value="">- Semua Program Studi -</option>
-                                @foreach($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                                @endforeach
-                            </select>
-                            <div>
-                                {{-- <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a> --}}
-                            </div>
-                        </div>
+                        <select class="form-control filter-box" name="kd_prodi">
+                            <option value="">- Semua Program Studi -</option>
+                            @foreach($studyProgram as $sp)
+                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </form>
@@ -92,17 +87,14 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <div class="table-responsive">
-
-                </div>
-                <table id="table_teacher" class="table" data-order='[[ 0, "asc" ]]' data-page-length='25' data-ajax="{{route('ajax.teacher.datatable')}}">
+                <table id="table_teacher" class="table display responsive nowrap" data-order='[[ 0, "asc" ]]' data-page-length='25' url-target="{{route('ajax.teacher.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center">Nama</th>
-                            <th class="text-center">Program Studi</th>
+                            <th class="text-center" data-priority="1">Nama</th>
+                            <th class="text-center" data-priority="3">Program Studi</th>
                             <th class="text-center">Ikatan Kerja</th>
                             @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort">Aksi</th>
+                            <th class="text-center no-sort" data-priority="2">Aksi</th>
                             @endif
                         </tr>
                     </thead>
@@ -147,7 +139,6 @@
     };
 
     var table = $('#table_teacher').DataTable({
-                    responsive: true,
                     autoWidth: false,
                     columnDefs: [ {
                         "targets"  : 'no-sort',
@@ -157,118 +148,23 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: '{{route('ajax.teacher.datatable')}}?prodi=57201',
-                        type: "GET",
+                        url: $('#table_teacher').attr('url-target'),
+                        type: "post",
                         data: function(d){
-                            var prodi = $('select.filter-box[name=kd_prodi]').val();
-
-                            d.prodi = prodi;
+                            d.prodi = $('select.filter-box[name=kd_prodi]').val();
+                            d._token = $('meta[name="csrf-token"]').attr('content')
                         }
                     },
                     columns: [
-                                { data: 'nama', },
-                                { data: 'study_program', },
-                                { data: 'ikatan_kerja', },
-                                { data: 'aksi', }
-                            ],
+                        { data: 'nama', },
+                        { data: 'study_program', },
+                        { data: 'ikatan_kerja', },
+                        { data: 'aksi', }
+                    ],
                 });
 
     $('.filter-box').bind("keyup change", function(){
-        // hehe = $('select.filter-box[name=kd_prodi]').val();
-        // alert(hehe);
-        table.draw();
+        table.ajax.reload();
     });
-
-
-
-// $('form#filter-teacher').submit(function(e){
-//     e.preventDefault();
-
-//     var cont = $(this);
-//     var btn  = cont.find('button[type=submit]');
-//     var data = cont.serialize();
-//     var url  = cont.attr('action');
-//     var role = decode_id(cont.data('token'));
-//     var opsi = cont.find('select[name=kd_jurusan] option:selected').text();
-
-//     $.ajax({
-//         url: url,
-//         data: data,
-//         type: 'POST',
-//         async: true,
-//         dataType: 'json',
-//         beforeSend: function() {
-//             btn.addClass('disabled');
-//             btn.html('<i class="fa fa-spinner fa-spin"></i>');
-//         },
-//         success: function (data) {
-//             $('span.nm_jurusan').text(opsi);
-
-//             var tabel = $('#table_teacher');
-//             var html = '';
-
-//             tabel.show();
-
-//             if(data.length > 0) {
-//                 $.each(data, function(i){
-
-//                     var nidn        = data[i].nidn;
-//                     var nama        = data[i].nama;
-//                     var nip         = data[i].nip;
-//                     var prodi       = data[i].study_program.nama;
-//                     var jurusan     = data[i].study_program.department.nama;
-//                     var fakultas    = data[i].study_program.department.faculty.singkatan;
-//                     var ikatan      = data[i].ikatan_kerja;
-//                     var jabatan     = data[i].jabatan_akademik;
-//                     var aksi;
-
-//                     if(role!='kajur') {
-//                         aksi = '<td class="text-center no-sort" width="50">'+
-//                                     '<div class="btn-group" role="group">'+
-//                                         '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-//                                             '<div><span class="fa fa-caret-down"></span></div>'+
-//                                         '</button>'+
-//                                         '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-//                                             '<a class="dropdown-item" href="'+base_url+'/teacher/list/'+encode_id(nidn)+'/edit">Sunting</a>'+
-//                                             '<form method="POST">'+
-//                                                 '<input type="hidden" value="'+encode_id(nidn)+'" name="id">'+
-//                                                 '<button type="submit" class="dropdown-item btn-delete" data-dest="/teacher/list">Hapus</button>'+
-//                                             '</form>'+
-//                                         '</div>'+
-//                                     '</div>'+
-//                                 '</td>'
-//                     }
-
-//                     html += '<tr>'+
-//                                 '<td><a href="'+base_url+'/teacher/list/'+encode_id(nidn)+'">'+nidn+'</a></td>'+
-//                                 '<td>'+
-//                                     nama+'<br>'+
-//                                     '<small>NIP. '+nip+'</small>'+
-//                                 '</td>'+
-//                                 '<td>'+
-//                                     prodi+'<br>'+
-//                                     '<small>'+fakultas+' - '+jurusan+'</small>'+
-//                                 '</td>'+
-//                                 '<td>'+ikatan+'</td>'+
-//                                 '<td>'+jabatan+'</td>'+
-//                                 aksi+
-//                             '</tr>';
-
-//                 })
-//             }
-//             // tabel.dataTable().fnDestroy();
-//             tabel.DataTable().clear().destroy();
-//             tabel.find('tbody').html(html);
-//             tabel.DataTable(datatable_opt);
-
-//             btn.removeClass('disabled');
-//             btn.html('Cari');
-//         },
-//         error: function (request) {
-//             btn.removeClass('disabled');
-//             btn.html('Cari');
-//         }
-//     });
-// });
 </script>
 @endsection
