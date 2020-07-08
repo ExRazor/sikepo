@@ -84,6 +84,7 @@ $(document).ready(function() {
         $(this).find('input[name^=_id]').removeAttr('value');
         $(this).find('input[name^=id]').removeAttr('value');
         $(this).find('select').val(null).trigger('change');
+        $(this).find('button').attr('data-id',null);
         $('.is-invalid').removeClass('is-invalid');
     })
 
@@ -122,8 +123,14 @@ $(document).ready(function() {
 
         var cont    = $(this);
         var action  = cont.val();
-        var url     = cont.data('dest');
         var modal   = cont.closest('.modal');
+
+        if(action=='put') {
+            var url     = cont.data('dest')+'/'+cont.data('id');
+        } else {
+            var url     = cont.data('dest');
+        }
+
         var data    = new FormData(cont.closest('form')[0]);
         data.append('_method', action);
 
@@ -139,8 +146,8 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             beforeSend: function() {
-                cont.addClass('disabled');
-                $('.btn-cancel').addClass('disabled');
+                cont.prop('disabled',true);
+                $('.btn-cancel').prop('disabled',true);
                 cont.html('<i class="fa fa-spinner fa-spin"></i>');
             },
             success: function (state) {
@@ -173,8 +180,8 @@ $(document).ready(function() {
                     $('[aria-labelledby*=select2-'+key+']').addClass('is-invalid');
                 });
 
-                cont.removeClass('disabled');
-                $('.btn-cancel').removeClass('disabled');
+                cont.prop('disabled',false);
+                $('.btn-cancel').prop('disabled',false);
                 cont.html('Simpan');
 
             },
@@ -586,7 +593,6 @@ $(document).ready(function() {
     $('.select-academicYear').select2({
         width: "100%",
         language: "id",
-        minimumInputLength: 3,
         allowClear: true,
         placeholder: 'Masukkan tahun akademik',
         ajax: {
@@ -1372,144 +1378,6 @@ $(document).ready(function() {
             });
         }
     })
-
-    $('#table-teacherAcv').on('click','.btn-edit',function(e){
-        e.preventDefault();
-
-        var id   = $(this).data('id');
-        var url  = $(this).data('dest')+'/'+id;
-        // var url = base_url+'/teacher/achievement/'+id;
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var option_ta     = $("<option selected></option>").val(data.id_ta).text(data.academic_year.tahun_akademik+' - '+data.academic_year.semester);
-                var option_nidn   = $("<option selected></option>").val(data.nidn).text(data.teacher.nama+' ('+data.teacher.nidn+')');
-
-                $('#modal-teach-acv')
-                    .find('input[name=_id]').val(id).end()
-                    .find('input[name=prestasi]').val(data.prestasi).end()
-                    .find('select[name=nidn]').append(option_nidn).trigger('change').end()
-                    .find('select[name=id_ta]').append(option_ta).trigger('change').end()
-                    .find('input[name=bukti_nama]').val(data.bukti_nama).end()
-
-                if($('#modal-teach-acv').find('select[name=nidn]').length) {
-                    $('#selectProdi').attr('data-nidn',data.nidn);
-                    $('#selectProdi').val(data.teacher.study_program.kd_prodi).change();
-                }
-
-                switch(data.tingkat_prestasi) {
-                    case 'Wilayah':
-                        $('input:radio[name=tingkat_prestasi][value="Wilayah"]').prop('checked',true);
-                    break;
-                    case 'Nasional':
-                        $('input:radio[name=tingkat_prestasi][value="Nasional"]').prop('checked',true);
-                    break;
-                    case 'Internasional':
-                        $('input:radio[name=tingkat_prestasi][value="Internasional"]').prop('checked',true);
-                    break;
-                }
-
-                $('#modal-teach-acv').modal('toggle');
-            }
-        });
-    });
-
-    $('form#filter-teacherAcv').submit(function(e){
-        e.preventDefault();
-
-        var cont    = $(this);
-        var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table-teacherAcv');
-        var datacon = cont.serializeArray();
-        var url     = cont.attr('action');
-        var role    = decode_id(cont.data('token'));
-        var opsi    = cont.find('select[name=kd_prodi] option:selected');
-        var jurusan = cont.find('input#nm_jurusan').val();
-
-        if(opsi.val()) {
-            var teks = 'Prodi: '+opsi.text();
-            $('h6.card-title').text(teks);
-        } else {
-            $('h6.card-title').text(jurusan);
-        }
-
-        $.ajax({
-            url: url,
-            data: datacon,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                var html          = '';
-
-                if(data.length > 0) {
-                    $.each(data, function(i,val){
-                        var id          = val.id;
-                        var nidn        = val.teacher.nidn;
-                        var tahun       = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
-                        var nama_dsn    = val.teacher.nama;
-                        var prodi       = val.teacher.study_program.singkatan;
-                        var prestasi    = val.prestasi;
-                        var tingkat     = val.tingkat_prestasi;
-                        var bukti_nama  = val.bukti_nama;
-                        var bukti_file  = val.bukti_file;
-                        var aksi;
-
-                        if(role!='kajur') {
-                            aksi = '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<a class="dropdown-item" href="'+base_url+'/'+encode_id(id)+'/edit">Sunting</a>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/community-service">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'
-                        }
-
-                        html +='<tr>'+
-                                '<td class="text-center">'+tahun+'</td>'+
-                                '<td>'+
-                                    '<a href="'+base_url+'/teacher/list/'+encode_id(val.teacher.nidn)+'">'+
-                                        nama_dsn+'<br>'+
-                                        '<small>NIDN.'+nidn+' / '+prodi+'</small>'+
-                                    '</a>'+
-                                '</td>'+
-                                '<td>'+prestasi+'</td>'+
-                                '<td>'+tingkat+'</td>'+
-                                '<td class="text-center align-middle">'+
-                                    '<a href="'+base_url+'/download/teacher-achievement/'+encode_id(bukti_file)+'" target="_blank"><div>'+bukti_nama+'</div></a>'+
-                                '</td>'+
-                                aksi+
-                            '</tr>';
-                    })
-                }
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    });
     /***********************************************************************************/
 
     /********************************* DATA EWMP DOSEN *********************************/
@@ -1642,101 +1510,6 @@ $(document).ready(function() {
 
     /********************************* DATA MAHASISWA *********************************/
 
-    $('form#filter-student').submit(function(e){
-        e.preventDefault();
-
-        var cont    = $(this);
-        var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table_student');
-        var datacon = cont.serializeArray();
-        var url     = cont.attr('action');
-
-        $('.nm_jurusan').hide();
-
-        $.ajax({
-            url: url,
-            data: datacon,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                var html          = '';
-                var status_filter = $('#status_mahasiswa').val();
-
-                if(data.length > 0) {
-                    $.each(data, function(i,val){
-                        if(val.latest_status) {
-                            var status      = null_check(val.latest_status.status);
-                        } else {
-                            var status = 'Aktif';
-                        }
-
-                        if(status_filter == status || status_filter == '') {
-                            var nim         = null_check(val.nim);
-                            var nama        = null_check(val.nama);
-                            var tgl_lhr     = null_check(val.tgl_lhr);
-                            var prodi       = null_check(val.study_program.nama);
-                            var jurusan     = null_check(val.study_program.department.nama);
-                            var fakultas    = null_check(val.study_program.department.faculty.singkatan);
-                            var angkatan    = null_check(val.angkatan);
-                            var kelas       = null_check(val.kelas);
-                            var program     = null_check(val.program);
-
-
-                            html += '<tr>'+
-                                        '<td>'+
-                                            '<a href="'+base_url+'/student/list/'+encode_id(nim)+'">'+
-                                                nama+'<br>'+
-                                                '<small>NIM. '+nim+'</small>'+
-                                            '</a>'+
-                                        '</td>'+
-                                        '<td>'+tgl_lhr+'</td>'+
-                                        '<td>'+
-                                            prodi+'<br>'+
-                                            '<small>'+fakultas+' - '+jurusan+'</small>'+
-                                        '</td>'+
-                                        '<td>'+angkatan+'</td>'+
-                                        '<td>'+kelas+'</td>'+
-                                        '<td class="text-center">'+program+'</td>'+
-                                        '<td class="text-center">'+status+'</td>'+
-                                        '<td class="text-center no-sort" width="50">'+
-                                            '<div class="btn-group" role="group">'+
-                                                '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                    '<div><span class="fa fa-caret-down"></span></div>'+
-                                                '</button>'+
-                                                '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                    '<a class="dropdown-item" href="'+base_url+'/student/list/'+encode_id(nim)+'/edit">Sunting</a>'+
-                                                    '<form method="POST">'+
-                                                        '<input type="hidden" value="'+encode_id(nim)+'" name="id">'+
-                                                        '<button type="submit" class="dropdown-item btn-delete" data-dest="/student/list">Hapus</button>'+
-                                                    '</form>'+
-                                                '</div>'+
-                                            '</div>'+
-                                        '</td>'+
-                                    '</tr>';
-                        }
-                    })
-                }
-
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    });
-
     $('#student_form').on('change','#tipe_mahasiswa',function(){
         var select      = $(this).find('select');
         var divlain     = $('#student_form').find('#tipe_lainlain');
@@ -1834,31 +1607,6 @@ $(document).ready(function() {
 
     /**********************************************************************************/
 
-    /********************************* DATA KUOTA MAHASISWA *********************************/
-    $('#table_student_quota').on('click','.btn-edit-quota',function(e){
-        e.preventDefault();
-
-        var id  = $(this).data('id');
-        var url = base_url+'/ajax/student/quota/'+id;
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                $('#modal-student-quota')
-                    .find('input[name=_id]').val(id).end()
-                    .find('select[name=kd_prodi]').val(data.kd_prodi).end()
-                    .find('select[name=id_ta]').val(data.id_ta).end()
-                    .find('input[name=daya_tampung]').val(data.daya_tampung).end()
-                    .find('input[name=calon_pendaftar]').val(data.calon_pendaftar).end()
-                    .find('input[name=calon_lulus]').val(data.calon_lulus).end()
-                    .modal('toggle').end();
-            }
-        });
-    });
-    /****************************************************************************************/
-
     /********************************* DATA STATUS MAHASISWA *********************************/
     $('button.btn-add-studentStatus').on('click', function(){
         $('#modal-student-status .status_mahasiswa').show();
@@ -1886,314 +1634,12 @@ $(document).ready(function() {
     /****************************************************************************************/
 
     /********************************* DATA MAHASISWA ASING *********************************/
-    $('#table-studentForeign').on('click','.btn-edit',function(){
 
-        var id  = $(this).data('id');
-        var url = base_url+'/student/foreign/'+id;
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var option = $("<option selected></option>").val(data.nim).text(data.student.nama);
-
-                $('#form-studentForeign')
-                    .find('input[name=_id]').val(id).end()
-                    .find('select[name=nim]').append(option).trigger('change').end()
-                    .find('input[name=asal_negara]').val(data.asal_negara).end()
-                    .find('select[name=durasi]').val(data.durasi).end()
-
-            }
-        });
-    })
-
-    $('#form-studentForeign')
-        .on('click','.btn-add',function(e){
-            var form  = $('#form-studentForeign')
-            form.trigger('reset');
-            $('.select-mhs').val(null).trigger('change');
-        }).end()
-
-    $('form#filter-studentForeign').submit(function(e){
-        e.preventDefault();
-
-        var cont    = $(this);
-        var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table-studentForeign');
-        var datacon = cont.serializeArray();
-        var url     = cont.attr('action');
-        var role    = decode_id(cont.data('token'));
-        var opsi    = cont.find('select[name=kd_prodi] option:selected');
-        var jurusan = cont.find('input#nm_jurusan').val();
-
-        if(opsi.val()) {
-            var teks = 'Prodi: '+opsi.text();
-            $('h6.card-title-table').text(teks);
-        } else {
-            $('h6.card-title-table').text(jurusan);
-        }
-
-        $.ajax({
-            url: url,
-            data: datacon,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                var html          = '';
-
-                if(data.length > 0) {
-                    $.each(data, function(i,val){
-                        var id          = val.id;
-                        var nim         = val.nim;
-                        var nama        = val.student.nama;
-                        var prodi       = val.student.study_program.singkatan;
-                        var asal_negara = val.asal_negara;
-                        var durasi      = val.durasi;
-                        var aksi;
-
-                        if(role!='kajur') {
-                            aksi = '<td class="text-center">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<button class="dropdown-item btn-edit" data-id="'+encode_id(id)+'">Sunting</button>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(id)+'" name="_id">'+
-                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/student/foreign">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'
-                        }
-
-                        html += '<tr>'+
-                                    '<td>'+
-                                        '<a href="'+base_url+'/student/list/'+encode_id(nim)+'">'+
-                                            nama+'<br>'+
-                                            '<small>NIM.'+nim+' / '+prodi+'</small>'+
-                                        '</a>'+
-                                    '</td>'+
-                                    '<td class="text-center">'+asal_negara+'</td>'+
-                                    '<td class="text-center">'+durasi+'</td>'+
-                                    aksi+
-                                '</tr>'
-                    })
-                }
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    });
     /****************************************************************************************/
 
     /********************************* DATA PRESTASI MAHASISWA *********************************/
-    $('#modal-student-acv').on('shown.bs.modal', function () {
-        $(this).find('select#selectProdi').trigger('change');
-    })
 
-    $('#modal-student-acv').on('hidden.bs.modal', function () {
-        $(this).find('form').trigger('reset');
-        $(this).find('select[name=nidn]').children('option:not(:first)').remove();
-        $(this).find('select[name=nidn]').prop('disabled',true);
-        $(this).find('select[name=id_ta] option').remove().trigger('change');
-        $(this).find('select[name=nim] option').remove().trigger('change');
-    })
 
-    $('#modal-student-acv').on('change','select#selectProdi', function() {
-        var cont    = $('#modal-student-acv');
-        var target  = cont.find('.select-mhs-prodi');
-        var prodi   = $(this).val();
-
-        if(prodi=='' || prodi==null) {
-            target.prop('disabled',true);
-            target.prop('required',false);
-        } else {
-            target.prop('disabled',false);
-            target.prop('required',true);
-
-            target.select2({
-                language: "id",
-                width: '100%',
-                minimumInputLength: 5,
-                allowClear: true,
-                placeholder: "Masukkan nim/nama mahasiswa",
-                ajax: {
-                    dataType: 'json',
-                    url: base_url+'/ajax/student/select_by_studyProgram',
-                    delay: 800,
-                    data: function(params) {
-                        return {
-                            prodi: prodi,
-                            cari: params.term
-                        }
-                    },
-                    processResults: function (response) {
-                        return {
-                            results: response
-                        };
-                    },
-                }
-            });
-        }
-
-    })
-
-    $('#table-studentAcv').on('click','.btn-edit',function(e){
-        e.preventDefault();
-
-        var id  = $(this).data('id');
-        var url = base_url+'/student/achievement/'+id;
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var option_ta     = $("<option selected></option>").val(data.id_ta).text(data.academic_year.tahun_akademik+' - '+data.academic_year.semester);
-                var option_nim    = $("<option selected></option>").val(data.nim).text(data.student.nama+' ('+data.student.nim+')');
-
-                $('#modal-student-acv')
-                    .find('input[name=_id]').val(id).end()
-                    .find('select[name=kd_prodi]').val(data.student.kd_prodi).trigger('change').end()
-                    .find('select[name=nim]').append(option_nim).trigger('change').end()
-                    .find('select[name=id_ta]').append(option_ta).trigger('change').end()
-                    .find('input[name=kegiatan_nama]').val(data.kegiatan_nama).end()
-                    .find('input[name=prestasi]').val(data.prestasi).end()
-
-                switch(data.kegiatan_tingkat) {
-                    case 'Wilayah':
-                        $('input:radio[name=kegiatan_tingkat][value="Wilayah"]').prop('checked',true);
-                    break;
-                    case 'Nasional':
-                        $('input:radio[name=kegiatan_tingkat][value="Nasional"]').prop('checked',true);
-                    break;
-                    case 'Internasional':
-                        $('input:radio[name=kegiatan_tingkat][value="Internasional"]').prop('checked',true);
-                    break;
-                }
-                switch(data.prestasi_jenis) {
-                    case 'Akademik':
-                        $('input:radio[name=prestasi_jenis][value="Akademik"]').prop('checked',true);
-                    break;
-                    case 'Non Akademik':
-                        $('input:radio[name=prestasi_jenis][value="Non Akademik"]').prop('checked',true);
-                    break;
-                }
-
-                $('#modal-student-acv').modal('toggle');
-            }
-        });
-    });
-
-    $('form#filter-studentAcv').submit(function(e){
-        e.preventDefault();
-
-        var cont    = $(this);
-        var btn     = cont.find('button[type=submit]');
-        var tabel   = $('#table-studentAcv');
-        var datacon = cont.serializeArray();
-        var url     = cont.attr('action');
-        var role    = decode_id(cont.data('token'));
-        var opsi    = cont.find('select[name=kd_prodi] option:selected');
-        var jurusan = cont.find('input#nm_jurusan').val();
-
-        if(opsi.val()) {
-            var teks = 'Prodi: '+opsi.text();
-            $('h6.card-title').text(teks);
-        } else {
-            $('h6.card-title').text(jurusan);
-        }
-
-        $.ajax({
-            url: url,
-            data: datacon,
-            type: 'POST',
-            async: true,
-            dataType: 'json',
-            beforeSend: function() {
-                btn.addClass('disabled');
-                btn.html('<i class="fa fa-spinner fa-spin"></i>');
-            },
-            success: function (data) {
-                var html          = '';
-
-                if(data.length > 0) {
-                    $.each(data, function(i,val){
-                        var id          = val.id;
-                        var tahun       = val.academic_year.tahun_akademik+' - '+val.academic_year.semester;
-                        var nim         = val.student.nim;
-                        var nama        = val.student.nama;
-                        var prodi       = val.student.study_program.singkatan;
-                        var kegiatan    = val.kegiatan_nama;
-                        var tingkat     = val.kegiatan_tingkat;
-                        var prestasi    = val.prestasi;
-                        var jenis       = val.prestasi_jenis;
-                        var aksi;
-
-                        if(role!='kajur') {
-                            aksi = '<td class="text-center" width="50">'+
-                                        '<div class="btn-group" role="group">'+
-                                            '<button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                                                '<div><span class="fa fa-caret-down"></span></div>'+
-                                            '</button>'+
-                                            '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">'+
-                                                '<button class="dropdown-item btn-edit" data-id="'+encode_id(id)+'">Sunting</button>'+
-                                                '<form method="POST">'+
-                                                    '<input type="hidden" value="'+encode_id(id)+'" name="id">'+
-                                                    '<button class="dropdown-item btn-delete" data-dest="'+base_url+'/student/achievement">Hapus</button>'+
-                                                '</form>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</td>'
-                        }
-
-                        html +='<tr>'+
-                                    '<td class="text-center">'+tahun+'</td>'+
-                                    '<td>'+
-                                        '<a href="'+base_url+'/student/list/'+encode_id(val.nim)+'">'+
-                                            nama+'<br>'+
-                                            '<small>NIM.'+nim+' / '+prodi+'</small>'+
-                                        '</a>'+
-                                    '</td>'+
-                                    '<td>'+kegiatan+'</td>'+
-                                    '<td>'+tingkat+'</td>'+
-                                    '<td>'+prestasi+'</td>'+
-                                    '<td>'+jenis+'</td>'+
-                                    aksi+
-                                '</tr>';
-                    })
-                }
-                // tabel.dataTable().fnDestroy();
-                tabel.DataTable().clear().destroy();
-                tabel.find('tbody').html(html);
-                tabel.DataTable(datatable_opt);
-
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            },
-            error: function (request) {
-                btn.removeClass('disabled');
-                btn.html('Cari');
-            }
-        });
-    });
     /***********************************************************************************/
 
     /********************************* DATA KATEGORI PENDANAAN *********************************/

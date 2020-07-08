@@ -8,6 +8,7 @@ use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class TeacherAchievementController extends Controller
 {
@@ -47,20 +48,18 @@ class TeacherAchievementController extends Controller
                                                 ->orderBy('id_ta','desc')->get();
         }
 
-
         return view('teacher.achievement.index',compact(['achievement','studyProgram']));
     }
 
     public function edit($id)
     {
-        if(request()->ajax()) {
-            $id = decode_id($id);
-            $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram','academicYear')->first();
-
-            return response()->json($data);
-        } else {
+        if(!request()->ajax()) {
             abort(404);
         }
+
+        // $id = decode_id($id);
+        $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram','academicYear')->first();
+        return response()->json($data);
     }
 
     public function store(Request $request)
@@ -112,7 +111,8 @@ class TeacherAchievementController extends Controller
     public function update(Request $request)
     {
         if(request()->ajax()) {
-            $id  = decode_id($request->_id);
+            // $id  = decode_id($request->_id);
+            $id = $request->_id;
 
             $request->validate([
                 'id_ta'             => 'required',
@@ -252,5 +252,59 @@ class TeacherAchievementController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+
+            $data    = TeacherAchievement::whereHas(
+                            'teacher.studyProgram',function($query) {
+                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                            }
+                        )
+                        ->orderBy('id_ta','desc');
+        } else {
+            $data    = TeacherAchievement::whereHas(
+                            'teacher.studyProgram',function($query) {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        )
+                        ->orderBy('id_ta','desc');
+        }
+
+        if($request->prodi) {
+            $data->whereHas(
+                'teacher',function($query) use($request) {
+                    $query->where('kd_prodi',$request->prodi);
+                }
+            );
+        }
+
+        return DataTables::of($data->get())
+                            ->editColumn('nama', function($d) {
+                                return '<a href="'.route("teacher.list.show",$d->nidn).'">'.
+                                            $d->teacher->nama.
+                                        '<br><small>Prodi: '.$d->teacher->studyProgram->singkatan.'</small></a>';
+                            })
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
+                            })
+                            ->addColumn('bukti', function($d){
+                                return  '<a href="'.route('teacher.achievement.download',encode_id($d->bukti_file)).'" target="_blank">'.
+                                            $d->bukti_nama.
+                                        '</a>';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('teacher.achievement.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['nama','bukti','aksi'])
+                            ->make();
     }
 }

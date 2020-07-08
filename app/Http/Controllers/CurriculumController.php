@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class CurriculumController extends Controller
 {
@@ -59,9 +60,16 @@ class CurriculumController extends Controller
         return view('academic.curriculum.form',compact('studyProgram'));
     }
 
+    public function show($id)
+    {
+        $data = Curriculum::where('id',$id)->first();
+
+        return view('academic.curriculum.show',compact(['data']));
+    }
+
     public function edit($id)
     {
-        $id             = decode_id($id);
+        // $id             = decode_id($id);
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $data           = Curriculum::find($id);
 
@@ -102,7 +110,7 @@ class CurriculumController extends Controller
         $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();
 
-        return redirect()->route('academic.curriculum')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('academic.curriculum.show',$query->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function import(Request $request)
@@ -146,7 +154,7 @@ class CurriculumController extends Controller
         $id = decrypt($request->id);
 
         $request->validate([
-            'kd_matkul'         => 'required|unique:curricula,kd_matkul,'.$id.',kd_matkul',
+            'kd_matkul'         => 'required|unique:curricula,kd_matkul,'.$request->kd_matkul.',kd_matkul',
             'kd_prodi'          => 'required',
             'versi'             => 'required|numeric|digits:4',
             'nama'              => 'required',
@@ -177,7 +185,7 @@ class CurriculumController extends Controller
         $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();
 
-        return redirect()->route('academic.curriculum')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('academic.curriculum.show',$query->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
@@ -201,43 +209,61 @@ class CurriculumController extends Controller
         }
     }
 
-    public function get_by_filter(Request $request)
+    public function datatable(Request $request)
     {
-        if($request->ajax()) {
-
-            $q   = Curriculum::with(['studyProgram'])
-                            ->whereHas(
-                                'studyProgram', function($query) {
-                                    $query->where('kd_jurusan',setting('app_department_id'));
-                                }
-                            );
-
-            if(Auth::user()->hasRole('kaprodi')) {
-                $q->where('kd_prodi',Auth::user()->kd_prodi);
-            }
-
-            if($request->kd_prodi){
-                $q->where('kd_prodi',$request->kd_prodi);
-            }
-
-            if($request->kurikulum) {
-                $q->where('versi',$request->kurikulum);
-            }
-
-            if($request->semester) {
-                $q->where('semester',$request->semester);
-            }
-
-            if($request->jenis) {
-                $q->where('jenis',$request->jenis);
-            }
-
-            $data = $q->orderBy('semester','asc')->get();
-
-            return response()->json($data);
-        } else {
+        if(!$request->ajax()) {
             abort(404);
         }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data = Curriculum::whereHas(
+                'studyProgram', function($query) {
+                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+                }
+            );
+        } else {
+            $data = Curriculum::whereHas(
+                'studyProgram', function($query) {
+                    $query->where('kd_jurusan',setting('app_department_id'));
+                }
+            );
+        }
+
+        if($request->kd_prodi) {
+            $data->where('kd_prodi',$request->kd_prodi);
+        }
+
+        if($request->thn_kurikulum) {
+            $data->where('thn_kurikulum',$request->thn_kurikulum);
+        }
+
+        if($request->semester) {
+            $data->where('semester',$request->semester);
+        }
+
+        if($request->jenis) {
+            $data->where('jenis',$request->jenis);
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('matkul', function($d) {
+                                return '<a name="'.$d->kd_matkul.'" href='.route("academic.curriculum.show",$d->id).'>'.
+                                            $d->nama.
+                                            '<br><small>'.$d->studyProgram->singkatan.' / '.$d->kd_matkul.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('prodi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return $d->studyProgram->nama;
+                                }
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('academic.curriculum.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['matkul','kompetensi_prodi','sks','aksi'])
+                            ->make();
     }
 
     public function loadData(Request $request)

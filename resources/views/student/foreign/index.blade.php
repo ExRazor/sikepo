@@ -2,11 +2,6 @@
 
 @section('title', 'Mahasiswa Asing')
 
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -40,25 +35,14 @@
     @endif
     @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.student.foreign.filter')}}" id="filter-studentForeign" method="POST" data-token="{{encode_id(Auth::user()->role)}}">
-                <div class="row">
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <div class="input-group">
-                            <select class="form-control mr-3" name="kd_prodi">
-                                <option value="">- Pilih Program Studi -</option>
-                                @foreach($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                                @endforeach
-                            </select>
-                            <div>
-                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
+            <select id="kd_prodi_filter" class="form-control filter-box">
+                <option value="">- Pilih Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     @endif
@@ -75,47 +59,15 @@
                     </h6>
                 </div>
                 <div class="card-body bd-color-gray-lighter">
-                    <table id="table-studentForeign" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                    <table id="table_student_foreign" class="table display responsive nowrap" data-order='[[ 0, "asc" ]]' url-target="{{route('ajax.student.foreign.datatable')}}">
                         <thead>
                             <tr>
-                                <th class="text-center defaultSort">Mahasiswa</th>
-                                <th class="text-center none">Asal Negara</th>
-                                <th class="text-center none">Durasi Status Asing</th>
-                                @if(!Auth::user()->hasRole('kajur'))
-                                <th class="text-center no-sort none" width="50">Aksi</th>
-                                @endif
+                                <th class="text-center">Mahasiswa</th>
+                                <th class="text-center">Asal Negara</th>
+                                <th class="text-center">Durasi</th>
+                                <th class="text-center no-sort" width="50">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($studentForeign as $sf)
-                            <tr>
-                                <td>
-                                    <a href="{{route('student.profile',encode_id($sf->nim))}}">
-                                        {{ $sf->student->nama }}<br>
-                                        <small>NIM.{{ $sf->student->nim }} / {{ $sf->student->studyProgram->singkatan }}</small>
-                                    </a>
-                                </td>
-                                <td class="text-center">{{ $sf->asal_negara }}</td>
-                                <td class="text-center">{{ $sf->durasi }}</td>
-                                @if(!Auth::user()->hasRole('kajur'))
-                                <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div><span class="fa fa-caret-down"></span></div>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <button class="dropdown-item btn-edit" data-id="{{ encode_id($sf->id) }}">Sunting</button>
-                                            <form method="POST">
-                                                <input type="hidden" value="{{encode_id($sf->id)}}" name="_id">
-                                                <button class="dropdown-item btn-delete" data-dest="{{ route('student.foreign.delete') }}">Hapus</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                                @endif
-                            </tr>
-                            @endforeach
-                        </tbody>
                     </table>
                 </div><!-- card-body -->
             </div>
@@ -127,7 +79,7 @@
                     <h6 class="card-title"><span class="title-action">Tambah</span> Mahasiswa Asing</h6>
                 </div>
                 <div class="card-body bd-color-gray-lighter">
-                    <form id="form-studentForeign" enctype="multipart/form-data">
+                    <form id="form-student-foreign" enctype="multipart/form-data">
                         <div class="alert alert-danger" style="display:none">
                             @foreach ($errors->all() as $error)
                                 {{ $error }}
@@ -174,8 +126,108 @@
 </div>
 @endsection
 
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
+@endsection
+
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
+<script>
+    var table = $('#table_student_foreign');
+    datatable(table);
+
+    $('.filter-box').bind("keyup change", function(){
+        table.DataTable().clear().destroy();
+        datatable(table);
+    });
+
+    function datatable(table_ehm)
+    {
+        var bahasa = {
+            "sProcessing":   '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+            'searchPlaceholder': 'Cari...',
+            'sSearch': '',
+            "sUrl":          "",
+            "oPaginate": {
+                "sFirst":    "Awal",
+                "sPrevious": "Balik",
+                "sNext":     "Lanjut",
+                "sLast":     "Akhir"
+            }
+        };
+
+        table_ehm.DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: table_ehm.attr('url-target'),
+                type: "post",
+                data: function(d){
+                    d.prodi   = $('select#kd_prodi_filter').val();
+                    d._token = $('meta[name="csrf-token"]').attr('content')
+                }
+            },
+            columns: [
+                        { data: 'nama', },
+                        { data: 'asal_negara', },
+                        { data: 'durasi', },
+                        { data: 'aksi', }
+                    ],
+            columnDefs: [
+                {
+                    targets: 3,
+                    orderable: false
+                },
+                {
+                    targets: [3],
+                    className: 'text-center'
+                },
+            ],
+            hideEmptyCols: [ 3 ],
+            autoWidth: false,
+            language: bahasa
+        })
+    }
+
+    table.on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = $(this).attr('url-target');
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var option = $("<option selected></option>").val(data.nim).text(data.student.nama);
+
+                $('#form-student-foreign')
+                    .find('input[name=_id]').val(id).end()
+                    .find('select[name=nim]').append(option).trigger('change').end()
+                    .find('input[name=asal_negara]').val(data.asal_negara).end()
+                    .find('select[name=durasi]').val(data.durasi).end()
+                    .find('button[type=submit]').attr('data-id',id).end()
+
+            }
+        });
+    })
+
+    $('#form-student-foreign').on('click','.btn-add',function(e){
+        $('#form-student-foreign').trigger('reset');
+        $('.select-mhs').val(null).trigger('change');
+    });
+
+</script>
 @endsection

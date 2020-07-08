@@ -1,5 +1,6 @@
 <?php
 
+use App\AcademicYear;
 use App\Setting;
 use App\Library\Encryption;
 
@@ -101,6 +102,19 @@ if (!function_exists('rata')) {
      */
     function rata($angka) {
         return number_format($angka,2);
+    }
+}
+
+if (!function_exists('current_academic')) {
+    /**
+     * description
+     *
+     * @param
+     * @return
+     */
+    function current_academic() {
+        $query = AcademicYear::where('status','Aktif')->first();
+        return $query;
     }
 }
 

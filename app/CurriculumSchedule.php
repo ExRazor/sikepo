@@ -26,7 +26,7 @@ class CurriculumSchedule extends Model
 
     public function curriculum()
     {
-        return $this->belongsTo('App\Curriculum','kd_matkul');
+        return $this->belongsTo('App\Curriculum','kd_matkul','kd_matkul');
     }
 
     public function scopeCurriculumProdi($query, $prodi)

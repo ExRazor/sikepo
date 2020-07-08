@@ -20,21 +20,23 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-percentage"></i>
-    <div>
-        <h4>{{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
-        <p class="mg-b-0">Tingkat Kepuasan Mahasiswa Terhadap Akademik Program Studi {{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-percentage"></i>
+        <div>
+            <h4>{{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
+            <p class="mg-b-0">Tingkat Kepuasan Mahasiswa Terhadap Akademik Program Studi {{ $data->studyProgram->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</p>
+        </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
-    <div class="row ml-auto" style="width:300px">
+    <div class="row ml-auto">
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encrypt($data->kd_kepuasan)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('academic.satisfaction.delete') }}" data-redir="{{ route('academic.satisfaction') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('academic.satisfaction.destroy',encrypt($data->kd_kepuasan)) }}" data-redir="{{ route('academic.satisfaction.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('academic.satisfaction.edit',encrypt($data->kd_kepuasan)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('academic.satisfaction.edit',encrypt($data->kd_kepuasan)) }}" class="btn btn-warning btn-block pr-4"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
     @endif
@@ -52,7 +54,7 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
+                <table class="table display responsive nowrap" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle" rowspan="2" width="25">#</th>
@@ -84,15 +86,17 @@
                             <td class="text-center">{{$a->tindak_lanjut}}</td>
                         </tr>
                         @endforeach
-                        <tr>
-                            <td class="text-center font-weight-bold" colspan="2">Jumlah</td>
-                            <td class="text-center">{{$jumlah->sangat_baik}}%</td>
-                            <td class="text-center">{{$jumlah->baik}}%</td>
-                            <td class="text-center">{{$jumlah->cukup}}%</td>
-                            <td class="text-center">{{$jumlah->kurang}}%</td>
-                            <td></td>
-                        </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="text-center font-weight-bold" colspan="2">Jumlah</th>
+                            <th class="text-center">{{$jumlah->sangat_baik}}%</th>
+                            <th class="text-center">{{$jumlah->baik}}%</th>
+                            <th class="text-center">{{$jumlah->cukup}}%</th>
+                            <th class="text-center">{{$jumlah->kurang}}%</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div><!-- card-body -->
         </div>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-            @foreach (Breadcrumbs::generate( isset($data) ? 'academic-schedule-edit' : 'academic-schedule-add', isset($data) ? $data : '' ) as $breadcrumb)
+            @foreach (Breadcrumbs::generate( isset($data) ? 'academic-schedule-edit' : 'academic-schedule-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -56,7 +56,7 @@
                     @endisset
                 </h6>
             </div>
-            <form id="curriculumSchedule_form" action="{{route('academic.schedule.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="curriculumSchedule_form" action="@isset($data) {{route('academic.schedule.update',$data->id)}} @else {{route('academic.schedule.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">
@@ -71,28 +71,12 @@
                             @endif
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Asal Dosen: <span class="tx-danger">*</span></label>
-                                <div class="col-md-4 mb-2">
-                                    <select class="form-control" name="kd_jurusan" data-type="form" required>
-                                        <option value="">- Pilih Jurusan -</option>
-                                        @foreach($faculty as $f)
-                                            @if($f->department->count())
-                                            <optgroup label="{{$f->nama}}">
-                                                @foreach($f->department as $d)
-                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->teacher->studyProgram->kd_jurusan==$d->kd_jurusan) ? 'selected': ''}}>{{$d->nama}}</option>
-                                                @endforeach
-                                            </optgroup>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
+                                <div class="col-md-8">
                                     <select id="selectProdiDsn" class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
-                                        @isset($data)
-                                            @foreach($studyProgram as $sp)
-                                                <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->teacher->kd_prodi==$sp->kd_prodi) ? 'selected': ''}}>{{$sp->nama}}</option>
-                                            @endforeach
-                                        @endisset
+                                        @foreach($studyProgram as $sp)
+                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->teacher->kd_prodi==$sp->kd_prodi) ? 'selected': ''}}>{{$sp->nama}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

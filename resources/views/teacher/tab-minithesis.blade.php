@@ -23,7 +23,7 @@
                                     <td>{{ $m->judul }}</td>
                                     <td class="text-center">{{ $m->academicYear->tahun_akademik.' - '.$m->academicYear->semester }}</td>
                                     <td>
-                                        <a href="{{route('student.profile',encode_id($m->nim))}}">
+                                        <a href="{{route('student.list.show',encode_id($m->nim))}}">
                                             {{ $m->student->nama.' ('.$m->nim.')' }}<br>
                                         </a>
                                     </td>

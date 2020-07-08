@@ -55,7 +55,7 @@
                 <div class="profil-tombol">
                     <ul class="profil-menu">
                         <li class="profil-menu-list">
-                            <a class="profil-menu-link" href="{{ route('student.edit',encode_id($data->nim)) }}">
+                            <a class="profil-menu-link" href="{{ route('student.list.edit',encode_id($data->nim)) }}">
                                 <i class="fa fa-pencil-alt"></i>
                                 <span>Sunting Profil</span>
                             </a>

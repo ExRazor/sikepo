@@ -23,10 +23,10 @@
           <span class="menu-item-label">Data Mahasiswa</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('student') }}" class="sub-link {{ (request()->is('student/list*')) ? 'active' : '' }}">Data Mahasiswa</a></li>
-        <li class="sub-item"><a href="{{ route('student.quota') }}" class="sub-link {{ (request()->is('student/quota*')) ? 'active' : '' }}">Kuota Mahasiswa</a></li>
-          <li class="sub-item"><a href="{{ route('student.foreign') }}" class="sub-link {{ (request()->is('student/foreign*')) ? 'active' : '' }}">Mahasiswa Asing</a></li>
-          <li class="sub-item"><a href="{{ route('student.achievement') }}" class="sub-link {{ (request()->is('student/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
+            <li class="sub-item"><a href="{{ route('student.list.index') }}" class="sub-link {{ (request()->is('student/list*')) ? 'active' : '' }}">Data Mahasiswa</a></li>
+        <li class="sub-item"><a href="{{ route('student.quota.index') }}" class="sub-link {{ (request()->is('student/quota*')) ? 'active' : '' }}">Kuota Mahasiswa</a></li>
+          <li class="sub-item"><a href="{{ route('student.foreign.index') }}" class="sub-link {{ (request()->is('student/foreign*')) ? 'active' : '' }}">Mahasiswa Asing</a></li>
+          <li class="sub-item"><a href="{{ route('student.achievement.index') }}" class="sub-link {{ (request()->is('student/achievement*')) ? 'active' : '' }}">Prestasi</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -35,11 +35,11 @@
             <span class="menu-item-label">Pendidikan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('academic.curriculum') }}" class="sub-link {{ (request()->is('academic/curriculum*')) ? 'active' : '' }}">Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.schedule') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Jadwal Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.integration') }}" class="sub-link {{ (request()->is('academic/integration*')) ? 'active' : '' }}">Integrasi Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.minithesis') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
-            <li class="sub-item"><a href="{{ route('academic.satisfaction') }}" class="sub-link {{ (request()->is('academic/satisfaction*')) ? 'active' : '' }}">Kepuasan</a></li>
+            <li class="sub-item"><a href="{{ route('academic.curriculum.index') }}" class="sub-link {{ (request()->is('academic/curriculum*')) ? 'active' : '' }}">Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.schedule.index') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Jadwal Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.integration.index') }}" class="sub-link {{ (request()->is('academic/integration*')) ? 'active' : '' }}">Integrasi Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.minithesis.index') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
+            <li class="sub-item"><a href="{{ route('academic.satisfaction.index') }}" class="sub-link {{ (request()->is('academic/satisfaction*')) ? 'active' : '' }}">Kepuasan</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

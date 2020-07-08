@@ -52,12 +52,6 @@ class AcademicYearController extends Controller
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\AcademicYear  $academicYear
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request)
     {
         if(request()->ajax()){
@@ -68,13 +62,6 @@ class AcademicYearController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\AcademicYear  $academicYear
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         if(request()->ajax()){
@@ -106,12 +93,6 @@ class AcademicYearController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\AcademicYear  $academicYear
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if($request->ajax()){
@@ -164,18 +145,28 @@ class AcademicYearController extends Controller
 
     public function loadData(Request $request)
     {
-        if($request->has('cari')){
-            $cari = $request->cari;
-            $data = AcademicYear::where('tahun_akademik', 'LIKE', '%'.$cari.'%')->orWhere('semester','LIKE','%'.$cari.'%')->get();
-
-            $response = array();
-            foreach($data as $d){
-                $response[] = array(
-                    "id"    => $d->id,
-                    "text"  => $d->tahun_akademik.' - '.$d->semester
-                );
-            }
-            return response()->json($response);
+        if(!request()->ajax()) {
+            abort(404);
         }
+
+        $query = AcademicYear::query();
+
+        if($request->cari) {
+            $query->where('tahun_akademik', 'LIKE', '%'.$request->cari.'%')
+                 ->orWhere('semester','LIKE','%'.$request->cari.'%');
+        }
+
+        $data = $query->orderBy('tahun_akademik','desc')
+                      ->orderBy('semester','desc')
+                      ->get();
+
+        $response = array();
+        foreach($data as $d){
+            $response[] = array(
+                "id"    => $d->id,
+                "text"  => $d->tahun_akademik.' - '.$d->semester
+            );
+        }
+        return response()->json($response);
     }
 }

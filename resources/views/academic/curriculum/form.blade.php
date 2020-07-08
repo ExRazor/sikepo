@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-curriculum-edit' : 'academic-curriculum-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-curriculum-edit' : 'academic-curriculum-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -47,14 +47,14 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="research_form" action="{{route('academic.curriculum.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="research_form" action="{{isset($data) ? route('academic.curriculum.update',$data->id) : route('academic.curriculum.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">
                             @csrf
                             @if(isset($data))
                                 @method('put')
-                                <input type="hidden" name="id" value="{{encrypt($data->kd_matkul)}}">
+                                <input type="hidden" name="id" value="{{encrypt($data->id)}}">
                             @else
                                 @method('post')
                             @endif

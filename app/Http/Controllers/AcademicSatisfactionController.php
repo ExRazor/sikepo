@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Yajra\DataTables\DataTables;
 class AcademicSatisfactionController extends Controller
 {
     public function __construct()
@@ -27,36 +28,10 @@ class AcademicSatisfactionController extends Controller
 
     public function index()
     {
-        if(Auth::user()->hasRole('kaprodi')) {
-            $satisfaction = AcademicSatisfaction::where('kd_prodi',Auth::user()->kd_prodi)
-                                                ->groupBy('kd_prodi')
-                                                ->groupBy('id_ta')
-                                                ->groupBy('kd_kepuasan')
-                                                ->orderBy('id_ta','desc')
-                                                ->get(['kd_prodi','id_ta','kd_kepuasan']);
-        } else {
-            $satisfaction = AcademicSatisfaction::groupBy('kd_prodi')
-                                                ->groupBy('id_ta')
-                                                ->groupBy('kd_kepuasan')
-                                                ->orderBy('id_ta','desc')
-                                                ->get(['kd_prodi','id_ta','kd_kepuasan']);
-        }
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $academicYear = AcademicYear::has('academicSatisfaction')->groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
 
-        foreach($satisfaction as $s) {
-            $persen[$s->kd_kepuasan]  = DB::table('academic_satisfactions as satisfaction')
-                                            ->select(
-                                                DB::raw('sum(satisfaction.sangat_baik) as sangat_baik'),
-                                                DB::raw('sum(satisfaction.baik) as baik'),
-                                                DB::raw('sum(satisfaction.cukup) as cukup'),
-                                                DB::raw('sum(satisfaction.kurang) as kurang')
-                                            )
-                                            ->join('satisfaction_categories as category','category.id', '=', 'satisfaction.id_kategori')
-                                            ->where('category.jenis','Akademik')
-                                            ->where('satisfaction.kd_kepuasan',$s->kd_kepuasan)
-                                            ->first();
-        }
-
-        return view('academic.satisfaction.index',compact(['satisfaction','persen']));
+        return view('academic.satisfaction.index',compact(['studyProgram','academicYear']));
     }
 
     public function create()
@@ -144,7 +119,7 @@ class AcademicSatisfactionController extends Controller
             $query->save();
         }
 
-        return redirect()->route('academic.satisfaction')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('academic.satisfaction.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)
@@ -184,5 +159,81 @@ class AcademicSatisfactionController extends Controller
                 ]);
             }
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data = \App\AcademicSatisfaction::where('kd_prodi',Auth::user()->kd_prodi)
+                                        ->groupBy('kd_prodi')
+                                        ->groupBy('id_ta')
+                                        ->groupBy('kd_kepuasan')
+                                        ->orderBy('id_ta','desc')
+                                        ->select(['kd_prodi','id_ta','kd_kepuasan']);
+        } else {
+            $data = \App\AcademicSatisfaction::groupBy('kd_prodi')
+                                        ->groupBy('id_ta')
+                                        ->groupBy('kd_kepuasan')
+                                        ->orderBy('id_ta','desc')
+                                        ->select(['kd_prodi','id_ta','kd_kepuasan']);
+        }
+
+
+        foreach($data->get() as $d) {
+            $persen[$d->kd_kepuasan]  = DB::table('academic_satisfactions as satisfaction')
+                                            ->select(
+                                                DB::raw('sum(satisfaction.sangat_baik) as sangat_baik'),
+                                                DB::raw('sum(satisfaction.baik) as baik'),
+                                                DB::raw('sum(satisfaction.cukup) as cukup'),
+                                                DB::raw('sum(satisfaction.kurang) as kurang')
+                                            )
+                                            ->join('satisfaction_categories as category','category.id', '=', 'satisfaction.id_kategori')
+                                            ->where('category.jenis','Akademik')
+                                            ->where('satisfaction.kd_kepuasan',$d->kd_kepuasan)
+                                            ->first();
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->where('kd_prodi',$request->kd_prodi_filter);
+        }
+
+        if($request->tahun_filter) {
+            $data->whereHas('academicYear', function($q) use($request) {
+                $q->where('tahun_akademik',$request->tahun_filter);
+            });
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('prodi', function($d) {
+                                if(!Auth::user()->hasRole('kaprodi')) {
+                                    return $d->studyProgram->nama;
+                                }
+                            })
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik;
+                            })
+                            ->addColumn('sangat_baik', function($d) use($persen) {
+                                return $persen[$d->kd_kepuasan]->sangat_baik.'%';
+                            })
+                            ->addColumn('baik', function($d) use($persen) {
+                                return $persen[$d->kd_kepuasan]->baik.'%';
+                            })
+                            ->addColumn('cukup', function($d) use($persen) {
+                                return $persen[$d->kd_kepuasan]->cukup.'%';
+                            })
+                            ->addColumn('kurang', function($d) use($persen) {
+                                return $persen[$d->kd_kepuasan]->kurang.'%';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('academic.satisfaction.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['aksi'])
+                            ->make();
     }
 }

@@ -14,10 +14,10 @@
                         <td>{{ $m->judul }}</td>
                         <td class="text-center">{{ $m->academicYear->tahun_akademik }} - {{ $m->academicYear->semester }}</td>
                         <td class="text-center">
-                            <a href="{{route('teacher.show',encode_id($m->pembimbingUtama->nidn))}}">
+                            <a href="{{route('teacher.list.show',$m->pembimbingUtama->nidn)}}">
                                 {{ $m->pembimbingUtama->nama}} (Utama)
                             </a><br>
-                            <a href="{{route('teacher.show',encode_id($m->pembimbingPendamping->nidn))}}">
+                            <a href="{{route('teacher.list.show',$m->pembimbingPendamping->nidn)}}">
                                 {{ $m->pembimbingPendamping->nama}} (Pendamping)
                             </a>
                         </td>

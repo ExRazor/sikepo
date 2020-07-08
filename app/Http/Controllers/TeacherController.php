@@ -471,9 +471,9 @@ class TeacherController extends Controller
 
     public function datatable(Request $request)
     {
-        // if(!$request->ajax()) {
-        //     abort(404);
-        // }
+        if(!$request->ajax()) {
+            abort(404);
+        }
 
         if(Auth::user()->hasRole('kaprodi')) {
             $data         = Teacher::whereHas(
@@ -486,8 +486,6 @@ class TeacherController extends Controller
                                     $query->where('kd_jurusan',setting('app_department_id'));
                             });
         }
-
-        // dd($request->prodi);
 
         if($request->prodi) {
             $data->where('kd_prodi',$request->prodi);
@@ -509,7 +507,7 @@ class TeacherController extends Controller
                                     return view('teacher.table-button', compact('d'))->render();
                                 }
                             })
-                            ->escapeColumns([])
+                            ->rawColumns(['nama','study_program','aksi'])
                             ->make();
     }
 

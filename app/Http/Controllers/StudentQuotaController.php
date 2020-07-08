@@ -9,6 +9,7 @@ use App\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class StudentQuotaController extends Controller
 {
@@ -21,28 +22,9 @@ class StudentQuotaController extends Controller
     {
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-
-        if(Auth::user()->hasRole('kaprodi')) {
-            $quota        = StudentQuota::whereHas('studyProgram', function($query){
-                                            $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                        })
-                                        ->orderBy('created_at','desc')->get();
-        } else {
-            $quota        = StudentQuota::whereHas('studyProgram', function($query){
-                                            $query->where('kd_jurusan',setting('app_department_id'));
-                                        })
-                                        ->orderBy('created_at','desc')->get();
-        }
-
-        $ayExist = array();
-
-        foreach($quota as $q) {
-            $ayExist[] = $q->id_ta;
-        }
-
         $academicYear = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
 
-        return view('student.quota.index',compact(['faculty','studyProgram','academicYear','quota','ayExist']));
+        return view('student.quota.index',compact(['faculty','studyProgram','academicYear']));
     }
 
     /**
@@ -96,16 +78,10 @@ class StudentQuotaController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\StudentQuota  $studentQuota
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function show($id)
     {
         if(request()->ajax()) {
-            $id = decrypt($id);
+            // $id = decrypt($id);
             $data = StudentQuota::find($id);
             return response()->json($data);
         } else {
@@ -113,17 +89,11 @@ class StudentQuotaController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StudentQuota  $studentQuota
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         if(request()->ajax()) {
-            $id = decrypt($request->_id);
+            // $id = decrypt($request->_id);
+            $id = $request->_id;
 
             $request->validate([
                 'kd_prodi'          => [
@@ -192,5 +162,45 @@ class StudentQuotaController extends Controller
                 ]);
             }
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data        = StudentQuota::whereHas('studyProgram', function($query){
+                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                            });
+        } else {
+            $data        = StudentQuota::whereHas('studyProgram', function($query){
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            });
+        }
+
+        if($request->prodi) {
+            $data     = StudentQuota::whereHas('studyProgram', function($query) use($request){
+                $query->where('kd_prodi',$request->prodi);
+            });
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('prodi', function($d) {
+                                if(!Auth::user()->hasRole('kaprodi')) {
+                                    return $d->studyProgram->nama;
+                                }
+                            })
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik;
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('student.quota.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['aksi'])
+                            ->make();
     }
 }

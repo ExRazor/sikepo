@@ -1,4 +1,4 @@
-<div id="modal-student-acv" class="modal fade effect-slide-in-right">
+<div id="modal_student_acv" class="modal fade effect-slide-in-right">
     <form method="POST" enctype="multipart/form-data" data-parsley-validate>
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content bd-0 tx-14 modal-form">

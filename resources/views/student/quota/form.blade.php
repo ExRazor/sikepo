@@ -15,23 +15,6 @@
                         @endforeach
                     </div>
                     <div class="row mb-3">
-                        <label class="col-md-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="kd_jurusan" data-type="form" disabled>
-                                <option value="">- Pilih Jurusan -</option>
-                                @foreach($faculty as $f)
-                                    @if($f->department->count())
-                                    <optgroup label="{{$f->nama}}">
-                                        @foreach($f->department as $d)
-                                        <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan==setting('app_department_id') ? 'selected': ''}}>{{$d->nama}}</option>
-                                        @endforeach
-                                    </optgroup>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
                         <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                         <div class="col-md-8">
                             @if(Auth::user()->hasRole('kaprodi'))

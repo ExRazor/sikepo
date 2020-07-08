@@ -11,6 +11,7 @@ use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class CurriculumScheduleController extends Controller
 {
@@ -32,20 +33,22 @@ class CurriculumScheduleController extends Controller
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $academicYear = AcademicYear::has('curriculumSchedule')->orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $ay_year      = AcademicYear::has('curriculumSchedule')->groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->get('tahun_akademik');
+        $ay_semester  = AcademicYear::has('curriculumSchedule')->groupBy('semester')->orderBy('semester','desc')->get('semester');
 
-        return view('academic.schedule.index',compact(['faculty','studyProgram','academicYear']));
+        return view('academic.schedule.index',compact(['faculty','studyProgram','academicYear','ay_year','ay_semester']));
     }
 
     public function create()
     {
-        $faculty      = Faculty::all();
+        $studyProgram      = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        return view('academic.schedule.form',compact(['faculty']));
+        return view('academic.schedule.form',compact(['studyProgram']));
     }
 
     public function edit($id)
     {
-        $id             = decode_id($id);
+        // $id             = decode_id($id);
         $faculty        = Faculty::all();
         $data           = CurriculumSchedule::with('teacher.studyProgram','curriculum','academicYear')->where('id',$id)->first();
         $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->studyProgram->kd_jurusan)->get();
@@ -86,7 +89,7 @@ class CurriculumScheduleController extends Controller
         ]);
 
         $dosen  = Teacher::find($request->nidn)->kd_prodi;
-        $matkul = Curriculum::find($request->kd_matkul)->kd_prodi;
+        $matkul = Curriculum::where('kd_matkul',$request->kd_matkul)->first()->kd_prodi;
 
         if($dosen==$matkul){
             $sesuai_prodi = '1';
@@ -156,7 +159,7 @@ class CurriculumScheduleController extends Controller
         ]);
 
         $dosen  = Teacher::find($request->nidn)->kd_prodi;
-        $matkul = Curriculum::find($request->kd_matkul)->kd_prodi;
+        $matkul = Curriculum::where('kd_matkul',$request->kd_matkul)->first()->kd_prodi;
 
         if($dosen==$matkul){
             $sesuai_prodi = '1';
@@ -216,6 +219,87 @@ class CurriculumScheduleController extends Controller
                 ]);
             }
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data = CurriculumSchedule::whereHas(
+                'curriculum.studyProgram', function($query) {
+                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+                }
+            );
+        } else {
+            $data = CurriculumSchedule::whereHas(
+                'curriculum.studyProgram', function($query) {
+                    $query->where('kd_jurusan',setting('app_department_id'));
+                }
+            );
+        }
+
+        if($request->kd_prodi) {
+            $data->whereHas('curriculum', function($q) use($request) {
+                $q->where('kd_prodi',$request->kd_prodi);
+            });
+        }
+
+        if($request->tahun) {
+            $data->whereHas('academicYear', function($q) use($request) {
+                $q->where('tahun_akademik',$request->tahun);
+            });
+        }
+
+        if($request->semester) {
+            $data->whereHas('academicYear', function($q) use($request) {
+                $q->where('semester',$request->semester);
+            });
+        }
+
+        if($request->jenis) {
+            $data->where('jenis',$request->jenis);
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('akademik', function($d) {
+                                return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
+                            })
+                            ->addColumn('matkul', function($d) {
+                                return '<a name="'.$d->curriculum->nama.'" href='.route("academic.curriculum.show",$d->id).'>'.
+                                            $d->curriculum->nama.
+                                            '<br><small>'.$d->curriculum->studyProgram->singkatan.' / '.$d->kd_matkul.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('sks', function($d) {
+                                return $d->curriculum->sks_teori+$d->curriculum->sks_seminar+$d->curriculum->sks_praktikum;
+                            })
+                            ->addColumn('dosen', function($d) {
+                                return '<a href='.route('teacher.list.show',$d->teacher->nidn).'>'.
+                                            $d->teacher->nama.
+                                            '<br>
+                                            <small>NIDN. '.$d->teacher->nidn.' / '.$d->teacher->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->editColumn('sesuai_prodi', function($d) {
+                                if($d->sesuai_prodi) {
+                                    return '<i class="fa fa-check"></i>';
+                                }
+                            })
+                            ->editColumn('sesuai_bidang', function($d) {
+                                if($d->sesuai_bidang) {
+                                    return '<i class="fa fa-check"></i>';
+                                }
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('academic.schedule.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['akademik','matkul','dosen','sesuai_prodi','sesuai_bidang','aksi'])
+                            ->make();
     }
 
     public function get_by_filter(Request $request)

@@ -2,11 +2,6 @@
 
 @section('title', 'Data Mahasiswa')
 
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -30,11 +25,11 @@
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <div class="row">
-            <div class="col-6 pr-1">
-                <a href="{{ route('student.add') }}" class="btn btn-teal btn-block mg-y-10 mg-r-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Mahasiswa</a>
+            <div class="col-6 pr-2">
+                <a href="{{ route('student.list.create') }}" class="btn btn-teal btn-block text-white"><i class="fa fa-plus mg-r-10"></i> Tambah</a>
             </div>
             <div class="col-6 pl-1">
-                <button class="btn btn-primary btn-block mg-y-10 text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
+                <button class="btn btn-primary btn-block text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
             </div>
         </div>
     </div>
@@ -51,58 +46,47 @@
         </div>
     @endif
     <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.student.filter')}}" id="filter-student" method="POST">
-                <div class="row">
-                    @if(Auth::user()->hasRole('admin'))
-                    {{-- <div class="mg-r-10">
-                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                            <option value="0">- Semua Jurusan -</option>
-                            @foreach($faculty as $f)
-                                @if($f->department->count())
-                                <optgroup label="{{$f->nama}}">
-                                    @foreach($f->department as $d)
-                                    <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
-                                    @endforeach
-                                </optgroup>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div> --}}
+        @if(Auth::user()->hasRole('admin'))
+        {{-- <div class="mg-r-10">
+            <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                <option value="0">- Semua Jurusan -</option>
+                @foreach($faculty as $f)
+                    @if($f->department->count())
+                    <optgroup label="{{$f->nama}}">
+                        @foreach($f->department as $d)
+                        <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
+                        @endforeach
+                    </optgroup>
                     @endif
-                    @if(!Auth::user()->hasRole('kaprodi'))
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <select class="form-control" name="kd_prodi">
-                            <option value="">- Semua Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <select class="form-control" name="angkatan">
-                            <option value="">- Semua Angkatan -</option>
-                            @foreach($angkatan as $a)
-                            <option value="{{$a->tahun_akademik}}">{{$a->tahun_akademik}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <div class="input-group">
-                            <select class="form-control mr-3" id="status_mahasiswa" name="status">
-                                <option value="">- Pilih Status -</option>
-                                @foreach($status as $s)
-                                    <option value="{{$s->status}}">{{$s->status}}</option>
-                                @endforeach
-                            </select>
-                            <div>
-                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+                @endforeach
+            </select>
+        </div> --}}
+        @endif
+        @if(!Auth::user()->hasRole('kaprodi'))
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select class="form-control filter-box" name="kd_prodi">
+                <option value="">- Semua Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
+        </div>
+        @endif
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select class="form-control filter-box" name="angkatan">
+                <option value="">- Semua Angkatan -</option>
+                @foreach($angkatan as $a)
+                <option value="{{$a->tahun_akademik}}">{{$a->tahun_akademik}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select class="form-control filter-box" name="status">
+                <option value="">- Pilih Status -</option>
+                @foreach($status as $s)
+                    <option value="{{$s->status}}">{{$s->status}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     <div class="widget-2">
@@ -120,21 +104,17 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_student" class="table display responsive" data-sort="desc">
+                <table id="table_student" class="table display responsive nowrap" data-order='[[ 3, "desc" ]]' data-page-length='50' url-target="{{route('ajax.student.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center">Nama / NIM</th>
-                            <th class="text-center none">Tanggal Lahir</th>
-                            <th class="text-center">Program Studi</th>
-                            <th class="text-center defaultSort none">Angkatan</th>
-                            <th class="text-center none">Kelas</th>
-                            <th class="text-center none">Program</th>
-                            <th class="text-center none">Status</th>
-                            <th class="text-center no-sort none">
-                                @if(!Auth::user()->hasRole('kajur'))
-                                Aksi
-                                @endif
-                            </th>
+                            <th class="text-center" data-priority="1">Nama / NIM</th>
+                            <th class="text-center">Tanggal Lahir</th>
+                            <th class="text-center" data-priority="2">Program Studi</th>
+                            <th class="text-center" data-priority="3">Angkatan</th>
+                            <th class="text-center">Kelas</th>
+                            <th class="text-center">Program</th>
+                            <th class="text-center" data-priority="4">Status</th>
+                            <th class="text-center no-sort" data-priority="5">Aksi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -146,40 +126,22 @@
 @include('student.form-import')
 @endsection
 
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
+@endsection
+
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
 
 @section('custom-js')
 <script>
-    $('#table_student').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('ajax.student.datatable') }}",
-        columns: [
-                    { data: 'nama', },
-                    { data: 'tgl_lhr', },
-                    { data: 'study_program', },
-                    { data: 'angkatan', },
-                    { data: 'kelas', },
-                    { data: 'program', },
-                    { data: 'status', },
-                    { data: 'aksi', }
-                ],
-        order: [[3, 'desc']],
-        columnDefs: [
-                        {
-                            "targets": 7,
-                            "orderable": false
-                        }
-                    ],
-        pageLength: 25,
-        responsive: true,
-        autoWidth: false,
-        language: {
-            "sProcessing":   "Sedang proses...",
+    var bahasa = {
+            "sProcessing":   '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
             "sLengthMenu":   "Tampilan _MENU_ entri",
             "sZeroRecords":  "Tidak ditemukan data",
             "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
@@ -195,7 +157,44 @@
                 "sNext":     "Lanjut",
                 "sLast":     "Akhir"
             }
-        }
+    };
+
+    var table = $('#table_student').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: $('#table_student').attr('url-target'),
+            type: "post",
+            data: function(d){
+                d.prodi     = $('select.filter-box[name=kd_prodi]').val();
+                d.angkatan  = $('select.filter-box[name=angkatan]').val();
+                d.status    = $('select.filter-box[name=status]').val();
+                d._token = $('meta[name="csrf-token"]').attr('content')
+            }
+        },
+        columns: [
+                    { data: 'nama', },
+                    { data: 'tgl_lhr', },
+                    { data: 'study_program', },
+                    { data: 'angkatan', },
+                    { data: 'kelas', },
+                    { data: 'program', },
+                    { data: 'status', },
+                    { data: 'aksi', }
+                ],
+        columnDefs: [
+            {
+                "targets": 7,
+                "orderable": false
+            }
+        ],
+        hideEmptyCols: [ 7 ],
+        autoWidth: false,
+        language: bahasa
     })
+
+    $('.filter-box').bind("keyup change", function(){
+        table.ajax.reload();
+    });
 </script>
 @endsection

@@ -2,11 +2,6 @@
 
 @section('title', 'Kuota Mahasiswa')
 
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -43,6 +38,20 @@
             {{ session('flash.message') }}
         </div>
     @endif
+    <div class="row">
+        @if(!Auth::user()->hasRole('kaprodi'))
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select class="form-control filter-box" name="kd_prodi_filter">
+                <option value="">- Semua Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
+        </div>
+        @else
+        <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
+        @endif
+    </div>
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-header nm_jurusan">
@@ -55,50 +64,20 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_student_quota" class="table display responsive nowrap datatable" data-sort="desc">
+                <table id="table_student_quota" class="table display responsive nowrap" data-order='[[ 1, "desc" ]]' url-target="{{route('ajax.student.quota.datatable')}}">
                     <thead>
                         <tr>
-                            @if(!Auth::user()->hasRole('kaprodi'))
                             <th class="text-center">Program Studi</th>
-                            @endif
                             <th class="text-center defaultSort">Tahun</th>
-                            <th class="text-center none">Daya Tampung</th>
-                            <th class="text-center none">Calon Mahasiswa<br>Pendaftar</th>
-                            <th class="text-center none">Calon mahasiswa<br>Lulus Seleksi</th>
+                            <th class="text-center">Daya Tampung</th>
+                            <th class="text-center">Calon Mahasiswa<br>Pendaftar</th>
+                            <th class="text-center">Calon mahasiswa<br>Lulus Seleksi</th>
                             @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort none">Aksi</th>
+                            <th class="text-center no-sort">Aksi</th>
                             @endif
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($quota as $q)
-                        <tr>
-                            @if(!Auth::user()->hasRole('kaprodi'))
-                            <td>{{ $q->studyProgram->nama }}</td>
-                            @endif
-                            <td class="text-center">{{ $q->academicYear->tahun_akademik }}</td>
-                            <td class="text-center">{{ $q->daya_tampung }}</td>
-                            <td class="text-center">{{ $q->calon_pendaftar }}</td>
-                            <td class="text-center">{{ $q->calon_lulus }}</td>
-                            @if(!Auth::user()->hasRole('kajur'))
-                            <td class="text-center" width="50">
-                                <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div><span class="fa fa-caret-down"></span></div>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <button class="dropdown-item btn-edit btn-edit-quota" data-id="{{encrypt($q->id)}}">Sunting</button>
-                                        <form method="POST">
-                                            <input type="hidden" value="{{encrypt($q->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('student.quota.delete') }}">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                            @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div><!-- card-body -->
         </div>
@@ -109,8 +88,106 @@
 @endif
 @endsection
 
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
+@endsection
+
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
+<script>
+    var table = $('#table_student_quota');
+    datatable(table);
+
+    $('.filter-box').bind("keyup change", function(){
+        table.DataTable().clear().destroy();
+        datatable(table);
+    });
+
+    function datatable(table_ehm)
+    {
+        var bahasa = {
+            "sProcessing":   '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
+            "sLengthMenu":   "Tampilan _MENU_ entri",
+            "sZeroRecords":  "Tidak ditemukan data",
+            "sInfo":         "Tampilan _START_ sampai _END_ dari _TOTAL_ entri",
+            "sInfoEmpty":    "Tampilan 0 hingga 0 dari 0 entri",
+            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+            "sInfoPostFix":  "",
+            'searchPlaceholder': 'Cari...',
+            'sSearch': '',
+            "sUrl":          "",
+            "oPaginate": {
+                "sFirst":    "Awal",
+                "sPrevious": "Balik",
+                "sNext":     "Lanjut",
+                "sLast":     "Akhir"
+            }
+        };
+
+        table_ehm.DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: table_ehm.attr('url-target'),
+                type: "post",
+                data: function(d){
+                    d.prodi   = $('select.filter-box[name=kd_prodi_filter]').val();
+                    d._token = $('meta[name="csrf-token"]').attr('content')
+                }
+            },
+            columns: [
+                        { data: 'prodi', },
+                        { data: 'tahun', },
+                        { data: 'daya_tampung', },
+                        { data: 'calon_pendaftar', },
+                        { data: 'calon_lulus', },
+                        { data: 'aksi', }
+                    ],
+            columnDefs: [
+                {
+                    targets: 5,
+                    orderable: false
+                },
+                {
+                    targets: [1,2,3,4,5],
+                    className: 'text-center'
+                },
+            ],
+            hideEmptyCols: [ 0,5 ],
+            autoWidth: false,
+            language: bahasa
+        })
+    }
+
+    $('#table_student_quota').on('click','.btn-edit-quota',function(e){
+        e.preventDefault();
+
+        var id  = $(this).data('id');
+        var url = $(this).attr('url-target');
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-student-quota')
+                    .find('input[name=_id]').val(id).end()
+                    .find('select[name=kd_prodi]').val(data.kd_prodi).end()
+                    .find('select[name=id_ta]').val(data.id_ta).end()
+                    .find('input[name=daya_tampung]').val(data.daya_tampung).end()
+                    .find('input[name=calon_pendaftar]').val(data.calon_pendaftar).end()
+                    .find('input[name=calon_lulus]').val(data.calon_lulus).end()
+                    .find('button[type=submit]').attr('data-id',id).end()
+                    .modal('toggle').end();
+            }
+        });
+    });
+</script>
 @endsection

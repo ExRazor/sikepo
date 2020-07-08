@@ -26,7 +26,7 @@ class CurriculumImport implements ToModel, WithStartRow
             ],
             [
                 'kd_prodi'      => $prodi->kd_prodi,
-                'nama'          => $row[2],
+                'nama'          => ucfirst(strtolower($row[2])),
                 'versi'         => $row[3],
                 'jenis'         => $row[4],
                 'semester'      => $row[5],

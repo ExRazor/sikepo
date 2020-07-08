@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Curriculum extends Model
 {
     public $incrementing    = false;
-    protected $primaryKey   = 'kd_matkul';
+    // protected $primaryKey   = 'kd_matkul';
     protected $casts        = ['capaian' => 'array'];
 
     protected $fillable = [

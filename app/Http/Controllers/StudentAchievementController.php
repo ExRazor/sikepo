@@ -6,6 +6,7 @@ use App\StudentAchievement;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class StudentAchievementController extends Controller
 {
@@ -76,10 +77,10 @@ class StudentAchievementController extends Controller
     }
 
 
-    public function edit($id)
+    public function show($id)
     {
         if(request()->ajax()) {
-            $id = decode_id($id);
+            // $id = decode_id($id);
             $data = StudentAchievement::where('id',$id)->with('student.studyProgram','academicYear')->first();
 
             return response()->json($data);
@@ -91,7 +92,8 @@ class StudentAchievementController extends Controller
     public function update(Request $request)
     {
         if(request()->ajax()) {
-            $id = decode_id($request->_id);
+            // $id = decode_id($request->_id);
+            $id = $request->_id;
 
             $request->validate([
                 'nim'               => 'required',
@@ -150,6 +152,60 @@ class StudentAchievementController extends Controller
         } else {
             return redirect()->route('student.achievement');
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data   = StudentAchievement::whereHas(
+                'student.studyProgram',function($query) {
+                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+                }
+            );
+        } else {
+            $data    = StudentAchievement::whereHas(
+                'student.studyProgram',function($query) {
+                    $query->where('kd_jurusan',setting('app_department_id'));
+                }
+            );
+        }
+
+        if($request->kd_prodi) {
+            $data->whereHas('student', function($query) use($request){
+                $query->where('kd_prodi',$request->kd_prodi);
+            });
+        }
+
+        if($request->kegiatan_tingkat) {
+            $data->where('kegiatan_tingkat',$request->kegiatan_tingkat);
+        }
+
+        if($request->prestasi_jenis) {
+            $data->where('prestasi_jenis',$request->prestasi_jenis);
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
+                            })
+                            ->addColumn('mahasiswa', function($d) {
+                                return '<a name="'.$d->student->nama.'" href="'.route("student.list.show",encode_id($d->student->nim)).'">'.
+                                            $d->student->nama.
+                                            '<br>
+                                            <small>NIM. '.$d->student->nim.' / '.$d->student->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('student.achievement.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['mahasiswa','aksi'])
+                            ->make();
     }
 
     public function get_by_filter(Request $request)

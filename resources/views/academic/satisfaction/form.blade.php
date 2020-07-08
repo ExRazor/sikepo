@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-satisfaction-edit' : 'academic-satisfaction-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-satisfaction-edit' : 'academic-satisfaction-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -47,7 +47,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="funding_studyProgram_form" action="{{route('academic.satisfaction.store')}}" method="POST" enctype="multipart/form-data">
+            <form id="funding_studyProgram_form" action="@isset($data) {{route('academic.satisfaction.update',encrypt($data->kd_kepuasan))}} @else {{route('academic.satisfaction.store')}} @endisset" method="POST" enctype="multipart/form-data">
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-10 mx-auto">

@@ -39,36 +39,30 @@
         </div>
     @endif
     @if(Auth::user()->role!='kaprodi')
-    <div class="row mb-3">
-        <div class="col-md-12">
-            <form action="{{route('ajax.teacher.filter')}}" id="filter-teacher" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="row">
-                    @if(Auth::user()->role!='kajur')
-                    {{-- <div class="col-md mb-2">
-                        <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                            <option value="0">- Semua Jurusan -</option>
-                            @foreach($faculty as $f)
-                                @if($f->department->count())
-                                <optgroup label="{{$f->nama}}">
-                                    @foreach($f->department as $d)
-                                    <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
-                                    @endforeach
-                                </optgroup>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div> --}}
+    <div class="row">
+        @if(Auth::user()->role!='kajur')
+        {{-- <div class="col-md mb-2">
+            <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                <option value="0">- Semua Jurusan -</option>
+                @foreach($faculty as $f)
+                    @if($f->department->count())
+                    <optgroup label="{{$f->nama}}">
+                        @foreach($f->department as $d)
+                        <option value="{{$d->kd_jurusan}}" {{ $d->kd_jurusan == setting('app_department_id') ? 'selected' : ''}}>{{$d->nama}}</option>
+                        @endforeach
+                    </optgroup>
                     @endif
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <select class="form-control filter-box" name="kd_prodi">
-                            <option value="">- Semua Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </form>
+                @endforeach
+            </select>
+        </div> --}}
+        @endif
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select class="form-control filter-box" name="kd_prodi">
+                <option value="">- Semua Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     @endif
@@ -113,6 +107,7 @@
 
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
@@ -144,6 +139,7 @@
                         "targets"  : 'no-sort',
                         "orderable": false,
                     }],
+                    hideEmptyCols: [ 3 ],
                     language: bahasa,
                     processing: true,
                     serverSide: true,

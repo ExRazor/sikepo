@@ -144,7 +144,6 @@ Route::middleware('auth')->group(function () {
         //Teacher
         Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
         Route::post('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
-        Route::post('teacher/get_by_filter','TeacherController@get_by_filter')->name('teacher.filter');
         Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('teacher.studyProgram');
 
         //Teacher - EWMP
@@ -156,26 +155,26 @@ Route::middleware('auth')->group(function () {
         Route::delete('ewmp','EwmpController@destroy')->name('ewmp.delete');
 
         //Teacher - Achievement
-        Route::post('teacher/achievement/get_by_filter','TeacherAchievementController@get_by_filter')->name('teacher.achievement.filter');
+        Route::post('teacher/achievement/datatable','TeacherAchievementController@datatable')->name('teacher.achievement.datatable');
 
         //Student
-        Route::get('student/datatable','StudentController@datatable')->name('student.datatable');
         Route::get('student/loadData','StudentController@loadData')->name('student.loadData');
         Route::get('student/select_by_studyProgram','StudentController@select_by_studyProgram')->name('student.studyProgram');
+        Route::post('student/datatable','StudentController@datatable')->name('student.datatable');
         Route::post('student/get_by_studyProgram','StudentController@get_by_studyProgram');
-        Route::post('student/get_by_filter','StudentController@get_by_filter')->name('student.filter');
 
         //Student - Quota
-        Route::get('student/quota/{id}','StudentQuotaController@edit')->name('student.quota.edit');
+        Route::post('student/quota/datatable','StudentQuotaController@datatable')->name('student.quota.datatable');
 
         //Student - Status
         Route::get('student/status/{id}','StudentStatusController@edit')->name('student.status.edit');
 
         //Student - Foreign
-        Route::post('student/foreign/get_by_filter','StudentForeignController@get_by_filter')->name('student.foreign.filter');
+        Route::post('student/foreign/datatable','StudentForeignController@datatable')->name('student.foreign.datatable');
 
         //Student - Achievement
         Route::post('student/achievement/get_by_filter','StudentAchievementController@get_by_filter')->name('student.achievement.filter');
+        Route::post('student/achievement/datatable','StudentAchievementController@datatable')->name('student.achievement.datatable');
 
         //Research
         Route::get('research/get_by_department','ResearchController@get_by_department')->name('research.get_by_department');
@@ -198,17 +197,24 @@ Route::middleware('auth')->group(function () {
         Route::post('output-activity/student/get_by_filter','StudentOutputActivityController@get_by_filter')->name('output-activity.student.filter');
 
         //Academic - Curriculum
-        Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('curriculum.filter');
         Route::get('curriculum/loadData','CurriculumController@loadData')->name('curriculum.loadData');
+        Route::post('curriculum/datatable','CurriculumController@datatable')->name('curriculum.datatable');
+        Route::post('curriculum/get_by_filter','CurriculumController@get_by_filter')->name('curriculum.filter');
 
         //Academic - Curriculum Integrations
         Route::post('curriculum-integration/get_by_filter','CurriculumIntegrationController@get_by_filter')->name('curriculum-integration.filter');
+        Route::post('curriculum-integration/datatable','CurriculumIntegrationController@datatable')->name('curriculum-integration.datatable');
 
         //Academic - Schedule
+        Route::post('schedule/datatable','CurriculumScheduleController@datatable')->name('schedule.datatable');
         Route::post('schedule/get_by_filter','CurriculumScheduleController@get_by_filter')->name('schedule.filter');
 
         //Academic - Minithesis
         Route::post('minithesis/get_by_filter','MinithesisController@get_by_filter')->name('minithesis.filter');
+        Route::post('minithesis/datatable','MinithesisController@datatable')->name('minithesis.datatable');
+
+        //Academic - Satisfaction
+        Route::post('academic-satisfaction/datatable','AcademicSatisfactionController@datatable')->name('academic-satisfaction.datatable');
 
         //Alumnus
         Route::get('alumnus/get','AlumnusAttainmentController@get_alumnus')->name('alumnus.get_alumnus');
@@ -230,20 +236,9 @@ Route::middleware('auth')->group(function () {
         //Teacher - List
         Route::resource('list', 'TeacherController');
         Route::get('list/import','TeacherController@import')->name('import');
-        // Route::get('list/add','TeacherController@create')->name('teacher.add');
-        // Route::get('list/{id}','TeacherController@show')->name('teacher.show');
-        // Route::get('list/{id}/edit','TeacherController@edit')->name('teacher.edit');
-        // Route::post('list','TeacherController@store')->name('teacher.store');
-        // Route::put('list','TeacherController@update')->name('teacher.update');
-        // Route::delete('list','TeacherController@destroy')->name('teacher.delete');
 
         //Teacher - Achievement
         Route::resource('achievement', 'TeacherAchievementController');
-        // Route::get('achievement','TeacherAchievementController@index')->name('teacher.achievement');
-        // Route::get('achievement/{nidn}','TeacherAchievementController@edit')->name('teacher.achievement.edit');
-        // Route::post('achievement','TeacherAchievementController@store')->name('teacher.achievement.store');
-        // Route::put('achievement','TeacherAchievementController@update')->name('teacher.achievement.update');
-        // Route::delete('achievement','TeacherAchievementController@destroy')->name('teacher.achievement.delete');
         Route::get('achievement/file/{nidn}','TeacherAchievementController@delete_file')->name('teacher.achievement.file');
 
         //EWMP
@@ -251,98 +246,50 @@ Route::middleware('auth')->group(function () {
     });
 
     //Students
-    Route::prefix('student')->middleware('role:admin,kaprodi,kajur')->group(function () {
+    Route::prefix('student')->name('student.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         Route::get('/',function(){
             return redirect(route('student'));
         });
 
         //Students - List
-        Route::get('list','StudentController@index')->name('student');
-        Route::get('list/add','StudentController@create')->name('student.add');
-        Route::get('list/{id}','StudentController@profile')->name('student.profile');
-        Route::get('list/{id}/edit','StudentController@edit')->name('student.edit');
-        Route::post('list/upload_photo','StudentController@upload_photo')->name('student.photo');
-        Route::post('list/import','StudentController@import')->name('student.import');
-        Route::post('list','StudentController@store')->name('student.store');
-        Route::put('list','StudentController@update')->name('student.update');
-        Route::delete('list','StudentController@destroy')->name('student.delete');
+        Route::resource('list', 'StudentController');
+        Route::post('list/upload_photo','StudentController@upload_photo')->name('photo');
+        Route::post('list/import','StudentController@import')->name('import');
 
         //Students - Quota
-        Route::get('quota','StudentQuotaController@index')->name('student.quota');
-        Route::get('quota/add','StudentQuotaController@create')->name('student.quota.add');
-        Route::post('quota','StudentQuotaController@store')->name('student.quota.store');
-        Route::put('quota','StudentQuotaController@update')->name('student.quota.update');
-        Route::delete('quota','StudentQuotaController@destroy')->name('student.quota.delete');
+        Route::resource('quota', 'StudentQuotaController');
 
         //Students - Status
-        Route::post('status','StudentStatusController@store')->name('student.status.store');
-        Route::put('status','StudentStatusController@update')->name('student.status.update');
-        Route::delete('status','StudentStatusController@destroy')->name('student.status.delete');
+        Route::post('status','StudentStatusController@store')->name('status.store');
+        Route::put('status','StudentStatusController@update')->name('status.update');
+        Route::delete('status','StudentStatusController@destroy')->name('status.delete');
 
         //Students - Foreign
-        Route::get('foreign','StudentForeignController@index')->name('student.foreign');
-        Route::get('foreign/add','StudentForeignController@create')->name('student.foreign.add');
-        Route::get('foreign/{id}','StudentForeignController@edit')->name('student.foreign.edit');
-        Route::post('foreign','StudentForeignController@store')->name('student.foreign.store');
-        Route::put('foreign','StudentForeignController@update')->name('student.foreign.update');
-        Route::delete('foreign','StudentForeignController@destroy')->name('student.foreign.delete');
+        Route::resource('foreign', 'StudentForeignController');
 
         //Student Achievement
-        Route::get('achievement','StudentAchievementController@index')->name('student.achievement');
-        Route::get('achievement/{nidn}','StudentAchievementController@edit')->name('student.achievement.edit');
-        Route::post('achievement','StudentAchievementController@store')->name('student.achievement.store');
-        Route::put('achievement','StudentAchievementController@update')->name('student.achievement.update');
-        Route::delete('achievement','StudentAchievementController@destroy')->name('student.achievement.delete');
+        Route::resource('achievement', 'StudentAchievementController');
     });
 
     //Academic
-    Route::prefix('academic')->middleware('role:admin,kaprodi,kajur')->group(function () {
+    Route::prefix('academic')->name('academic.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         //Academic - Curriculum
-        Route::get('curriculum','CurriculumController@index')->name('academic.curriculum');
-        Route::get('curriculum/add','CurriculumController@create')->name('academic.curriculum.add');
-        Route::get('curriculum/{id}','CurriculumController@show')->name('academic.curriculum.show');
-        Route::get('curriculum/{id}/edit','CurriculumController@edit')->name('academic.curriculum.edit');
-        Route::post('curriculum_import','CurriculumController@import')->name('academic.curriculum.import');
-        Route::post('curriculum','CurriculumController@store')->name('academic.curriculum.store');
-        Route::put('curriculum','CurriculumController@update')->name('academic.curriculum.update');
-        Route::delete('curriculum','CurriculumController@destroy')->name('academic.curriculum.delete');
+        Route::resource('curriculum', 'CurriculumController');
+        Route::post('curriculum/import','CurriculumController@import')->name('curriculum.import');
 
         //Academic - Schedule
-        Route::get('schedule','CurriculumScheduleController@index')->name('academic.schedule');
-        Route::get('schedule/add','CurriculumScheduleController@create')->name('academic.schedule.add');
-        Route::get('schedule/{nidn}/edit','CurriculumScheduleController@edit')->name('academic.schedule.edit');
-        Route::post('schedule','CurriculumScheduleController@store')->name('academic.schedule.store');
-        Route::put('schedule','CurriculumScheduleController@update')->name('academic.schedule.update');
-        Route::delete('schedule','CurriculumScheduleController@destroy')->name('academic.schedule.delete');
+        Route::resource('schedule', 'CurriculumScheduleController');
 
         //Academic - Curriculum Integration
-        Route::get('integration','CurriculumIntegrationController@index')->name('academic.integration');
-        Route::get('integration/add','CurriculumIntegrationController@create')->name('academic.integration.add');
-        Route::get('integration/{id}','CurriculumIntegrationController@show')->name('academic.integration.show');
-        Route::get('integration/{id}/edit','CurriculumIntegrationController@edit')->name('academic.integration.edit');
-        Route::post('integration','CurriculumIntegrationController@store')->name('academic.integration.store');
-        Route::put('integration','CurriculumIntegrationController@update')->name('academic.integration.update');
-        Route::delete('integration','CurriculumIntegrationController@destroy')->name('academic.integration.delete');
+        Route::resource('integration', 'CurriculumIntegrationController');
 
         //Academic - Minithesis
-        Route::get('minithesis','MinithesisController@index')->name('academic.minithesis');
-        Route::get('minithesis/add','MinithesisController@create')->name('academic.minithesis.add');
-        Route::get('minithesis/{nidn}','MinithesisController@show')->name('academic.minithesis.show');
-        Route::get('minithesis/{nidn}/edit','MinithesisController@edit')->name('academic.minithesis.edit');
-        Route::post('minithesis','MinithesisController@store')->name('academic.minithesis.store');
-        Route::put('minithesis','MinithesisController@update')->name('academic.minithesis.update');
-        Route::delete('minithesis','MinithesisController@destroy')->name('academic.minithesis.delete');
+        Route::resource('minithesis', 'MinithesisController');
 
         //Academic - Satisfaction
-        Route::get('satisfaction','AcademicSatisfactionController@index')->name('academic.satisfaction');
-        Route::get('satisfaction/add','AcademicSatisfactionController@create')->name('academic.satisfaction.add');
-        Route::get('satisfaction/{id}','AcademicSatisfactionController@show')->name('academic.satisfaction.show');
-        Route::get('satisfaction/{id}/edit','AcademicSatisfactionController@edit')->name('academic.satisfaction.edit');
-        Route::post('satisfaction','AcademicSatisfactionController@store')->name('academic.satisfaction.store');
-        Route::put('satisfaction','AcademicSatisfactionController@update')->name('academic.satisfaction.update');
-        Route::delete('satisfaction','AcademicSatisfactionController@destroy')->name('academic.satisfaction.delete');
+        Route::resource('satisfaction', 'AcademicSatisfactionController');
     });
 
     //Collaboration

@@ -14,9 +14,10 @@ class CreateTeachersTable extends Migration
     public function up()
     {
         Schema::create('teachers', function (Blueprint $table) {
-            $table->char('nidn',10)->primary();
+            $table->bigIncrements('id');
+            $table->char('nidn',10)->unique();
+            $table->char('nip',18)->unique()->nullable();
             $table->char('kd_prodi',5);
-            $table->char('nip',18)->nullable();
             $table->string('nama');
             $table->string('jk');
             $table->string('agama')->nullable();

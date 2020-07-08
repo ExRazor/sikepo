@@ -47,7 +47,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="student_form" action="{{route('student.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="student_form" action="@isset($data->nim) {{route('student.list.update',encrypt($data->nim))}} @else {{route('student.list.update',encrypt($data->nim))}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">

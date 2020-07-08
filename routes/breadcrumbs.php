@@ -57,17 +57,17 @@ Breadcrumbs::for('teacher-achievement', function ($trail) {
 // Mahasiswa
 Breadcrumbs::for('student', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Mahasiswa', route('student'));
+    $trail->push('Data Mahasiswa', route('student.list.index'));
 });
 
 Breadcrumbs::for('student-add', function ($trail) {
     $trail->parent('student');
-    $trail->push('Tambah Data Mahasiswa', route('student.add'));
+    $trail->push('Tambah Data Mahasiswa', route('student.list.add'));
 });
 
 Breadcrumbs::for('student-profile', function ($trail,$data) {
     $trail->parent('student');
-    $trail->push($data->nim.' : '.$data->nama,route('student.profile',encode_id($data->nim)));
+    $trail->push($data->nim.' : '.$data->nama,route('student.list.show',encode_id($data->nim)));
 });
 
 Breadcrumbs::for('student-edit', function ($trail,$data) {
@@ -78,19 +78,19 @@ Breadcrumbs::for('student-edit', function ($trail,$data) {
 // Mahasiswa > Mahasiswa Asing
 Breadcrumbs::for('student-quota', function ($trail) {
     $trail->parent('student');
-    $trail->push('Data Kuota Mahasiswa', route('student.quota'));
+    $trail->push('Data Kuota Mahasiswa', route('student.quota.index'));
 });
 
 // Mahasiswa > Mahasiswa Asing
 Breadcrumbs::for('student-foreign', function ($trail) {
     $trail->parent('student');
-    $trail->push('Data Mahasiswa Asing', route('student.foreign'));
+    $trail->push('Data Mahasiswa Asing', route('student.foreign.index'));
 });
 
 // Mahasiswa > Prestasi
 Breadcrumbs::for('student-achievement', function ($trail) {
     $trail->parent('student');
-    $trail->push('Daftar Prestasi Mahasiswa', route('student.achievement'));
+    $trail->push('Daftar Prestasi Mahasiswa', route('student.achievement.index'));
 });
 
 // Keuangan
@@ -293,12 +293,17 @@ Breadcrumbs::for('academic', function ($trail) {
 // Akademik > Kurikulum
 Breadcrumbs::for('academic-curriculum', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Data Kurikulum', route('academic.curriculum'));
+    $trail->push('Data Kurikulum', route('academic.curriculum.index'));
 });
 
-Breadcrumbs::for('academic-curriculum-add', function ($trail) {
+Breadcrumbs::for('academic-curriculum-show', function ($trail,$data) {
     $trail->parent('academic-curriculum');
-    $trail->push('Tambah Mata Kuliah', route('academic.curriculum.add'));
+    $trail->push($data->nama, route('academic.curriculum.show',$data->id));
+});
+
+Breadcrumbs::for('academic-curriculum-create', function ($trail) {
+    $trail->parent('academic-curriculum');
+    $trail->push('Tambah Mata Kuliah', route('academic.curriculum.create'));
 });
 
 Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
@@ -308,12 +313,12 @@ Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
 // Akademik > Jadwal
 Breadcrumbs::for('academic-schedule', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Jadwal Kurikulum', route('academic.schedule'));
+    $trail->push('Jadwal Kurikulum', route('academic.schedule.index'));
 });
 
-Breadcrumbs::for('academic-schedule-add', function ($trail) {
+Breadcrumbs::for('academic-schedule-create', function ($trail) {
     $trail->parent('academic-schedule');
-    $trail->push('Tambah Jadwal Kurikulum', route('academic.schedule.add'));
+    $trail->push('Tambah Jadwal Kurikulum', route('academic.schedule.create'));
 });
 
 Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
@@ -323,12 +328,12 @@ Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
 // Akademik > Integrasi Kurikulum
 Breadcrumbs::for('academic-integration', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Integrasi Kurikulum', route('academic.integration'));
+    $trail->push('Integrasi Kurikulum', route('academic.integration.index'));
 });
 
 Breadcrumbs::for('academic-integration-add', function ($trail) {
     $trail->parent('academic-integration');
-    $trail->push('Tambah Integrasi Kurikulum', route('academic.integration.add'));
+    $trail->push('Tambah Integrasi Kurikulum', route('academic.integration.create'));
 });
 
 Breadcrumbs::for('academic-integration-edit', function ($trail,$data) {
@@ -338,12 +343,12 @@ Breadcrumbs::for('academic-integration-edit', function ($trail,$data) {
 // Akademik > Skripsi
 Breadcrumbs::for('academic-minithesis', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Tugas Akhir', route('academic.minithesis'));
+    $trail->push('Tugas Akhir', route('academic.minithesis.index'));
 });
 
-Breadcrumbs::for('academic-minithesis-add', function ($trail) {
+Breadcrumbs::for('academic-minithesis-create', function ($trail) {
     $trail->parent('academic-minithesis');
-    $trail->push('Tambah Tugas Akhir', route('academic.minithesis.add'));
+    $trail->push('Tambah Tugas Akhir', route('academic.minithesis.create'));
 });
 
 Breadcrumbs::for('academic-minithesis-edit', function ($trail,$data) {
@@ -353,12 +358,12 @@ Breadcrumbs::for('academic-minithesis-edit', function ($trail,$data) {
 // Akademik > Kepuasan
 Breadcrumbs::for('academic-satisfaction', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Kepuasan Akademik', route('academic.satisfaction'));
+    $trail->push('Kepuasan Akademik', route('academic.satisfaction.index'));
 });
 
-Breadcrumbs::for('academic-satisfaction-add', function ($trail) {
+Breadcrumbs::for('academic-satisfaction-create', function ($trail) {
     $trail->parent('academic-satisfaction');
-    $trail->push('Tambah', route('academic.satisfaction.add'));
+    $trail->push('Tambah', route('academic.satisfaction.create'));
 });
 
 Breadcrumbs::for('academic-satisfaction-show', function ($trail,$data) {

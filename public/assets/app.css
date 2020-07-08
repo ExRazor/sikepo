@@ -123,7 +123,8 @@ table.dataTable>tbody>tr.child ul.dtr-details {
 }
 
 table.dataTable>tbody>tr.child ul.dtr-details>li>span {
-    display: block
+    display: block;
+    white-space: normal;
 }
 
 /* ----------------------------------------------- */
@@ -328,8 +329,6 @@ div.radio.is-invalid {
     float:right;
 }
 
-
-
 /* ----------------------------------------------- */
 /* ############### MEDIA ############### */
 /* ----------------------------------------------- */
@@ -347,6 +346,30 @@ div.radio.is-invalid {
 
     .br-profile-page .br-profile-body {
         padding: 20px 0;
+    }
+
+    /* TABLE */
+    .table-show th, .table-show td {
+        padding: 0.25rem;
+    }
+
+    .table-show th{
+        display:block;
+        border-top: 0;
+    }
+
+    .table-show td:nth-child(2) {
+        display:none;
+    }
+
+    .table-show td:nth-child(3) {
+        display:block;
+        margin-bottom: 15px;
+    }
+
+    /* DATA TABLE */
+    table.dataTable.nowrap td {
+        white-space: normal;
     }
 
 }

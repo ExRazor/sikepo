@@ -54,7 +54,7 @@
                                             <button class="dropdown-item btn-edit" data-id="{{encode_id($s->id)}}">Sunting</button>
                                             <form method="POST">
                                                 <input type="hidden" value="{{encode_id($s->id)}}" name="id">
-                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('academic.schedule.delete') }}">Hapus</a>
+                                                <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('academic.schedule.destroy',$s->id) }}">Hapus</a>
                                             </form>
                                         </div>
                                     </div>

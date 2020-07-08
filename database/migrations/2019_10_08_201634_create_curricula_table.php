@@ -14,7 +14,8 @@ class CreateCurriculaTable extends Migration
     public function up()
     {
         Schema::create('curricula', function (Blueprint $table) {
-            $table->string('kd_matkul',12)->primary();
+            $table->bigIncrements('id');
+            $table->char('kd_matkul',12)->unique();
             $table->char('kd_prodi',5);
             $table->integer('versi');
             $table->string('nama');

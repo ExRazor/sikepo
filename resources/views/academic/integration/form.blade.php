@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-integration-edit' : 'academic-integration-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'academic-integration-edit' : 'academic-integration-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -47,7 +47,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="curriculumIntegration_form" action="{{route('academic.integration.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="curriculumIntegration_form" action="@isset($data) {{route('academic.integration.update',$data->id)}} @else {{route('academic.integration.store')}}@endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">

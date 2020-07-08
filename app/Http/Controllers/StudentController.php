@@ -48,7 +48,7 @@ class StudentController extends Controller
         return view('student.index',compact(['studyProgram','faculty','angkatan','status']));
     }
 
-    public function profile($id)
+    public function show($id)
     {
         $id = decode_id($id);
 
@@ -246,7 +246,7 @@ class StudentController extends Controller
         $status->id_ta = $request->tahun_masuk;
         $status->save();
 
-        return redirect()->route('student.profile',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('student.list.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
@@ -364,42 +364,55 @@ class StudentController extends Controller
 
     public function datatable(Request $request)
     {
-        if($request->ajax()) {
-
-            if(Auth::user()->hasRole('kaprodi')) {
-                $students     = Student::whereHas(
-                                            'studyProgram', function($query) {
-                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                            })
-                                        ->get();
-            } else {
-                $students     = Student::whereHas(
-                                            'studyProgram', function($query) {
-                                                $query->where('kd_jurusan',setting('app_department_id'));
-                                            })
-                                        ->get();
-            }
-
-            $data = DataTables::of($students)
-                                ->editColumn('nama', function($d) {
-                                    return '<a href="'.route("student.profile",encode_id($d->nim)).'">'.$d->nama.'<br><small>NIM. '.$d->nim.'</small></a>';
-                                })
-                                ->editColumn('study_program', function($d){
-                                    return '<td>'.$d->studyProgram->nama.'<br><small>'.$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama.'</small></td>';
-                                })
-                                ->addColumn('status', function($d) {
-                                    return $d->latestStatus->status;
-                                })
-                                ->addColumn('aksi', function($d) {
-                                    if(!Auth::user()->hasRole('kajur')) {
-                                        return view('student.table-button', compact('d'))->render();
-                                    }
-                                })
-                                ->escapeColumns([])
-                                ->make(true);
-
-            return $data;
+        if(!$request->ajax()) {
+            abort(404);
         }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data     = Student::whereHas(
+                            'studyProgram', function($query) {
+                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                            }
+                        );
+        } else {
+            $data     = Student::whereHas(
+                            'studyProgram', function($query) {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        );
+        }
+
+        if($request->prodi) {
+            $data->where('kd_prodi',$request->prodi);
+        }
+
+        if($request->angkatan) {
+            $data->where('angkatan',$request->angkatan);
+        }
+
+        if($request->status) {
+            $data->whereHas('latestStatus', function($q) use($request) {
+                $q->where('status','LIKE',$request->status);
+            });
+        }
+
+        return DataTables::of($data->get())
+                            ->editColumn('nama', function($d) {
+                                return '<a href="'.route("student.list.show",encode_id($d->nim)).'">'.$d->nama.'<br><small>NIM. '.$d->nim.'</small></a>';
+                            })
+                            ->editColumn('study_program', function($d){
+                                return $d->studyProgram->nama.'<br><small>'.$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama.'</small>';
+                            })
+                            ->addColumn('status', function($d) {
+                                return $d->latestStatus->status;
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('student.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['nama','study_program','aksi'])
+                            ->make();
     }
 
     public function loadData(Request $request)
