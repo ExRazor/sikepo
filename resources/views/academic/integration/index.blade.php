@@ -83,6 +83,7 @@
 
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
@@ -112,23 +113,12 @@
                 }
             },
             columns: [
-                { data: 'akademik', },
+                { data: 'akademik', className: 'text-center'},
                 { data: 'dosen', },
                 { data: 'matkul', },
                 { data: 'kegiatan', },
                 { data: 'bentuk_integrasi', },
-                { data: 'aksi', }
-            ],
-            columnDefs: [
-                {
-                    targets: [5],
-                    orderable: false,
-                    className: 'text-center'
-                },
-                {
-                    targets: [0],
-                    className: 'text-center'
-                },
+                { data: 'aksi', className: 'text-center', orderable:false}
             ],
             hideEmptyCols: [ 5 ],
             autoWidth: false,

@@ -73,15 +73,15 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_minithesis" class="table display responsive nowrap" data-order='[[ 2, "desc" ]]' data-page-length="25" url-target="{{route('ajax.minithesis.datatable')}}">
+                <table id="table_minithesis" class="table display responsive" data-order='[[ 2, "desc" ]]' data-page-length="25" url-target="{{route('ajax.minithesis.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center">Judul Tugas Akhir</th>
-                            <th class="text-center">Nama Mahasiswa</th>
-                            <th class="text-center">Tahun Diangkat</th>
+                            <th class="text-center min-mobile-p">Judul Tugas Akhir</th>
+                            <th class="text-center min-mobile-p">Nama Mahasiswa</th>
+                            <th class="text-center desktop">Tahun Diangkat</th>
                             <th class="text-center none">Pembimbing Utama</th>
                             <th class="text-center none">Pembimbing Pendamping</th>
-                            <th class="text-center" width="50">Aksi</th>
+                            <th class="text-center desktop" width="50">Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -98,6 +98,7 @@
 
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
@@ -127,23 +128,12 @@
                 }
             },
             columns: [
-                { data: 'judul', },
-                { data: 'mahasiswa', },
-                { data: 'tahun', },
-                { data: 'pembimbing_utama', },
-                { data: 'pembimbing_pendamping', },
-                { data: 'aksi', }
-            ],
-            columnDefs: [
-                {
-                    targets: [5],
-                    orderable: false,
-                    className: 'text-center'
-                },
-                {
-                    targets: [2],
-                    className: 'text-center'
-                },
+                { data: 'judul',},
+                { data: 'mahasiswa',},
+                { data: 'tahun', className: 'text-center'},
+                { data: 'pembimbing_utama',},
+                { data: 'pembimbing_pendamping',},
+                { data: 'aksi', className: 'text-center', orderable:false}
             ],
             hideEmptyCols: [ 5 ],
             autoWidth: false,

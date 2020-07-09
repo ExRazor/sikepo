@@ -20,17 +20,19 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-american-sign-language-interpreting"></i>
-    <div>
-        <h4>Rincian Pengabdian</h4>
-        <p class="mg-b-0">Rincian data pengabdian</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-american-sign-language-interpreting"></i>
+        <div>
+            <h4>Rincian Pengabdian</h4>
+            <p class="mg-b-0">Rincian data pengabdian</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="row ml-auto" style="width:300px">
-        <div class="col-6 pr-1">
+        <div class="col-6">
             <form method="POST">
                 <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('community-service.delete') }}" data-redir="{{ route('community-service') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('community-service.destroy',encode_id($data->id)) }}" data-redir="{{ route('community-service.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
@@ -52,57 +54,56 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
+                <table class="table table-show display">
                     <tbody>
                         <tr>
-                            <td>Judul Pengabdian</td>
+                            <th>Judul Pengabdian</th>
                             <td>:</td>
                             <td>{{$data->judul_pengabdian}}</td>
                         </tr>
                         <tr>
-                            <td>Tema Pengabdian</td>
+                            <th>Tema Pengabdian</th>
                             <td>:</td>
                             <td>{{$data->tema_pengabdian}}</td>
                         </tr>
                         <tr>
-                            <td>Bidang Program Studi</td>
+                            <th>Bidang Program Studi</th>
                             <td>:</td>
                             <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
                         </tr>
                         <tr>
-                            <td>Jumlah SKS Pengabdian</td>
+                            <th>Jumlah SKS Pengabdian</th>
                             <td>:</td>
                             <td>{{$data->sks_pengabdian}}</td>
                         </tr>
                         <tr>
-                            <td>Tahun Pengabdian</td>
+                            <th>Tahun Pengabdian</th>
                             <td>:</td>
                             <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
                         </tr>
                         <tr>
-                            <td>Sumber Biaya Pengabdian</td>
+                            <th>Sumber Biaya Pengabdian</th>
                             <td>:</td>
                             <td>{{$data->sumber_biaya}}</td>
                         </tr>
                         <tr>
-                            <td>Nama Lembaga Penunjang Biaya</td>
+                            <th>Nama Lembaga Penunjang Biaya</th>
                             <td>:</td>
                             <td>{{isset($data->sumber_biaya_nama) ? $data->sumber_biaya_nama : ''}}</td>
                         </tr>
                         <tr>
-                            <td>Jumlah Biaya Pengabdian</td>
+                            <th>Jumlah Biaya Pengabdian</th>
                             <td>:</td>
                             <td>{{rupiah($data->jumlah_biaya)}}</td>
                         </tr>
                         <tr>
-                            <td>Dosen yang Terlibat</td>
+                            <th>Dosen yang Terlibat</th>
                             <td>:</td>
                             <td>
                                 <table class="table table-bordered table-colored table-purple">
                                     <thead class="text-center">
                                         <tr>
                                             <td>Nama Dosen</td>
-                                            <td>Asal/Program Studi</td>
                                             <td>Status Anggota</td>
                                             <td>SKS</td>
                                         </tr>
@@ -112,22 +113,15 @@
                                         <tr>
                                             @if(!$st->nama_lain)
                                             <td>
-                                                <a href="{{route('teacher.show',encode_id($st->teacher->nip))}}">
+                                                <a href="{{route('teacher.list.show',$st->teacher->nidn)}}">
                                                     {{$st->teacher->nama}}<br>
-                                                    <small>NIDN. {{$st->nidn}}</small>
+                                                    <small>NIDN. {{$st->nidn}} / {{$st->teacher->studyProgram->singkatan}}</small>
                                                 </a>
-                                            </td>
-                                            <td>
-                                                {{$st->teacher->studyProgram->nama}}<br>
-                                                <small>{{$st->teacher->studyProgram->department->nama.' / '.$st->teacher->studyProgram->department->faculty->singkatan}}</small>
                                             </td>
                                             @else
                                             <td>
                                                 {{$st->nama_lain}}<br>
-                                                <small>NIDN. {{$st->nidn}}</small>
-                                            </td>
-                                            <td>
-                                                {{$st->asal_lain}}<br>
+                                                <small>NIDN. {{$st->nidn}} / {{$st->asal_lain}}</small>
                                             </td>
                                             @endif
                                             <td class="text-center">
@@ -149,7 +143,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Mahasiswa yang Terlibat</td>
+                            <th>Mahasiswa yang Terlibat</th>
                             <td>:</td>
                             <td>
                                 <table class="table table-bordered table-colored table-pink">
@@ -164,7 +158,7 @@
                                         <tr>
                                             @if(!$ss->nama_lain)
                                             <td>
-                                                <a href="{{route('student.profile',encode_id($ss->student->nim))}}">
+                                                <a href="{{route('student.list.show',encode_id($ss->student->nim))}}">
                                                     {{$ss->student->nama}}<br>
                                                     <small>NIDN. {{$ss->nim}}</small>
                                                 </a>

@@ -43,19 +43,19 @@
         </ul>
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('collaboration') }}" class="br-menu-link {{ (request()->is('collaboration*')) ? 'active' : '' }}">
+        <a href="{{ route('collaboration.index') }}" class="br-menu-link {{ (request()->is('collaboration*')) ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-handshake"></i>
             <span class="menu-item-label">Kerja Sama</span>
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('research') }}" class="br-menu-link {{ (request()->segment(1) == 'research') ? 'active' : '' }}">
+        <a href="{{ route('research.index') }}" class="br-menu-link {{ (request()->segment(1) == 'research') ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-book-reader"></i>
           <span class="menu-item-label">Penelitian</span>
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('community-service') }}" class="br-menu-link {{ (request()->segment(1) == 'community-service') ? 'active' : '' }}">
+        <a href="{{ route('community-service.index') }}" class="br-menu-link {{ (request()->segment(1) == 'community-service') ? 'active' : '' }}">
           <i class="menu-item-icon fa fa-american-sign-language-interpreting"></i>
           <span class="menu-item-label">Pengabdian</span>
         </a><!-- br-menu-link -->
@@ -66,8 +66,8 @@
             <span class="menu-item-label">Publikasi</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('publication.teacher') }}" class="sub-link {{ (request()->is('publication/teacher*')) ? 'active' : '' }}">Publikasi Dosen</a></li>
-            <li class="sub-item"><a href="{{ route('publication.student') }}" class="sub-link {{ (request()->is('publication/student*')) ? 'active' : '' }}">Publikasi Mahasiswa</a></li>
+            <li class="sub-item"><a href="{{ route('publication.teacher.index') }}" class="sub-link {{ (request()->is('publication/teacher*')) ? 'active' : '' }}">Publikasi Dosen</a></li>
+            <li class="sub-item"><a href="{{ route('publication.student.index') }}" class="sub-link {{ (request()->is('publication/student*')) ? 'active' : '' }}">Publikasi Mahasiswa</a></li>
         </ul>
     </li>
     <li class="br-menu-item">
@@ -76,8 +76,8 @@
             <span class="menu-item-label">Luaran Kegiatan</span>
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
-            <li class="sub-item"><a href="{{ route('output-activity.teacher') }}" class="sub-link {{ (request()->is('output-activity/teacher*')) ? 'active' : '' }}">Luaran Dosen</a></li>
-            <li class="sub-item"><a href="{{ route('output-activity.student') }}" class="sub-link {{ (request()->is('output-activity/student*')) ? 'active' : '' }}">Luaran Mahasiswa</a></li>
+            <li class="sub-item"><a href="{{ route('output-activity.teacher.index') }}" class="sub-link {{ (request()->is('output-activity/teacher*')) ? 'active' : '' }}">Luaran Dosen</a></li>
+            <li class="sub-item"><a href="{{ route('output-activity.student.index') }}" class="sub-link {{ (request()->is('output-activity/student*')) ? 'active' : '' }}">Luaran Mahasiswa</a></li>
         </ul>
     </li>
     <li class="br-menu-item">

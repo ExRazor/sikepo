@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Rincian Kurikulum')
+@section('title', 'Rincian Kerja Sama')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('academic-curriculum-show',$data) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('collaboration-show',$data) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -16,10 +16,10 @@
 </div>
 <div class="br-pagetitle">
     <div class="d-flex pl-0 mb-3">
-        <i class="icon fa fa-book-reader"></i>
+        <i class="icon fa fa-handshake"></i>
         <div>
-            <h4>Rincian Kurikulum</h4>
-            <p class="mg-b-0">Rincian data kurikulum</p>
+            <h4>Rincian Kerja Sama</h4>
+            <p class="mg-b-0">Rincian data kerja sama</p>
         </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
@@ -27,11 +27,11 @@
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('academic.curriculum.destroy',$data->id) }}" data-redir="{{ route('academic.curriculum.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('collaboration.destroy',$data->id) }}" data-redir="{{ route('collaboration.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6 pl-1">
-            <a href="{{ route('academic.curriculum.edit',$data->id) }}" class="btn btn-warning btn-block text-white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('collaboration.edit',$data->id) }}" class="btn btn-warning btn-block text-white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
     @endif
@@ -54,14 +54,9 @@
                         <table class="table table-show display">
                             <tbody>
                                 <tr>
-                                    <th width="225">Kode Mata Kuliah</th>
+                                    <th width="225">Tahun Akademik</th>
                                     <td width="1">:</td>
-                                    <td>{{$data->kd_matkul}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Nama Mata Kuliah</th>
-                                    <td>:</td>
-                                    <td>{{$data->nama}}</td>
+                                    <td>{{$data->academicYear->tahun_akademik." - ".$data->academicYear->semester}}</td>
                                 </tr>
                                 <tr>
                                     <th>Program Studi</th>
@@ -69,50 +64,48 @@
                                     <td>{{$data->studyProgram->nama}}</td>
                                 </tr>
                                 <tr>
-                                    <th>Semester</th>
+                                    <th>Lembaga Mitra</th>
                                     <td>:</td>
-                                    <td>{{$data->semester}}</td>
+                                    <td>{{$data->nama_lembaga}}</td>
                                 </tr>
                                 <tr>
-                                    <th>Jenis</th>
+                                    <th>Jenis Kerja Sama</th>
                                     <td>:</td>
                                     <td>{{$data->jenis}}</td>
                                 </tr>
                                 <tr>
-                                    <th>Sesuai Kompetensi</th>
+                                    <th>Tingkat Kerja Sama</th>
                                     <td>:</td>
-                                    <td>{{isset($data->kompetensi_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
+                                    <td>{{$data->tingkat}}</td>
                                 </tr>
                                 <tr>
-                                    <th>Tahun Kurikulum</th>
+                                    <th>Judul Kegiatan</th>
                                     <td>:</td>
-                                    <td>{{$data->versi}}</td>
+                                    <td>{{$data->judul_kegiatan}}</td>
                                 </tr>
                                 <tr>
-                                    <th class="align-middle">SKS Mata Kuliah</th>
+                                    <th>Manfaat Kegiatan</th>
+                                    <td>:</td>
+                                    <td>{{$data->manfaat_kegiatan}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Waktu Kegiatan</th>
+                                    <td>:</td>
+                                    <td>{{$data->waktu}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Durasi Kegiatan</th>
+                                    <td>:</td>
+                                    <td>{{$data->durasi}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bukti Kerja Sama</th>
                                     <td>:</td>
                                     <td>
-                                        <ul class="px-sm-0 my-sm-0">
-                                            <li>SKS Teori : {{$data->sks_teori}}</li>
-                                            <li>SKS Seminar : {{$data->sks_seminar}}</li>
-                                            <li>SKS Praktikum : {{$data->sks_praktikum}}</li>
-                                        </ul>
+                                        <a href="{{route('collaboration.download',encode_id($data->bukti_file))}}" target="_blank">
+                                            <i class="fa fa-download mr-1"></i> {{$data->bukti_nama}}
+                                        </a>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <th>Capaian Pembelajaran</th>
-                                    <td>:</td>
-                                    <td>{{implode(', ',$data->capaian)}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Dokumen Rencana Pembelajaran</th>
-                                    <td>:</td>
-                                    <td>{{$data->dokumen_nama}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Unit Penyelenggara</th>
-                                    <td>:</td>
-                                    <td>{{$data->unit_penyelenggara}}</td>
                                 </tr>
                             </tbody>
                         </table>

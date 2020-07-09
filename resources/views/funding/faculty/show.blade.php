@@ -20,12 +20,14 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-balance-scale"></i>
-    <div>
-        <h4>Dana {{ $data->faculty->singkatan }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
-        <p class="mg-b-0">Rincian keuangan untuk {{ $data->faculty->nama }} periode tahun {{ $data->academicYear->tahun_akademik }}</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-balance-scale"></i>
+        <div>
+            <h4>Dana {{ $data->faculty->singkatan }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
+            <p class="mg-b-0">Rincian keuangan untuk {{ $data->faculty->nama }} periode tahun {{ $data->academicYear->tahun_akademik }}</p>
+        </div>
     </div>
-    <div class="row ml-auto" style="width:300px">
+    <div class="row ml-auto">
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encrypt($data->kd_dana)}}" name="id">

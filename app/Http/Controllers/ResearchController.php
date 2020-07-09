@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Yajra\DataTables\DataTables;
 
 class ResearchController extends Controller
 {
@@ -151,7 +152,7 @@ class ResearchController extends Controller
             }
         }
 
-        return redirect()->route('research')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('research.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)
@@ -305,6 +306,59 @@ class ResearchController extends Controller
                 ]);
             }
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data   = Research::whereHas(
+                                        'researchTeacher', function($q) {
+                                            $q->prodiKetua(Auth::user()->kd_prodi);
+                                        }
+                                    );
+
+        } else {
+            $data   = Research::whereHas(
+                                        'researchTeacher', function($q) {
+                                            $q->jurusanKetua(setting('app_department_id'));
+                                        }
+                                    );
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->whereHas(
+                'researchTeacher', function($q) use($request) {
+                    $q->prodiKetua($request->kd_prodi_filter);
+                }
+            );
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('penelitian', function($d) {
+                                return  '<a href="'.route('research.show',encode_id($d->id)).'" target="_blank">'
+                                            .$d->judul_penelitian.
+                                        '</a>';
+                            })
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
+                            })
+                            ->addColumn('peneliti', function($d) {
+                                return  '<a href="'.route('teacher.list.show',$d->researchKetua->teacher->nidn).'#research">'
+                                            .$d->researchKetua->teacher->nama.
+                                            '<br><small>NIDN.'.$d->researchKetua->teacher->nidn.' / '.$d->researchKetua->teacher->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('research.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['penelitian','peneliti','aksi'])
+                            ->make();
     }
 
     public function get_by_filter(Request $request)

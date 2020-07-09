@@ -44,6 +44,7 @@
     </div>
     @endif
     <div class="row">
+        @if(!Auth::user()->hasRole('kaprodi'))
         <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
             <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
             <select id="kd_prodi_filter" class="form-control filter-box">
@@ -53,6 +54,7 @@
                 @endforeach
             </select>
         </div>
+        @endif
         <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
             <select id="kegiatan_tingkat_filter" class="form-control filter-box">
                 <option value="">- Pilih Tingkat Kegiatan -</option>
@@ -76,7 +78,6 @@
                     <span class="nm_jurusan">
                     @if(Auth::user()->hasRole('kaprodi'))
                     {{ Auth::user()->studyProgram->nama }}
-
                     @else
                     {{ setting('app_department_name') }}
                     @endif
@@ -113,6 +114,7 @@
 
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection

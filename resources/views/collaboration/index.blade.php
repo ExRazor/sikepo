@@ -2,11 +2,6 @@
 
 @section('title', 'Data Kerja Sama Prodi')
 
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -29,7 +24,7 @@
     </div>
     @if (Auth::user()->role!='kajur')
     <div class="ml-auto">
-        <a href="{{ route('collaboration.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Kerja Sama</a>
+        <a href="{{ route('collaboration.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Kerja Sama</a>
     </div>
     @endif
 </div>
@@ -45,25 +40,13 @@
     @endif
     @if (Auth::user()->role!='kaprodi')
     <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.collaboration.filter')}}" id="filter-collaboration" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="row">
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <input id="nm_jurusan" type="hidden" value="{{setting('app_department_name')}}">
-                        <div class="input-group">
-                            <select class="form-control mr-3" name="kd_prodi">
-                                <option value="">- Pilih Program Studi -</option>
-                                @foreach($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                                @endforeach
-                            </select>
-                            <div>
-                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select id="kd_prodi_filter" class="form-control filter-box">
+                <option value="">- Pilih Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     @endif
@@ -73,66 +56,17 @@
                 <h6 class="card-title">Teknik Informatika</h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_collaboration" class="table table-bordered datatable display responsive" data-sort="desc">
+                <table id="table_collaboration" class="table display responsive nowrap" data-order='[[ 0, "desc" ]]' data-page-length="25" url-target="{{route('ajax.collaboration.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center align-middle all defaultSort" width="150">Tahun Akademik</th>
-                            @if (Auth::user()->role!='kaprodi')
-                            <th class="text-center align-middle all" width="250">Program Studi</th>
-                            @endif
-                            <th class="text-center align-middle none" width="175">Jenis</th>
-                            <th class="text-center align-middle all">Lembaga Mitra</th>
-                            <th class="text-center align-middle none" width="150">Tingkat</th>
-                            <th class="text-center align-middle none">Judul Kegiatan</th>
-                            <th class="text-center align-middle no-sort none">Manfaat</th>
-                            <th class="text-center align-middle none">Waktu</th>
-                            <th class="text-center align-middle no-sort none">Durasi</th>
-                            <th class="text-center align-middle no-sort none">Bukti Kerjasama</th>
-                            @if (Auth::user()->role!='kajur')
-                            <th class="text-center align-middle no-sort none">Aksi</th>
-                            @endif
+                            <th class="text-center align-middle" width="1">Tahun Akademik</th>
+                            <th class="text-center align-middle">Program Studi</th>
+                            <th class="text-center align-middle">Lembaga Mitra</th>
+                            <th class="text-center align-middle">Jenis</th>
+                            <th class="text-center align-middle">Tingkat</th>
+                            <th class="text-center align-middle">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($collab as $d)
-                        <tr>
-                            <td>{{$d->academicYear->tahun_akademik." - ".$d->academicYear->semester}}</td>
-                            @if (Auth::user()->role!='kaprodi')
-                            <td>{{$d->studyProgram->nama}}</td>
-                            @endif
-                            <td>{{$d->jenis}}</td>
-                            <td>{{$d->nama_lembaga}}</td>
-                            <td class="text-capitalize text-center">{{$d->tingkat}}</td>
-                            <td>{{$d->judul_kegiatan}}</td>
-                            <td>{{$d->manfaat_kegiatan}}</td>
-                            <td>{{$d->waktu}}</td>
-                            <td>{{$d->durasi}}</td>
-                            <td class="text-center" width="75">
-                                <a href="{{ route('collaboration.download',encode_id($d->bukti_file)) }}" target="_blank">
-                                    {{$d->bukti_nama}}
-                                </a>
-                            </td>
-                            @if (Auth::user()->role!='kajur')
-                            <td class="text-center" width="50">
-                                <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div><span class="fa fa-caret-down"></span></div>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('collaboration.edit',encode_id($d->id)) }}">Sunting</a>
-                                        <form method="POST">
-                                            @method('delete')
-                                            @csrf
-                                            <input type="hidden" value="{{encode_id($d->id)}}" name="id">
-                                            <a href="#" class="dropdown-item btn-delete" data-dest={{ route('collaboration.delete') }}>Hapus</a>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                            @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div><!-- card-body -->
         </div>
@@ -140,8 +74,66 @@
 </div>
 @endsection
 
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
+@endsection
+
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
+<script type="text/javascript">
+    var table = $('#table_collaboration');
+    datatable(table);
+
+    $('.filter-box').bind("keyup change", function(){
+        table.DataTable().clear().destroy();
+        datatable(table);
+    });
+
+    function datatable(table_ehm)
+    {
+        table_ehm.DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: table_ehm.attr('url-target'),
+                type: "post",
+                data: function(d){
+                    d.kd_prodi_filter  = $('#kd_prodi_filter').val();
+                    d._token           = $('meta[name="csrf-token"]').attr('content')
+                }
+            },
+            columns: [
+                { data: 'tahun', },
+                { data: 'prodi', },
+                { data: 'lembaga', },
+                { data: 'jenis', },
+                { data: 'tingkat', },
+                { data: 'aksi', }
+            ],
+            columnDefs: [
+                {
+                    targets: [5],
+                    orderable: false,
+                    className: 'text-center'
+                },
+                {
+                    targets: [4],
+                    className: 'text-center text-capitalize'
+                },
+            ],
+            hideEmptyCols: [ 1,5 ],
+            autoWidth: false,
+            language: {
+                url: "/assets/lib/datatables.net/indonesian.json",
+            }
+        })
+    }
+</script>
 @endsection

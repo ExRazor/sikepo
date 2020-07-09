@@ -138,9 +138,6 @@ Route::middleware('auth')->group(function () {
         Route::get('funding/category/{id}','FundingCategoryController@edit')->name('funding.category.edit');
         Route::get('funding/category/select/{id}','FundingCategoryController@get_jenis')->name('funding.category.select');
 
-        //Collaboration
-        Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('collaboration.filter');
-
         //Teacher
         Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
         Route::post('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
@@ -176,25 +173,35 @@ Route::middleware('auth')->group(function () {
         Route::post('student/achievement/get_by_filter','StudentAchievementController@get_by_filter')->name('student.achievement.filter');
         Route::post('student/achievement/datatable','StudentAchievementController@datatable')->name('student.achievement.datatable');
 
+        //Collaboration
+        Route::post('collaboration/get_by_filter','CollaborationController@get_by_filter')->name('collaboration.filter');
+        Route::post('collaboration/datatable','CollaborationController@datatable')->name('collaboration.datatable');
+
         //Research
         Route::get('research/get_by_department','ResearchController@get_by_department')->name('research.get_by_department');
         Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('research.filter');
+        Route::post('research/datatable','ResearchController@datatable')->name('research.datatable');
 
         //Community Service
         Route::get('community-service/get_by_department','CommunityServiceController@get_by_department')->name('community-service.get_by_department');
         Route::post('community-service/get_by_filter','CommunityServiceController@get_by_filter')->name('community-service.filter');
+        Route::post('community-service/datatable','CommunityServiceController@datatable')->name('community-service.datatable');
 
         //Publication - Teacher
         Route::post('publication/teacher/get_by_filter','TeacherPublicationController@get_by_filter')->name('publication.teacher.filter');
+        Route::post('publication/teacher/datatable','TeacherPublicationController@datatable')->name('publication.teacher.datatable');
 
         //Publication - Student
         Route::post('publication/student/get_by_filter','StudentPublicationController@get_by_filter')->name('publication.student.filter');
+        Route::post('publication/student/datatable','StudentPublicationController@datatable')->name('publication.student.datatable');
 
         //Output Activity - Teacher
         Route::post('output-activity/teacher/get_by_filter','TeacherOutputActivityController@get_by_filter')->name('output-activity.teacher.filter');
+        Route::post('output-activity/teacher/datatable','TeacherOutputActivityController@datatable')->name('output-activity.teacher.datatable');
 
         //Output Activity - Student
         Route::post('output-activity/student/get_by_filter','StudentOutputActivityController@get_by_filter')->name('output-activity.student.filter');
+        Route::post('output-activity/student/datatable','StudentOutputActivityController@datatable')->name('output-activity.student.datatable');
 
         //Academic - Curriculum
         Route::get('curriculum/loadData','CurriculumController@loadData')->name('curriculum.loadData');
@@ -249,7 +256,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('student')->name('student.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         Route::get('/',function(){
-            return redirect(route('student'));
+            return redirect(route('student.list.index'));
         });
 
         //Students - List
@@ -275,6 +282,10 @@ Route::middleware('auth')->group(function () {
     //Academic
     Route::prefix('academic')->name('academic.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
+        Route::get('/',function(){
+            return redirect(route('academic.curriculum.index'));
+        });
+
         //Academic - Curriculum
         Route::resource('curriculum', 'CurriculumController');
         Route::post('curriculum/import','CurriculumController@import')->name('curriculum.import');
@@ -293,82 +304,67 @@ Route::middleware('auth')->group(function () {
     });
 
     //Collaboration
-    Route::middleware('role:admin,kaprodi,kajur')->group(function () {
-        Route::get('/collaboration','CollaborationController@index')->name('collaboration');
-        Route::get('/collaboration/add','CollaborationController@create')->name('collaboration.add');
-        Route::get('/collaboration/{id}/edit','CollaborationController@edit')->name('collaboration.edit');
-        Route::post('/collaboration','CollaborationController@store')->name('collaboration.store');
-        Route::put('/collaboration','CollaborationController@update')->name('collaboration.update');
-        Route::delete('/collaboration','CollaborationController@destroy')->name('collaboration.delete');
-    });
+    Route::resource('collaboration', 'CollaborationController');
 
     //Research
-    Route::get('research','ResearchController@index')->name('research');
-    Route::get('research/add','ResearchController@create')->name('research.add');
-    Route::get('research/{id}','ResearchController@show')->name('research.show');
-    Route::get('research/{id}/edit','ResearchController@edit')->name('research.edit');
-    Route::post('research','ResearchController@store')->name('research.store');
-    Route::put('research','ResearchController@update')->name('research.update');
-    Route::delete('research','ResearchController@destroy')->name('research.delete');
+    Route::resource('research', 'ResearchController');
     Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
     Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
 
     //Community Service
-    Route::get('community-service','CommunityServiceController@index')->name('community-service');
-    Route::get('community-service/add','CommunityServiceController@create')->name('community-service.add');
-    Route::get('community-service/{id}','CommunityServiceController@show')->name('community-service.show');
-    Route::get('community-service/{id}/edit','CommunityServiceController@edit')->name('community-service.edit');
-    Route::post('community-service','CommunityServiceController@store')->name('community-service.store');
-    Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
-    Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
+    Route::resource('community-service', 'CommunityServiceController');
     Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
     Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
     //Publication
-    Route::prefix('publication')->middleware('role:admin,kaprodi,kajur')->group(function () {
+    Route::prefix('publication')->name('publication.')->middleware('role:admin,kaprodi,kajur')->group(function () {
         //Publication - Teacher
-        Route::get('teacher','TeacherPublicationController@index')->name('publication.teacher');
-        Route::get('teacher/add','TeacherPublicationController@create')->name('publication.teacher.add');
-        Route::get('teacher/{id}','TeacherPublicationController@show')->name('publication.teacher.show');
-        Route::get('teacher/{id}/edit','TeacherPublicationController@edit')->name('publication.teacher.edit');
-        Route::post('teacher','TeacherPublicationController@store')->name('publication.teacher.store');
-        Route::put('teacher','TeacherPublicationController@update')->name('publication.teacher.update');
-        Route::delete('teacher','TeacherPublicationController@destroy')->name('publication.teacher.delete');
-        Route::get('teacher/delete_member/{id}','TeacherPublicationController@destroy_member')->name('publication.teacher.delete.member');
-        Route::get('teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.teacher.delete.student');
+        Route::resource('teacher', 'TeacherPublicationController');
+        // Route::get('teacher','TeacherPublicationController@index')->name('teacher');
+        // Route::get('teacher/add','TeacherPublicationController@create')->name('teacher.add');
+        // Route::get('teacher/{id}','TeacherPublicationController@show')->name('teacher.show');
+        // Route::get('teacher/{id}/edit','TeacherPublicationController@edit')->name('teacher.edit');
+        // Route::post('teacher','TeacherPublicationController@store')->name('teacher.store');
+        // Route::put('teacher','TeacherPublicationController@update')->name('teacher.update');
+        // Route::delete('teacher','TeacherPublicationController@destroy')->name('teacher.delete');
+        Route::get('teacher/delete_member/{id}','TeacherPublicationController@destroy_member')->name('teacher.delete.member');
+        Route::get('teacher/delete_student/{id}','TeacherPublicationController@destroy_student')->name('teacher.delete.student');
 
         //Publication - Student
-        Route::get('student','StudentPublicationController@index')->name('publication.student');
-        Route::get('student/add','StudentPublicationController@create')->name('publication.student.add');
-        Route::get('student/{id}','StudentPublicationController@show')->name('publication.student.show');
-        Route::get('student/{id}/edit','StudentPublicationController@edit')->name('publication.student.edit');
-        Route::post('student','StudentPublicationController@store')->name('publication.student.store');
-        Route::put('student','StudentPublicationController@update')->name('publication.student.update');
-        Route::delete('student','StudentPublicationController@destroy')->name('publication.student.delete');
-        Route::get('student/delete_member/{id}','StudentPublicationController@destroy_member')->name('publication.student.delete.member');
+        Route::resource('student', 'StudentPublicationController');
+        // Route::get('student','StudentPublicationController@index')->name('student');
+        // Route::get('student/add','StudentPublicationController@create')->name('student.add');
+        // Route::get('student/{id}','StudentPublicationController@show')->name('student.show');
+        // Route::get('student/{id}/edit','StudentPublicationController@edit')->name('student.edit');
+        // Route::post('student','StudentPublicationController@store')->name('student.store');
+        // Route::put('student','StudentPublicationController@update')->name('student.update');
+        // Route::delete('student','StudentPublicationController@destroy')->name('student.delete');
+        Route::get('student/delete_member/{id}','StudentPublicationController@destroy_member')->name('student.delete.member');
     });
 
-    Route::prefix('output-activity')->middleware('role:admin,kaprodi,kajur')->group(function () {
+    Route::prefix('output-activity')->name('output-activity.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         //Output Activity - Teacher
-        Route::get('teacher','TeacherOutputActivityController@index')->name('output-activity.teacher');
-        Route::get('teacher/add','TeacherOutputActivityController@create')->name('output-activity.teacher.add');
-        Route::get('teacher/{id}','TeacherOutputActivityController@show')->name('output-activity.teacher.show');
-        Route::get('teacher/{id}/edit','TeacherOutputActivityController@edit')->name('output-activity.teacher.edit');
-        Route::post('teacher','TeacherOutputActivityController@store')->name('output-activity.teacher.store');
-        Route::put('teacher','TeacherOutputActivityController@update')->name('output-activity.teacher.update');
-        Route::delete('teacher','TeacherOutputActivityController@destroy')->name('output-activity.teacher.delete');
-        Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('output-activity.file.download');
-        Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('output-activity.file.delete');
+        Route::resource('teacher', 'TeacherOutputActivityController');
+        // Route::get('teacher','TeacherOutputActivityController@index')->name('teacher');
+        // Route::get('teacher/add','TeacherOutputActivityController@create')->name('teacher.add');
+        // Route::get('teacher/{id}','TeacherOutputActivityController@show')->name('teacher.show');
+        // Route::get('teacher/{id}/edit','TeacherOutputActivityController@edit')->name('teacher.edit');
+        // Route::post('teacher','TeacherOutputActivityController@store')->name('teacher.store');
+        // Route::put('teacher','TeacherOutputActivityController@update')->name('teacher.update');
+        // Route::delete('teacher','TeacherOutputActivityController@destroy')->name('teacher.delete');
+        Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('file.download');
+        Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('file.delete');
 
         //Output Activity - Student
-        Route::get('student','StudentOutputActivityController@index')->name('output-activity.student');
-        Route::get('student/add','StudentOutputActivityController@create')->name('output-activity.student.add');
-        Route::get('student/{id}','StudentOutputActivityController@show')->name('output-activity.student.show');
-        Route::get('student/{id}/edit','StudentOutputActivityController@edit')->name('output-activity.student.edit');
-        Route::post('student','StudentOutputActivityController@store')->name('output-activity.student.store');
-        Route::put('student','StudentOutputActivityController@update')->name('output-activity.student.update');
-        Route::delete('student','StudentOutputActivityController@destroy')->name('output-activity.student.delete');
+        Route::resource('student', 'StudentOutputActivityController');
+        // Route::get('student','StudentOutputActivityController@index')->name('student');
+        // Route::get('student/add','StudentOutputActivityController@create')->name('student.add');
+        // Route::get('student/{id}','StudentOutputActivityController@show')->name('student.show');
+        // Route::get('student/{id}/edit','StudentOutputActivityController@edit')->name('student.edit');
+        // Route::post('student','StudentOutputActivityController@store')->name('student.store');
+        // Route::put('student','StudentOutputActivityController@update')->name('student.update');
+        // Route::delete('student','StudentOutputActivityController@destroy')->name('student.delete');
     });
 
     //Funding
@@ -497,7 +493,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/download/teacher/{filename}','TeacherController@download')->name('teacher.download');
     Route::get('/download/teacher/achievement/{filename}','TeacherAchievementController@download')->name('teacher.achievement.download');
     Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');
-
 
     //Penilaian
     Route::prefix('assessment')->name('assessment.')->group(function () {

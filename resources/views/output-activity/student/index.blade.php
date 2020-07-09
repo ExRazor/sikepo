@@ -2,11 +2,6 @@
 
 @section('title', 'Luaran Mahasiswa')
 
-@section('style')
-<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
@@ -29,7 +24,7 @@
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
-        <a href="{{ route('output-activity.student.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
+        <a href="{{ route('output-activity.student.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Luaran</a>
     </div>
     @endif
 </div>
@@ -56,25 +51,13 @@
     @endif
     @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.output-activity.student.filter')}}" id="filter-outputActivity" data-token="{{encode_id(Auth::user()->role)}}" data-type="student" method="POST">
-                <input type="hidden" id="nm_jurusan" value="{{ setting('app_department_name') }}">
-                <div class="row">
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <div class="input-group">
-                            <select class="form-control mr-3" name="kd_prodi">
-                                <option value="">- Pilih Program Studi -</option>
-                                @foreach($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                                @endforeach
-                            </select>
-                            <div>
-                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select id="kd_prodi_filter" class="form-control filter-box">
+                <option value="">- Pilih Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     @endif
@@ -93,53 +76,17 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_outputActivity" class="table display responsive datatable" data-sort="desc" style="width:100%">
+                <table id="table_outputActivity_student" class="table display responsive" data-order='[[ 3, "desc" ]]' data-page-length="25" url-target="{{route('ajax.output-activity.student.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center" width="500">Judul Luaran</th>
-                            <th class="text-center none" width="125">Jenis Luaran</th>
-                            <th class="text-center none" width="300">Kategori</th>
-                            <th class="text-center defaultSort" width="150">Tahun</th>
-                            <th class="text-center none" width="125">Jenis Kegiatan</th>
-                            @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center no-sort none" width="50">Aksi</th>
-                            @endif
+                            <th class="text-center" width="600">Judul Luaran</th>
+                            <th class="text-center" width="300">Pemilik</th>
+                            <th class="text-center" width="125">Jenis Luaran</th>
+                            <th class="text-center" width="300">Kategori</th>
+                            <th class="text-center" width="150">Tahun</th>
+                            <th class="text-center" width="50">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($outputActivity as $activity)
-                        <tr>
-                            <td>
-                                <a href="{{route('output-activity.student.show',encode_id($activity->id))}}">
-                                    {{$activity->judul_luaran}}
-                                </a><br>
-                                <small>
-                                    {{$activity->student->nama.' ('.$activity->nim.')'.' / '.$activity->student->studyProgram->singkatan}}
-                                </small>
-                            </td>
-                            <td class="text-center">{{$activity->jenis_luaran}}</td>
-                            <td class="text-center">{{$activity->outputActivityCategory->nama}}</td>
-                            <td class="text-center">{{$activity->thn_luaran}}</td>
-                            <td class="text-center">{{$activity->kegiatan}}</td>
-                            @if(!Auth::user()->hasRole('kajur'))
-                            <td class="text-center" width="50">
-                                <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div><span class="fa fa-caret-down"></span></div>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('output-activity.student.edit',encode_id($activity->id)) }}">Sunting</a>
-                                        <form method="POST">
-                                            <input type="hidden" value="{{encode_id($activity->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('output-activity.student.delete') }}">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                            @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
                 </table>
             </div><!-- card-body -->
         </div>
@@ -147,8 +94,55 @@
 </div>
 @endsection
 
+@section('style')
+<link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
+@endsection
+
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
+@endsection
+
+@section('custom-js')
+<script type="text/javascript">
+    var table = $('#table_outputActivity_student');
+    datatable(table);
+
+    $('.filter-box').bind("keyup change", function(){
+        table.DataTable().clear().destroy();
+        datatable(table);
+    });
+
+    function datatable(table_ehm)
+    {
+        table_ehm.DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: table_ehm.attr('url-target'),
+                type: "post",
+                data: function(d){
+                    d.kd_prodi_filter  = $('#kd_prodi_filter').val();
+                    d._token           = $('meta[name="csrf-token"]').attr('content')
+                }
+            },
+            columns: [
+                { data: 'judul', className: 'min-mobile-p'},
+                { data: 'milik', className: 'min-mobile-p'},
+                { data: 'jenis_luaran', className: 'desktop'},
+                { data: 'kategori', className: 'desktop'},
+                { data: 'thn_luaran', className: 'desktop text-center'},
+                { data: 'aksi', className: 'desktop text-center', orderable: false}
+            ],
+            hideEmptyCols: [ 5 ],
+            autoWidth: false,
+            language: {
+                url: "/assets/lib/datatables.net/indonesian.json",
+            }
+        })
+    }
+</script>
 @endsection

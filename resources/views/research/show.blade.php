@@ -20,21 +20,23 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-book-reader"></i>
-    <div>
-        <h4>Rincian Penelitian</h4>
-        <p class="mg-b-0">Rincian data penelitian</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-book-reader"></i>
+        <div>
+            <h4>Rincian Penelitian</h4>
+            <p class="mg-b-0">Rincian data penelitian</p>
+        </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
-    <div class="row ml-auto" style="width:300px">
-        <div class="col-6 pr-1">
+    <div class="row ml-auto">
+        <div class="col-6">
             <form method="POST">
                 <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('research.delete') }}" data-redir="{{ route('research') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('research.destroy',$data->id) }}" data-redir="{{ route('research.index') }}"><i class="fa fa-trash"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('research.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('research.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt"></i> Sunting</a>
         </div>
     </div>
     @endif
@@ -52,62 +54,61 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
+                <table class="table table-show display">
                     <tbody>
                         <tr>
-                            <td>Judul Penelitian</td>
+                            <th>Judul Penelitian</th>
                             <td>:</td>
                             <td>{{$data->judul_penelitian}}</td>
                         </tr>
                         <tr>
-                            <td>Tema Penelitian</td>
+                            <th>Tema Penelitian</th>
                             <td>:</td>
                             <td>{{$data->tema_penelitian}}</td>
                         </tr>
                         <tr>
-                            <td>Tingkat Penelitian</td>
+                            <th>Tingkat Penelitian</th>
                             <td>:</td>
                             <td>{{$data->tingkat_penelitian}}</td>
                         </tr>
                         <tr>
-                            <td>Bidang Program Studi</td>
+                            <th>Bidang Program Studi</th>
                             <td>:</td>
                             <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
                         </tr>
                         <tr>
-                            <td>Jumlah SKS Penelitian</td>
+                            <th>Jumlah SKS Penelitian</th>
                             <td>:</td>
                             <td>{{$data->sks_penelitian}}</td>
                         </tr>
                         <tr>
-                            <td>Tahun Penelitian</td>
+                            <th>Tahun Penelitian</th>
                             <td>:</td>
                             <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
                         </tr>
                         <tr>
-                            <td>Sumber Biaya Penelitian</td>
+                            <th>Sumber Biaya Penelitian</th>
                             <td>:</td>
                             <td>{{$data->sumber_biaya}}</td>
                         </tr>
                         <tr>
-                            <td>Nama Lembaga Penunjang Biaya</td>
+                            <th>Nama Lembaga Penunjang Biaya</th>
                             <td>:</td>
                             <td>{{isset($data->sumber_biaya_nama) ? $data->sumber_biaya_nama : ''}}</td>
                         </tr>
                         <tr>
-                            <td>Jumlah Biaya Penelitian</td>
+                            <th>Jumlah Biaya Penelitian</th>
                             <td>:</td>
                             <td>{{rupiah($data->jumlah_biaya)}}</td>
                         </tr>
                         <tr>
-                            <td>Dosen yang Terlibat</td>
+                            <th>Dosen yang Terlibat</th>
                             <td>:</td>
                             <td>
                                 <table class="table table-bordered table-colored table-info">
                                     <thead class="text-center">
                                         <tr>
                                             <td>Nama Dosen</td>
-                                            <td>Asal/Program Studi</td>
                                             <td>Status Anggota</td>
                                             <td>SKS</td>
                                         </tr>
@@ -117,22 +118,15 @@
                                         <tr>
                                             @if(!$rt->nama_lain)
                                             <td>
-                                                <a href="{{route('teacher.show',encode_id($rt->teacher->nidn))}}">
+                                                <a href="{{route('teacher.list.show',$rt->teacher->nidn)}}">
                                                     {{$rt->teacher->nama}}<br>
-                                                    <small>NIDN. {{$rt->teacher->nidn}}</small>
+                                                    <small>NIDN. {{$rt->teacher->nidn}} / {{$rt->teacher->studyProgram->singkatan}}</small>
                                                 </a>
-                                            </td>
-                                            <td>
-                                                {{$rt->teacher->studyProgram->nama}}<br>
-                                                <small>{{$rt->teacher->studyProgram->department->nama.' / '.$rt->teacher->studyProgram->department->faculty->singkatan}}</small>
                                             </td>
                                             @else
                                             <td>
                                                 {{$rt->nama_lain}}<br>
-                                                <small>NIDN. {{$rt->nidn}}</small>
-                                            </td>
-                                            <td>
-                                                {{$rt->asal_lain}}<br>
+                                                <small>NIDN. {{$rt->nidn}} / {{$rt->asal_lain}}</small>
                                             </td>
                                             @endif
                                             <td class="text-center">
@@ -154,7 +148,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Mahasiswa yang Terlibat</td>
+                            <th>Mahasiswa yang Terlibat</th>
                             <td>:</td>
                             <td>
                                 <table class="table table-bordered table-colored table-danger">
@@ -169,7 +163,7 @@
                                         <tr>
                                             @if(!$rs->nama_lain)
                                             <td>
-                                                <a href="{{route('student.profile',encode_id($rs->student->nim))}}">
+                                                <a href="{{route('student.list.show',encode_id($rs->student->nim))}}">
                                                     {{$rs->student->nama}}<br>
                                                     <small>NIM. {{$rs->student->nim}}</small>
                                                 </a>

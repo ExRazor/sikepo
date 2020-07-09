@@ -10,6 +10,7 @@ use App\Faculty;
 use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class CommunityServiceController extends Controller
 {
@@ -147,7 +148,7 @@ class CommunityServiceController extends Controller
             }
         }
 
-        return redirect()->route('community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('community-service.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)
@@ -297,6 +298,58 @@ class CommunityServiceController extends Controller
                 ]);
             }
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data   = CommunityService::whereHas(
+                                            'serviceTeacher', function($q) {
+                                                $q->prodiKetua(Auth::user()->kd_prodi);
+                                            }
+                                        );
+        } else {
+            $data   = CommunityService::whereHas(
+                                            'serviceTeacher', function($q) {
+                                                $q->jurusanKetua(setting('app_department_id'));
+                                            }
+                                        );
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->whereHas(
+                'serviceTeacher', function($q) use($request) {
+                    $q->prodiKetua($request->kd_prodi_filter);
+                }
+            );
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('pengabdian', function($d) {
+                                return  '<a href="'.route('community-service.show',encode_id($d->id)).'" target="_blank">'
+                                            .$d->judul_pengabdian.
+                                        '</a>';
+                            })
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
+                            })
+                            ->addColumn('pelaksana', function($d) {
+                                return  '<a href="'.route('teacher.list.show',$d->serviceKetua->teacher->nidn).'#community-service">'
+                                            .$d->serviceKetua->teacher->nama.
+                                            '<br><small>NIDN.'.$d->serviceKetua->teacher->nidn.' / '.$d->serviceKetua->teacher->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('community-service.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['pengabdian','pelaksana','aksi'])
+                            ->make();
     }
 
     public function get_by_filter(Request $request)

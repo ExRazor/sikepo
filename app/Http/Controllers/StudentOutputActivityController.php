@@ -7,7 +7,8 @@ use App\OutputActivityCategory;
 use App\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use File;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
 
 class StudentOutputActivityController extends Controller
 {
@@ -274,31 +275,55 @@ class StudentOutputActivityController extends Controller
         }
     }
 
-    public function get_by_filter(Request $request)
+    public function datatable(Request $request)
     {
-        if($request->ajax()) {
-
-            $q   = StudentOutputActivity::with([
-                                                'student.studyProgram',
-                                                'outputActivityCategory'])
-                            ->whereHas(
-                                'student.studyProgram.department', function($query) {
-                                    $query->where('kd_jurusan',setting('app_department_id'));
-                                }
-                            );
-
-            if($request->kd_prodi){
-                $q->whereHas(
-                    'student.studyProgram', function($query) use ($request) {
-                        $query->where('kd_prodi',$request->kd_prodi);
-                });
-            }
-
-            $data = $q->orderBy('thn_luaran','desc')->get();
-
-            return response()->json($data);
-        } else {
+        if(!$request->ajax()) {
             abort(404);
         }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data    = StudentOutputActivity::whereHas(
+                                            'student.studyProgram', function($query) {
+                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                            }
+                                        );
+        } else {
+            $data   = StudentOutputActivity::whereHas(
+                                            'student.studyProgram.department', function($query) {
+                                                $query->where('kd_jurusan',setting('app_department_id'));
+                                            }
+                                        );
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->whereHas(
+                'student.studyProgram', function($q) use($request) {
+                    $q->where('kd_prodi',$request->kd_prodi_filter);
+                }
+            );
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('judul', function($d) {
+                                return  '<a href="'.route('output-activity.student.show',encode_id($d->id)).'" target="_blank">'
+                                            .$d->judul_luaran.
+                                        '</a>';
+                            })
+                            ->addColumn('milik', function($d) {
+                                return  '<a href="'.route('student.list.show',$d->student->nim).'#publication">'
+                                            .$d->student->nama.
+                                            '<br><small>NIM.'.$d->student->nim.' / '.$d->student->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('kategori', function($d) {
+                                return  $d->outputActivityCategory->nama;
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('output-activity.student.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['judul','milik','aksi'])
+                            ->make();
     }
 }

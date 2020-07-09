@@ -20,22 +20,26 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-newspaper"></i>
-    <div>
-        <h4>Rincian Publikasi</h4>
-        <p class="mg-b-0">Rincian data publikasi dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-newspaper"></i>
+        <div>
+            <h4>Rincian Publikasi</h4>
+            <p class="mg-b-0">Rincian data publikasi dosen</p>
+        </div>
     </div>
-    <div class="row ml-auto" style="width:300px">
+    @if(!Auth::user()->hasRole('kajur'))
+    <div class="row ml-sm-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.teacher.delete') }}" data-redir="{{ route('publication.teacher') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.teacher.destroy',encode_id($data->id)) }}" data-redir="{{ route('publication.teacher.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('publication.teacher.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('publication.teacher.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" ><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
+    @endif
 </div>
 
 <div class="br-pagebody">
@@ -47,121 +51,114 @@
             {{ session('flash.message') }}
         </div>
     @endif
-    <div class="widget-2">
-        <div class="card shadow-base mb-3">
-            <div class="card-body bd-color-gray-lighter">
-                <table class="table display responsive nowrap">
-                    <tbody>
-                        <tr>
-                            <td width="350px">Judul Publikasi</td>
-                            <td width="20px">:</td>
-                            <td>{{$data->judul}}</td>
-                        </tr>
-                        <tr>
-                            <td>Jenis Publikasi</td>
-                            <td>:</td>
-                            <td>{{$data->publicationCategory->nama}}</td>
-                        </tr>
-                        <tr>
-                            <td>Penulis Utama</td>
-                            <td>:</td>
-                            <td>
-                                <a href="{{route('teacher.show',encode_id($data->nidn))}}" target="_blank">
-                                    {{$data->teacher->nama}} / NIDN. {{$data->nidn}}
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Penulis Lain</td>
-                            <td>:</td>
-                            <td>
-                                <table class="table table-bordered table-colored table-info">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <td>Nama</td>
-                                            <td>Asal Program Studi</td>
-                                            <td>Status</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if($data->publicationMembers->count() || $data->publicationStudents->count() )
-                                            @foreach($data->publicationMembers as $pm)
+    <div class="row widget-2">
+        <div class="col-md-9">
+            <div class="card shadow-base mb-3">
+                <div class="card-body bd-color-gray-lighter">
+                    <table class="table table-show display">
+                        <tbody>
+                            <tr>
+                                <th width="225px">Judul Publikasi</th>
+                                <td width="20px">:</td>
+                                <td>{{$data->judul}}</td>
+                            </tr>
+                            <tr>
+                                <th>Jenis Publikasi</th>
+                                <td>:</td>
+                                <td>{{$data->publicationCategory->nama}}</td>
+                            </tr>
+                            <tr>
+                                <th>Penulis Utama</th>
+                                <td>:</td>
+                                <td>
+                                    <a href="{{route('teacher.list.show',$data->nidn)}}" target="_blank">
+                                        {{$data->teacher->nama}} / NIDN. {{$data->nidn}}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Penulis Lain</th>
+                                <td>:</td>
+                                <td>
+                                    <table class="table table-bordered table-colored table-info">
+                                        <thead class="text-center">
                                             <tr>
-                                                <td>
-                                                    {{$pm->nama}}<br>
-                                                    <small>NIDN. {{$pm->nidn}}</small>
-                                                </td>
-                                                <td>
-                                                    {{$pm->studyProgram->nama}}<br>
-                                                    <small>{{$pm->studyProgram->department->nama.' / '.$pm->studyProgram->department->faculty->singkatan}}</small>
-                                                </td>
-                                                <td class="text-center">
-                                                    Dosen
-                                                </td>
+                                                <td>Nama</td>
+                                                <td>Status</td>
                                             </tr>
-                                            @endforeach
-                                            @foreach($data->publicationStudents as $ps)
-                                            <tr>
-                                                <td>
-                                                    {{$ps->nama}}<br>
-                                                    <small>NIM. {{$ps->nim}}</small>
-                                                </td>
-                                                <td>
-                                                    {{$ps->studyProgram->nama}}<br>
-                                                    <small>{{$ps->studyProgram->department->nama.' / '.$ps->studyProgram->department->faculty->singkatan}}</small>
-                                                </td>
-                                                <td class="text-center">
-                                                    Mahasiswa
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        @else
-                                            <tr>
-                                                <td colspan="3" class="text-center">BELUM ADA DATA</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Bidang Program Studi</td>
-                            <td>:</td>
-                            <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
-                        </tr>
-                        <tr>
-                            <td>Tahun Terbit</td>
-                            <td>:</td>
-                            <td>{{$data->tahun}}</td>
-                        </tr>
-                        <tr>
-                            <td>Penerbit</td>
-                            <td>:</td>
-                            <td>{{$data->penerbit}}</td>
-                        </tr>
-                        <tr>
-                            <td>Nama Terbitan</td>
-                            <td>:</td>
-                            <td>{{$data->jurnal}}</td>
-                        </tr>
-                        <tr>
-                            <td>Akreditasi</td>
-                            <td>:</td>
-                            <td>{{$data->akreditasi}}</td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah Sitasi</td>
-                            <td>:</td>
-                            <td>{{$data->sitasi}}</td>
-                        </tr>
-                        <tr>
-                            <td>Tautan</td>
-                            <td>:</td>
-                            <td><a href="{{$data->tautan}}">{{$data->tautan}}</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div><!-- card-body -->
+                                        </thead>
+                                        <tbody>
+                                            @if($data->publicationMembers->count() || $data->publicationStudents->count() )
+                                                @foreach($data->publicationMembers as $pm)
+                                                <tr>
+                                                    <td>
+                                                        {{$pm->nama}}<br>
+                                                        <small>NIDN. {{$pm->nidn}} / {{$pm->studyProgram->singkatan}}</small>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        Dosen
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                                @foreach($data->publicationStudents as $ps)
+                                                <tr>
+                                                    <td>
+                                                        {{$ps->nama}}<br>
+                                                        <small>NIM. {{$ps->nim}} / {{$ps->studyProgram->singkatan}}</small>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        Mahasiswa
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="2" class="text-center">BELUM ADA DATA</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Bidang Program Studi</th>
+                                <td>:</td>
+                                <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
+                            </tr>
+                            <tr>
+                                <th>Tahun Terbit</th>
+                                <td>:</td>
+                                <td>{{$data->tahun}}</td>
+                            </tr>
+                            <tr>
+                                <th>Penerbit</th>
+                                <td>:</td>
+                                <td>{{$data->penerbit}}</td>
+                            </tr>
+                            <tr>
+                                <th>Nama Terbitan</th>
+                                <td>:</td>
+                                <td>{{$data->jurnal}}</td>
+                            </tr>
+                            <tr>
+                                <th>Akreditasi</th>
+                                <td>:</td>
+                                <td>{{$data->akreditasi}}</td>
+                            </tr>
+                            <tr>
+                                <th>Jumlah Sitasi</th>
+                                <td>:</td>
+                                <td>{{$data->sitasi}}</td>
+                            </tr>
+                            <tr>
+                                <th>Tautan</th>
+                                <td>:</td>
+                                <td><a href="{{$data->tautan}}">{{$data->tautan}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- card-body -->
+            </div>
         </div>
     </div>
 

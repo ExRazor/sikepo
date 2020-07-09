@@ -20,16 +20,18 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-boxes"></i>
-    <div>
-        <h4>Rincian Luaran</h4>
-        <p class="mg-b-0">Rincian data luaran dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-boxes"></i>
+        <div>
+            <h4>Rincian Luaran</h4>
+            <p class="mg-b-0">Rincian data luaran dosen</p>
+        </div>
     </div>
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
                 <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('output-activity.teacher.delete') }}" data-redir="{{ route('output-activity.teacher') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('output-activity.teacher.destroy',encode_id($data->id)) }}" data-redir="{{ route('output-activity.teacher.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
@@ -52,148 +54,149 @@
             <div class="widget-2">
                 <div class="card shadow-base mb-3">
                     <div class="card-body bd-color-gray-lighter">
-                        <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
+                        <table class="table table-show display">
                             <tbody>
                                 <tr>
-                                    <td width="200">Jenis Kegiatan</td>
+                                    <th width="200">Jenis Kegiatan</th>
                                     <td width="20">:</td>
                                     <td>{{$data->kegiatan}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Nama Kegiatan</td>
+                                    <th>Nama Kegiatan</th>
                                     <td>:</td>
                                     <td>{{$data->nm_kegiatan}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Pembuat Luaran</td>
+                                    <th>Pembuat Luaran</th>
                                     <td>:</td>
                                     <td>
-                                        <a href="{{ route('teacher.show',encode_id($data->nidn)) }}">
+                                        <a href="{{ route('teacher.list.show',$data->nidn) }}">
                                             {{$data->teacher->nama}}<br>
                                             <small>NIDN. {{$data->nidn}} / {{$data->teacher->studyProgram->singkatan}}</small>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Kategori Luaran</td>
+                                    <th>Kategori Luaran</th>
                                     <td>:</td>
                                     <td>{{$data->outputActivityCategory->nama}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Judul Luaran</td>
+                                    <th>Judul Luaran</th>
                                     <td>:</td>
                                     <td>{{$data->judul_luaran}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tahun Luaran</td>
+                                    <th>Tahun Luaran</th>
                                     <td>:</td>
                                     <td>{{$data->thn_luaran}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Jenis Luaran</td>
+                                    <th>Jenis Luaran</th>
                                     <td>:</td>
                                     <td><strong>{{$data->jenis_luaran}}</strong></td>
                                 </tr>
                                 @if($data->jenis_luaran=='Buku')
                                 <tr>
-                                    <td>Nama Buku</td>
+                                    <th>Nama Buku</th>
                                     <td>:</td>
                                     <td>{{$data->nama_karya}}</td>
                                 </tr>
                                 <tr>
-                                    <td>ISSN/ISBN</td>
+                                    <th>ISSN/ISBN</th>
                                     <td>:</td>
                                     <td>{{$data->issn}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Penerbit</td>
+                                    <th>Penerbit</th>
                                     <td>:</td>
                                     <td>{{$data->penerbit}}</td>
                                 </tr>
                                 <tr>
-                                    <td>URL</td>
+                                    <th>URL</th>
                                     <td>:</td>
                                     <td><a href="{{$data->url}}">{{$data->url}}</a></td>
                                 </tr>
                                 @elseif($data->jenis_luaran=='Jurnal')
                                 <tr>
-                                    <td>Nama Jurnal</td>
+                                    <th>Nama Jurnal</th>
                                     <td>:</td>
                                     <td>{{$data->nama_karya}}</td>
                                 </tr>
                                 <tr>
-                                    <td>ISSN/ISBN/e-ISSN</td>
+                                    <th>ISSN/ISBN/e-ISSN</th>
                                     <td>:</td>
                                     <td>{{$data->issn}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Penyelenggara</td>
+                                    <th>Penyelenggara</th>
                                     <td>:</td>
                                     <td>{{$data->penyelenggara}}</td>
                                 </tr>
                                 <tr>
-                                    <td>URL</td>
+                                    <th>URL</th>
                                     <td>:</td>
                                     <td><a href="{{$data->url}}">{{$data->url}}</a></td>
                                 </tr>
                                 @elseif($data->jenis_luaran=='HKI')
                                 <tr>
-                                    <td>Nama Karya</td>
+                                    <th>Nama Karya</th>
                                     <td>:</td>
                                     <td>{{$data->nama_karya}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Jenis Karya</td>
+                                    <th>Jenis Karya</th>
                                     <td>:</td>
                                     <td>{{$data->jenis_karya}}</td>
                                 </tr>
                                 <tr>
-                                    <td>No. Permohonan</td>
+                                    <th>No. Permohonan</th>
                                     <td>:</td>
                                     <td>{{$data->no_permohonan}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tgl. Permohonan</td>
+                                    <th>Tgl. Permohonan</th>
                                     <td>:</td>
                                     <td>{{$data->tgl_permohonan}}</td>
                                 </tr>
                                 @elseif($data->jenis_luaran=='HKI Paten')
                                 <tr>
-                                    <td>Nama Karya</td>
+                                    <th>Nama Karya</th>
                                     <td>:</td>
                                     <td>{{$data->nama_karya}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Jenis Karya</td>
+                                    <th>Jenis Karya</th>
                                     <td>:</td>
                                     <td>{{$data->jenis_karya}}</td>
                                 </tr>
                                 <tr>
-                                    <td>No. Paten</td>
+                                    <th>No. Paten</th>
                                     <td>:</td>
                                     <td>{{$data->no_paten}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tgl. Disahkan</td>
+                                    <th>Tgl. Disahkan</th>
                                     <td>:</td>
                                     <td>{{$data->tgl_sah}}</td>
                                 </tr>
                                 @elseif($data->jenis_luaran=='Lainnya')
                                 <tr>
-                                    <td>Nama Karya</td>
+                                    <th>Nama Karya</th>
                                     <td>:</td>
                                     <td>{{$data->nama_karya}}</td>
                                 </tr>
                                 @endif
                                 <tr>
-                                    <td>Keterangan</td>
+                                    <th>Keterangan</th>
                                     <td>:</td>
                                     <td>
                                         {!!nl2br($data->keterangan)!!}
                                     </td>
                                 </tr>
+                                @isset($data->file_karya)
                                 <tr>
-                                    <td>File Karya</td>
+                                    <th>File Karya</th>
                                     <td>:</td>
                                     <td class="align-middle">
                                         <a href="{{route('output-activity.file.download','id='.encrypt($data->id))}}" target="_blank">
@@ -201,6 +204,7 @@
                                         </a>
                                     </td>
                                 </tr>
+                                @endisset
                             </tbody>
                         </table>
                     </div><!-- card-body -->

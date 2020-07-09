@@ -5,29 +5,13 @@ Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Beranda', route('dashboard'));
 });
 
-// Kerja Sama
-Breadcrumbs::for('collaboration', function ($trail) {
-    $trail->parent('dashboard');
-    $trail->push('Kerja Sama', route('collaboration'));
-});
-
-Breadcrumbs::for('collaboration-add', function ($trail) {
-    $trail->parent('collaboration');
-    $trail->push('Tambah Kerja Sama', route('collaboration.add'));
-});
-
-Breadcrumbs::for('collaboration-edit', function ($trail) {
-    $trail->parent('collaboration');
-    $trail->push('Sunting Kerja Sama');
-});
-
 // Dosen
 Breadcrumbs::for('teacher', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Dosen', route('teacher.list.index'));
 });
 
-Breadcrumbs::for('teacher-add', function ($trail) {
+Breadcrumbs::for('teacher-create', function ($trail) {
     $trail->parent('teacher');
     $trail->push('Tambah Data Dosen', route('teacher.list.create'));
 });
@@ -91,197 +75,6 @@ Breadcrumbs::for('student-foreign', function ($trail) {
 Breadcrumbs::for('student-achievement', function ($trail) {
     $trail->parent('student');
     $trail->push('Daftar Prestasi Mahasiswa', route('student.achievement.index'));
-});
-
-// Keuangan
-Breadcrumbs::for('funding', function ($trail) {
-    $trail->parent('dashboard');
-    $trail->push('Data Keuangan');
-});
-
-// Keuangan > Fakultas
-Breadcrumbs::for('funding-faculty', function ($trail) {
-    $trail->parent('funding');
-    $trail->push('Keuangan Fakultas', route('funding.faculty'));
-});
-
-Breadcrumbs::for('funding-faculty-add', function ($trail) {
-    $trail->parent('funding-faculty');
-    $trail->push('Tambah Keuangan Fakultas', route('funding.faculty.add'));
-});
-
-Breadcrumbs::for('funding-faculty-show', function ($trail,$data) {
-    $trail->parent('funding-faculty');
-    $trail->push(
-        'Rincian Keuangan: '.$data->faculty->singkatan.' - '.$data->academicYear->tahun_akademik,
-        route('funding.faculty.show',encrypt($data->kd_dana))
-    );
-});
-
-Breadcrumbs::for('funding-faculty-edit', function ($trail,$data) {
-    $trail->parent('funding-faculty-show',$data);
-    $trail->push('Sunting Keuangan Fakultas');
-});
-
-// Keuangan > Program Studi
-Breadcrumbs::for('funding-studyProgram', function ($trail) {
-    $trail->parent('funding');
-    $trail->push('Keuangan Program Studi', route('funding.study-program'));
-});
-
-Breadcrumbs::for('funding-studyProgram-add', function ($trail) {
-    $trail->parent('funding-studyProgram');
-    $trail->push('Tambah Keuangan Program Studi', route('funding.study-program.add'));
-});
-
-Breadcrumbs::for('funding-studyProgram-show', function ($trail,$data) {
-    $trail->parent('funding-studyProgram');
-    $trail->push(
-        'Rincian Keuangan: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
-        route('funding.study-program.show',encrypt($data->kd_dana))
-    );
-});
-
-Breadcrumbs::for('funding-studyProgram-edit', function ($trail,$data) {
-    $trail->parent('funding-studyProgram-show',$data);
-    $trail->push('Sunting Keuangan Program Studi');
-});
-
-//Penelitian Dosen
-Breadcrumbs::for('research', function ($trail) {
-    $trail->parent('dashboard');
-    $trail->push('Data Penelitian', route('research'));
-});
-
-Breadcrumbs::for('research-add', function ($trail) {
-    $trail->parent('research');
-    $trail->push('Tambah Data Penelitian', route('research.add'));
-});
-
-Breadcrumbs::for('research-show', function ($trail,$data) {
-    $trail->parent('research');
-    $trail->push('Data Penelitian: '.$data->judul_penelitian, route('research.show',encode_id($data->id)));
-});
-
-Breadcrumbs::for('research-edit', function ($trail,$data) {
-    $trail->parent('research-show',$data);
-    $trail->push('Sunting Data Penelitian');
-});
-
-//Pengabdian Dosen
-Breadcrumbs::for('community-service', function ($trail) {
-    $trail->parent('dashboard');
-    $trail->push('Data Pengabdian', route('community-service'));
-});
-
-Breadcrumbs::for('community-service-add', function ($trail) {
-    $trail->parent('community-service');
-    $trail->push('Tambah Data Pengabdian', route('community-service.add'));
-});
-
-Breadcrumbs::for('community-service-show', function ($trail,$data) {
-    $trail->parent('community-service');
-    $trail->push('Data Pengabdian: '.$data->judul_pengabdian, route('community-service.show',encode_id($data->id)));
-});
-
-Breadcrumbs::for('community-service-edit', function ($trail,$data) {
-    $trail->parent('community-service-show',$data);
-    $trail->push('Sunting Data Pengabdian');
-});
-
-//Publikasi > Dosen
-Breadcrumbs::for('publication', function ($trail) {
-    $trail->parent('dashboard');
-    $trail->push('Data Publikasi');
-});
-
-//Publikasi > Dosen
-Breadcrumbs::for('publication-teacher', function ($trail) {
-    $trail->parent('publication');
-    $trail->push('Publikasi Dosen', route('publication.teacher'));
-});
-
-Breadcrumbs::for('publication-teacher-add', function ($trail) {
-    $trail->parent('publication-teacher');
-    $trail->push('Tambah Publikasi Dosen', route('publication.teacher.add'));
-});
-
-Breadcrumbs::for('publication-teacher-show', function ($trail,$data) {
-    $trail->parent('publication-teacher');
-    $trail->push('Data Publikasi: '.$data->judul, route('publication.teacher.show',encode_id($data->id)));
-});
-
-Breadcrumbs::for('publication-teacher-edit', function ($trail,$data) {
-    $trail->parent('publication-teacher');
-    $trail->push('Sunting Publikasi Dosen');
-});
-
-//Publikasi > Mahasiswa
-Breadcrumbs::for('publication-student', function ($trail) {
-    $trail->parent('publication');
-    $trail->push('Publikasi Mahasiswa', route('publication.student'));
-});
-
-Breadcrumbs::for('publication-student-add', function ($trail) {
-    $trail->parent('publication-student');
-    $trail->push('Tambah Publikasi Mahasiswa', route('publication.student.add'));
-});
-
-Breadcrumbs::for('publication-student-show', function ($trail,$data) {
-    $trail->parent('publication-student');
-    $trail->push('Data Publikasi: '.$data->judul, route('publication.student.show',encode_id($data->id)));
-});
-
-Breadcrumbs::for('publication-student-edit', function ($trail,$data) {
-    $trail->parent('publication-student');
-    $trail->push('Sunting Publikasi Mahasiswa');
-});
-
-// Luaran - Dosen
-Breadcrumbs::for('output-activity', function ($trail) {
-    $trail->parent('dashboard');
-    $trail->push('Data Luaran');
-});
-
-Breadcrumbs::for('output-activity-teacher', function ($trail) {
-    $trail->parent('output-activity');
-    $trail->push('Luaran Dosen', route('output-activity.teacher'));
-});
-
-Breadcrumbs::for('output-activity-teacher-add', function ($trail) {
-    $trail->parent('output-activity-teacher');
-    $trail->push('Tambah Data Luaran', route('output-activity.teacher.add'));
-});
-
-Breadcrumbs::for('output-activity-teacher-show', function ($trail,$data) {
-    $trail->parent('output-activity-teacher');
-    $trail->push('Luaran Penelitian: '.$data->judul_luaran, route('output-activity.teacher.show',encode_id($data->id)));
-});
-
-Breadcrumbs::for('output-activity-teacher-edit', function ($trail,$data) {
-    $trail->parent('output-activity-teacher-show',$data);
-    $trail->push('Sunting Data Luaran');
-});
-
-// Luaran - Mahasiswa
-Breadcrumbs::for('output-activity-student', function ($trail) {
-    $trail->parent('output-activity');
-    $trail->push('Luaran Mahasiswa', route('output-activity.student'));
-});
-
-Breadcrumbs::for('output-activity-student-add', function ($trail) {
-    $trail->parent('output-activity-student');
-    $trail->push('Tambah Data Luaran', route('output-activity.student.add'));
-});
-
-Breadcrumbs::for('output-activity-student-show', function ($trail,$data) {
-    $trail->parent('output-activity-student');
-    $trail->push('Luaran Penelitian: '.$data->judul_luaran, route('output-activity.student.show',encode_id($data->id)));
-});
-
-Breadcrumbs::for('output-activity-student-edit', function ($trail,$data) {
-    $trail->parent('output-activity-student-show',$data);
-    $trail->push('Sunting Data Luaran');
 });
 
 // Akademik
@@ -377,6 +170,218 @@ Breadcrumbs::for('academic-satisfaction-show', function ($trail,$data) {
 Breadcrumbs::for('academic-satisfaction-edit', function ($trail,$data) {
     $trail->parent('academic-satisfaction-show',$data);
     $trail->push('Sunting');
+});
+
+// Kerja Sama
+Breadcrumbs::for('collaboration', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Kerja Sama', route('collaboration.index'));
+});
+
+Breadcrumbs::for('collaboration-create', function ($trail) {
+    $trail->parent('collaboration');
+    $trail->push('Tambah Kerja Sama', route('collaboration.create'));
+});
+
+Breadcrumbs::for('collaboration-show', function ($trail,$data) {
+    $trail->parent('collaboration');
+    $trail->push('Rincian Kerja Sama', route('collaboration.show',$data->id));
+});
+
+Breadcrumbs::for('collaboration-edit', function ($trail) {
+    $trail->parent('collaboration');
+    $trail->push('Sunting Kerja Sama');
+});
+
+//Penelitian Dosen
+Breadcrumbs::for('research', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Penelitian', route('research.index'));
+});
+
+Breadcrumbs::for('research-create', function ($trail) {
+    $trail->parent('research');
+    $trail->push('Tambah Data Penelitian', route('research.create'));
+});
+
+Breadcrumbs::for('research-show', function ($trail,$data) {
+    $trail->parent('research');
+    $trail->push($data->judul_penelitian, route('research.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('research-edit', function ($trail,$data) {
+    $trail->parent('research-show',$data);
+    $trail->push('Sunting Data Penelitian');
+});
+
+//Pengabdian Dosen
+Breadcrumbs::for('community-service', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Pengabdian', route('community-service.index'));
+});
+
+Breadcrumbs::for('community-service-create', function ($trail) {
+    $trail->parent('community-service');
+    $trail->push('Tambah Data Pengabdian', route('community-service.create'));
+});
+
+Breadcrumbs::for('community-service-show', function ($trail,$data) {
+    $trail->parent('community-service');
+    $trail->push('Data Pengabdian: '.$data->judul_pengabdian, route('community-service.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('community-service-edit', function ($trail,$data) {
+    $trail->parent('community-service-show',$data);
+    $trail->push('Sunting Data Pengabdian');
+});
+
+//Publikasi > Dosen
+Breadcrumbs::for('publication', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Publikasi');
+});
+
+//Publikasi > Dosen
+Breadcrumbs::for('publication-teacher', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Publikasi Dosen', route('publication.teacher.index'));
+});
+
+Breadcrumbs::for('publication-teacher-create', function ($trail) {
+    $trail->parent('publication-teacher');
+    $trail->push('Tambah Publikasi Dosen', route('publication.teacher.create'));
+});
+
+Breadcrumbs::for('publication-teacher-show', function ($trail,$data) {
+    $trail->parent('publication-teacher');
+    $trail->push($data->judul, route('publication.teacher.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('publication-teacher-edit', function ($trail,$data) {
+    $trail->parent('publication-teacher');
+    $trail->push('Sunting Publikasi Dosen');
+});
+
+//Publikasi > Mahasiswa
+Breadcrumbs::for('publication-student', function ($trail) {
+    $trail->parent('publication');
+    $trail->push('Publikasi Mahasiswa', route('publication.student.index'));
+});
+
+Breadcrumbs::for('publication-student-create', function ($trail) {
+    $trail->parent('publication-student');
+    $trail->push('Tambah Publikasi Mahasiswa', route('publication.student.create'));
+});
+
+Breadcrumbs::for('publication-student-show', function ($trail,$data) {
+    $trail->parent('publication-student');
+    $trail->push($data->judul, route('publication.student.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('publication-student-edit', function ($trail,$data) {
+    $trail->parent('publication-student');
+    $trail->push('Sunting Publikasi Mahasiswa');
+});
+
+// Luaran - Dosen
+Breadcrumbs::for('output-activity', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Luaran');
+});
+
+Breadcrumbs::for('output-activity-teacher', function ($trail) {
+    $trail->parent('output-activity');
+    $trail->push('Luaran Dosen', route('output-activity.teacher.index'));
+});
+
+Breadcrumbs::for('output-activity-teacher-create', function ($trail) {
+    $trail->parent('output-activity-teacher');
+    $trail->push('Tambah Data Luaran', route('output-activity.teacher.create'));
+});
+
+Breadcrumbs::for('output-activity-teacher-show', function ($trail,$data) {
+    $trail->parent('output-activity-teacher');
+    $trail->push($data->judul_luaran, route('output-activity.teacher.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('output-activity-teacher-edit', function ($trail,$data) {
+    $trail->parent('output-activity-teacher-show',$data);
+    $trail->push('Sunting Data Luaran');
+});
+
+// Luaran - Mahasiswa
+Breadcrumbs::for('output-activity-student', function ($trail) {
+    $trail->parent('output-activity');
+    $trail->push('Luaran Mahasiswa', route('output-activity.student.index'));
+});
+
+Breadcrumbs::for('output-activity-student-create', function ($trail) {
+    $trail->parent('output-activity-student');
+    $trail->push('Tambah Data Luaran', route('output-activity.student.create'));
+});
+
+Breadcrumbs::for('output-activity-student-show', function ($trail,$data) {
+    $trail->parent('output-activity-student');
+    $trail->push($data->judul_luaran, route('output-activity.student.show',encode_id($data->id)));
+});
+
+Breadcrumbs::for('output-activity-student-edit', function ($trail,$data) {
+    $trail->parent('output-activity-student-show',$data);
+    $trail->push('Sunting Data Luaran');
+});
+
+// Keuangan
+Breadcrumbs::for('funding', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Data Keuangan');
+});
+
+// Keuangan > Fakultas
+Breadcrumbs::for('funding-faculty', function ($trail) {
+    $trail->parent('funding');
+    $trail->push('Keuangan Fakultas', route('funding.faculty'));
+});
+
+Breadcrumbs::for('funding-faculty-add', function ($trail) {
+    $trail->parent('funding-faculty');
+    $trail->push('Tambah Keuangan Fakultas', route('funding.faculty.add'));
+});
+
+Breadcrumbs::for('funding-faculty-show', function ($trail,$data) {
+    $trail->parent('funding-faculty');
+    $trail->push(
+        'Rincian Keuangan: '.$data->faculty->singkatan.' - '.$data->academicYear->tahun_akademik,
+        route('funding.faculty.show',encrypt($data->kd_dana))
+    );
+});
+
+Breadcrumbs::for('funding-faculty-edit', function ($trail,$data) {
+    $trail->parent('funding-faculty-show',$data);
+    $trail->push('Sunting Keuangan Fakultas');
+});
+
+// Keuangan > Program Studi
+Breadcrumbs::for('funding-studyProgram', function ($trail) {
+    $trail->parent('funding');
+    $trail->push('Keuangan Program Studi', route('funding.study-program'));
+});
+
+Breadcrumbs::for('funding-studyProgram-add', function ($trail) {
+    $trail->parent('funding-studyProgram');
+    $trail->push('Tambah Keuangan Program Studi', route('funding.study-program.add'));
+});
+
+Breadcrumbs::for('funding-studyProgram-show', function ($trail,$data) {
+    $trail->parent('funding-studyProgram');
+    $trail->push(
+        'Rincian Keuangan: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
+        route('funding.study-program.show',encrypt($data->kd_dana))
+    );
+});
+
+Breadcrumbs::for('funding-studyProgram-edit', function ($trail,$data) {
+    $trail->parent('funding-studyProgram-show',$data);
+    $trail->push('Sunting Keuangan Program Studi');
 });
 
 // Alumnus

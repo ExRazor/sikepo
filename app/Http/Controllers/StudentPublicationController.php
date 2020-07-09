@@ -9,6 +9,7 @@ use App\StudyProgram;
 use App\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class StudentPublicationController extends Controller
 {
@@ -217,32 +218,60 @@ class StudentPublicationController extends Controller
         }
     }
 
-    public function get_by_filter(Request $request)
+    public function datatable(Request $request)
     {
-        if($request->ajax()) {
-
-            $q   = StudentPublication::with([
-                                                'student.studyProgram',
-                                                'publicationMembers.studyProgram.department',
-                                                'publicationCategory'])
-                            ->whereHas(
-                                'student.studyProgram.department', function($query) {
-                                    $query->where('kd_jurusan',setting('app_department_id'));
-                                }
-                            );
-
-            if($request->kd_prodi){
-                $q->whereHas(
-                    'student.studyProgram', function($query) use ($request) {
-                        $query->where('kd_prodi',$request->kd_prodi);
-                });
-            }
-
-            $data = $q->orderBy('tahun','desc')->get();
-
-            return response()->json($data);
-        } else {
+        if(!$request->ajax()) {
             abort(404);
         }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data    = StudentPublication::whereHas(
+                                            'student.studyProgram', function($query) {
+                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                            }
+                                        );
+        } else {
+            $data    = StudentPublication::whereHas(
+                                            'student.studyProgram', function($query) {
+                                                $query->where('kd_jurusan',setting('app_department_id'));
+                                            }
+                                        );
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->whereHas(
+                'student.studyProgram', function($q) use($request) {
+                    $q->where('kd_prodi',$request->kd_prodi_filter);
+                }
+            );
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('publikasi', function($d) {
+                                return  '<a href="'.route('publication.student.show',encode_id($d->id)).'" target="_blank">'
+                                            .$d->judul.
+                                        '</a>';
+                            })
+                            ->addColumn('milik', function($d) {
+                                return  '<a href="'.route('student.list.show',$d->student->nim).'#publication">'
+                                            .$d->student->nama.
+                                            '<br><small>NIM.'.$d->student->nim.' / '.$d->student->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('kategori', function($d) {
+                                return  $d->publicationCategory->nama;
+                            })
+                            ->editColumn('sesuai_prodi', function($d) {
+                                if($d->sesuai_prodi) {
+                                    return '<i class="fa fa-check"></i>';
+                                }
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('publication.student.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['publikasi','milik','aksi'])
+                            ->make();
     }
 }

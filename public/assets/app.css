@@ -127,6 +127,11 @@ table.dataTable>tbody>tr.child ul.dtr-details>li>span {
     white-space: normal;
 }
 
+/* DATA TABLE */
+/* #table_research td, #table_communityService td, #table_publication_teacher td {
+    white-space: normal;
+} */
+
 /* ----------------------------------------------- */
 /* ############### PARSLEY CUSTOM ############### */
 /* ----------------------------------------------- */
@@ -358,20 +363,14 @@ div.radio.is-invalid {
         border-top: 0;
     }
 
-    .table-show td:nth-child(2) {
+    .table-show>tbody>tr>td:nth-child(2) {
         display:none;
     }
 
-    .table-show td:nth-child(3) {
+    .table-show>tbody>tr>td:nth-child(3) {
         display:block;
         margin-bottom: 15px;
     }
-
-    /* DATA TABLE */
-    table.dataTable.nowrap td {
-        white-space: normal;
-    }
-
 }
 
 @media (max-width: 992px) {

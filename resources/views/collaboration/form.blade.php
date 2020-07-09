@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Data Program Studi')
+@section('title', 'Sunting Kerja Sama')
 
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'collaboration-edit' : 'collaboration-add' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'collaboration-edit' : 'collaboration-create' ) as $breadcrumb)
         <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
         @endforeach
     </nav>
@@ -44,14 +44,14 @@
     <div class="widget-2">
         <div class="card bd-0">
             <div class="card-body bd bd-t-0 rounded-bottom">
-                <form action="/collaboration" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                <form action="@isset($data){{route('collaboration.update',$data->id)}} @else {{route('collaboration.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                     @csrf
-                    @if(isset($data))
+                    @isset($data)
                         @method('put')
                         <input type="hidden" name="id" value="{{encrypt($data->id)}}">
                     @else
                         @method('post')
-                    @endif
+                    @endisset
                     <div class="row mg-b-25">
                         <div class="col-lg-4">
                             <div class="form-group">
@@ -159,7 +159,7 @@
                         <div class="col-lg-6">
                             <div class="form-group mg-b-10-force">
                                 <label class="form-control-label justify-content-start">Jenis Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
-                                <input class="form-control" type="text" name="bukti_nama" value="{{ isset($data) ? $data->bukti_nama : Request::old('bukti_nama')}}" placeholder="Tuliskan lama durasi kegiatan" required>
+                                <input class="form-control" type="text" name="bukti_nama" value="{{ isset($data) ? $data->bukti_nama : Request::old('bukti_nama')}}" placeholder="Tuliskan jenis bukti kerja sama" required>
                                 <small class="w-100">
                                     Bukti kerja sama dapat berupa Surat Penugasan, Surat Perjanjian Kerja Sama (SPK), bukti-bukti pelaksanaan (laporan, hasil kerja sama, luaran kerja sama), atau bukti lain yang relevan. Dokumen Memorandum of Understanding (MoU), Memorandum of Agreement (MoA) atau dokumen sejenis yang memayungi pelaksanaan kerja sama tidak dapat dijadikan bukti realisasi kerja sama.
                                 </small>
@@ -180,7 +180,7 @@
                     </div>
                     <div class="form-layout-footer">
                         <button type="submit" class="btn btn-info btn-submit">Simpan</button>
-                        <a href="{{route('collaboration')}}" class="btn btn-secondary">Batal</a>
+                        <a href="{{route('collaboration.index')}}" class="btn btn-secondary">Batal</a>
                     </div>
                 </form>
             </div><!-- card-body -->

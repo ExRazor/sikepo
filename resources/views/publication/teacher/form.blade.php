@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-teacher-edit' : 'publication-teacher-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-teacher-edit' : 'publication-teacher-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -46,7 +46,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="publication_form" action="{{route('publication.teacher.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="publication_form" action="@isset($data) {{route('publication.teacher.update',encode_id($data->id))}} @else {{route('publication.teacher.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">

@@ -49,7 +49,7 @@
         <div class="col-md-9 order-2 order-md-1">
             <div class="widget-2">
                 <div class="card mb-3">
-                    <form id="outputActivity_form" action="{{route('output-activity.student.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+                    <form id="outputActivity_form" action="@isset($data) {{route('output-activity.student.update',encode_id($data->id))}} @else{{route('output-activity.student.store')}}@endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                         <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                             <div class="row">
                                 <div class="col-md-12 mx-auto">

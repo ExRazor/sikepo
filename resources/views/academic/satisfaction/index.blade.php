@@ -98,6 +98,7 @@
 
 @section('js')
 <script src="{{asset('assets/lib')}}/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('assets/lib')}}/datatables.net/js/dataTables.hideEmptyColumns.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
@@ -146,7 +147,7 @@
                     className: 'text-center'
                 },
             ],
-            hideEmptyCols: [ 0, 6 ],
+            hideEmptyCols: [ 0 ],
             autoWidth: false,
             language: {
                 url: "/assets/lib/datatables.net/indonesian.json",

@@ -10,6 +10,7 @@ use App\StudyProgram;
 use App\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class TeacherPublicationController extends Controller
 {
@@ -277,33 +278,60 @@ class TeacherPublicationController extends Controller
         }
     }
 
-    public function get_by_filter(Request $request)
+    public function datatable(Request $request)
     {
-        if($request->ajax()) {
-
-            $q   = TeacherPublication::with([
-                                                'teacher.studyProgram',
-                                                'publicationMembers.studyProgram.department',
-                                                'publicationStudents.studyProgram.department',
-                                                'publicationCategory'])
-                            ->whereHas(
-                                'teacher.studyProgram.department', function($query) {
-                                    $query->where('kd_jurusan',setting('app_department_id'));
-                                }
-                            );
-
-            if($request->kd_prodi){
-                $q->whereHas(
-                    'teacher.studyProgram', function($query) use ($request) {
-                        $query->where('kd_prodi',$request->kd_prodi);
-                });
-            }
-
-            $data = $q->orderBy('tahun','desc')->get();
-
-            return response()->json($data);
-        } else {
+        if(!$request->ajax()) {
             abort(404);
         }
+
+        if(Auth::user()->hasRole('kaprodi')) {
+            $data    = TeacherPublication::whereHas(
+                                            'teacher.studyProgram', function($query) {
+                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                            }
+                                        );
+        } else {
+            $data    = TeacherPublication::whereHas(
+                                            'teacher.studyProgram', function($query) {
+                                                $query->where('kd_jurusan',setting('app_department_id'));
+                                            }
+                                        );
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->whereHas(
+                'teacher.studyProgram', function($q) use($request) {
+                    $q->where('kd_prodi',$request->kd_prodi_filter);
+                }
+            );
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('publikasi', function($d) {
+                                return  '<a href="'.route('publication.teacher.show',encode_id($d->id)).'" target="_blank">'
+                                            .$d->judul.
+                                        '</a>';
+                            })
+                            ->addColumn('milik', function($d) {
+                                return  '<a href="'.route('teacher.list.show',$d->teacher->nidn).'#publication">'
+                                            .$d->teacher->nama.
+                                            '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->studyProgram->singkatan.'</small>
+                                        </a>';
+                            })
+                            ->addColumn('kategori', function($d) {
+                                return  $d->publicationCategory->nama;
+                            })
+                            ->editColumn('sesuai_prodi', function($d) {
+                                if($d->sesuai_prodi) {
+                                    return '<i class="fa fa-check"></i>';
+                                }
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('publication.teacher.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['publikasi','milik','aksi'])
+                            ->make();
     }
 }

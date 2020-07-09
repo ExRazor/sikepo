@@ -8,6 +8,7 @@ use App\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class CollaborationController extends Controller
 {
@@ -58,14 +59,21 @@ class CollaborationController extends Controller
 
     public function create()
     {
-        $academicYear = AcademicYear::all();
+        $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         return view('collaboration/form',compact(['academicYear','studyProgram']));
     }
 
+    public function show($id)
+    {
+        $data = Collaboration::find($id);
+
+        return view('collaboration.show',compact(['data']));
+    }
+
     public function edit($id)
     {
-        $id = decode_id($id);
+        // $id = decode_id($id);
         $data = Collaboration::find($id);
 
         $academicYear = AcademicYear::all();
@@ -114,7 +122,7 @@ class CollaborationController extends Controller
         $collaboration->save();
 
 
-        return redirect()->route('collaboration')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('collaboration.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)
@@ -169,31 +177,31 @@ class CollaborationController extends Controller
 
         $collaboration->save();
 
-        return redirect()->route('collaboration')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('collaboration.show',$collaboration->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()){
-            $id     = decode_id($request->id);
-            $data   = Collaboration::find($id);
-            $q      = $data->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                $this->delete_file($data->bukti_file);
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!request()->ajax()){
+            abort(404);
+        }
+
+        $id     = decode_id($request->id);
+        $data   = Collaboration::find($id);
+        $q      = $data->delete();
+        if(!$q) {
+            return response()->json([
+                'title'   => 'Gagal',
+                'message' => 'Terjadi kesalahan saat menghapus',
+                'type'    => 'error'
+            ]);
         } else {
-            return redirect()->route('collaboration');
+            $this->delete_file($data->bukti_file);
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
         }
     }
 
@@ -220,6 +228,61 @@ class CollaborationController extends Controller
         if(File::exists($storagePath)) {
             File::delete($storagePath);
         }
+    }
+
+    public function datatable(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        if(Auth::user()->hasRole('kaprodi'))
+        {
+            $data = Collaboration::whereHas(
+                                        'studyProgram', function($query) {
+                                            $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                        }
+                                    );
+        }
+        else
+        {
+            $data = Collaboration::whereHas(
+                                        'studyProgram', function($query) {
+                                            $query->where('kd_jurusan',setting('app_department_id'));
+                                        }
+                                    );
+        }
+
+        if($request->kd_prodi_filter) {
+            $data->where('kd_prodi',$request->kd_prodi_filter);
+        }
+
+        return DataTables::of($data->get())
+                            ->addColumn('tahun', function($d) {
+                                return $d->academicYear->tahun_akademik." - ".$d->academicYear->semester;
+                            })
+                            ->addColumn('prodi', function($d) {
+                                if(!Auth::user()->hasRole('kaprodi')) {
+                                    return $d->studyProgram->nama;
+                                }
+                            })
+                            ->addColumn('lembaga', function($d) {
+                                return '<a href="'.route('collaboration.show',$d->id).'" target="_blank">'
+                                            .$d->nama_lembaga.
+                                        '</a>';
+                            })
+                            ->addColumn('download', function($d) {
+                                return  '<a href="'.route('collaboration.download',encode_id($d->bukti_file)).'" target="_blank">'
+                                            .$d->bukti_nama.
+                                        '</a>';
+                            })
+                            ->addColumn('aksi', function($d) {
+                                if(!Auth::user()->hasRole('kajur')) {
+                                    return view('collaboration.table-button', compact('d'))->render();
+                                }
+                            })
+                            ->rawColumns(['lembaga','aksi'])
+                            ->make();
     }
 
     public function get_by_filter(Request $request)
