@@ -45,19 +45,13 @@
     @endif
     @if (Auth::user()->role!='kaprodi')
     <div class="row">
-        <div class="col-12">
-            <form action="{{route('ajax.teacher.achievement.filter')}}" id="filter-teacherAcv" data-token="{{encode_id(Auth::user()->role)}}" method="POST">
-                <div class="row">
-                    <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
-                        <select class="form-control filter-box" name="kd_prodi">
-                            <option value="">- Semua Program Studi -</option>
-                            @foreach($studyProgram as $sp)
-                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </form>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select class="form-control filter-box" name="kd_prodi">
+                <option value="">- Semua Program Studi -</option>
+                @foreach($studyProgram as $sp)
+                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     @endif

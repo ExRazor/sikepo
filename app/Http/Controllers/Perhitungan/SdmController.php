@@ -617,7 +617,7 @@ class SdmController extends Controller
             $rumus['skor'] = "Tidak ada Skor kurang dari 2";
         }
 
-        $data = compact(['jumlah','faktor','rata','skor','rumus']);
+        $data = compact(['jumlah','rata','skor','rumus']);
 
         if($request->ajax()) {
             return response()->json($data);

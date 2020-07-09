@@ -104,7 +104,7 @@ class MahasiswaController extends Controller
 
         $skor['total'] = rata(( (2*$skor['a']) + $skor['b'] ) / 3);
 
-        $data = compact(['jumlah','rasio','persentase','skor']);
+        $data = compact(['jumlah','persentase','skor']);
 
         if($request->ajax()) {
             return response()->json($data);

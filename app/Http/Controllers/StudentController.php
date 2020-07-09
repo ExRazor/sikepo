@@ -322,46 +322,6 @@ class StudentController extends Controller
 
     }
 
-    public function get_by_filter(Request $request)
-    {
-        if($request->ajax()) {
-
-            $q  = Student::with('studyProgram.department.faculty','latestStatus');
-
-            if($request->kd_jurusan) {
-                $q->whereHas(
-                    'studyProgram', function($query) use($request) {
-                        $query->where('kd_jurusan',$request->kd_jurusan);
-                    });
-            }
-
-            if(Auth::user()->hasRole('kaprodi')) {
-                $q->where('kd_prodi',Auth::user()->kd_prodi);
-            }
-
-            if($request->kd_prodi){
-                $q->where('kd_prodi',$request->kd_prodi);
-            }
-
-            if($request->angkatan) {
-                $q->where('angkatan',$request->angkatan);
-            }
-
-            if($request->status) {
-                $q->whereHas(
-                    'latestStatus', function($query) use ($request) {
-                        $query->where('status',$request->status);
-                });
-            }
-
-            $data = $q->orderBy('nim','asc')->get();
-
-            return response()->json($data);
-        } else {
-            abort(404);
-        }
-    }
-
     public function datatable(Request $request)
     {
         if(!$request->ajax()) {
@@ -398,7 +358,7 @@ class StudentController extends Controller
 
         return DataTables::of($data->get())
                             ->editColumn('nama', function($d) {
-                                return '<a href="'.route("student.list.show",encode_id($d->nim)).'">'.$d->nama.'<br><small>NIM. '.$d->nim.'</small></a>';
+                                return '<a name="'.$d->nama.'" href="'.route("student.list.show",encode_id($d->nim)).'">'.$d->nama.'<br><small>NIM. '.$d->nim.'</small></a>';
                             })
                             ->editColumn('study_program', function($d){
                                 return $d->studyProgram->nama.'<br><small>'.$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama.'</small>';

@@ -151,20 +151,20 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="internasional">Mahasiswa Aktif</label>
-                                    <input type="text" class="form-control form-isi" id="mahasiswa_aktif" disabled>
+                                    <input type="text" class="form-control" id="mahasiswa_aktif" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Mahasiswa Asing Full-time</label>
-                                    <input type="text" class="form-control form-isi" id="mahasiswa_asing_full" disabled>
+                                    <input type="text" class="form-control" id="mahasiswa_asing_full" disabled>
                                     <small class="form-text text-muted">Persentase = <span class="persentase_asing_full">0</span>%</small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Mahasiswa Asing Part-time</label>
-                                    <input type="text" class="form-control form-isi" id="mahasiswa_asing_part" disabled>
+                                    <input type="text" class="form-control" id="mahasiswa_asing_part" disabled>
                                     <small class="form-text text-muted">Persentase = <span class="persentase_asing_part">0</span>%</small>
                                 </div>
                             </div>
@@ -179,7 +179,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Skor A (Upaya)</label>
-                                    <select class="form-control form-isi" id="skor_asing_a">
+                                    <select class="form-control" id="skor_asing_a">
                                         @for($i=1;$i <= 4;$i++)
                                         <option>{{$i}}</option>
                                         @endfor

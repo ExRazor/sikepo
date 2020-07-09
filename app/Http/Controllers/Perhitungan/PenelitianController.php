@@ -32,6 +32,11 @@ class PenelitianController extends Controller
                                     $q->whereBetween('tahun_akademik', [date('Y',strtotime('-3 year')),date('Y')]);
                                 }
                             )
+                            ->whereHas(
+                                'researchTeacher', function($q) use($prodi) {
+                                    $q->prodiKetua($prodi);
+                                }
+                            )
                             ->get();
 
         $jumlah = array(

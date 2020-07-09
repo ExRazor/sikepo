@@ -15,7 +15,7 @@ class KerjaSamaController extends Controller
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_Id'))->get();
 
-        return view('simulasi.kerjasama.index',compact('jumlah','rata','skor','rumus','studyProgram'));
+        return view('simulasi.kerjasama.index',compact('studyProgram'));
     }
 
     public function kerjasama(Request $request)
@@ -101,6 +101,9 @@ class KerjaSamaController extends Controller
         //SKOR
         $skor['total']  = rata( ((2*$skor['a'])+$skor['b'])/3 );
         $rumus['total'] = "((2 x A) + B) / 3";
+
+        $skor['a']  = rata( $skor['a'] );
+        $skor['b']  = rata( $skor['b'] );
 
         $data = compact(['jumlah','rata','skor','rumus']);
 

@@ -105,7 +105,6 @@
             <li class="sub-item"><a href="{{ route('alumnus.satisfaction') }}" class="sub-link {{ (request()->is('alumnus/satisfaction*')) ? 'active' : '' }}">Kepuasan Pengguna</a></li>
         </ul>
     </li>
-    @if (!Auth::user()->hasRole('admin'))
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'assessment') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-star-half-alt"></i>
@@ -119,7 +118,6 @@
             <li class="sub-item"><a href="{{ route('assessment.tridharma') }}" class="sub-link {{ (request()->is('assessment/tridharma')) ? 'active' : '' }}">Capaian Tridharma</a></li>
         </ul>
     </li>
-    @endif
     @if (Auth::user()->hasRole('admin'))
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'master') ? 'active' : '' }}">

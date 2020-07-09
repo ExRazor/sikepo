@@ -409,35 +409,6 @@ class TeacherController extends Controller
         }
     }
 
-    public function get_by_filter(Request $request)
-    {
-        if($request->ajax()) {
-
-            $q = Teacher::with(['studyProgram.department.faculty']);
-
-            if($request->kd_jurusan) {
-                $q->whereHas(
-                    'studyProgram', function($query) use($request) {
-                        $query->where('kd_jurusan',$request->kd_jurusan);
-                    });
-            }
-
-            if(Auth::user()->hasRole('kaprodi')) {
-                $q->where('kd_prodi',Auth::user()->kd_prodi);
-            }
-
-            if($request->kd_prodi){
-                $q->where('kd_prodi',$request->kd_prodi);
-            }
-
-            $data = $q->orderBy('created_at','desc')->get();
-
-            return response()->json($data);
-        } else {
-            abort(404);
-        }
-    }
-
     public function get_by_studyProgram(Request $request)
     {
         if($request->ajax()) {
@@ -493,7 +464,7 @@ class TeacherController extends Controller
 
         return DataTables::of($data->get())
                             ->editColumn('nama', function($d) {
-                                return '<a href="'.route("teacher.list.show",$d->nidn).'">'.
+                                return '<a name="'.$d->nama.'" href="'.route("teacher.list.show",$d->nidn).'">'.
                                             $d->nama.
                                         '<br><small>NIDN. '.$d->nidn.'</small></a>';
                             })
