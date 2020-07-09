@@ -15,17 +15,17 @@ class SettingSeeder extends Seeder
         DB::table('settings')->insert([
         [
             'name'   => 'app_name',
-            'value'  => 'Sistem Informasi Borang Akreditasi',
+            'value'  => 'Sistem Informasi Kinerja Program Studi',
             'created_at' => now()
         ],
         [
             'name'   => 'app_short',
-            'value'  => 'SIBAK',
+            'value'  => 'SIKEPO',
             'created_at' => now()
         ],
         [
             'name'   => 'app_description',
-            'value'  => 'Sebuah aplikasi sistem informasi yang dirancang untuk memenuhi kebutuhan data jurusan terkait data-data yang berkaitan dengan borang akreditasi.',
+            'value'  => 'Sebuah aplikasi sistem informasi yang dirancang untuk memenuhi kebutuhan data jurusan terkait data-data kinerja untuk keperluan borang akreditasi.',
             'created_at' => now()
         ],
         [
