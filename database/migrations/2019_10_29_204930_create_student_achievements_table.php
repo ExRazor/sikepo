@@ -22,6 +22,8 @@ class CreateStudentAchievementsTable extends Migration
             $table->string('prestasi');
             $table->string('prestasi_jenis');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');

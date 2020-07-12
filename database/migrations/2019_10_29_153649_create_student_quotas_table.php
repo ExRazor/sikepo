@@ -21,6 +21,8 @@ class CreateStudentQuotasTable extends Migration
             $table->integer('calon_pendaftar')->nullable()->default(0);
             $table->integer('calon_lulus')->nullable()->default(0);
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->unique(['kd_prodi','id_ta']);
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

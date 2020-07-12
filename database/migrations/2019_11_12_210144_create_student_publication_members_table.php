@@ -20,6 +20,8 @@ class CreateStudentPublicationMembersTable extends Migration
             $table->string('nama');
             $table->char('kd_prodi',5);
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_publikasi')->references('id')->on('student_publications')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

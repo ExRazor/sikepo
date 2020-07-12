@@ -20,6 +20,8 @@ class CreateSatisfactionCategoriesTable extends Migration
             $table->string('alias')->nullable();
             $table->string('deskripsi')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
         });
     }
 

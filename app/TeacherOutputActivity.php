@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class TeacherOutputActivity extends Model
+class TeacherOutputActivity extends BaseModel
 {
     protected $fillable = [
         'kegiatan',

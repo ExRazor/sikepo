@@ -25,6 +25,8 @@ class CreateResearchesTable extends Migration
             $table->string('sumber_biaya_nama')->nullable();
             $table->integer('jumlah_biaya');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
 

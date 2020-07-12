@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class TeacherAchievement extends Model
+class TeacherAchievement extends BaseModel
 {
     protected $fillable = [
         'nidn',

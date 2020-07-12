@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class StudyProgram extends Model
+class StudyProgram extends BaseModel
 {
     protected $primaryKey = 'kd_prodi';
     protected $fillable = [

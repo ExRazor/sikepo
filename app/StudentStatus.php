@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class StudentStatus extends Model
+class StudentStatus extends BaseModel
 {
     use \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 

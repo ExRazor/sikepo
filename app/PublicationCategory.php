@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class PublicationCategory extends Model
+class PublicationCategory extends BaseModel
 {
     protected $fillable = [
         'nama',

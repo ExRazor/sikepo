@@ -3,9 +3,9 @@
 namespace App;
 
 use App\Traits\Uuid;
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class Teacher extends Model
+class Teacher extends BaseModel
 {
     // use Uuid;
 

@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class FundingStudyProgram extends Model
+class FundingStudyProgram extends BaseModel
 {
     protected $fillable = [
         'kd_prodi',

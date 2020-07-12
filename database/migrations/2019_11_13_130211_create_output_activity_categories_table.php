@@ -18,6 +18,8 @@ class CreateOutputActivityCategoriesTable extends Migration
             $table->string('nama');
             $table->text('deskripsi')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
         });
     }
 

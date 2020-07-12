@@ -36,6 +36,8 @@ class CreateStudentOutputActivitiesTable extends Migration
             $table->string('keterangan')->nullable();
             $table->string('file_karya')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_kategori')->references('id')->on('output_activity_categories')->onUpdate('cascade')->onDelete('cascade');

@@ -2,15 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
-    use Traits\Uuid;
+    // use Traits\Uuid;
 
-    public $incrementing = false;
+    // public $incrementing = false;
     protected $hidden = array('password', 'remember_token','created_at','updated_at');
 
     protected $fillable = [

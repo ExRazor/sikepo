@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class Department extends Model
+class Department extends BaseModel
 {
     protected $primaryKey = 'kd_jurusan';
     protected $fillable = [

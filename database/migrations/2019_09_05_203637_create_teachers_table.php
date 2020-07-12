@@ -35,6 +35,8 @@ class CreateTeachersTable extends Migration
             $table->string('sertifikat_pendidik')->nullable();
             $table->string('foto')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });

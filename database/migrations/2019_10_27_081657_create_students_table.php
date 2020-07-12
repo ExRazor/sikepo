@@ -33,6 +33,8 @@ class CreateStudentsTable extends Migration
             $table->char('angkatan',4)->nullable();
             $table->string('foto')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });

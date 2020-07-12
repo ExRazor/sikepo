@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class CommunityService extends Model
+class CommunityService extends BaseModel
 {
     protected $fillable = [
         'id_ta',

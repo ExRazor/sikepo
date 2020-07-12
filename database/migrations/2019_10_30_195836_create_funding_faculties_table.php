@@ -21,6 +21,8 @@ class CreateFundingFacultiesTable extends Migration
             $table->unsignedInteger('id_kategori');
             $table->integer('nominal')->default(0);
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->unique(['id_fakultas','id_ta','id_kategori']);
             $table->foreign('id_fakultas')->references('id')->on('faculties')->onUpdate('cascade')->onDelete('cascade');

@@ -20,6 +20,8 @@ class CreateFundingCategoriesTable extends Migration
             $table->string('deskripsi')->nullable();
             $table->string('jenis')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
         });
     }
 

@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class SatisfactionCategory extends Model
+class SatisfactionCategory extends BaseModel
 {
     protected $fillable = [
         'jenis',

@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class StudentForeign extends Model
+class StudentForeign extends BaseModel
 {
     protected $fillable = [
         'nim',

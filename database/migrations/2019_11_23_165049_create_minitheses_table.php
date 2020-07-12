@@ -21,6 +21,8 @@ class CreateMinithesesTable extends Migration
             $table->char('pembimbing_pendamping',10)->nullable();
             $table->unsignedInteger('id_ta');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('pembimbing_utama')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('pembimbing_pendamping')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');

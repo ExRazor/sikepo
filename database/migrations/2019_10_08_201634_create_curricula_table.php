@@ -29,6 +29,8 @@ class CreateCurriculaTable extends Migration
             $table->string('dokumen_nama')->nullable();
             $table->string('unit_penyelenggara')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });

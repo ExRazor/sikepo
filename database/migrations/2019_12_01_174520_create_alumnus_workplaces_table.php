@@ -23,6 +23,8 @@ class CreateAlumnusWorkplacesTable extends Migration
             $table->integer('kerja_nasional');
             $table->integer('kerja_internasional');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });

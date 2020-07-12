@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class Collaboration extends Model
+class Collaboration extends BaseModel
 {
     protected $fillable = [
                             'kd_prodi',

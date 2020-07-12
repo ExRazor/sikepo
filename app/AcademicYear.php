@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 use Illuminate\Support\Facades\Auth;
 
-class AcademicYear extends Model
+class AcademicYear extends BaseModel
 {
     protected $fillable = [
                     'tahun_akademik',

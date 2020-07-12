@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class Faculty extends Model
+class Faculty extends BaseModel
 {
     protected $fillable = [
         'nama',

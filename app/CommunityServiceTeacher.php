@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class CommunityServiceTeacher extends Model
+class CommunityServiceTeacher extends BaseModel
 {
     public $timestamps = false;
 

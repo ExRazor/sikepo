@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class Curriculum extends Model
+class Curriculum extends BaseModel
 {
     public $incrementing    = false;
     // protected $primaryKey   = 'kd_matkul';

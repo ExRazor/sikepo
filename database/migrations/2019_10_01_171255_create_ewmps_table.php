@@ -26,6 +26,8 @@ class CreateEwmpsTable extends Migration
             $table->float('total_sks')->default(0);
             $table->float('rata_sks')->default(0);
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->unique(['id_ta','nidn']);
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');

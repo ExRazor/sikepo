@@ -19,6 +19,8 @@ class CreateStudentForeignsTable extends Migration
             $table->string('asal_negara');
             $table->string('durasi');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
 

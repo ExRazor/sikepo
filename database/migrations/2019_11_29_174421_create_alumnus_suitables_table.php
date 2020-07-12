@@ -23,6 +23,8 @@ class CreateAlumnusSuitablesTable extends Migration
             $table->integer('sesuai_sedang');
             $table->integer('sesuai_tinggi');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });

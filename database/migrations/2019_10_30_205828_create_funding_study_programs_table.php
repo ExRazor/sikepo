@@ -21,6 +21,8 @@ class CreateFundingStudyProgramsTable extends Migration
             $table->unsignedInteger('id_kategori');
             $table->integer('nominal')->default(0);
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->unique(['kd_prodi','id_ta','id_kategori']);
             $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');

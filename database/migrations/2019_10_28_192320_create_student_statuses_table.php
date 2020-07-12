@@ -20,6 +20,8 @@ class CreateStudentStatusesTable extends Migration
             $table->string('status');
             $table->string('ipk_terakhir')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');

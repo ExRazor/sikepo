@@ -20,6 +20,8 @@ class CreateDepartmentsTable extends Migration
             $table->char('nip_kajur',18)->nullable();
             $table->string('nm_kajur',50)->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_fakultas')->references('id')->on('faculties')->onUpdate('cascade')->onDelete('cascade');
         });

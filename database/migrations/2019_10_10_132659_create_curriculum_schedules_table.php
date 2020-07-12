@@ -21,6 +21,8 @@ class CreateCurriculumSchedulesTable extends Migration
             $table->char('sesuai_prodi',1)->nullable();
             $table->char('sesuai_bidang',1)->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->unique(['id_ta','nidn','kd_matkul']);
 

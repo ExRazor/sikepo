@@ -27,6 +27,8 @@ class CreateStudyProgramsTable extends Migration
             $table->char('nip_kaprodi',18)->nullable();
             $table->string('nm_kaprodi',50)->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('kd_jurusan')->references('kd_jurusan')->on('departments')->onUpdate('cascade')->onDelete('cascade');
         });

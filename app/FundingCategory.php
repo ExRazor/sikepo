@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class FundingCategory extends Model
+class FundingCategory extends BaseModel
 {
     protected $fillable = [
         'id_parent',

@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'id'         => Str::uuid()->toString(),
+                // 'id'         => Str::uuid()->toString(),
                 'username'   => 'admin',
                 'password'   => Hash::make('admin123'),
                 'role'       => 'admin',
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'id'       => Str::uuid()->toString(),
+                // 'id'       => Str::uuid()->toString(),
                 'username'   => 'dikkun',
                 'password'   => Hash::make('dikkun123'),
                 'role'       => 'admin',
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'id'       => Str::uuid()->toString(),
+                // 'id'       => Str::uuid()->toString(),
                 'username'   => 'kajur',
                 'password'   => Hash::make('kajur'),
                 'role'       => 'kajur',
@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'id'       => Str::uuid()->toString(),
+                // 'id'       => Str::uuid()->toString(),
                 'username'   => 'kaprodisi',
                 'password'   => Hash::make('kaprodisi'),
                 'role'       => 'kaprodi',
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
                 'created_at' => now()
             ],
             [
-                'id'       => Str::uuid()->toString(),
+                // 'id'       => Str::uuid()->toString(),
                 'username'   => 'kaprodipti',
                 'password'   => Hash::make('kaprodipti'),
                 'role'       => 'kaprodi',
@@ -71,7 +71,7 @@ class UserSeeder extends Seeder
         foreach($teacher as $t) {
             DB::table('users')->insert([
                 [
-                    'id'         => Str::uuid()->toString(),
+                    // 'id'         => Str::uuid()->toString(),
                     'username'   => $t->nidn,
                     'password'   => Hash::make($t->nidn),
                     'role'       => 'dosen',

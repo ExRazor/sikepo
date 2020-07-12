@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\BaseModel;
 
-class CurriculumSchedule extends Model
+class CurriculumSchedule extends BaseModel
 {
     protected $fillable = [
         'id_ta',

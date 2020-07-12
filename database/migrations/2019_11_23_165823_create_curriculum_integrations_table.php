@@ -23,6 +23,8 @@ class CreateCurriculumIntegrationsTable extends Migration
             $table->string('kd_matkul',12);
             $table->string('bentuk_integrasi');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
