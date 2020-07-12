@@ -1,11 +1,11 @@
 <label class="sidebar-label pd-x-10 mg-t-20 op-3">Navigation</label>
 <ul class="br-sideleft-menu">
-    <li class="br-menu-item">
-    <a href="{{ route('dashboard') }}" class="br-menu-link {{ (request()->is('/')) ? 'active' : '' }}">
-        <i class="menu-item-icon icon ion-ios-home-outline tx-24"></i>
-        <span class="menu-item-label">Beranda</span>
-    </a><!-- br-menu-link -->
-    </li>
+    {{-- <li class="br-menu-item">
+        <a href="{{ route('dashboard') }}" class="br-menu-link {{ (request()->is('/')) ? 'active' : '' }}">
+            <i class="menu-item-icon icon ion-ios-home-outline tx-24"></i>
+            <span class="menu-item-label">Beranda</span>
+        </a>
+    </li> --}}
     <li class="br-menu-item">
         <a href="{{ route('profile.biodata') }}" class="br-menu-link {{ (request()->is('profile/biodata*')) ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-user-edit"></i>

@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())

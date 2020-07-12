@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-newspaper"></i>
-    <div>
-        <h4>Rincian Publikasi</h4>
-        <p class="mg-b-0">Rincian data publikasi dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-newspaper"></i>
+        <div>
+            <h4>Rincian Publikasi</h4>
+            <p class="mg-b-0">Rincian data publikasi dosen</p>
+        </div>
     </div>
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">

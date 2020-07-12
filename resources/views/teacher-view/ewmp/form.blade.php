@@ -18,6 +18,7 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Tahun Akademik:</label>
                         <div class="col-sm-8">
                             <input type="hidden" name="_id">
+                            <input type="hidden" name="nidn" value="{{encrypt(Auth::user()->username)}}">
                             <select class="form-control select-academicYear" name="id_ta">
                                 <option value="">= Pilih Tahun Akademik =</option>
                             </select>
@@ -31,10 +32,10 @@
                                     <input type="text" class="form-control" name="ps_intra" placeholder="Dalam PS" disabled>
                                 </div>
                                 <div class="col-4 px-1">
-                                    <input type="text" class="form-control" name="ps_lain" placeholder="PS Lain dalam PT" disabled>
+                                    <input type="text" class="form-control" name="ps_lain" placeholder="PS Lain dalam PT" required>
                                 </div>
                                 <div class="col-4 pl-1">
-                                    <input type="text" class="form-control" name="ps_luar" placeholder="PS Lain luar PT"required>
+                                    <input type="text" class="form-control" name="ps_luar" placeholder="PS Lain luar PT" required>
                                 </div>
                             </div>
 

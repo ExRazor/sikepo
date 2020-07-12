@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-american-sign-language-interpreting"></i>
-    <div>
-        <h4>Rincian Pengabdian</h4>
-        <p class="mg-b-0">Rincian data pengabdian</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-american-sign-language-interpreting"></i>
+        <div>
+            <h4>Rincian Pengabdian</h4>
+            <p class="mg-b-0">Rincian data pengabdian</p>
+        </div>
     </div>
     @if($status=='Ketua')
     <div class="row ml-auto" style="width:300px">

@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-book-reader"></i>
-    <div>
-        <h4>Data Penelitian</h4>
-        <p class="mg-b-0">Olah Data Penelitian</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-book-reader"></i>
+        <div>
+            <h4>Data Penelitian</h4>
+            <p class="mg-b-0">Olah Data Penelitian</p>
+        </div>
     </div>
     <div class="ml-auto">
         <a href="{{ route('profile.research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>

@@ -269,19 +269,15 @@ class TeacherOutputActivityController extends Controller
             abort(404);
         }
 
-        if(Auth::user()->hasRole('kaprodi')) {
-            $data    = TeacherOutputActivity::whereHas(
-                                            'teacher.studyProgram', function($query) {
-                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                            }
-                                        );
-        } else {
-            $data   = TeacherOutputActivity::whereHas(
-                                            'teacher.studyProgram.department', function($query) {
-                                                $query->where('kd_jurusan',setting('app_department_id'));
-                                            }
-                                        );
-        }
+        $data = TeacherOutputActivity::whereHas(
+                'teacher.studyProgram', function($query) {
+                    if(Auth::user()->hasRole('kaprodi')) {
+                        $query->where('kd_prodi',Auth::user()->kd_prodi);
+                    } else {
+                        $query->where('kd_jurusan',setting('app_department_id'));
+                    }
+                }
+            );
 
         if($request->kd_prodi_filter) {
             $data->whereHas(

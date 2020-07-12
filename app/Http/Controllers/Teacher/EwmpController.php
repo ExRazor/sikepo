@@ -55,7 +55,7 @@ class EwmpController extends Controller
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
             $ewmp->ps_intra         = $sks['schedule_ps'];
-            $ewmp->ps_lain          = $sks['schedule_pt'];
+            $ewmp->ps_lain          = $request->ps_lain;
             $ewmp->ps_luar          = $request->ps_luar;
             $ewmp->penelitian       = $sks['penelitian'];
             $ewmp->pkm              = $sks['pengabdian'];
@@ -105,7 +105,7 @@ class EwmpController extends Controller
             $ewmp                   = Ewmp::find($id);
             $ewmp->id_ta            = $request->id_ta;
             $ewmp->ps_intra         = $sks['schedule_ps'];
-            $ewmp->ps_lain          = $sks['schedule_pt'];
+            $ewmp->ps_lain          = $request->ps_lain;
             $ewmp->ps_luar          = $request->ps_luar;
             $ewmp->penelitian       = $sks['penelitian'];
             $ewmp->pkm              = $sks['pengabdian'];

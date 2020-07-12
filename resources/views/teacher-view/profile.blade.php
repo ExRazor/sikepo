@@ -16,12 +16,14 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-user-edit"></i>
         <div>
             <h4>Biodata</h4>
             <p class="mg-b-0">Perbarui Biodata Diri</p>
         </div>
     </div>
+</div>
 
 <div class="br-pagebody">
     @if (session()->has('flash.message'))

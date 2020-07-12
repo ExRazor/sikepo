@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class AcademicYearController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $academicYears = AcademicYear::orderBy('tahun_akademik', 'desc')->orderBy('semester', 'desc')->get();
@@ -19,12 +14,6 @@ class AcademicYearController extends Controller
         return view('master.academic-year.index',compact('academicYears'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         if($request->ajax()) {
@@ -123,15 +112,15 @@ class AcademicYearController extends Controller
         if(request()->ajax()){
             $academicYear = AcademicYear::find($request->id);
 
-            if($academicYear->status == 'Aktif') {
+            if($academicYear->status == true) {
                 return response()->json(['warning' => 'Status sudah aktif']);
             } else {
-                AcademicYear::where('status','Aktif')
+                AcademicYear::where('status',true)
                             ->update([
-                                'status' => 'Tidak Aktif'
+                                'status' => false
                             ]);
 
-                $academicYear->status = 'Aktif';
+                $academicYear->status = true;
                 $academicYear->save();
 
                 return response()->json([

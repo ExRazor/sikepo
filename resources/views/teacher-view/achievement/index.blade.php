@@ -16,10 +16,12 @@
 </div>
 
 <div class="br-pagetitle">
-    <i class="icon fa fa-medal"></i>
-    <div>
-        <h4>Prestasi Dosen</h4>
-        <p class="mg-b-0">Daftar Prestasi Dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-medal"></i>
+        <div>
+            <h4>Prestasi Dosen</h4>
+            <p class="mg-b-0">Daftar Prestasi Dosen</p>
+        </div>
     </div>
     <div class="ml-auto">
         <button class="btn btn-teal btn-block mg-b-10 btn-add" data-toggle="modal" data-target="#modal-teach-acv" style="color:white"><i class="fa fa-plus mg-r-10"></i> Prestasi Dosen</button>

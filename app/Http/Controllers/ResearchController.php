@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AcademicYear;
 use App\Research;
 use App\StudyProgram;
 use App\Faculty;
@@ -36,24 +37,7 @@ class ResearchController extends Controller
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        if(Auth::user()->hasRole('kaprodi')) {
-            $penelitian   = Research::whereHas(
-                                        'researchTeacher', function($q) {
-                                            $q->prodiKetua(Auth::user()->kd_prodi);
-                                        }
-                                    )
-                                    ->get();
-
-        } else {
-            $penelitian   = Research::whereHas(
-                                        'researchTeacher', function($q) {
-                                            $q->jurusanKetua(setting('app_department_id'));
-                                        }
-                                    )
-                                    ->get();
-        }
-
-        return view('research.index',compact(['penelitian','studyProgram','faculty']));
+        return view('research.index',compact(['studyProgram','faculty']));
     }
 
     public function show($id)
@@ -101,7 +85,7 @@ class ResearchController extends Controller
         $research->id_ta             = $request->id_ta;
         $research->judul_penelitian  = $request->judul_penelitian;
         $research->tema_penelitian   = $request->tema_penelitian;
-        $research->tingkat_penelitian= $request->tema_penelitian;
+        $research->tingkat_penelitian= $request->tingkat_penelitian;
         $research->sks_penelitian    = $request->sks_penelitian;
         $research->sesuai_prodi      = $request->sesuai_prodi;
         $research->sumber_biaya      = $request->sumber_biaya;
@@ -359,6 +343,44 @@ class ResearchController extends Controller
                             })
                             ->rawColumns(['penelitian','peneliti','aksi'])
                             ->make();
+    }
+
+    public function chart(Request $request)
+    {
+        $query = Research::whereHas(
+            'researchTeacher', function($q) {
+                if(Auth::user()->hasRole('kaprodi')) {
+                    $q->prodiKetua(Auth::user()->kd_prodi);
+                } else {
+                    $q->jurusanKetua(setting('app_department_id'));
+                }
+            }
+        )->get();
+
+        $a = $request->tahun_a;
+        $b = $request->tahun_b;
+        $thn = current_academic()->tahun_akademik;
+        $academicYear = AcademicYear::whereBetween('tahun_akademik',[$thn-5,$thn])->get();
+
+        // if($a != null && $b != null) {
+        //     $query->whereHas(
+        //         'academicYear', function($q) use($a,$b) {
+        //             $q->whereBetween('tahun_akademik', [$a,$b]);
+        //         }
+        //     );
+        // } else {
+        //     $query->whereHas(
+        //         'academicYear', function($q) use($a) {
+        //             $q->where('status', 1);
+        //         }
+        //     );
+        // }
+
+        foreach($academicYear as $ay) {
+            $result[$ay->tahun_akademik] = $query->where('id_ta',$ay->id)->count();
+        }
+
+        return response()->json($result);
     }
 
     public function get_by_filter(Request $request)

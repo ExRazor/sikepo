@@ -16,6 +16,7 @@
 </div>
 
 <div class="br-pagetitle">
+    <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-pen-square"></i>
         @if(isset($data))
         <div>
@@ -29,6 +30,7 @@
         </div>
         @endif
     </div>
+</div>
 
 <div class="br-pagebody">
     @if($errors->any())
@@ -77,6 +79,31 @@
                                 <label class="col-3 form-control-label">Tema Penelitian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="tema_penelitian" value="{{ isset($data) ? $data->tema_penelitian : Request::old('tema_penelitian')}}" placeholder="Masukkan tema penelitian sesuai roadmap" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 form-control-label">Tingkat Penelitian: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-sm-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_penelitian" type="radio" value="Internasional" {{ isset($data) && ($data->tingkat_penelitian=='Internasional' || Request::old('tingkat_penelitian')=='Internasional') ? 'checked' : ''}} required>
+                                                <span>Internasional</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_penelitian" type="radio" value="Nasional" {{ isset($data) && ($data->tingkat_penelitian=='Nasional' || Request::old('tingkat_penelitian')=='Nasional') ? 'checked' : ''}} required>
+                                                <span>Nasional</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_penelitian" type="radio" value="Lokal" {{ isset($data) && ($data->tingkat_penelitian=='Lokal' || Request::old('tingkat_penelitian')=='Lokal') ? 'checked' : ''}} required>
+                                                <span>Lokal/Wilayah</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mb-3">

@@ -47,7 +47,7 @@
                         <td>{{$a->tahun_akademik}}</td>
                         <td>{{$a->semester}}</td>
                         <td>
-                            <div class="br-toggle br-toggle-success toggle-ay-status {{$a->status == 'Aktif' ? 'on' : '' }} " data-id='{{$a->id}}'>
+                            <div class="br-toggle br-toggle-success toggle-ay-status {{($a->status) ? 'on' : '' }} " data-id='{{$a->id}}'>
                                 <div class="br-toggle-switch"></div>
                             </div>
                         </td>

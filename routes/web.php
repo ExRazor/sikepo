@@ -107,6 +107,10 @@ Route::middleware('auth')->group(function () {
 
     //Ajax
     Route::prefix('ajax')->name('ajax.')->group(function () {
+
+        //Page Controller
+        Route::get('index/chart','PageController@chart')->name('index.chart');
+
         //Academic Year
         Route::post('academic-year/edit', 'AcademicYearController@edit');
         Route::post('academic-year/status','AcademicYearController@setStatus');
@@ -181,6 +185,7 @@ Route::middleware('auth')->group(function () {
         Route::get('research/get_by_department','ResearchController@get_by_department')->name('research.get_by_department');
         Route::post('research/get_by_filter','ResearchController@get_by_filter')->name('research.filter');
         Route::post('research/datatable','ResearchController@datatable')->name('research.datatable');
+        Route::get('research/chart','ResearchController@chart')->name('research.chart');
 
         //Community Service
         Route::get('community-service/get_by_department','CommunityServiceController@get_by_department')->name('community-service.get_by_department');
@@ -346,25 +351,11 @@ Route::middleware('auth')->group(function () {
 
         //Output Activity - Teacher
         Route::resource('teacher', 'TeacherOutputActivityController');
-        // Route::get('teacher','TeacherOutputActivityController@index')->name('teacher');
-        // Route::get('teacher/add','TeacherOutputActivityController@create')->name('teacher.add');
-        // Route::get('teacher/{id}','TeacherOutputActivityController@show')->name('teacher.show');
-        // Route::get('teacher/{id}/edit','TeacherOutputActivityController@edit')->name('teacher.edit');
-        // Route::post('teacher','TeacherOutputActivityController@store')->name('teacher.store');
-        // Route::put('teacher','TeacherOutputActivityController@update')->name('teacher.update');
-        // Route::delete('teacher','TeacherOutputActivityController@destroy')->name('teacher.delete');
         Route::get('/download/output-activity','TeacherOutputActivityController@download')->name('file.download');
         Route::get('/delete_file/output-activity','TeacherOutputActivityController@delete_file')->name('file.delete');
 
         //Output Activity - Student
         Route::resource('student', 'StudentOutputActivityController');
-        // Route::get('student','StudentOutputActivityController@index')->name('student');
-        // Route::get('student/add','StudentOutputActivityController@create')->name('student.add');
-        // Route::get('student/{id}','StudentOutputActivityController@show')->name('student.show');
-        // Route::get('student/{id}/edit','StudentOutputActivityController@edit')->name('student.edit');
-        // Route::post('student','StudentOutputActivityController@store')->name('student.store');
-        // Route::put('student','StudentOutputActivityController@update')->name('student.update');
-        // Route::delete('student','StudentOutputActivityController@destroy')->name('student.delete');
     });
 
     //Funding
@@ -438,6 +429,7 @@ Route::middleware('auth')->group(function () {
 
     //Teacher Profile
     Route::prefix('profile')->name('profile.')->middleware('role:dosen')->group(function () {
+
         //Biodata
         Route::get('biodata','Teacher\BiodataController@index')->name('biodata');
         Route::put('biodata','Teacher\BiodataController@update')->name('biodata.update');

@@ -17,7 +17,7 @@ class CreateAcademicYearsTable extends Migration
             $table->increments('id');
             $table->char('tahun_akademik',4);
             $table->enum('semester', ['Ganjil', 'Genap']);
-            $table->enum('status', ['Tidak Aktif', 'Aktif']);
+            $table->boolean('status');
             $table->timestamps();
         });
     }

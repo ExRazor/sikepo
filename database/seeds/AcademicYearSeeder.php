@@ -13,22 +13,22 @@ class AcademicYearSeeder extends Seeder
     {
         for($i=2010;$i<=date('Y');$i++) {
             if($i==date('Y')) {
-                $status = 'Aktif';
+                $status = true;
             } else {
-                $status = 'Tidak Aktif';
+                $status = false;
             }
 
             DB::table('academic_years')->insert([
                 [
                     'tahun_akademik' => $i,
                     'semester' => 'Ganjil',
-                    'status' => $status,
+                    'status' => false,
                     'created_at' => now()
                 ],
                 [
                     'tahun_akademik' => $i,
                     'semester' => 'Genap',
-                    'status' => 'Tidak Aktif',
+                    'status' => $status,
                     'created_at' => now()
                 ]
             ]);

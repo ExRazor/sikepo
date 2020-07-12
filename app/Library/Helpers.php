@@ -113,7 +113,7 @@ if (!function_exists('current_academic')) {
      * @return
      */
     function current_academic() {
-        $query = AcademicYear::where('status','Aktif')->first();
+        $query = AcademicYear::where('status',1)->first();
         return $query;
     }
 }

@@ -20,10 +20,12 @@
     </nav>
 </div>
 <div class="br-pagetitle">
-    <i class="icon fa fa-newspaper"></i>
-    <div>
-        <h4>Data Publikasi Dosen</h4>
-        <p class="mg-b-0">Olah data publikasi dosen</p>
+    <div class="d-flex pl-0 mb-3">
+        <i class="icon fa fa-newspaper"></i>
+        <div>
+            <h4>Data Publikasi Dosen</h4>
+            <p class="mg-b-0">Olah data publikasi dosen</p>
+        </div>
     </div>
     <div class="ml-auto">
         <a href="{{ route('profile.publication.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
