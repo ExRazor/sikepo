@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Student;
-use App\PublicationCategory;
+use App\Models\Student;
+use App\Models\PublicationCategory;
 
 class StudentPublicationSeeder extends Seeder
 {

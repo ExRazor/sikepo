@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\CurriculumIntegration;
-use App\StudyProgram;
+use App\Models\CurriculumIntegration;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;

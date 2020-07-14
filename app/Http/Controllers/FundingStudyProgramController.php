@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\FundingStudyProgram;
-use App\FundingCategory;
-use App\StudyProgram;
-use App\AcademicYear;
+use App\Models\FundingStudyProgram;
+use App\Models\FundingCategory;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

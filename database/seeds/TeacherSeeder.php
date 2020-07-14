@@ -2,7 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\StudyProgram;
+use App\Models\StudyProgram;
+use App\Models\Teacher;
+use App\Models\TeacherStatus;
+use App\Models\AcademicYear;
 
 class TeacherSeeder extends Seeder
 {
@@ -42,9 +45,8 @@ class TeacherSeeder extends Seeder
                 $sertifikat = null;
             }
 
-            DB::table('teachers')->insert([
+            $teacher = Teacher::create([
                 'nidn'                  => rand(000000000, 999999999),
-                'kd_prodi'              => $studyProgram->kd_prodi,
                 'nip'                   => rand(197201011982010101, 199001012000010101),
                 'nama'                  => $faker->name,
                 'jk'                    => $jk[array_rand($jk)],
@@ -62,6 +64,14 @@ class TeacherSeeder extends Seeder
                 'sertifikat_pendidik'   => $sertifikat,
                 'sesuai_bidang_ps'      => $sesuai[array_rand($sesuai)],
                 'created_at'            => now()
+            ]);
+
+            TeacherStatus::create([
+                'id_ta'             => AcademicYear::where('semester','Ganjil')->where('tahun_akademik',date('Y'))->first()->id,
+                'nidn'              => Teacher::where('nip',$teacher->nip)->first()->nidn,
+                'jabatan'            => 'Dosen',
+                'kd_prodi'          => $studyProgram->kd_prodi,
+                'created_at'        => now()
             ]);
         }
     }

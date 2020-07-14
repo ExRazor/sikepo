@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Research;
-use App\Student;
+use App\Models\Research;
+use App\Models\Student;
 
 class ResearchStudentsSeeder extends Seeder
 {

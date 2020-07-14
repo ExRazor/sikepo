@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\StudyProgram;
-use App\Research;
-use App\AcademicYear;
-use App\CommunityService;
-use App\TeacherPublication;
-use App\TeacherOutputActivity;
+use App\Models\StudyProgram;
+use App\Models\Research;
+use App\Models\AcademicYear;
+use App\Models\CommunityService;
+use App\Models\TeacherPublication;
+use App\Models\TeacherOutputActivity;
 use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller

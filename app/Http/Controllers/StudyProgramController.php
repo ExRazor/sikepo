@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\StudyProgram;
-use App\Department;
-use App\Faculty;
+use App\Models\StudyProgram;
+use App\Models\Department;
+use App\Models\Faculty;
 use Illuminate\Http\Request;
 
 class StudyProgramController extends Controller

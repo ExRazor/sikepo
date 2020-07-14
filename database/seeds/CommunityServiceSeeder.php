@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Teacher;
-use App\AcademicYear;
+use App\Models\Teacher;
+use App\Models\AcademicYear;
 use Illuminate\Support\Facades\DB;
 
 class CommunityServiceSeeder extends Seeder

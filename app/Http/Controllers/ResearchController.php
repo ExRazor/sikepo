@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\AcademicYear;
-use App\Research;
-use App\StudyProgram;
-use App\Faculty;
-use App\Teacher;
-use App\ResearchStudent;
-use App\ResearchTeacher;
+use App\Models\AcademicYear;
+use App\Models\Research;
+use App\Models\StudyProgram;
+use App\Models\Faculty;
+use App\Models\Teacher;
+use App\Models\ResearchStudent;
+use App\Models\ResearchTeacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

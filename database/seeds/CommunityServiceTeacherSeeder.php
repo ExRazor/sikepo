@@ -1,7 +1,7 @@
 <?php
 
-use App\CommunityService;
-use App\Teacher;
+use App\Models\CommunityService;
+use App\Models\Teacher;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 

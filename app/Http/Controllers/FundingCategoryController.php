@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FundingCategory;
+use App\Models\FundingCategory;
 use Illuminate\Http\Request;
 
 class FundingCategoryController extends Controller

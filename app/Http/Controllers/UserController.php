@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\StudyProgram;
-use App\User;
-use App\Teacher;
+use App\Models\StudyProgram;
+use App\Models\User;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 

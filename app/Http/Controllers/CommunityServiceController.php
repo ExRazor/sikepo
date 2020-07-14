@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\CommunityService;
-use App\CommunityServiceTeacher;
-use App\CommunityServiceStudent;
-use App\StudyProgram;
-use App\Faculty;
-use App\Teacher;
+use App\Models\CommunityService;
+use App\Models\CommunityServiceTeacher;
+use App\Models\CommunityServiceStudent;
+use App\Models\StudyProgram;
+use App\Models\Faculty;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;

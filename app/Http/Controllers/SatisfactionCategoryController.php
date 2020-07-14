@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SatisfactionCategory;
+use App\Models\SatisfactionCategory;
 use Illuminate\Http\Request;
 
 class SatisfactionCategoryController extends Controller

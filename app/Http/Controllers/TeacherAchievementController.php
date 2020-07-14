@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\StudyProgram;
-use App\TeacherAchievement;
-use App\Teacher;
+use App\Models\StudyProgram;
+use App\Models\TeacherAchievement;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;

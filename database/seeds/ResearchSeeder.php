@@ -1,9 +1,9 @@
 <?php
 
-use App\AcademicYear;
+use App\Models\AcademicYear;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Teacher;
+use App\Models\Teacher;
 
 class ResearchSeeder extends Seeder
 {

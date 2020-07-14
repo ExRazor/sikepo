@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Department;
+use App\Models\Department;
 use Faker\Factory as Faker;
 
 class StudyProgramSeeder extends Seeder

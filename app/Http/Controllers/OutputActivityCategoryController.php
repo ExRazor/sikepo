@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\OutputActivityCategory;
+use App\Models\OutputActivityCategory;
 use Illuminate\Http\Request;
 
 class OutputActivityCategoryController extends Controller

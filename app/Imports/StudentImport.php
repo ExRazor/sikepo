@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
-use App\AcademicYear;
-use App\Student;
-use App\StudentStatus;
-use App\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\Student;
+use App\Models\StudentStatus;
+use App\Models\StudyProgram;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;

@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Research;
-use App\CommunityService;
-use App\OutputActivityCategory;
-use App\Teacher;
-use App\Student;
+use App\Models\Research;
+use App\Models\CommunityService;
+use App\Models\OutputActivityCategory;
+use App\Models\Teacher;
+use App\Models\Student;
 
 class OutputActivitySeeder extends Seeder
 {
@@ -32,7 +32,7 @@ class OutputActivitySeeder extends Seeder
             if($pilihPemilik == 'Dosen')
             {
                 $teacher = Teacher::whereHas(
-                                        'studyProgram', function($q) {
+                                        'latestStatus.studyProgram', function($q) {
                                             $q->where('kd_jurusan',setting('app_department_id'));
                                         }
                                     )

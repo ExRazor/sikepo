@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Research;
-use App\CommunityService;
-use App\Curriculum;
-use App\Teacher;
-use App\AcademicYear;
+use App\Models\Research;
+use App\Models\CommunityService;
+use App\Models\Curriculum;
+use App\Models\Teacher;
+use App\Models\AcademicYear;
 
 class CurriculumIntegrationSeeder extends Seeder
 {

@@ -14,10 +14,9 @@ class CreateTeachersTable extends Migration
     public function up()
     {
         Schema::create('teachers', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->char('nidn',10)->unique();
+            // $table->bigIncrements('id');
+            $table->char('nidn',10)->primary();
             $table->char('nip',18)->unique()->nullable();
-            $table->char('kd_prodi',5);
             $table->string('nama');
             $table->string('jk');
             $table->string('agama')->nullable();
@@ -37,8 +36,6 @@ class CreateTeachersTable extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
-
-            $table->foreign('kd_prodi')->references('kd_prodi')->on('study_programs')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

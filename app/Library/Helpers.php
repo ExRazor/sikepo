@@ -1,7 +1,7 @@
 <?php
 
-use App\AcademicYear;
-use App\Setting;
+use App\Models\AcademicYear;
+use App\Models\Setting;
 use App\Library\Encryption;
 
 if (!function_exists('setting')) {

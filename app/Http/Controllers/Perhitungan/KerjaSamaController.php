@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Perhitungan;
 
-use App\Collaboration;
-use App\Http\Controllers\Controller;
-use App\Teacher;
-use App\StudyProgram;
+use App\Models\Collaboration;
+use App\Models\Http\Controllers\Controller;
+use App\Models\Teacher;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

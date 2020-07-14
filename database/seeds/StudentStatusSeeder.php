@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\AcademicYear;
-use App\Student;
+use App\Models\AcademicYear;
+use App\Models\Student;
 
 class StudentStatusSeeder extends Seeder
 {

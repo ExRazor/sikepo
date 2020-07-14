@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Teacher;
-use App\User;
-use App\TeacherAchievement;
-use App\Research;
-use App\ResearchTeacher;
-use App\ResearchStudent;
-use App\CommunityService;
-use App\CommunityServiceTeacher;
-use App\CommunityServiceStudent;
-use App\TeacherPublication;
-use App\TeacherPublicationMember;
+use App\Models\Teacher;
+use App\Models\User;
+use App\Models\TeacherAchievement;
+use App\Models\Research;
+use App\Models\ResearchTeacher;
+use App\Models\ResearchStudent;
+use App\Models\CommunityService;
+use App\Models\CommunityServiceTeacher;
+use App\Models\CommunityServiceStudent;
+use App\Models\TeacherPublication;
+use App\Models\TeacherPublicationMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;

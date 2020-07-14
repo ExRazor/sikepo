@@ -84,7 +84,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     @if(Auth::user()->hasRole('kaprodi'))
@@ -97,7 +97,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">

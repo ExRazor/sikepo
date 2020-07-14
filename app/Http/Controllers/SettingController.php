@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Setting;
-use App\Faculty;
-use App\Department;
-use App\Research;
-use App\ResearchTeacher;
-use App\CommunityService;
-use App\CommunityServiceTeacher;
+use App\Models\Setting;
+use App\Models\Faculty;
+use App\Models\Department;
+use App\Models\Research;
+use App\Models\ResearchTeacher;
+use App\Models\CommunityService;
+use App\Models\CommunityServiceTeacher;
 
 use Illuminate\Http\Request;
 

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\Teacher;
-use App\AcademicYear;
+use App\Models\Teacher;
+use App\Models\AcademicYear;
 
 class TeacherAchievementSeeder extends Seeder
 {

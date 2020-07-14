@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\AcademicYear;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 
 class AcademicYearController extends Controller

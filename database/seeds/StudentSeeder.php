@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\StudyProgram;
-use App\AcademicYear;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
 use App\Imports\StudentImport;
 use Maatwebsite\Excel\Facades\Excel;
 

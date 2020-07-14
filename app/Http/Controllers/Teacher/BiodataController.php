@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Teacher;
 
-use App\Teacher;
-use App\User;
-use App\Http\Controllers\Controller;
+use App\Models\Teacher;
+use App\Models\User;
+use App\Models\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;

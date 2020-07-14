@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Teacher;
-use App\PublicationCategory;
+use App\Models\Teacher;
+use App\Models\PublicationCategory;
 
 class TeacherPublicationSeeder extends Seeder
 {

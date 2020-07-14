@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Teacher;
-use App\Student;
-use App\AcademicYear;
-use App\Minithesis;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Models\AcademicYear;
+use App\Models\Minithesis;
 
 class MinithesisSeeder extends Seeder
 {
@@ -27,7 +27,7 @@ class MinithesisSeeder extends Seeder
         for($j = 0; $j < 50; $j++){
 
             $pembimbing_utama = Teacher::whereHas(
-                                            'studyProgram', function($q) {
+                                            'latestStatus.studyProgram', function($q) {
                                                 $q->where('kd_jurusan',setting('app_department_id'));
                                             }
                                         )

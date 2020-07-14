@@ -1,11 +1,11 @@
 <?php
 
-use App\AcademicYear;
-use App\Curriculum;
-use App\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\Curriculum;
+use App\Models\StudyProgram;
 use Illuminate\Database\Seeder;
-use App\CurriculumSchedule;
-use App\Teacher;
+use App\Models\CurriculumSchedule;
+use App\Models\Teacher;
 
 class CurriculumScheduleSeeder extends Seeder
 {

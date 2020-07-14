@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use App\Teacher;
+use App\Models\Teacher;
 
 class UserSeeder extends Seeder
 {

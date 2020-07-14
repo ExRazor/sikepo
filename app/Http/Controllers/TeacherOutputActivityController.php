@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\TeacherOutputActivity;
-use App\OutputActivityCategory;
-use App\StudyProgram;
+use App\Models\TeacherOutputActivity;
+use App\Models\OutputActivityCategory;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;

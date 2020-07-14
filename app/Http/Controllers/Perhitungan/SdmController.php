@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Perhitungan;
 
-use App\AcademicYear;
-use App\Ewmp;
-use App\Http\Controllers\Controller;
-use App\Minithesis;
-use App\StudyProgram;
-use App\Teacher;
-use App\Student;
-use App\TeacherAchievement;
-use App\TeacherPublication;
-use App\TeacherOutputActivity;
+use App\Models\AcademicYear;
+use App\Models\Ewmp;
+use App\Models\Http\Controllers\Controller;
+use App\Models\Minithesis;
+use App\Models\StudyProgram;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Models\TeacherAchievement;
+use App\Models\TeacherPublication;
+use App\Models\TeacherOutputActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 

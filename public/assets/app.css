@@ -32,6 +32,7 @@
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
 }
 
 /* Track */
@@ -127,11 +128,6 @@ table.dataTable>tbody>tr.child ul.dtr-details>li>span {
     white-space: normal;
 }
 
-/* DATA TABLE */
-/* #table_research td, #table_communityService td, #table_publication_teacher td {
-    white-space: normal;
-} */
-
 /* ----------------------------------------------- */
 /* ############### PARSLEY CUSTOM ############### */
 /* ----------------------------------------------- */
@@ -214,6 +210,24 @@ select.parsley-success:focus {
 .profil-menu .profil-menu-list .profil-menu-link span {
     margin-left: 15px;
     font-size: 12pt;
+}
+
+/* PROFIL DOSEN */
+.br-profile-page .br-profile-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+
+.profile-tab {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: auto;
+}
+
+.profile-tab .nav-item {
+    display: inline-block;
 }
 
 /* ----------------------------------------------- */

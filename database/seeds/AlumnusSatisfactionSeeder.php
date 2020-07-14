@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\AcademicYear;
-use App\StudyProgram;
-use App\SatisfactionCategory;
+use App\Models\AcademicYear;
+use App\Models\StudyProgram;
+use App\Models\SatisfactionCategory;
 
 class AlumnusSatisfactionSeeder extends Seeder
 {

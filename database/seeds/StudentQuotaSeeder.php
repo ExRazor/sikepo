@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\StudyProgram;
-use App\AcademicYear;
-use App\StudentQuota;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\StudentQuota;
 
 class StudentQuotaSeeder extends Seeder
 {

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Perhitungan;
 
-use App\AcademicYear;
-use App\Http\Controllers\Controller;
-use App\Research;
-use App\StudyProgram;
-use App\Teacher;
+use App\Models\AcademicYear;
+use App\Models\Http\Controllers\Controller;
+use App\Models\Research;
+use App\Models\StudyProgram;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

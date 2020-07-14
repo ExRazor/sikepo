@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\PublicationCategory;
-use App\TeacherPublication;
-use App\TeacherPublicationMember;
-use App\TeacherPublicationStudent;
-use App\StudyProgram;
-use App\Teacher;
+use App\Models\PublicationCategory;
+use App\Models\TeacherPublication;
+use App\Models\TeacherPublicationMember;
+use App\Models\TeacherPublicationStudent;
+use App\Models\StudyProgram;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;

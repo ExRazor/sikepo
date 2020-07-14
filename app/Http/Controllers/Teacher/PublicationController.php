@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Teacher;
 
-use App\Teacher;
-use App\PublicationCategory;
-use App\TeacherPublication;
-use App\TeacherPublicationMember;
-use App\TeacherPublicationStudent;
+use App\Models\Teacher;
+use App\Models\PublicationCategory;
+use App\Models\TeacherPublication;
+use App\Models\TeacherPublicationMember;
+use App\Models\TeacherPublicationStudent;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class PublicationController extends Controller

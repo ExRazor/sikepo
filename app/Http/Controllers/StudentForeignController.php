@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\StudentForeign;
-use App\Student;
-use App\StudyProgram;
+use App\Models\StudentForeign;
+use App\Models\Student;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;

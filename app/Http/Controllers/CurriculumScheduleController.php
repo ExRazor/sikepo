@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\CurriculumSchedule;
-use App\Curriculum;
-use App\Teacher;
-use App\AcademicYear;
-use App\Faculty;
-use App\StudyProgram;
+use App\Models\CurriculumSchedule;
+use App\Models\Curriculum;
+use App\Models\Teacher;
+use App\Models\AcademicYear;
+use App\Models\Faculty;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\StudentQuota;
-use App\Faculty;
-use App\StudyProgram;
-use App\AcademicYear;
+use App\Models\StudentQuota;
+use App\Models\Faculty;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;

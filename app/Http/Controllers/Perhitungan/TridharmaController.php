@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Perhitungan;
 
-use App\AcademicYear;
-use App\Student;
-use App\AlumnusWorkplace;
-use App\StudentAchievement;
-use App\Http\Controllers\Controller;
-use App\StudentStatus;
-use App\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\Student;
+use App\Models\AlumnusWorkplace;
+use App\Models\StudentAchievement;
+use App\Models\Http\Controllers\Controller;
+use App\Models\StudentStatus;
+use App\Models\StudyProgram;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\FundingCategory;
+use App\Models\FundingCategory;
 
 class FundingCategorySeeder extends Seeder
 {

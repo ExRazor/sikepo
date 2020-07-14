@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\AlumnusWorkplace;
-use App\AcademicYear;
-use App\StudyProgram;
+use App\Models\AlumnusWorkplace;
+use App\Models\AcademicYear;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\AcademicSatisfaction;
-use App\SatisfactionCategory;
-use App\AcademicYear;
-use App\StudyProgram;
+use App\Models\AcademicSatisfaction;
+use App\Models\SatisfactionCategory;
+use App\Models\AcademicYear;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

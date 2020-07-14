@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Ewmp;
-use App\AcademicYear;
-use App\CurriculumSchedule;
-use App\Research;
-use App\CommunityService;
-use App\StudyProgram;
+use App\Models\Ewmp;
+use App\Models\AcademicYear;
+use App\Models\CurriculumSchedule;
+use App\Models\Research;
+use App\Models\CommunityService;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;

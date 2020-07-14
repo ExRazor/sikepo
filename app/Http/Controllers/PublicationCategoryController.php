@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\PublicationCategory;
+use App\Models\PublicationCategory;
 use Illuminate\Http\Request;
 
 class PublicationCategoryController extends Controller

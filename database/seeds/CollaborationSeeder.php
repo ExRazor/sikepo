@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\StudyProgram;
-use App\AcademicYear;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
 
 class CollaborationSeeder extends Seeder
 {

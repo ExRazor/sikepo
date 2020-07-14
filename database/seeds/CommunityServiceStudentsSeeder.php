@@ -2,9 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use App\CommunityService;
-use App\Student;
-use App\StudyProgram;
+use App\Models\CommunityService;
+use App\Models\Student;
+use App\Models\StudyProgram;
 
 class CommunityServiceStudentsSeeder extends Seeder
 {

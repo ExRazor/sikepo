@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Curriculum;
-use App\StudyProgram;
+use App\Models\Curriculum;
+use App\Models\StudyProgram;
 use App\Imports\CurriculumImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Controllers\Controller;
+use App\Models\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Teacher;
 
-use App\TeacherAchievement;
-use App\Http\Controllers\Controller;
+use App\Models\TeacherAchievement;
+use App\Models\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;

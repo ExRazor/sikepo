@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Student;
-use App\StudentStatus;
-use App\Faculty;
-use App\StudyProgram;
-use App\AcademicYear;
-use App\Research;
-use App\CommunityService;
-use App\StudentAchievement;
-use App\Minithesis;
+use App\Models\Student;
+use App\Models\StudentStatus;
+use App\Models\Faculty;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\Research;
+use App\Models\CommunityService;
+use App\Models\StudentAchievement;
+use App\Models\Minithesis;
 use App\Imports\StudentImport;
-use App\StudentPublication;
+use App\Models\StudentPublication;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;

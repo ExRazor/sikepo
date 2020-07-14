@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\StudyProgram;
-use App\FundingCategory;
-use App\AcademicYear;
-use App\FundingStudyProgram;
+use App\Models\StudyProgram;
+use App\Models\FundingCategory;
+use App\Models\AcademicYear;
+use App\Models\FundingStudyProgram;
 
 class FundStudyProgramSeeder extends Seeder
 {

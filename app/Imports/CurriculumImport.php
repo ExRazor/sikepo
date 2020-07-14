@@ -2,8 +2,8 @@
 
 namespace App\Imports;
 
-use App\Curriculum;
-use App\StudyProgram;
+use App\Models\Curriculum;
+use App\Models\StudyProgram;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 

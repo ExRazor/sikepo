@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\AcademicYear;
-use App\StudentStatus;
-use App\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\StudentStatus;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

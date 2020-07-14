@@ -1,9 +1,9 @@
 <?php
 
-use App\AcademicYear;
-use App\StudentStatus;
+use App\Models\AcademicYear;
+use App\Models\StudentStatus;
 use Illuminate\Database\Seeder;
-use App\StudyProgram;
+use App\Models\StudyProgram;
 
 class AlumnusIdleSeeder extends Seeder
 {

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\FundingFaculty;
-use App\FundingCategory;
-use App\AcademicYear;
+use App\Models\FundingFaculty;
+use App\Models\FundingCategory;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;

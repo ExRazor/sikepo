@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\OutputActivityCategory;
-use App\Teacher;
-use App\Student;
-use App\AcademicYear;
+use App\Models\OutputActivityCategory;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Models\AcademicYear;
 
 
 class TeacherOutputActivity extends Seeder
@@ -27,7 +27,7 @@ class TeacherOutputActivity extends Seeder
             $kategori   = OutputActivityCategory::all()->random()->id;
             $thn_luaran = $tahun[array_rand($tahun)];
             $teacher = Teacher::whereHas(
-                                        'studyProgram', function($q) {
+                                        'latestStatus.studyProgram', function($q) {
                                             $q->where('kd_jurusan',setting('app_department_id'));
                                         }
                                     )

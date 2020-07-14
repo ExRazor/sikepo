@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Teacher;
-use App\AcademicYear;
-use App\Ewmp;
-use App\CurriculumSchedule;
-use App\Research;
-use App\CommunityService;
+use App\Models\Teacher;
+use App\Models\AcademicYear;
+use App\Models\Ewmp;
+use App\Models\CurriculumSchedule;
+use App\Models\Research;
+use App\Models\CommunityService;
 class EwmpSeeder extends Seeder
 {
     /**

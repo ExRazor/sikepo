@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Collaboration;
-use App\StudyProgram;
-use App\AcademicYear;
+use App\Models\Collaboration;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;

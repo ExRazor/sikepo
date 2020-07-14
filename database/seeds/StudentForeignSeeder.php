@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Student;
+use App\Models\Student;
 
 class StudentForeignSeeder extends Seeder
 {

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Student;
-use App\AcademicYear;
+use App\Models\Student;
+use App\Models\AcademicYear;
 
 class StudentAchievementSeeder extends Seeder
 {

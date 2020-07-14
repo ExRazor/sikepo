@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Faculty;
-use App\FundingCategory;
-use App\AcademicYear;
+use App\Models\Faculty;
+use App\Models\FundingCategory;
+use App\Models\AcademicYear;
 
 class FundFacultySeeder extends Seeder
 {

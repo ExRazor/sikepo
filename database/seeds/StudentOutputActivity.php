@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\OutputActivityCategory;
-use App\Teacher;
-use App\Student;
-use App\AcademicYear;
+use App\Models\OutputActivityCategory;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Models\AcademicYear;
 
 class StudentOutputActivity extends Seeder
 {

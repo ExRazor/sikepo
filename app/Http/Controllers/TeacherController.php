@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Teacher;
-use App\StudyProgram;
-use App\AcademicYear;
-use App\Ewmp;
-use App\Faculty;
-use App\CurriculumSchedule;
-use App\TeacherAchievement;
-use App\Research;
-use App\CommunityService;
-use App\Minithesis;
-use App\User;
+use App\Models\Teacher;
+use App\Models\StudyProgram;
+use App\Models\AcademicYear;
+use App\Models\Ewmp;
+use App\Models\Faculty;
+use App\Models\CurriculumSchedule;
+use App\Models\TeacherAchievement;
+use App\Models\Research;
+use App\Models\CommunityService;
+use App\Models\Minithesis;
+use App\Models\User;
 use App\Imports\TeacherImport;
-use App\TeacherPublication;
+use App\Models\TeacherPublication;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
@@ -144,7 +144,7 @@ class TeacherController extends Controller
     {
         $request->validate([
             'nidn'                  => 'required|numeric|min:8',
-            'kd_prodi'              => 'required',
+            // 'kd_prodi'              => 'required',
             'nip'                   => 'nullable|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
@@ -165,7 +165,7 @@ class TeacherController extends Controller
 
         $Teacher                            = new Teacher;
         $Teacher->nidn                      = $request->nidn;
-        $Teacher->kd_prodi                  = $request->kd_prodi;
+        // $Teacher->kd_prodi                  = $request->kd_prodi;
         $Teacher->nip                       = $request->nip;
         $Teacher->nama                      = $request->nama;
         $Teacher->jk                        = $request->jk;
@@ -210,7 +210,7 @@ class TeacherController extends Controller
         $id  = decrypt($request->_id);
 
         $request->validate([
-            'kd_prodi'              => 'required',
+            // 'kd_prodi'              => 'required',
             'nip'                   => 'nullable|numeric|digits:18',
             'nama'                  => 'required',
             'jk'                    => 'required',
@@ -230,7 +230,7 @@ class TeacherController extends Controller
         $bidang_ahli = explode(", ",$request->bidang_ahli);
 
         $Teacher                            = Teacher::find($id);
-        $Teacher->kd_prodi                  = $request->kd_prodi;
+        // $Teacher->kd_prodi                  = $request->kd_prodi;
         $Teacher->nip                       = $request->nip;
         $Teacher->nama                      = $request->nama;
         $Teacher->jk                        = $request->jk;
