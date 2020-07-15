@@ -56,7 +56,7 @@
                     @endisset
                 </h6>
             </div>
-            <form id="teacher_form" action="{{route('teacher.list.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="teacher_form" action="@isset($data) {{route('teacher.list.update',$data->nidn)}} @else {{route('teacher.list.store')}} @endif" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">
@@ -67,7 +67,7 @@
                             @else
                                 @method('post')
                             @endif
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     <select class="form-control" name="kd_jurusan" data-type="form" {{Auth::user()->role=='kaprodi' ? 'disabled' : 'required'}}>
@@ -76,14 +76,14 @@
                                             @if($f->department->count())
                                             <optgroup label="{{$f->nama}}">
                                                 @foreach($f->department as $d)
-                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->studyProgram->kd_jurusan==$d->kd_jurusan) || setting('app_department_id')==$d->kd_jurusan ? 'selected': ''}}>{{$d->nama}}</option>
+                                                <option value="{{$d->kd_jurusan}}" {{ (isset($data) && $data->latestStatus->studyProgram->kd_jurusan==$d->kd_jurusan) || setting('app_department_id')==$d->kd_jurusan ? 'selected': ''}}>{{$d->nama}}</option>
                                                 @endforeach
                                             </optgroup>
                                             @endif
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             {{-- <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">

@@ -148,7 +148,7 @@ class MinithesisController extends Controller
         }
 
         if($request->prodi_pembimbing_filter) {
-            $data->whereHas('teacher.studyProgram', function($q) use($request) {
+            $data->whereHas('pembimbingUtama.latestStatus.studyProgram', function($q) use($request) {
                 $q->where('kd_prodi',$request->prodi_pembimbing_filter);
             });
         }
@@ -168,14 +168,14 @@ class MinithesisController extends Controller
                                 return '<a name="'.$d->pembimbingUtama->nama.'" href='.route('teacher.list.show',$d->pembimbingUtama->nidn).'>'.
                                             $d->pembimbingUtama->nama.
                                             '<br>
-                                            <small>NIDN. '.$d->pembimbingUtama->nidn.' / '.$d->pembimbingUtama->studyProgram->singkatan.'</small>
+                                            <small>NIDN. '.$d->pembimbingUtama->nidn.' / '.$d->pembimbingUtama->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('pembimbing_pendamping', function($d) {
                                 return '<a name="'.$d->pembimbingPendamping->nama.'" href='.route('teacher.list.show',$d->pembimbingPendamping->nidn).'>'.
                                             $d->pembimbingPendamping->nama.
                                             '<br>
-                                            <small>NIDN. '.$d->pembimbingPendamping->nidn.' / '.$d->pembimbingPendamping->studyProgram->singkatan.'</small>
+                                            <small>NIDN. '.$d->pembimbingPendamping->nidn.' / '.$d->pembimbingPendamping->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('aksi', function($d) {

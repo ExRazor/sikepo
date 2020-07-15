@@ -333,7 +333,7 @@ class ResearchController extends Controller
                             ->addColumn('peneliti', function($d) {
                                 return  '<a href="'.route('teacher.list.show',$d->researchKetua->teacher->nidn).'#research">'
                                             .$d->researchKetua->teacher->nama.
-                                            '<br><small>NIDN.'.$d->researchKetua->teacher->nidn.' / '.$d->researchKetua->teacher->studyProgram->singkatan.'</small>
+                                            '<br><small>NIDN.'.$d->researchKetua->teacher->nidn.' / '.$d->researchKetua->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('aksi', function($d) {
@@ -381,41 +381,6 @@ class ResearchController extends Controller
         }
 
         return response()->json($result);
-    }
-
-    public function get_by_filter(Request $request)
-    {
-        if($request->ajax()) {
-
-            $q   = Research::with([
-                                    'academicYear',
-                                    'researchKetua.teacher.studyProgram',
-                                    'researchAnggota.teacher.studyProgram.department',
-                                    'researchStudent.student.studyProgram.department'
-                                ]);
-
-            if($request->kd_jurusan){
-                $q->whereHas(
-                    'researchTeacher', function($q) use($request) {
-                        $q->jurusanKetua($request->kd_jurusan);
-                    }
-                );
-            }
-
-            if($request->kd_prodi){
-                $q->whereHas(
-                    'researchTeacher', function($q) use ($request) {
-                        $q->prodiKetua($request->kd_prodi);
-                    }
-                );
-            }
-
-            $data = $q->orderBy('id_ta','desc')->get();
-
-            return response()->json($data);
-        } else {
-            abort(404);
-        }
     }
 
     public function get_by_department(Request $request)

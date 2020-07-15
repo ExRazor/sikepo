@@ -42,7 +42,7 @@ class TeacherProfileController extends Controller
     {
         if(request()->ajax()) {
             $id = decode_id($id);
-            $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram','academicYear')->first();
+            $data = TeacherAchievement::where('id',$id)->with('teacher.latestStatus.studyProgram','academicYear')->first();
 
             return response()->json($data);
         } else {

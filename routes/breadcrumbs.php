@@ -124,7 +124,7 @@ Breadcrumbs::for('academic-integration', function ($trail) {
     $trail->push('Integrasi Kurikulum', route('academic.integration.index'));
 });
 
-Breadcrumbs::for('academic-integration-add', function ($trail) {
+Breadcrumbs::for('academic-integration-create', function ($trail) {
     $trail->parent('academic-integration');
     $trail->push('Tambah Integrasi Kurikulum', route('academic.integration.create'));
 });
@@ -227,7 +227,7 @@ Breadcrumbs::for('community-service-create', function ($trail) {
 
 Breadcrumbs::for('community-service-show', function ($trail,$data) {
     $trail->parent('community-service');
-    $trail->push('Data Pengabdian: '.$data->judul_pengabdian, route('community-service.show',encode_id($data->id)));
+    $trail->push($data->judul_pengabdian, route('community-service.show',encode_id($data->id)));
 });
 
 Breadcrumbs::for('community-service-edit', function ($trail,$data) {
@@ -603,7 +603,7 @@ Breadcrumbs::for('profile-community-service-add', function ($trail) {
 
 Breadcrumbs::for('profile-community-service-show', function ($trail,$data) {
     $trail->parent('profile-community-service');
-    $trail->push('Data Pengabdian: '.$data->judul_pengabdian, route('profile.community-service.show',encode_id($data->id)));
+    $trail->push($data->judul_pengabdian, route('profile.community-service.show',encode_id($data->id)));
 });
 
 Breadcrumbs::for('profile-community-service-edit', function ($trail,$data) {

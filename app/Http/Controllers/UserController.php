@@ -20,7 +20,7 @@ class UserController extends Controller
         $user   = User::where('role','!=','Dosen')->orderBy('created_at','asc')->get();
         $dosen  = User::where('role','=','Dosen')
                         ->whereHas(
-                            'teacher.studyProgram', function($q) {
+                            'teacher.latestStatus.studyProgram', function($q) {
                                 $q->where('kd_jurusan',setting('app_department_id'));
                             }
                         )

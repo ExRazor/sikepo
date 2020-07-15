@@ -97,7 +97,7 @@
                                 <label class="col-md-3 form-control-label">Pembimbing Utama: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     <div id="pilihUtama" class="parsley-select">
-                                            <select class="form-control select-dsn" name="pembimbing_utama" data-parsley-class-handler="#pilihUtama" data-parsley-errors-container="#errorsPilihUtama" required>
+                                            <select class="form-control select2-dosen" name="pembimbing_utama" data-parsley-class-handler="#pilihUtama" data-parsley-errors-container="#errorsPilihUtama" required>
                                                 @isset($data)
                                                 <option value="{{$data->pembimbing_utama}}">{{$data->pembimbingUtama->nama.' ('.$data->pembimbingUtama->nidn.')'}}</option>
                                                 @endisset
@@ -110,7 +110,7 @@
                                 <label class="col-md-3 form-control-label">Pembimbing Pendamping: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     <div id="pilihPendamping" class="parsley-select">
-                                        <select class="form-control select-dsn" name="pembimbing_pendamping" data-parsley-class-handler="#pilihPendamping" data-parsley-errors-container="#errorsPilihPendamping" required>
+                                        <select class="form-control select2-dosen" name="pembimbing_pendamping" data-parsley-class-handler="#pilihPendamping" data-parsley-errors-container="#errorsPilihPendamping" required>
                                             @isset($data)
                                             <option value="{{$data->pembimbing_pendamping}}">{{$data->pembimbingPendamping->nama.' ('.$data->pembimbingPendamping->nidn.')'}}</option>
                                             @endisset
@@ -136,4 +136,11 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('custom-js')
+<script>
+    var cont  = $('.select2-dosen');
+    select2_dosen(cont);
+</script>
 @endsection

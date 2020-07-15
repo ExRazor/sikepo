@@ -172,18 +172,18 @@
                 var option_ta     = $("<option selected></option>").val(data.id_ta).text(data.academic_year.tahun_akademik+' - '+data.academic_year.semester);
                 var option_nidn   = $("<option selected></option>").val(data.nidn).text(data.teacher.nama+' ('+data.teacher.nidn+')');
 
+                if($('#modal-teach-acv').find('select[name=nidn]').length) {
+                    $('#selectProdi').attr('data-nidn',data.nidn);
+                    $('#selectProdi').val(data.teacher.latest_status.study_program.kd_prodi);
+                }
+
                 $('#modal-teach-acv')
                     .find('input[name=_id]').val(id).end()
                     .find('input[name=prestasi]').val(data.prestasi).end()
-                    .find('select[name=nidn]').append(option_nidn).trigger('change').end()
+                    .find('select[name=nidn]').val(null).html(option_nidn).trigger('change').end()
                     .find('select[name=id_ta]').append(option_ta).trigger('change').end()
                     .find('input[name=bukti_nama]').val(data.bukti_nama).end()
                     .find('button[type=submit]').attr('data-id',id);
-
-                if($('#modal-teach-acv').find('select[name=nidn]').length) {
-                    $('#selectProdi').attr('data-nidn',data.nidn);
-                    $('#selectProdi').val(data.teacher.study_program.kd_prodi).change();
-                }
 
                 switch(data.tingkat_prestasi) {
                     case 'Wilayah':

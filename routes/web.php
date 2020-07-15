@@ -143,7 +143,7 @@ Route::middleware('auth')->group(function () {
         Route::get('funding/category/select/{id}','FundingCategoryController@get_jenis')->name('funding.category.select');
 
         //Teacher
-        Route::get('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
+        Route::post('teacher/loadData','TeacherController@loadData')->name('teacher.loadData');
         Route::post('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
         Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('teacher.studyProgram');
 

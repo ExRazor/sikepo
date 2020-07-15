@@ -47,13 +47,13 @@ class TeacherController extends Controller
 
         if(Auth::user()->hasRole('kaprodi')) {
             $data         = Teacher::whereHas(
-                                'studyProgram', function($query) {
+                                'latestStatus.studyProgram', function($query) {
                                     $query->where('kd_prodi',Auth::user()->kd_prodi);
                                 })
                             ->get();
         } else {
             $data         = Teacher::whereHas(
-                                'studyProgram', function($query) {
+                                'latestStatus.studyProgram', function($query) {
                                     $query->where('kd_jurusan',setting('app_department_id'));
                                 })
                             ->get();
@@ -132,7 +132,7 @@ class TeacherController extends Controller
         // $nidn          = decode_id($nidn);
         $data         = Teacher::where('nidn',$nidn)->first();
         $faculty      = Faculty::all();
-        $studyProgram = StudyProgram::where('kd_jurusan',$data->studyProgram->kd_jurusan)->get();
+        $studyProgram = StudyProgram::where('kd_jurusan',$data->latestStatus->studyProgram->kd_jurusan)->get();
 
         $bidang = json_decode($data->bidang_ahli);
         $data->bidang_ahli   = implode(', ',$bidang);
@@ -276,7 +276,7 @@ class TeacherController extends Controller
         $user->name    = $request->nama;
         $user->save();
 
-        return redirect()->route('teacher.show',encode_id($Teacher->nidn))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('teacher.list.show',$Teacher->nidn)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
@@ -393,13 +393,13 @@ class TeacherController extends Controller
             $kd = $request->input('kd_jurusan');
 
             if($kd == 0){
-                $data = Teacher::with(['studyProgram.department.faculty'])->orderBy('created_at','desc')->get();
+                $data = Teacher::with(['latestStatus.studyProgram.department.faculty'])->orderBy('created_at','desc')->get();
             } else {
                 $data = Teacher::whereHas(
-                            'studyProgram', function($query) use ($kd) {
+                            'latestStatus.studyProgram', function($query) use ($kd) {
                                 $query->where('kd_jurusan',$kd);
                             })
-                        ->with(['studyProgram.department.faculty'])
+                        ->with(['latestStatus.studyProgram.department.faculty'])
                         ->get();
             }
 
@@ -448,12 +448,12 @@ class TeacherController extends Controller
 
         if(Auth::user()->hasRole('kaprodi')) {
             $data         = Teacher::whereHas(
-                                'studyProgram', function($query) {
+                                'latestStatus.studyProgram', function($query) {
                                     $query->where('kd_prodi',Auth::user()->kd_prodi);
                             });
         } else {
             $data         = Teacher::whereHas(
-                                'studyProgram', function($query) {
+                                'latestStatus.studyProgram', function($query) {
                                     $query->where('kd_jurusan',setting('app_department_id'));
                             });
         }
@@ -469,9 +469,9 @@ class TeacherController extends Controller
                                         '<br><small>NIDN. '.$d->nidn.'</small></a>';
                             })
                             ->editColumn('study_program', function($d){
-                                return  $d->studyProgram->nama.
+                                return  $d->latestStatus->studyProgram->nama.
                                         '<br>
-                                        <small>'.$d->studyProgram->department->faculty->singkatan.' - '.$d->studyProgram->department->nama.'</small>';
+                                        <small>'.$d->latestStatus->studyProgram->department->faculty->singkatan.' - '.$d->latestStatus->studyProgram->department->nama.'</small>';
                             })
                             ->addColumn('aksi', function($d) {
                                 if(!Auth::user()->hasRole('kajur')) {
@@ -492,7 +492,9 @@ class TeacherController extends Controller
                 $q = Teacher::select('nidn','nama');
 
                 if($prodi) {
-                    $q->where('kd_prodi',$prodi);
+                    $q->whereHas('latestStatus', function($q) use($prodi) {
+                        $q->where('kd_prodi',$prodi);
+                    });
                 }
 
                 if($cari) {

@@ -71,10 +71,7 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Ketua Pelaksana: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    @if(Auth::user()->hasRole('kaprodi'))
-                                        <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
-                                    @endif
-                                    <select class="form-control select-dsn-prodi" name="ketua_nidn" required>
+                                    <select class="form-control select2-dosen" name="ketua_nidn" @if(Auth::user()->hasRole('kaprodi')) data-prodi={{Auth::user()->kd_prodi}} @endif required>
                                         @isset($data)
                                         <option value="{{$data->serviceKetua->nidn}}">{{$data->serviceKetua->teacher->nama.' ('.$data->serviceKetua->nidn.')'}}</option>
                                         @endisset
@@ -153,7 +150,7 @@
                                     <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('community-service.teacher.delete',encode_id($data->id)) }}" data-id="{{encrypt($rt->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-7">
                                         <div id="pilihDosen{{$i}}" class="parsley-select">
-                                            <select class="form-control select-dsn" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsPilihDosen{{$i}}" name="anggota_nidn[]" required>
+                                            <select class="form-control select2-dosen" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsPilihDosen{{$i}}" name="anggota_nidn[]" required>
                                                 <option value="{{$rt->nidn}}">{{$rt->teacher->nama.' ('.$rt->teacher->nidn.')'}}</option>
                                             </select>
                                         </div>
@@ -217,5 +214,11 @@
 </div>
 @endsection
 
-@section('js')
+@section('custom-js')
+<script>
+    var cont  = $('.select2-dosen');
+    var prodi = cont.attr('data-prodi');
+    select2_dosen(cont,prodi);
+</script>
 @endsection
+

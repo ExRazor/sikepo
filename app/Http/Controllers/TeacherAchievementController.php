@@ -34,14 +34,14 @@ class TeacherAchievementController extends Controller
         if(Auth::user()->hasRole('kaprodi')) {
 
             $achievement    = TeacherAchievement::whereHas(
-                                                    'teacher.studyProgram',function($query) {
+                                                    'teacher.latestStatus.studyProgram',function($query) {
                                                         $query->where('kd_prodi',Auth::user()->kd_prodi);
                                                     }
                                                 )
                                                 ->orderBy('id_ta','desc')->get();
         } else {
             $achievement    = TeacherAchievement::whereHas(
-                                                    'teacher.studyProgram',function($query) {
+                                                    'teacher.latestStatus.studyProgram',function($query) {
                                                         $query->where('kd_jurusan',setting('app_department_id'));
                                                     }
                                                 )
@@ -58,7 +58,7 @@ class TeacherAchievementController extends Controller
         }
 
         // $id = decode_id($id);
-        $data = TeacherAchievement::where('id',$id)->with('teacher.studyProgram','academicYear')->first();
+        $data = TeacherAchievement::where('id',$id)->with('teacher.latestStatus.studyProgram','academicYear')->first();
         return response()->json($data);
     }
 
@@ -228,20 +228,20 @@ class TeacherAchievementController extends Controller
         if($request->ajax()) {
 
             $q   = TeacherAchievement::with([
-                                        'teacher.studyProgram.department' => function($q) {
+                                        'teacher.latestStatus.studyProgram.department' => function($q) {
                                             $q->where('kd_jurusan',setting('app_department_id'));
                                         },
                                         'academicYear'
                                     ])
                                     ->whereHas(
-                                        'teacher.studyProgram', function($query) {
+                                        'teacher.latestStatus.studyProgram', function($query) {
                                             $query->where('kd_jurusan',setting('app_department_id'));
                                         }
                                     );
 
             if($request->kd_prodi){
                 $q->whereHas(
-                    'teacher.studyProgram', function($query) use ($request) {
+                    'teacher.latestStatus.studyProgram', function($query) use ($request) {
                         $query->where('kd_prodi',$request->kd_prodi);
                 });
             }
@@ -263,14 +263,14 @@ class TeacherAchievementController extends Controller
         if(Auth::user()->hasRole('kaprodi')) {
 
             $data    = TeacherAchievement::whereHas(
-                            'teacher.studyProgram',function($query) {
+                            'teacher.latestStatus.studyProgram',function($query) {
                                 $query->where('kd_prodi',Auth::user()->kd_prodi);
                             }
                         )
                         ->orderBy('id_ta','desc');
         } else {
             $data    = TeacherAchievement::whereHas(
-                            'teacher.studyProgram',function($query) {
+                            'teacher.latestStatus.studyProgram',function($query) {
                                 $query->where('kd_jurusan',setting('app_department_id'));
                             }
                         )
@@ -279,7 +279,7 @@ class TeacherAchievementController extends Controller
 
         if($request->prodi) {
             $data->whereHas(
-                'teacher',function($query) use($request) {
+                'teacher.latestStatus',function($query) use($request) {
                     $query->where('kd_prodi',$request->prodi);
                 }
             );
@@ -289,7 +289,7 @@ class TeacherAchievementController extends Controller
                             ->editColumn('nama', function($d) {
                                 return '<a href="'.route("teacher.list.show",$d->nidn).'">'.
                                             $d->teacher->nama.
-                                        '<br><small>Prodi: '.$d->teacher->studyProgram->singkatan.'</small></a>';
+                                        '<br><small>Prodi: '.$d->teacher->latestStatus->studyProgram->singkatan.'</small></a>';
                             })
                             ->addColumn('tahun', function($d) {
                                 return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;

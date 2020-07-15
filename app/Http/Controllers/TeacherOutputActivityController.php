@@ -270,7 +270,7 @@ class TeacherOutputActivityController extends Controller
         }
 
         $data = TeacherOutputActivity::whereHas(
-                'teacher.studyProgram', function($query) {
+                'teacher.latestStatus.studyProgram', function($query) {
                     if(Auth::user()->hasRole('kaprodi')) {
                         $query->where('kd_prodi',Auth::user()->kd_prodi);
                     } else {
@@ -281,7 +281,7 @@ class TeacherOutputActivityController extends Controller
 
         if($request->kd_prodi_filter) {
             $data->whereHas(
-                'teacher.studyProgram', function($q) use($request) {
+                'teacher.latestStatus.studyProgram', function($q) use($request) {
                     $q->where('kd_prodi',$request->kd_prodi_filter);
                 }
             );
@@ -296,7 +296,7 @@ class TeacherOutputActivityController extends Controller
                             ->addColumn('milik', function($d) {
                                 return  '<a href="'.route('teacher.list.show',$d->teacher->nidn).'#publication">'
                                             .$d->teacher->nama.
-                                            '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->studyProgram->singkatan.'</small>
+                                            '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('kategori', function($d) {

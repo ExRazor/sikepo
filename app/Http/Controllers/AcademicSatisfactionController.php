@@ -168,14 +168,14 @@ class AcademicSatisfactionController extends Controller
         }
 
         if(Auth::user()->hasRole('kaprodi')) {
-            $data = \App\AcademicSatisfaction::where('kd_prodi',Auth::user()->kd_prodi)
+            $data = AcademicSatisfaction::where('kd_prodi',Auth::user()->kd_prodi)
                                         ->groupBy('kd_prodi')
                                         ->groupBy('id_ta')
                                         ->groupBy('kd_kepuasan')
                                         ->orderBy('id_ta','desc')
                                         ->select(['kd_prodi','id_ta','kd_kepuasan']);
         } else {
-            $data = \App\AcademicSatisfaction::groupBy('kd_prodi')
+            $data = AcademicSatisfaction::groupBy('kd_prodi')
                                         ->groupBy('id_ta')
                                         ->groupBy('kd_kepuasan')
                                         ->orderBy('id_ta','desc')

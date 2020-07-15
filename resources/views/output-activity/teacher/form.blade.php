@@ -80,11 +80,8 @@
                                     <div class="row mb-3">
                                         <label class="col-md-3 form-control-label">Pemilik Luaran: <span class="tx-danger">*</span></label>
                                         <div class="col-md-8">
-                                            @if(Auth::user()->hasRole('kaprodi'))
-                                                <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
-                                            @endif
                                             <div id="pilihDosen" class="parsley-select">
-                                                <select class="form-control select-dsn-prodi" name="nidn"  data-parsley-class-handler="#pilihDosen" data-parsley-errors-container="#errorsPilihDosen" required>
+                                                <select class="form-control select2-dosen" name="nidn" data-parsley-class-handler="#pilihDosen" data-parsley-errors-container="#errorsPilihDosen" @if(Auth::user()->hasRole('kaprodi')) data-prodi={{Auth::user()->kd_prodi}} @endif required>
                                                     @isset($data)
                                                     <option value="{{$data->nidn}}" selected>{{$data->teacher->nama.' ('.$data->nidn.')'}}</option>
                                                     @endisset
@@ -260,5 +257,10 @@
 </div>
 @endsection
 
-@section('js')
+@section('custom-js')
+<script>
+    var cont  = $('.select2-dosen');
+    var prodi = cont.attr('data-prodi');
+    select2_dosen(cont,prodi);
+</script>
 @endsection

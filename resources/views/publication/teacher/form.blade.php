@@ -71,10 +71,7 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    @if(Auth::user()->hasRole('kaprodi'))
-                                        <input type="hidden" name="prodi_dsn" value="{{Auth::user()->kd_prodi}}">
-                                    @endif
-                                    <select id="select-dosen" class="form-control select-dsn-prodi" name="nidn" required>
+                                    <select id="select-dosen" class="form-control select2-dosen" name="nidn" @if(Auth::user()->hasRole('kaprodi')) data-prodi={{Auth::user()->kd_prodi}} @endif required>
                                         <option value="">- Pilih Dosen -</option>
                                         @isset($data)
                                         @foreach ($teacher as $t)
@@ -247,5 +244,10 @@
 </div>
 @endsection
 
-@section('js')
+@section('custom-js')
+<script>
+    var cont  = $('.select2-dosen');
+    var prodi = cont.attr('data-prodi');
+    select2_dosen(cont,prodi);
+</script>
 @endsection

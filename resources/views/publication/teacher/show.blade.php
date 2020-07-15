@@ -138,22 +138,22 @@
                             <tr>
                                 <th>Nama Terbitan</th>
                                 <td>:</td>
-                                <td>{{$data->jurnal}}</td>
+                                <td>{{isset($data->jurnal) ? $data->jurnal : '?'}}</td>
                             </tr>
                             <tr>
                                 <th>Akreditasi</th>
                                 <td>:</td>
-                                <td>{{$data->akreditasi}}</td>
+                                <td>{{isset($data->akreditasi) ? $data->akreditasi : '?'}}</td>
                             </tr>
                             <tr>
                                 <th>Jumlah Sitasi</th>
                                 <td>:</td>
-                                <td>{{$data->sitasi}}</td>
+                                <td>{{isset($data->sitasi) ? $data->sitasi : '?'}}</td>
                             </tr>
                             <tr>
                                 <th>Tautan</th>
                                 <td>:</td>
-                                <td><a href="{{$data->tautan}}">{{$data->tautan}}</a></td>
+                                <td>@isset($data->tautan) <a href="{{$data->tautan}}">{{$data->tautan}} @else ? @endisset</a></td>
                             </tr>
                         </tbody>
                     </table>

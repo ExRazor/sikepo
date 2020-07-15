@@ -28,7 +28,7 @@ class ResearchTeacher extends BaseModel
     public function scopeJurusanKetua($query, $jurusan)
     {
         return $query->whereHas(
-                                'teacher.studyProgram', function($q1) use($jurusan) {
+                                'teacher.latestStatus.studyProgram', function($q1) use($jurusan) {
                                     $q1->where('kd_jurusan',$jurusan);
                                 }
                         )
@@ -38,7 +38,7 @@ class ResearchTeacher extends BaseModel
     public function scopeProdiKetua($query, $prodi)
     {
         return $query->whereHas(
-                                'teacher', function($q1) use($prodi) {
+                                'teacher.latestStatus.studyProgram', function($q1) use($prodi) {
                                     $q1->where('kd_prodi',$prodi);
                                 }
                         )

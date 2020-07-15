@@ -43,7 +43,7 @@ class PageController extends Controller
                     );
 
         $publikasi = TeacherPublication::whereHas(
-                        'teacher.studyProgram', function($query) {
+                        'teacher.latestStatus.studyProgram', function($query) {
                             if(Auth::user()->hasRole('kaprodi')) {
                                 $query->where('kd_prodi',Auth::user()->kd_prodi);
                             } else {
@@ -53,7 +53,7 @@ class PageController extends Controller
                     );
 
         $luaran = TeacherOutputActivity::whereHas(
-                    'teacher.studyProgram', function($query) {
+                    'teacher.latestStatus.studyProgram', function($query) {
                         if(Auth::user()->hasRole('kaprodi')) {
                             $query->where('kd_prodi',Auth::user()->kd_prodi);
                         } else {
@@ -95,7 +95,7 @@ class PageController extends Controller
         )->get();
 
         $publikasi = TeacherPublication::whereHas(
-            'teacher.studyProgram', function($query) {
+            'teacher.latestStatus.studyProgram', function($query) {
                 if(Auth::user()->hasRole('kaprodi')) {
                     $query->where('kd_prodi',Auth::user()->kd_prodi);
                 } else {
@@ -105,7 +105,7 @@ class PageController extends Controller
         )->get();
 
         $luaran = TeacherOutputActivity::whereHas(
-            'teacher.studyProgram', function($query) {
+            'teacher.latestStatus.studyProgram', function($query) {
                 if(Auth::user()->hasRole('kaprodi')) {
                     $query->where('kd_prodi',Auth::user()->kd_prodi);
                 } else {

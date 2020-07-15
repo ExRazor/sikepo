@@ -72,7 +72,7 @@
                                     <td>
                                         <a href="{{ route('teacher.list.show',$data->nidn) }}">
                                             {{$data->teacher->nama}}<br>
-                                            <small>NIDN. {{$data->nidn}} / {{$data->teacher->studyProgram->singkatan}}</small>
+                                            <small>NIDN. {{$data->nidn}} / {{$data->teacher->latestStatus->studyProgram->singkatan}}</small>
                                         </a>
                                     </td>
                                 </tr>

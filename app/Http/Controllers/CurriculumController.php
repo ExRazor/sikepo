@@ -7,7 +7,6 @@ use App\Models\StudyProgram;
 use App\Imports\CurriculumImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;

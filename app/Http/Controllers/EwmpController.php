@@ -37,7 +37,7 @@ class EwmpController extends Controller
     {
         if(request()->ajax()) {
             $id = decrypt($id);
-            $data = Ewmp::where('id',$id)->with('teacher.studyProgram','academicYear')->first();
+            $data = Ewmp::where('id',$id)->with('teacher.latestStatus.studyProgram','academicYear')->first();
 
             return response()->json($data);
         } else {
@@ -192,7 +192,7 @@ class EwmpController extends Controller
             if($smt == 'Penuh') {
                 $ewmp = Ewmp::with('teacher')
                             ->whereHas(
-                                'teacher.studyProgram', function($query) use ($prodi) {
+                                'teacher.latestStatus.studyProgram', function($query) use ($prodi) {
                                     $query->where('kd_prodi',$prodi);
                                 })
                             ->whereHas(
@@ -215,7 +215,7 @@ class EwmpController extends Controller
             } else {
                 $ewmp = Ewmp::with('teacher')
                             ->whereHas(
-                                'teacher.studyProgram', function($query) use ($prodi) {
+                                'teacher.latestStatus.studyProgram', function($query) use ($prodi) {
                                     $query->where('kd_prodi',$prodi);
                                 })
                             ->whereHas(

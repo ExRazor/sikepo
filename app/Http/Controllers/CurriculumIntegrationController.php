@@ -135,7 +135,7 @@ class CurriculumIntegrationController extends Controller
         $data = CurriculumIntegration::query();
 
         if($request->kd_prodi_dosen) {
-            $data->whereHas('teacher', function($q) use($request) {
+            $data->whereHas('teacher.latestStatus.studyProgram', function($q) use($request) {
                 $q->where('kd_prodi',$request->kd_prodi_dosen);
             });
         }
@@ -160,7 +160,7 @@ class CurriculumIntegrationController extends Controller
                                 return '<a name="'.$d->teacher->nama.'" href='.route('teacher.list.show',$d->teacher->nidn).'>'.
                                             $d->teacher->nama.
                                             '<br>
-                                            <small>NIDN. '.$d->teacher->nidn.' / '.$d->teacher->studyProgram->singkatan.'</small>
+                                            <small>NIDN. '.$d->teacher->nidn.' / '.$d->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('kegiatan', function($d) {

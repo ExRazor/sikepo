@@ -50,9 +50,11 @@ class CurriculumScheduleController extends Controller
     {
         // $id             = decode_id($id);
         $faculty        = Faculty::all();
-        $data           = CurriculumSchedule::with('teacher.studyProgram','curriculum','academicYear')->where('id',$id)->first();
-        $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->studyProgram->kd_jurusan)->get();
-        $teacher        = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+        $data           = CurriculumSchedule::with('teacher.latestStatus.studyProgram','curriculum','academicYear')->where('id',$id)->first();
+        $studyProgram   = StudyProgram::where('kd_jurusan',$data->teacher->latestStatus->studyProgram->kd_jurusan)->get();
+        $teacher        = Teacher::whereHas('latestStatus.studyProgram', function($q) use($data) {
+                                $q->where('kd_prodi',$data->teacher->latestStatus->kd_prodi);
+                           })->get();
 
         if(request()->ajax()) {
             return response()->json($data);
@@ -280,7 +282,7 @@ class CurriculumScheduleController extends Controller
                                 return '<a href='.route('teacher.list.show',$d->teacher->nidn).'>'.
                                             $d->teacher->nama.
                                             '<br>
-                                            <small>NIDN. '.$d->teacher->nidn.' / '.$d->teacher->studyProgram->singkatan.'</small>
+                                            <small>NIDN. '.$d->teacher->nidn.' / '.$d->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->editColumn('sesuai_prodi', function($d) {
@@ -308,7 +310,7 @@ class CurriculumScheduleController extends Controller
             $q  = AcademicYear::with(
                                     'curriculumSchedule.academicYear',
                                     'curriculumSchedule.curriculum.studyProgram.department',
-                                    'curriculumSchedule.teacher.studyProgram.department'
+                                    'curriculumSchedule.teacher.latestStatus.studyProgram.department'
                                 );
 
             if($request->kd_jurusan) {

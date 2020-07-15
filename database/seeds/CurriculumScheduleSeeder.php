@@ -25,7 +25,7 @@ class CurriculumScheduleSeeder extends Seeder
             $teacher = Teacher::all()->random();
             $curriculum = Curriculum::all()->random();
 
-            $sesuai = ($teacher->kd_prodi==$curriculum->kd_prodi ? '1' : null);
+            $sesuai = ($teacher->latestStatus->kd_prodi==$curriculum->kd_prodi ? '1' : null);
 
             CurriculumSchedule::updateOrCreate(
                 [

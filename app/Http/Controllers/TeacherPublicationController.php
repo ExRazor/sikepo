@@ -59,7 +59,9 @@ class TeacherPublicationController extends Controller
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $jenis        = PublicationCategory::all();
         $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
-        $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+        $teacher      = Teacher::whereHas('latestStatus.studyProgram', function($q) use($data) {
+                            $q->where('kd_prodi',$data->teacher->latestStatus->studyProgram->kd_prodi);
+                        })->get();
 
         return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
     }
@@ -270,13 +272,13 @@ class TeacherPublicationController extends Controller
 
         if(Auth::user()->hasRole('kaprodi')) {
             $data    = TeacherPublication::whereHas(
-                                            'teacher.studyProgram', function($query) {
+                                            'teacher.latestStatus.studyProgram', function($query) {
                                                 $query->where('kd_prodi',Auth::user()->kd_prodi);
                                             }
                                         );
         } else {
             $data    = TeacherPublication::whereHas(
-                                            'teacher.studyProgram', function($query) {
+                                            'teacher.latestStatus.studyProgram', function($query) {
                                                 $query->where('kd_jurusan',setting('app_department_id'));
                                             }
                                         );
@@ -284,7 +286,7 @@ class TeacherPublicationController extends Controller
 
         if($request->kd_prodi_filter) {
             $data->whereHas(
-                'teacher.studyProgram', function($q) use($request) {
+                'teacher.latestStatus.studyProgram', function($q) use($request) {
                     $q->where('kd_prodi',$request->kd_prodi_filter);
                 }
             );
@@ -299,7 +301,7 @@ class TeacherPublicationController extends Controller
                             ->addColumn('milik', function($d) {
                                 return  '<a href="'.route('teacher.list.show',$d->teacher->nidn).'#publication">'
                                             .$d->teacher->nama.
-                                            '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->studyProgram->singkatan.'</small>
+                                            '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('kategori', function($d) {

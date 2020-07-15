@@ -75,7 +75,7 @@
                                     <select id="selectProdiDsn" class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
                                         @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->teacher->kd_prodi==$sp->kd_prodi) ? 'selected': ''}}>{{$sp->nama}}</option>
+                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && $data->teacher->latestStatus->kd_prodi==$sp->kd_prodi) ? 'selected': ''}}>{{$sp->nama}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -83,7 +83,7 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <select class="form-control select-dsn" name="nidn" {{isset($data) ? 'required' : 'disabled'}}>
+                                    <select class="form-control select2-dosen" name="nidn" {{isset($data) ? 'required' : 'disabled'}}>
                                         <option value="">- Pilih Dosen -</option>
                                         @isset($data)
                                             @foreach($teacher as $t)
@@ -150,4 +150,11 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('custom-js')
+<script>
+    var cont  = $('.select2-dosen');
+    select2_dosen(cont);
+</script>
 @endsection

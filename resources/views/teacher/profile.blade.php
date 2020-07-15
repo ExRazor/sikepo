@@ -26,8 +26,8 @@
             <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">
                 Ikatan Kerja: <strong>{{ $data->ikatan_kerja}}</strong><br>
                 Jabatan Akademik: <strong>{{ $data->jabatan_akademik }}</strong><br>
-                Fakultas/Jurusan: <strong>{{ $data->studyProgram->department->faculty->singkatan.' - '.$data->studyProgram->department->nama }}</strong><br>
-                Program Studi: <strong>{{ $data->studyProgram->nama }}</strong>
+                Fakultas/Jurusan: <strong>{{ $data->latestStatus->studyProgram->department->faculty->singkatan.' - '.$data->latestStatus->studyProgram->department->nama }}</strong><br>
+                Program Studi: <strong>{{ $data->latestStatus->studyProgram->nama }}</strong>
             </p>
 
             @if(!Auth::user()->hasRole('kajur'))
@@ -46,7 +46,7 @@
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#schedule" role="tab">Mata Kuliah</a></li>
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Bimbingan</a></li>
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
-            @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
+            @if($data->latestStatus->studyProgram->kd_jurusan == setting('app_department_id'))
                 @if($data->ikatan_kerja=='Dosen Tetap PS')
                     <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                 @endif
@@ -70,7 +70,7 @@
                 @include('teacher.tab-schedule')
                 @include('teacher.tab-minithesis')
                 @include('teacher.tab-achievement')
-                @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
+                @if($data->latestStatus->studyProgram->kd_jurusan == setting('app_department_id'))
                     @if($data->ikatan_kerja=='Dosen Tetap PS')
                         @include('teacher.tab-ewmp')
                     @endif
@@ -109,7 +109,7 @@
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">No. Sertifikat Pendidik</label>
                 <p class="tx-inverse mg-b-25">{{$data->sertifikat_pendidik}}</p>
 
-                @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
+                @if($data->latestStatus->studyProgram->kd_jurusan == setting('app_department_id'))
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Lulusan</label>
                 <p class="tx-inverse mg-b-25">{{$data->pend_terakhir_jenjang}} - {{$data->pend_terakhir_jurusan}}</p>
 

@@ -86,11 +86,13 @@
                             <td>:</td>
                             <td>{{$data->sumber_biaya}}</td>
                         </tr>
+                        @isset($data->sumber_biaya_nama)
                         <tr>
                             <th>Nama Lembaga Penunjang Biaya</th>
                             <td>:</td>
-                            <td>{{isset($data->sumber_biaya_nama) ? $data->sumber_biaya_nama : ''}}</td>
+                            <td>{{$data->sumber_biaya_nama}}</td>
                         </tr>
+                        @endisset
                         <tr>
                             <th>Jumlah Biaya Pengabdian</th>
                             <td>:</td>
@@ -115,7 +117,7 @@
                                             <td>
                                                 <a href="{{route('teacher.list.show',$st->teacher->nidn)}}">
                                                     {{$st->teacher->nama}}<br>
-                                                    <small>NIDN. {{$st->nidn}} / {{$st->teacher->studyProgram->singkatan}}</small>
+                                                    <small>NIDN. {{$st->nidn}} / {{$st->teacher->latestStatus->studyProgram->singkatan}}</small>
                                                 </a>
                                             </td>
                                             @else

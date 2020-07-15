@@ -28,7 +28,7 @@
                     <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Nama Dosen:</label>
                         <div class="col-sm-8">
-                            <select class="form-control select-dsn" name="nidn" {{Auth::user()->role=='kaprodi' ? '' : 'disabled'}}>
+                            <select class="form-control select2-dosen" name="nidn" {{Auth::user()->role=='kaprodi' ? '' : 'disabled'}}>
                             </select>
                         </div>
                     </div>

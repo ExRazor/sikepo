@@ -324,7 +324,7 @@ class CommunityServiceController extends Controller
                             ->addColumn('pelaksana', function($d) {
                                 return  '<a href="'.route('teacher.list.show',$d->serviceKetua->teacher->nidn).'#community-service">'
                                             .$d->serviceKetua->teacher->nama.
-                                            '<br><small>NIDN.'.$d->serviceKetua->teacher->nidn.' / '.$d->serviceKetua->teacher->studyProgram->singkatan.'</small>
+                                            '<br><small>NIDN.'.$d->serviceKetua->teacher->nidn.' / '.$d->serviceKetua->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
                             })
                             ->addColumn('aksi', function($d) {
@@ -342,8 +342,8 @@ class CommunityServiceController extends Controller
 
             $q   = CommunityService::with([
                                     'academicYear',
-                                    'serviceKetua.teacher.studyProgram',
-                                    'serviceAnggota.teacher.studyProgram.department',
+                                    'serviceKetua.teacher.latestStatus.studyProgram',
+                                    'serviceAnggota.teacher.latestStatus.studyProgram.department',
                                     'serviceStudent.student.studyProgram.department'
                                 ]);
 
