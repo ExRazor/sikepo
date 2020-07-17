@@ -158,7 +158,7 @@ $(document).on('click','.btn-save',function(e) {
                 title: state.title,
                 text: state.message,
                 type: state.type,
-                timer: 1500,
+                // timer: 1500,
                 onClose: () => {
                     location.reload();
                 }
@@ -181,17 +181,6 @@ $(document).on('click','.btn-save',function(e) {
             cont.prop('disabled',false);
             $('.btn-cancel').prop('disabled',false);
             cont.html('Simpan');
-
-        },
-        statusCode: {
-            500: function(state) {
-                Swal.fire({
-                    title: 'Gagal',
-                    text: 'Terjadi kesalahan saat memproses',
-                    type: 'error',
-                    timer: 1500,
-                });
-            }
         },
     });
 

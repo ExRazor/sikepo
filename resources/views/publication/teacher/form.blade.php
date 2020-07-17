@@ -244,10 +244,10 @@
 </div>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script>
     var cont  = $('.select2-dosen');
     var prodi = cont.attr('data-prodi');
     select2_dosen(cont,prodi);
 </script>
-@endsection
+@endpush

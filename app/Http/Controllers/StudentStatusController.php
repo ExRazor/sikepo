@@ -7,16 +7,6 @@ use Illuminate\Http\Request;
 
 class StudentStatusController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -60,13 +50,6 @@ class StudentStatusController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StudentStatus  $studentStatus
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         $request->validate([
@@ -98,12 +81,6 @@ class StudentStatusController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\StudentStatus  $studentStatus
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         if($request->ajax()) {

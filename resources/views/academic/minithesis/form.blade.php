@@ -138,9 +138,9 @@
 </div>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script>
     var cont  = $('.select2-dosen');
     select2_dosen(cont);
 </script>
-@endsection
+@endpush

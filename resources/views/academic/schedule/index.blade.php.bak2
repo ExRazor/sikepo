@@ -157,7 +157,7 @@
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script type="text/javascript">
     var datatable_opt = {
                             order: [[$('th.defaultSort').index(), $('table').data('sort')]],
@@ -174,4 +174,4 @@
 
 
 </script>
-@endsection
+@endpush

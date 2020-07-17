@@ -107,11 +107,11 @@ class CurriculumScheduleController extends Controller
         $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
         $query->save();
 
-        if($url_current != $url_previous) {
-            $url_tujuan = $request->url_previous;
-        } else {
-            $url_tujuan = route('academic.schedule');
-        }
+        // if($url_current != $url_previous) {
+        //     $url_tujuan = $request->url_previous;
+        // } else {
+        //     $url_tujuan = route('academic.schedule.index');
+        // }
 
         if(request()->ajax()) {
             if(!$query) {
@@ -128,7 +128,7 @@ class CurriculumScheduleController extends Controller
                 ]);
             }
         } else {
-            return redirect($url_tujuan)->with('flash.message', 'Data jadwal kurikulum berhasil ditambahkan!')->with('flash.class', 'success');
+            return redirect()->route('academic.schedule.index')->with('flash.message', 'Data jadwal kurikulum berhasil ditambahkan!')->with('flash.class', 'success');
         }
     }
 
@@ -177,11 +177,11 @@ class CurriculumScheduleController extends Controller
         $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
         $query->save();
 
-        if($url_current != $url_previous) {
-            $url_tujuan = $request->url_previous;
-        } else {
-            $url_tujuan = route('academic.schedule');
-        }
+        // if($url_current != $url_previous) {
+        //     $url_tujuan = $request->url_previous;
+        // } else {
+        //     $url_tujuan = route('academic.schedule');
+        // }
 
         if(request()->ajax()) {
             if(!$query) {
@@ -198,7 +198,7 @@ class CurriculumScheduleController extends Controller
                 ]);
             }
         } else {
-            return redirect($url_tujuan)->with('flash.message', 'Data jadwal kurikulum berhasil disunting!')->with('flash.class', 'success');
+            return redirect()->route('academic.schedule.index')->with('flash.message', 'Data jadwal kurikulum berhasil disunting!')->with('flash.class', 'success');
         }
     }
 

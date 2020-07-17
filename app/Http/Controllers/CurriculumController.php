@@ -109,7 +109,7 @@ class CurriculumController extends Controller
         $query->unit_penyelenggara = $request->unit_penyelenggara;
         $query->save();
 
-        return redirect()->route('academic.curriculum.show',$query->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('academic.curriculum.index',$query->id)->with('flash.message', 'Data berhasil disimpan!')->with('flash.class', 'success');
     }
 
     public function import(Request $request)

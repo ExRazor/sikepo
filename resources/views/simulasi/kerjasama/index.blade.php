@@ -188,7 +188,7 @@
 <script src="{{asset('assets')}}/simulasi.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script>
 
 $('#form_penilaian').submit(function(e){
@@ -237,4 +237,4 @@ $('#form_penilaian').submit(function(e){
 
 
 </script>
-@endsection
+@endpush

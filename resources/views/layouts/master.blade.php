@@ -84,6 +84,6 @@
     <script src="{{ asset ('assets') }}/app.js"></script>
 
     <!-- CUSTOM JS -->
-    @yield('custom-js')
+    @stack('custom-js')
   </body>
 </html>

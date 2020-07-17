@@ -103,7 +103,7 @@
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script type="text/javascript">
     var table = $('#table_minithesis');
     datatable(table);
@@ -143,4 +143,4 @@
         })
     }
 </script>
-@endsection
+@endpush

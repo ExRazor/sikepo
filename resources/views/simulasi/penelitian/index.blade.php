@@ -131,7 +131,7 @@
 <script src="{{asset('assets')}}/simulasi.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script type="text/javascript">
 
 $(function(){
@@ -187,4 +187,4 @@ function penilaian_penelitian_dtps(kd_prodi) {
 
 
 </script>
-@endsection
+@endpush

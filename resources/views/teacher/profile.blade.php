@@ -43,6 +43,7 @@
     </div>
     <div class="br-profile-tab ht-70 bg-gray-100 shadow-base">
         <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
+            <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Jabatan</a></li>
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#schedule" role="tab">Mata Kuliah</a></li>
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Bimbingan</a></li>
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
@@ -67,6 +68,7 @@
                     {{ session('flash.message') }}
                 </div>
                 @endif
+                @include('teacher.tab-status')
                 @include('teacher.tab-schedule')
                 @include('teacher.tab-minithesis')
                 @include('teacher.tab-achievement')

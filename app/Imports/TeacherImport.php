@@ -39,7 +39,7 @@ class TeacherImport implements ToCollection, WithStartRow
                 $row[19] = 'Nonaktif';
             }
 
-            Student::updateOrCreate(
+            Teacher::updateOrCreate(
                 [
                     'nim'       => $row[4],
                 ],
@@ -62,7 +62,7 @@ class TeacherImport implements ToCollection, WithStartRow
                 ]
             );
 
-            StudentStatus::create([
+            TeacherStatus::create([
                 'id_ta'     => $thn_masuk->id,
                 'nim'       => $row[4],
                 'status'    => 'Aktif'

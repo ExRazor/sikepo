@@ -3,7 +3,7 @@
         <div class="card card pd-20 pd-xs-30 shadow-base bd-0">
             <div class="row d-flex">
                 <div class="pt-1">
-                    <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">Prestasi/Pengakuan/Rekognisi Dosen</h6>
+                    <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">Jadwal Mata Kuliah</h6>
                 </div>
                 @if(!Auth::user()->hasRole('kajur'))
                 <div class="ml-auto">

@@ -104,7 +104,7 @@
 <link href="{{ asset ('assets/lib') }}/datatables.net-responsive-dt/css/responsive.dataTables.min.css" rel="stylesheet">
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script>
     var bahasa = {
             "sProcessing":   '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
@@ -202,4 +202,4 @@
         });
     });
 </script>
-@endsection
+@endpush

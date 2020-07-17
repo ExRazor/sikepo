@@ -1,6 +1,6 @@
 <div class="tab-pane fade" id="minithesis">
         <div class="bd rounded table-responsive">
-            <table id="table-studentAcv" class="table datatable table-bordered mb-0">
+            <table id="table-studentAcv" class="table table-bordered mb-0">
                 <thead>
                     <tr>
                         <th class="text-center align-middle">Judul Tugas Akhir</th>

@@ -129,7 +129,7 @@ class TeacherPublicationController extends Controller
             }
         }
 
-        return redirect()->route('publication.teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('publication.teacher.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)

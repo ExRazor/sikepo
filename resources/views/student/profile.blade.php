@@ -77,12 +77,12 @@
                     <div class="card shadow-base">
                         <div class="card-header">
                             <div class="tab-header d-flex">
-                                <h4 class="d-none d-md-block">-</h4>
+                                {{-- <h4 class="d-none d-md-block">-</h4> --}}
                                 <div class="br-profile-tab ml-auto">
                                     <ul class="nav nav-outline active-info align-items-center flex-row profile-tab" role="tablist">
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#profile" role="tab">Biodata</a></li>
                                         @if($data->studyProgram->kd_jurusan == setting('app_department_id'))
-                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status Akademik</a></li>
+                                        <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#status" role="tab">Status</a></li>
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
                                         @endif
                                         <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Tugas Akhir</a></li>

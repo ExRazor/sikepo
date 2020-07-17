@@ -103,5 +103,5 @@
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
 
-@section('custom-js')
-@endsection
+@push('custom-js')
+@endpush

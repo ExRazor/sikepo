@@ -99,7 +99,7 @@
 <script src="{{asset('assets')}}/simulasi.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script type="text/javascript">
 
 $(function(){
@@ -434,4 +434,4 @@ $(function(){
 });
 
 </script>
-@endsection
+@endpush

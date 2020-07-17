@@ -51,13 +51,17 @@ class StudentController extends Controller
     public function show($id)
     {
         $id = decode_id($id);
+        $data       = Student::where('nim',$id)->first();
 
+        if(!isset($data) || Auth::user()->kd_prodi != $data->kd_prodi) {
+            return redirect(route('student.list.index'));
+        }
+
+        $status       = $data->latestStatus;
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $data       = Student::with('studyProgram','studentForeign')->where('nim',$id)->first();
-        $status     = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','desc')->orderBy('id','desc')->first();
-        $statusList = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
-        $achievement = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
-        $minithesis = Minithesis::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
+        $statusList   = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','asc')->get();
+        $achievement  = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
+        $minithesis   = Minithesis::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
 
         if($status){
             if($status->status == 'Aktif') {
@@ -163,7 +167,7 @@ class StudentController extends Controller
         $status->status = 'Aktif';
         $status->save();
 
-        return redirect()->route('student')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('student.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function import(Request $request)

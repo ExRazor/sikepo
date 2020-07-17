@@ -212,7 +212,7 @@
 <script src="{{asset('assets')}}/simulasi.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script>
 
 $(function(){
@@ -292,4 +292,4 @@ function penilaian_mhs_asing(kd_prodi) {
 });
 
 </script>
-@endsection
+@endpush

@@ -16,6 +16,7 @@ use App\Models\Minithesis;
 use App\Models\User;
 use App\Imports\TeacherImport;
 use App\Models\TeacherPublication;
+use App\Models\TeacherStatus;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
@@ -67,13 +68,16 @@ class TeacherController extends Controller
         // $nidn = decode_id($nidn);
         $data = Teacher::where('nidn',$nidn)->first();
 
-        if(!isset($data)) {
-            return redirect(route('teacher'));
+        if(!isset($data) || (Auth::user()->hasRole('kaprodi') && Auth::user()->kd_prodi != $data->latestStatus->studyProgram->kd_prodi)) {
+            return redirect(route('teacher.list.index'));
         }
 
         $data->bidang_ahli = json_decode($data->bidang_ahli);
 
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
+        $tahun          = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
+        $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $status         = TeacherStatus::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
         $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
         $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_pendamping',$data->nidn)->orderBy('id_ta','desc')->get();
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
@@ -113,10 +117,8 @@ class TeacherController extends Controller
                                             ->orderBy('tahun','desc')
                                             ->get();
 
-        // dd($research);
-        // return response()->json($research);die;
 
-        return view('teacher/profile',compact(['data','academicYear','schedule','ewmp','achievement','minithesis','research','service','publication']));
+        return view('teacher/profile',compact(['data','academicYear','tahun','studyProgram','status','schedule','ewmp','achievement','minithesis','research','service','publication']));
     }
 
     public function create()
@@ -202,7 +204,7 @@ class TeacherController extends Controller
         $user->name         = $request->nama;
         $user->save();
 
-        return redirect()->route('teacher')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        return redirect()->route('teacher.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
     public function update(Request $request)
@@ -459,7 +461,9 @@ class TeacherController extends Controller
         }
 
         if($request->prodi) {
-            $data->where('kd_prodi',$request->prodi);
+            $data->whereHas('latestStatus.studyProgram',function($q) use($request) {
+                $q->where('kd_prodi',$request->prodi);
+            });
         }
 
         return DataTables::of($data->get())

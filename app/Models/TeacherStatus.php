@@ -20,7 +20,7 @@ class TeacherStatus extends Model
 
     public function academicYear()
     {
-        return $this->belongsTo('App\Models\AcademicYear','id_ta');
+        return $this->belongsTo('App\Models\AcademicYear','id_ta')->orderBy('tahun_akademik','desc');
     }
 
     public function studyProgram()

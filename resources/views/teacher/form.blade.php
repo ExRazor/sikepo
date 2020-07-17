@@ -281,7 +281,7 @@
 </div>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -304,4 +304,4 @@ function cek(value) {
     }
 }
 </script>
-@endsection
+@endpush

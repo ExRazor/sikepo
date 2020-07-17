@@ -390,7 +390,7 @@ class TeacherProfileController extends Controller
                 ]);
             }
         } else {
-            return redirect()->route('teacher.achievement');
+            return redirect()->route('teacher.achievement.index');
         }
     }
 

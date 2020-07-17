@@ -134,7 +134,7 @@
 <script src="{{asset('assets')}}/home.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script>
     url = $('#chart').attr('url-target');
     chart(url,'Penelitian');
@@ -147,4 +147,4 @@
         chart(url,type);
     })
 </script>
-@endsection
+@endpush

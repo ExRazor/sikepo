@@ -1,6 +1,6 @@
 <div class="tab-pane fade" id="publication">
     <div class="bd rounded table-responsive">
-        <table class="table datatable table-bordered mb-0">
+        <table class="table table-bordered mb-0">
             <thead>
                 <tr>
                     <th class="text-center align-middle">Judul Publikasi</th>

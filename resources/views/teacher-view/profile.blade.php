@@ -243,5 +243,5 @@
 </div>
 @endsection
 
-@section('custom-js')
-@endsection
+@push('custom-js')
+@endpush

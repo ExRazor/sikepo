@@ -243,7 +243,7 @@
 <script src="{{asset('assets')}}/simulasi.js"></script>
 @endsection
 
-@section('custom-js')
+@push('custom-js')
 <script type="text/javascript">
 
 $(function(){
@@ -339,4 +339,4 @@ function penilaian_tempat_lulusan(kd_prodi)
 
 
 </script>
-@endsection
+@endpush

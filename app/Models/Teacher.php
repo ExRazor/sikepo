@@ -43,14 +43,9 @@ class Teacher extends BaseModel
         return $this->hasMany('App\Models\TeacherStatus','nidn');
     }
 
-    public function teacherStatusArray()
-    {
-        return $this->hasMany('App\Models\TeacherStatus','nidn')->toArray();
-    }
-
     public function latestStatus()
     {
-        return $this->hasOne('App\Models\TeacherStatus','nidn')->orderBy('id_ta','desc')->orderBy('id','desc')->limit(1);
+        return $this->hasOne('App\Models\TeacherStatus','nidn')->orderBy('id_ta','desc');
     }
 
     public function ewmp()

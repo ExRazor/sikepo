@@ -176,7 +176,7 @@ class EwmpController extends Controller
                 ]);
             }
         } else {
-            return redirect()->route('collaboration');
+            return redirect()->url('/');
         }
     }
 
