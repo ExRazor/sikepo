@@ -135,4 +135,29 @@ class PageController extends Controller
 
         return redirect()->route('dashboard')->with('flash.message', 'Selamat datang di panel admin Program Studi '.$prodi->nama.'!');
     }
+
+    public function tes()
+    {
+        // $hehe = \App\Models\Teacher::find(269685517)->teacherStatus;
+        // dd($hehe);
+
+        // $data         = \App\Models\Teacher::whereHas(
+        //     'latestStatus', function($query) {
+        //         $query->where('kd_prodi',57201);
+        // })->get();
+
+        // $data = \App\Models\Teacher::select('teachers.*')
+        // ->join('teacher_statuses', 'teachers.nidn', 'teacher_statuses.nidn')
+        // ->where(
+        //     'teacher_statuses.kd_prodi', function($query) {
+        //         $query->select('kd_prodi')
+        //               ->from('teacher_statuses')
+        //               ->latest()
+        //               ->limit(1);
+        // })->get();
+
+        $data = \App\Models\Teacher::find(467391983)->latestStatus;
+
+        dd($data);
+    }
 }

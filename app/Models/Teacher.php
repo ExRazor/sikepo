@@ -40,12 +40,13 @@ class Teacher extends BaseModel
 
     public function teacherStatus()
     {
-        return $this->hasMany('App\Models\TeacherStatus','nidn');
+        return $this->hasMany('App\Models\TeacherStatus','nidn')->latest('periode');
     }
 
     public function latestStatus()
     {
-        return $this->hasOne('App\Models\TeacherStatus','nidn')->orderBy('id_ta','desc');
+        // return $this->hasOne('App\Models\TeacherStatus','nidn')->orderBy('periode','desc');
+        return $this->hasOne('App\Models\TeacherStatus','nidn')->where('is_active',true);
     }
 
     public function ewmp()

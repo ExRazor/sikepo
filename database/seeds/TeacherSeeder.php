@@ -67,10 +67,12 @@ class TeacherSeeder extends Seeder
             ]);
 
             TeacherStatus::create([
-                'id_ta'             => AcademicYear::where('semester','Ganjil')->where('tahun_akademik',date('Y'))->first()->id,
+                // 'id_ta'             => AcademicYear::where('semester','Ganjil')->where('tahun_akademik',date('Y'))->first()->id,
                 'nidn'              => Teacher::where('nip',$teacher->nip)->first()->nidn,
-                'jabatan'            => 'Dosen',
+                'periode'           => date('Y-m-d'),
+                'jabatan'           => 'Dosen',
                 'kd_prodi'          => $studyProgram->kd_prodi,
+                'is_active'         => true,
                 'created_at'        => now()
             ]);
         }

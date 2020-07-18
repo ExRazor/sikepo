@@ -77,7 +77,7 @@ class TeacherController extends Controller
         $academicYear   = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
         $tahun          = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $status         = TeacherStatus::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
+        $status         = TeacherStatus::where('nidn',$data->nidn)->get();
         $schedule       = CurriculumSchedule::where('nidn',$data->nidn)->orderBy('kd_matkul','asc')->get();
         $minithesis     = Minithesis::where('pembimbing_utama',$data->nidn)->orWhere('pembimbing_pendamping',$data->nidn)->orderBy('id_ta','desc')->get();
         $ewmp           = Ewmp::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
@@ -106,17 +106,16 @@ class TeacherController extends Controller
                                                     $q1->where('nidn',$data->nidn);
                                                 }
                                             )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
-
-        $publication        = TeacherPublication::whereHas(
-                                                'teacher', function($q1) use ($data) {
-                                                    $q1->where('nidn',$data->nidn);
-                                                }
-                                            )
-                                            ->orderBy('tahun','desc')
+                                            ->orderBy('id_ta','desc')
                                             ->get();
 
+        $publication        = TeacherPublication::whereHas(
+                                                    'teacher', function($q1) use ($data) {
+                                                        $q1->where('nidn',$data->nidn);
+                                                    }
+                                                )
+                                                ->orderBy('tahun','desc')
+                                                ->get();
 
         return view('teacher/profile',compact(['data','academicYear','tahun','studyProgram','status','schedule','ewmp','achievement','minithesis','research','service','publication']));
     }
@@ -199,7 +198,7 @@ class TeacherController extends Controller
         $user               = new User;
         $user->username     = $request->nidn;
         $user->password     = Hash::make($request->nidn);
-        $user->role         = 'dosen';
+        $user->role         = 'Dosen';
         $user->defaultPass  = 1;
         $user->name         = $request->nama;
         $user->save();
@@ -459,6 +458,8 @@ class TeacherController extends Controller
                                     $query->where('kd_jurusan',setting('app_department_id'));
                             });
         }
+
+        // dd($data->get());
 
         if($request->prodi) {
             $data->whereHas('latestStatus.studyProgram',function($q) use($request) {

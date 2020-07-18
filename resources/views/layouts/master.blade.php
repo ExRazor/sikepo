@@ -27,6 +27,7 @@
 
     <!-- Custom CSS -->
     @yield('custom-style')
+    @stack('custom-style')
 
     <!-- APP JS -->
     <script src="{{ asset ('assets/lib') }}/jquery/jquery.min.js"></script>

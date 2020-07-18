@@ -3,7 +3,7 @@
         <div class="card card pd-20 pd-xs-30 shadow-base bd-0">
             <div class="row d-flex">
                 <div class="pt-1">
-                    <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">Prestasi/Pengakuan/Rekognisi Dosen</h6>
+                    <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-14 mg-b-30">Status Jabatan</h6>
                 </div>
                 @if(!Auth::user()->hasRole('kajur'))
                 <div class="ml-auto">
@@ -28,10 +28,8 @@
                             @forelse ($status as $s)
                             <tr>
                                 <td>{{ $s->jabatan }}</td>
-                                <td class="text-center">{{ $s->academicYear->tahun_akademik }}</td>
-                                <td>
-                                    {{ $s->studyProgram->nama }}
-                                </td>
+                                <td class="text-center">{{ $s->periode }}</td>
+                                <td>{{ $s->studyProgram->nama }}</td>
                                 @if(!Auth::user()->hasRole('kajur'))
                                 <td width="50">
                                     <div class="btn-group" role="group">
@@ -65,9 +63,7 @@
 
 @push('custom-js')
 <script>
-
 $('#table_teacher_status').on('click','.btn-edit',function(e){
-
     var id  = $(this).data('id');
     var url = base_url+'/ajax/teacher/status/'+id;
 
@@ -78,8 +74,8 @@ $('#table_teacher_status').on('click','.btn-edit',function(e){
         success: function (data) {
             $('#modal-teach-status')
                 .find('input[name=_id]').val(id).end()
-                .find('select[name=id_ta]').val(data.id_ta).end()
                 .find('select[name=jabatan]').val(data.jabatan).end()
+                .find('input[name=periode]').val(data.periode).end()
                 .find('select[name=kd_prodi]').val(data.kd_prodi).end()
                 .find('.status_mahasiswa').hide().end()
                 .find('button[type=submit]').attr('data-id',id).end()

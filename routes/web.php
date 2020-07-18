@@ -12,6 +12,7 @@
 */
 
 // Login Routes...
+Route::get('/tes', 'PageController@tes');
 Route::get('login', 'AuthController@login_form')->middleware('guest')->name('login');
 Route::post('login', 'AuthController@login_post')->name('login_post');
 Route::get('logout', 'AuthController@logout')->name('logout');

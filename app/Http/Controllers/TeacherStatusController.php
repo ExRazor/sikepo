@@ -15,10 +15,14 @@ class TeacherStatusController extends Controller
         try {
             $data                = new TeacherStatus;
             $data->nidn          = $request->_nidn;
-            $data->id_ta         = $val['id_ta'];
+            $data->periode       = date("Y-m-d", strtotime($val['periode']) );
             $data->jabatan       = $val['jabatan'];
             $data->kd_prodi      = $val['kd_prodi'];
+            $data->is_active     = false;
             $data->save();
+
+            //Update status aktif jabatan
+            $this->setStatus($request->_nidn);
 
             $response = [
                 'title'   => 'Berhasil',
@@ -34,7 +38,7 @@ class TeacherStatusController extends Controller
                 'message' => $e->getMessage(),
                 'type'    => 'error'
             ];
-            // return false;
+
             return response()->json($response);
         }
     }
@@ -59,9 +63,13 @@ class TeacherStatusController extends Controller
         try {
             $data            = TeacherStatus::findOrFail($id);
             $data->nidn      = $request->_nidn;
-            $data->id_ta     = $val['id_ta'];
+            $data->periode   = date("Y-m-d", strtotime($val['periode']) );
             $data->kd_prodi  = $val['kd_prodi'];
+            $data->is_active = false;
             $data->save();
+
+            //Update status aktif jabatan
+            $this->setStatus($request->_nidn);
 
             $response = [
                 'title'   => 'Berhasil',
@@ -77,6 +85,7 @@ class TeacherStatusController extends Controller
                 'message' => $e->getMessage(),
                 'type'    => 'error'
             ];
+
             return response()->json($response);
         }
     }
@@ -87,7 +96,12 @@ class TeacherStatusController extends Controller
             $id = decrypt($request->id);
 
             try {
-                TeacherStatus::find($id)->delete();
+                $data = TeacherStatus::find($id);
+                $data->delete();
+
+                //Update status aktif jabatan
+                $this->setStatus($data->nidn);
+
             } catch(\Exception $e) {
                 return response()->json([
                     'title'   => 'Gagal',
@@ -102,5 +116,13 @@ class TeacherStatusController extends Controller
                 'type'    => 'success'
             ]);
         }
+    }
+
+    public function setStatus($nidn)
+    {
+        $status_terbaru = TeacherStatus::where('nidn',$nidn)->latest('periode')->first()->id;
+
+        TeacherStatus::where('nidn',$nidn)->where('is_active',true)->update(['is_active'=>false]);
+        TeacherStatus::where('id',$status_terbaru)->update(['is_active'=>true]);
     }
 }

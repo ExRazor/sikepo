@@ -30,12 +30,13 @@ class TeacherStatusRequest extends FormRequest
         }
         return [
             'jabatan'       => 'required',
-            'id_ta'         => [
-                                'required',
-                                Rule::unique('teacher_statuses')->where(function($query) {
-                                    return $query->where('nidn',$this->_nidn);
-                                })->ignore($id)
-                            ],
+            // 'id_ta'         => [
+            //                     'required',
+            //                     Rule::unique('teacher_statuses')->where(function($query) {
+            //                         return $query->where('nidn',$this->_nidn);
+            //                     })->ignore($id)
+            //                 ],
+            'periode'       => 'required',
             'kd_prodi'      => 'required',
         ];
     }
@@ -44,7 +45,7 @@ class TeacherStatusRequest extends FormRequest
     {
         return [
             'jabatan'  => 'Jabatan',
-            'id_ta'    => 'Tahun Periode',
+            'periode'  => 'Tahun Periode',
             'kd_prodi' => "Klaster",
         ];
     }
