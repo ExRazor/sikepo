@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -168,5 +169,112 @@ class UserController extends Controller
                 'type'      => 'success'
             ]);
         }
+    }
+
+    public function toggle_active($id)
+    {
+        try {
+            $user = User::find($id);
+            $user->is_active = !$user->is_active;
+            $user->save();
+
+            switch($user->is_active) {
+                case true:
+                    $pesan = 'diaktifkan';
+                break;
+                case false:
+                    $pesan = 'dinonaktifkan';
+                break;
+            }
+
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'User berhasil '.$pesan,
+                'type'    => 'success'
+            ]);
+
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function datatable_user(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        $user   = User::where('role','!=','Dosen')->orderBy('created_at','asc')->get();
+
+        foreach($user as $u) {
+            switch($u->role) {
+                case 'admin':
+                    $u->badge = 'badge badge-primary tx-13';
+                break;
+                case 'kajur':
+                    $u->badge = 'badge badge-success tx-13';
+                break;
+                case 'kaprodi':
+                    $u->badge = 'badge badge-danger tx-13';
+                break;
+                default:
+                    $u->badge = 'badge badge-secondary tx-13';
+                break;
+            }
+        }
+        return DataTables::of($user)
+                            ->editColumn('role', function($d) {
+                                $role = '<span class="'.$d->badge.'">'.ucfirst($d->role).(isset($d->kd_prodi) ? ' - '.$d->studyProgram->nama : '').'</span>';
+                                return $role;
+                            })
+                            ->addColumn('status', function($d) {
+                                $status =   '<div class="br-toggle br-toggle-success '.(($d->is_active) ? 'on' : '').'" onclick="setActive(this)" data-route='.route('ajax.user.toggle_active',$d->id).'>
+                                                <div class="br-toggle-switch"></div>
+                                            </div>';
+                                return $status;
+                            })
+                            ->addColumn('aksi', function($d) {
+                                return view('setting.user.btn_action_user', compact('d'))->render();
+                            })
+                            ->rawColumns(['role','status','aksi'])
+                            ->make();
+    }
+
+    public function datatable_dosen(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        $data  = User::where('role','=','Dosen')
+                        ->whereHas(
+                            'teacher.latestStatus.studyProgram', function($q) {
+                                $q->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        )
+                        ->orderBy('created_at','asc')->get();
+
+        return DataTables::of($data)
+                            ->addColumn('status', function($d) {
+                                // $status = '<button class="btn btn-sm btn-success btn-active font-weight-bold" onclick="setActive(this)" data-route='.route('ajax.user.toggle_active',$d->id).'>Aktif</button>';
+                                $status =   '<div class="br-toggle br-toggle-success '.(($d->is_active) ? 'on' : '').'" onclick="setActive(this)" data-route='.route('ajax.user.toggle_active',$d->id).'>
+                                                <div class="br-toggle-switch"></div>
+                                            </div>';
+
+                                return $status;
+                            })
+                            ->addColumn('password', function($d) {
+                                if($d->defaultPass) {
+                                    $msg = 'Default';
+                                } else {
+                                    $msg = 'Diganti';
+                                }
+                                return $msg;
+                            })
+                            ->addColumn('aksi', function($d) {
+                                return view('setting.user.btn_action_dosen', compact('d'))->render();
+                            })
+                            ->rawColumns(['status','aksi'])
+                            ->make();
     }
 }

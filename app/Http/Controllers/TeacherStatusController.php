@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TeacherStatus;
 use App\Http\Requests\TeacherStatusRequest;
+use App\Models\Teacher;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherStatusController extends Controller
 {
@@ -23,6 +26,9 @@ class TeacherStatusController extends Controller
 
             //Update status aktif jabatan
             $this->setStatus($request->_nidn);
+
+            //Create User
+            // $this->addUser($request);
 
             $response = [
                 'title'   => 'Berhasil',
@@ -99,6 +105,8 @@ class TeacherStatusController extends Controller
                 $data = TeacherStatus::find($id);
                 $data->delete();
 
+                // $this->deleteUser($data);
+
                 //Update status aktif jabatan
                 $this->setStatus($data->nidn);
 
@@ -118,11 +126,54 @@ class TeacherStatusController extends Controller
         }
     }
 
-    public function setStatus($nidn)
+    private function setStatus($nidn)
     {
         $status_terbaru = TeacherStatus::where('nidn',$nidn)->latest('periode')->first()->id;
 
         TeacherStatus::where('nidn',$nidn)->where('is_active',true)->update(['is_active'=>false]);
         TeacherStatus::where('id',$status_terbaru)->update(['is_active'=>true]);
+    }
+
+    private function addUser($request)
+    {
+        $val = $request->validated();
+
+        try {
+            $jabatan = 'Dosen';
+
+            if($val['jabatan'] != 'Dosen') {
+                $jabatan = $val['jabatan'];
+            }
+
+            User::updateOrCreate(
+                [
+                    'username' => $request->_nidn,
+                    'role'     => $jabatan,
+                ],
+                [
+                    'password'   => Hash::make($request->_nidn),
+                    'kd_prodi'   => $val['kd_prodi'],
+                    'name'       => Teacher::find($request->_nidn)->nama,
+                    'foto'       => Teacher::find($request->_nidn)->foto ?? null,
+                    'is_active'  => true,
+                ]
+            );
+
+            return true;
+
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    private function deleteUser($data)
+    {
+        try {
+            User::where('username',$data->nidn)->where('role',$data->jabatan)->delete();
+            return true;
+
+        } catch(\Exception $e) {
+            return false;
+        }
     }
 }

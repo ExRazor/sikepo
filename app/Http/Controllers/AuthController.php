@@ -25,8 +25,14 @@ class AuthController extends Controller
 
         $auth = $request->only('username', 'password');
 
+        $credential = [
+            'username' => $request->username,
+            'password' => $request->password,
+            'is_active'=> true
+        ];
+
         //Proses Login
-        if (Auth::attempt($auth)) {
+        if (Auth::attempt($credential)) {
             //Redirek jika berhasil
             return redirect()->intended(route('dashboard'));
         }

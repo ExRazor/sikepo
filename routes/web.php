@@ -130,6 +130,11 @@ Route::middleware('auth')->group(function () {
         Route::post('study-program/get_by_department','StudyProgramController@get_by_department')->name('study-program.filter');
         Route::get('study-program/loadData','StudyProgramController@loadData')->name('study-program.load');
 
+        //Setting - User
+        Route::get('user/toggle_active/{id}','UserController@toggle_active')->name('user.toggle_active');
+        Route::post('user/datatable_user','UserController@datatable_user')->name('user.datatable.user');
+        Route::post('user/datatable_dosen','UserController@datatable_dosen')->name('user.datatable.dosen');
+
         //Satisfaction Category
         Route::get('satisfaction-category/{id}','SatisfactionCategoryController@edit')->name('satisfaction-category.edit');
 

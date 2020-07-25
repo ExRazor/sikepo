@@ -18,7 +18,7 @@
                             <tr>
                                 <th class="text-center align-middle">Jabatan</th>
                                 <th class="text-center align-middle">Periode</th>
-                                <th class="text-center align-middle">Klaster</th>
+                                <th class="text-center align-middle">Homebase</th>
                                 @if(!Auth::user()->hasRole('kajur'))
                                 <th class="text-center align-middle">Aksi</th>
                                 @endif

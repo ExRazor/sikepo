@@ -21,7 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('kd_prodi')->nullable();
             $table->string('name');
             $table->string('foto')->nullable();
-            $table->char('defaultPass',1)->nullable();
+            $table->boolean('defaultPass')->nullable();
+            $table->boolean('is_active')->nullable();
             $table->string('remember_token')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();

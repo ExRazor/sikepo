@@ -51,10 +51,10 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Klaster:<span class="tx-danger">*</span></label>
+                        <label class="col-sm-3 form-control-label">Homebase:<span class="tx-danger">*</span></label>
                         <div class="col-sm-8">
                             <select class="form-control" name="kd_prodi">
-                                <option value="">= Pilih Klaster =</option>
+                                <option value="">= Pilih Homebase =</option>
                                 @foreach ($studyProgram as $sp)
                                 <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                                 @endforeach
