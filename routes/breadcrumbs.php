@@ -542,7 +542,7 @@ Breadcrumbs::for('setting-general', function ($trail) {
 // Setelan > User
 Breadcrumbs::for('setting-user', function ($trail) {
     $trail->parent('setting');
-    $trail->push('Manajemen User',route('setting.user'));
+    $trail->push('Manajemen User',route('setting.user.index'));
 });
 
 // Profile

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Perhitungan;
 
 use App\Models\AcademicYear;
 use App\Models\Ewmp;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\Minithesis;
 use App\Models\StudyProgram;
 use App\Models\Teacher;

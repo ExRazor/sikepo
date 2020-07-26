@@ -15,7 +15,7 @@ class PageController extends Controller
 {
     public function dashboard(Request $request)
     {
-        if(Auth::user()->hasRole('dosen')) {
+        if(Auth::user()->hasRole('dosen') || Auth::user()->hasRole('Dosen')) {
             return redirect()->route('profile.biodata');
         }
 

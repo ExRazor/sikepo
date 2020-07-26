@@ -6,7 +6,7 @@ use App\Models\AcademicYear;
 use App\Models\Student;
 use App\Models\AlumnusWorkplace;
 use App\Models\StudentAchievement;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\StudentStatus;
 use App\Models\StudyProgram;
 use Illuminate\Support\Facades\Auth;

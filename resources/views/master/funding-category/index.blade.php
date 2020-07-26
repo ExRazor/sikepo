@@ -167,5 +167,76 @@
 {{-- @include('funding.category.form'); --}}
 @endsection
 
-@section('js')
-@endsection
+@push('custom-js')
+    <script>
+        $('#table-fundCat').on('click','.btn-edit',function(){
+            var id  = $(this).data('id');
+            var url = base_url+'/ajax/funding/category/'+id;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#form-fundCat')
+                        .find('input[name=_id]').val(id).end()
+                        .find('select[name=id_parent]').val(data.id_parent).end()
+                        .find('input[name=nama]').val(data.nama).end()
+                        .find('textarea[name=deskripsi]').val(data.deskripsi).end()
+
+                    if(data.id_parent) {
+                        $('#form-fundCat').find('.select_parent').show()
+                        $('#form-fundCat').find('.category-description').show();
+                        $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',false);
+                        $('#form-fundCat').find('select[name=jenis]').prop('disabled',true).val(data.jenis);
+                        $('#form-fundCat').find('input[name=jenis]').prop('disabled',false).val(data.jenis);
+                    } else {
+                        $('#form-fundCat').find('.select_parent').hide()
+                        $('#form-fundCat').find('.category-description').hide();
+                        $('#form-fundCat').find('.category-description').find('textarea').prop('disabled',true);
+                        $('#form-fundCat').find('input[name=jenis]').prop('disabled',true).removeAttr('value');
+                        $('#form-fundCat').find('select[name=jenis]').prop('disabled',false).val(data.jenis);
+                    }
+
+                }
+            });
+            })
+
+            $('#form-fundCat')
+            .on('change','select[name=id_parent]',function(){
+                var form  = $('#form-fundCat')
+                var value = $(this).val();
+
+                if(value) {
+                    $.ajax({
+                        url: base_url+'/ajax/funding/category/select/'+value,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            form.find('.category-description').show();
+                            form.find('.category-description').find('textarea').prop('disabled',false);
+                            form.find('.category-type').find('select').prop('disabled',true);
+                            form.find('.category-type').find('select').val(data);
+                            form.find('input[name=jenis]').prop('disabled',false);
+                            form.find('input[name=jenis]').val(data);
+                        }
+                    });
+                } else {
+                    form.find('.category-description').hide();
+                    form.find('.category-description').find('textarea').prop('disabled',true);
+                    form.find('input[name=jenis]').prop('disabled',true)
+                    form.find('input[name=jenis]').removeAttr("value");
+                    form.find('.category-type').find('select').prop('disabled',false);
+                    form.find('.category-type').find('select').val("");
+
+                }
+            })
+            .on('click','.btn-add',function(e){
+                var form  = $('#form-fundCat')
+                form.trigger('reset');
+                form.find('.select_parent').show()
+                form.find('select[name=id_parent]').trigger('change')
+
+            }).end()
+    </script>
+@endpush

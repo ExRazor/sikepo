@@ -196,11 +196,12 @@ class TeacherController extends Controller
 
         //Buat User Dosen
         $user               = new User;
-        $user->username     = $request->nidn;
-        $user->password     = Hash::make($request->nidn);
-        $user->role         = 'Dosen';
+        $user->username     = $Teacher->nidn;
+        $user->password     = Hash::make($Teacher->nidn);
+        $user->role         = 'dosen';
         $user->defaultPass  = 1;
-        $user->name         = $request->nama;
+        $user->name         = $Teacher->nama;
+        $user->foto         = $Teacher->foto;
         $user->save();
 
         return redirect()->route('teacher.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
@@ -274,7 +275,8 @@ class TeacherController extends Controller
 
         //Update User Dosen
         $user          = User::where('username',$id)->first();
-        $user->name    = $request->nama;
+        $user->name    = $Teacher->nama;
+        $user->foto    = $Teacher->foto;
         $user->save();
 
         return redirect()->route('teacher.list.show',$Teacher->nidn)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
@@ -489,38 +491,36 @@ class TeacherController extends Controller
 
     public function loadData(Request $request)
     {
-        if($request->ajax()) {
-            if($request->has('cari')){
-                $cari  = $request->cari;
-                $prodi = $request->prodi;
-
-                $q = Teacher::select('nidn','nama');
-
-                if($prodi) {
-                    $q->whereHas('latestStatus', function($q) use($prodi) {
-                        $q->where('kd_prodi',$prodi);
-                    });
-                }
-
-                if($cari) {
-                    $q->where(function($query) use ($request) {
-                        $query->where('nidn', 'LIKE', '%'.$request->cari.'%')->orWhere('nama', 'LIKE', '%'.$request->cari.'%');
-                    });
-                }
-
-                $data = $q->get();
-
-                $response = array();
-                foreach($data as $d){
-                    $response[] = array(
-                        "id"    => $d->nidn,
-                        "text"  => $d->nama.' ('.$d->nidn.')'
-                    );
-                }
-                return response()->json($response);
-            }
-        } else {
+        if(!$request->ajax()) {
             abort(404);
         }
+
+        $cari  = $request->cari;
+        $prodi = $request->prodi;
+
+        $q = Teacher::select('nidn','nama');
+
+        if($prodi) {
+            $q->whereHas('latestStatus', function($q) use($prodi) {
+                $q->where('kd_prodi',$prodi);
+            });
+        }
+
+        if($cari) {
+            $q->where(function($query) use ($request) {
+                $query->where('nidn', 'LIKE', '%'.$request->cari.'%')->orWhere('nama', 'LIKE', '%'.$request->cari.'%');
+            });
+        }
+
+        $data = $q->orderBy('nama','asc')->get();
+
+        $response = array();
+        foreach($data as $d){
+            $response[] = array(
+                "id"    => $d->nidn,
+                "text"  => $d->nama.' ('.$d->nidn.')'
+            );
+        }
+        return response()->json($response);
     }
 }

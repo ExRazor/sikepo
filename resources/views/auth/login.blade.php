@@ -48,11 +48,20 @@
             <form method="POST" action="{{route('login_post')}}">
                 {!! csrf_field() !!}
                 <div class="form-group">
-                <input type="text" name="username" class="form-control" placeholder="Username/NIDN" required>
-                </div><!-- form-group -->
+                    <select name="role" class="form-control" required>
+                        <option value="">- Pilih Akses -</option>
+                        <option value="admin">Operator</option>
+                        <option value="kajur">Kajur</option>
+                        <option value="kaprodi">Kaprodi</option>
+                        <option value="dosen">Dosen</option>
+                    </select>
+                </div>
                 <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="Kata sandi" required>
-                </div><!-- form-group -->
+                    <input type="text" name="username" class="form-control" placeholder="Username/NIDN" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Kata sandi" required>
+                </div>
                 <button type="submit" class="btn btn-info btn-block">Masuk</button>
             </form>
           </div><!-- login-wrapper -->

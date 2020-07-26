@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Perhitungan;
 
 use App\Models\AcademicYear;
 use App\Models\Student;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\StudentQuota;
 use App\Models\StudyProgram;
 use App\Models\StudentForeign;

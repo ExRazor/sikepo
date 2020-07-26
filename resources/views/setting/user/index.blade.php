@@ -62,44 +62,10 @@
                                 <th class="text-center align-middle">Nama User</th>
                                 <th class="text-center align-middle">Role</th>
                                 <th class="text-center align-middle">Status</th>
+                                <th class="text-center align-middle">Password</th>
                                 <th class="text-center align-middle no-sort">Aksi</th>
                             </tr>
                         </thead>
-                        {{-- <tbody>
-                            @foreach ($user as $u)
-                            <tr>
-                                <td>{{ $u->username }}</td>
-                                <td class="text-center">
-                                    <span class="badge badge-{{$u->badge}} tx-13">{{ ucfirst($u->role) }} {{isset($u->kd_prodi) ? ' - '.$u->studyProgram->nama : ''}}</span>
-                                </td>
-                                <td class="text-center">
-                                    @if($u->is_active)
-                                        <span class="badge badge-success tx-13">Aktif</span>
-                                    @else
-                                        <span class="badge badge-danger tx-13">Nonaktif</span>
-                                    @endif
-                                </td>
-                                <td>{{ $u->name }}</td>
-                                <td width="50" class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div><span class="fa fa-caret-down"></span></div>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <button class="dropdown-item btn-edit" data-id="{{ encrypt($u->id) }}">Sunting</button>
-                                            <button class="dropdown-item reset-password" data-id="{{ encrypt($u->id) }}">Reset Password</button>
-                                            <form method="POST">
-                                                @method('delete')
-                                                @csrf
-                                                <input type="hidden" value="{{ encrypt($u->id) }}" name="id">
-                                                <button class="dropdown-item btn-delete" data-dest="{{ route('setting.user.delete') }}">Hapus</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody> --}}
                     </table>
                 </div><!-- card-body -->
             </div>
@@ -189,6 +155,7 @@
 
 @push('custom-js')
     <script>
+        //DataTable
         var bahasa = {
                 "sProcessing":   '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i><span class="sr-only">Loading...</span>',
                 "sLengthMenu":   "Tampilan _MENU_ entri",
@@ -207,7 +174,6 @@
                     "sLast":     "Akhir"
                 }
         };
-
         var dt_user = $('#table-user').DataTable({
             autoWidth: false,
             language: bahasa,
@@ -225,11 +191,11 @@
                 { data: 'name', className: "desktop"},
                 { data: 'role', className: "min-mobile-p text-center"},
                 { data: 'status', className: "desktop text-center"},
+                { data: 'password', className: "desktop text-center"},
                 { data: 'aksi', className: "desktop text-center", orderable: false}
             ],
             order: [[ 2, "asc" ]]
         });
-
         var dt_dosen = $('#table-dosen').DataTable({
             autoWidth: false,
             language: bahasa,
@@ -252,10 +218,11 @@
             order: [[ 1, "asc" ]]
         });
 
+        //Button Edit
         $('#table-user').on('click','.btn-edit',function(){
 
-            var id  = $(this).data('id');
-            var url = base_url+'/setting/user/'+id;
+            var id = $(this).data('id');
+            var url  = $(this).attr('url-target');
 
             $.ajax({
                 url: url,
@@ -263,33 +230,44 @@
                 dataType: 'json',
                 success: function (data) {
 
-                    var selectProdi = $('#modal-setting-user').find('select#kd_prodi');
-                    if (data.role == 'Kaprodi') {
-                        selectProdi.prop('disabled',false);
-                        selectProdi.prop('required',true);
-                        selectProdi.val(data.kd_prodi);
-                    } else {
-                        selectProdi.prop('disabled',true);
-                        selectProdi.prop('required',false);
-                        selectProdi.val(null);
-                    }
+                    var cont        = $('#modal-setting-user');
+                    var selectProdi = cont.find('select#kd_prodi');
 
                     switch(data.role) {
-                        case 'Admin':
-                            $('input:radio[name=role][value="Admin"]').prop('checked',true);
+                        case 'admin':
+                            $('input:radio[name=role][value="admin"]').prop('checked',true).trigger('change');
                         break;
-                        case 'Kajur':
-                            $('input:radio[name=role][value="Kajur"]').prop('checked',true);
+                        case 'kajur':
+                            $('input:radio[name=role][value="kajur"]').prop('checked',true).trigger('change');
                         break;
-                        case 'Kaprodi':
-                            $('input:radio[name=role][value="Kaprodi"]').prop('checked',true);
+                        case 'kaprodi':
+                            $('input:radio[name=role][value="kaprodi"]').prop('checked',true).trigger('change');
                         break;
                     }
+
+                    if(data.role == 'admin') {
+                        cont.find('input[name=username]').val(data.username);
+                    } else {
+                        var option_username  = $("<option selected></option>").val(data.username).text(data.name+' ('+data.username+')');
+                        cont.find('select[name=username]').val(null).html(option_username).trigger('change');
+
+                        if (data.role == 'kaprodi') {
+                            selectProdi.prop('disabled',false);
+                            selectProdi.prop('required',true);
+                            selectProdi.val(data.kd_prodi);
+                        } else {
+                            selectProdi.prop('disabled',true);
+                            selectProdi.prop('required',false);
+                            selectProdi.val(null);
+                        }
+                    }
+
+
 
                     $('#modal-setting-user')
                         .find('input[name=id]').val(id).end()
                         .find('input[name=name]').val(data.name).end()
-                        .find('input[name=username]').val(data.username).prop('readonly',false).end()
+                        // .find('input[name=username]').val(data.username).prop('readonly',false).end()
                         .modal('toggle').end();
 
                 }
@@ -348,7 +326,7 @@
             })
         })
 
-
+        //Function Set Active
         if (typeof setActive != 'function') {
 
             function setActive(button) {

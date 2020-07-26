@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Perhitungan;
 
 use App\Models\Collaboration;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;

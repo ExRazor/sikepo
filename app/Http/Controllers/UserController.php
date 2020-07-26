@@ -49,7 +49,7 @@ class UserController extends Controller
         return view('setting.user.index',compact(['user','studyProgram','dosen']));
     }
 
-    public function edit($id)
+    public function show($id)
     {
         $id = decrypt($id);
         $data = User::find($id);
@@ -59,21 +59,30 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validateProdi = $request->has('kd_prodi') ? 'required' : 'nullable';
+        $validateUsername   = $request->has('role') ? 'required|min:5|alpha_dash' : 'nullable';
+        $validateName       = $request->has('role') ? 'required|min:5' : 'nullable';
+        $validateProdi      = $request->has('kd_prodi') ? 'required' : 'nullable';
 
         $request->validate([
-            'name'                  => 'required|min:5',
-            'username'              => 'required|min:5|alpha_dash',
             'role'                  => 'required',
+            'name'                  => $validateName,
+            'username'              => $validateUsername,
             'kd_prodi'              => $validateProdi,
         ]);
 
         $data            = new User;
-        $data->name      = $request->name;
+        $data->role      = $request->role;
         $data->username  = $request->username;
         $data->password  = Hash::make($request->username);
-        $data->role      = $request->role;
         $data->kd_prodi  = $request->kd_prodi;
+        $data->defaultPass = true;
+
+        if($request->role == 'kajur' || $request->role == 'kaprodi') {
+            $dosen = Teacher::find($request->username);
+            $data->name   = $request->name;
+            $data->foto   = $dosen->foto;
+        }
+
         $q = $data->save();
 
         if(!$q) {
@@ -94,19 +103,22 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $id = decrypt($request->id);
-        $validateProdi = $request->has('kd_prodi') ? 'required' : 'nullable';
+
+        $validateUsername   = $request->has('role') ? 'required|min:5|alpha_dash' : 'nullable';
+        $validateName       = $request->has('role') ? 'required|min:5' : 'nullable';
+        $validateProdi      = $request->has('kd_prodi') ? 'required' : 'nullable';
 
         $request->validate([
-            'name'                  => 'required|min:5',
-            'username'              => 'required|min:5|alpha_dash',
             'role'                  => 'required',
+            'name'                  => $validateName,
+            'username'              => $validateUsername,
             'kd_prodi'              => $validateProdi,
         ]);
 
         $data            = User::find($id);
+        $data->role      = $request->role;
         $data->name      = $request->name;
         $data->username  = $request->username;
-        $data->role      = $request->role;
         $data->kd_prodi  = $request->kd_prodi;
         $q = $data->save();
 
@@ -232,6 +244,14 @@ class UserController extends Controller
                                                 <div class="br-toggle-switch"></div>
                                             </div>';
                                 return $status;
+                            })
+                            ->addColumn('password', function($d) {
+                                if($d->defaultPass) {
+                                    $msg = 'Default';
+                                } else {
+                                    $msg = 'Diganti';
+                                }
+                                return $msg;
                             })
                             ->addColumn('aksi', function($d) {
                                 return view('setting.user.btn_action_user', compact('d'))->render();

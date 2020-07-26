@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Models\Research;
 use App\Models\ResearchTeacher;
 use App\Models\ResearchStudent;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

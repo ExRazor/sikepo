@@ -8,7 +8,7 @@ use App\Models\TeacherPublication;
 use App\Models\TeacherPublicationMember;
 use App\Models\TeacherPublicationStudent;
 use Illuminate\Http\Request;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class PublicationController extends Controller

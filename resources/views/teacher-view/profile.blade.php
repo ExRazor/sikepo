@@ -55,12 +55,6 @@
                             @csrf
                             @method('put')
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-8">
-                                    <input class="form-control" type="text" value="{{$data->studyProgram->nama}}" disabled>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
                                 <label class="col-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="nidn" value="{{ isset($data) ? $data->nidn : Request::old('nidn')}}" placeholder="Masukkan NIDN" {{ isset($data) ? 'disabled' : ''}} minlength="8" maxlength="10" required>

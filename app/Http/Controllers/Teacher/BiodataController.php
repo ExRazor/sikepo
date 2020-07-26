@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Models\Teacher;
 use App\Models\User;
-use App\Models\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -87,7 +87,8 @@ class BiodataController extends Controller
 
         //Update User Dosen
         $user          = User::where('username',$id)->first();
-        $user->name    = $request->nama;
+        $user->name    = $Teacher->nama;
+        $user->foto    = $Teacher->foto;
         $user->save();
 
         return redirect()->route('profile.biodata')->with('flash.message', 'Biodata berhasil diperbarui!')->with('flash.class', 'success');

@@ -77,7 +77,7 @@ class StudentForeignController extends Controller
     {
         if(request()->ajax()) {
             // $id     = decode_id($id);
-            $data   = StudentForeign::find('id',$id);
+            $data   = StudentForeign::with('student')->find($id);
             return response()->json($data);
         } else {
             abort(404);

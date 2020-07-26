@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// use App\Models\Http\Controllers\Controller;
+// use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
@@ -26,6 +26,7 @@ class AuthController extends Controller
         $auth = $request->only('username', 'password');
 
         $credential = [
+            'role'     => $request->role,
             'username' => $request->username,
             'password' => $request->password,
             'is_active'=> true

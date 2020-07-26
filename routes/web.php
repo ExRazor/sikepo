@@ -98,12 +98,13 @@ Route::middleware('auth')->group(function () {
         Route::put('general', 'SettingController@update')->name('general.update');
 
         //User
-        Route::get('user', 'UserController@index')->name('user');
-        Route::post('user', 'UserController@store')->name('user.store');
-        Route::put('user', 'UserController@update')->name('user.update');
-        Route::delete('user', 'UserController@destroy')->name('user.delete');
+        Route::resource('user', 'UserController');
+        // Route::get('user', 'UserController@index')->name('user');
+        // Route::post('user', 'UserController@store')->name('user.store');
+        // Route::put('user/{id}', 'UserController@update')->name('user.update');
+        // Route::delete('user', 'UserController@destroy')->name('user.delete');
+        // Route::get('user/{id}', 'UserController@edit')->name('user.edit');
         Route::post('user/resetpass', 'UserController@reset_password')->name('user.resetpass');
-        Route::get('user/{id}', 'UserController@edit')->name('user.edit');
     });
 
     //Ajax

@@ -15,19 +15,6 @@
                         @endforeach
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Nama Lengkap: <span class="tx-danger">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="hidden" name="id">
-                            <input type="text" class="form-control" name="name" placeholder="Masukkan nama lengkap" required>
-                        </div>
-                    </div>
-                    <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Username: <span class="tx-danger">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="username" placeholder="Masukkan username" required>
-                        </div>
-                    </div>
-                    <div class="form-group row mg-t-20">
                         <label class="col-sm-3 form-control-label">Hak Akses: <span class="tx-danger">*</span></label>
                         <div class="col-sm-8">
                             <div id="role">
@@ -46,7 +33,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row mg-t-20">
+                    <div id="user_username" class="form-group row mg-t-20" style="display:none">
+                        <label class="col-sm-3 form-control-label">Username: <span class="tx-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="username" placeholder="Masukkan username" disabled>
+                            <select class="form-control select2-dosen" name="username" data-parsley-class-handler="#pilihDosen" data-parsley-errors-container="#errorsPilihDosen" style="display:none;" disabled>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="user_name" class="form-group row mg-t-20" style="display:none">
+                        <label class="col-sm-3 form-control-label">Nama Lengkap: <span class="tx-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="hidden" name="id">
+                            <input type="text" class="form-control" name="name" placeholder="Masukkan nama lengkap" disabled>
+                        </div>
+                    </div>
+                    <div id="user_prodi" class="form-group row mg-t-20" style="display:none">
                         <label class="col-sm-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                         <div class="col-sm-8">
                             <select id="kd_prodi" class="form-control" name="kd_prodi" disabled>
@@ -70,6 +72,8 @@
 </div><!-- modal -->
 @push('custom-js')
     <script>
+        select2_dosen($('.select2-dosen'));
+
         $('#modal-setting-user').on('click','button#generatePassword',function(e){
             e.preventDefault();
 
@@ -80,15 +84,72 @@
         })
 
         $('#modal-setting-user').on('change','input[name=role]',function(){
-            var selectProdi = $('#modal-setting-user').find('select#kd_prodi');
+            var cont = $('#modal-setting-user');
+            var user_name      = cont.find('#user_name');
+            var user_username  = cont.find('#user_username');
+            var user_prodi     = cont.find('#user_prodi');
 
-            if ($(this).is(':checked') && $(this).val() == 'kaprodi') {
-                selectProdi.prop('disabled',false);
-                selectProdi.prop('required',true);
+            if ($(this).is(':checked') && $(this).val() == 'admin') {
+                //User Name
+                user_name.show();
+                user_name.find('input[name=name]').prop('readonly',false);
+                user_name.find('input[name=name]').prop('disabled',false);
+                user_name.find('input[name=name]').prop('required',true);
+
+                //User Username
+                user_username.show();
+                user_username.find('input[name=username]').show();
+                user_username.find('input[name=username]').prop('disabled',false);
+                user_username.find('input[name=username]').prop('required',true);
+
+                user_username.find('.select2').hide();
+                user_username.find('select[name=username]').prop('disabled',true);
+                user_username.find('select[name=username]').prop('required',false);
+
+                //User Prodi
+                user_prodi.hide();
+                user_prodi.find('select#kd_prodi').prop('disabled',true);
+                user_prodi.find('select#kd_prodi').prop('required',false);
             } else {
-                selectProdi.prop('disabled',true);
-                selectProdi.prop('required',false);
+                //User Name
+                user_name.show();
+                user_name.find('input[name=name]').prop('disabled',false);
+                user_name.find('input[name=name]').prop('readonly',true);
+                $('select[name=username]').on('change', function() {
+                    var data = $("select[name=username] option:selected").text().replace(/ *\([^)]*\) */g, "");
+                    $('#user_name').find('input[name=name]').val(data);
+                })
+
+                //User Username
+                user_username.show();
+                user_username.find('input[name=username]').hide();
+                user_username.find('input[name=username]').prop('disabled',true);
+                user_username.find('input[name=username]').prop('required',false);
+
+                user_username.find('.select2').show();
+                user_username.find('select[name=username]').prop('disabled',false);
+                user_username.find('select[name=username]').prop('required',true);
+
+                //Jika Hak Akses Kaprodi
+                if ($(this).is(':checked') && $(this).val() == 'kaprodi') {
+                    user_prodi.show();
+                    user_prodi.find('select#kd_prodi').prop('disabled',false);
+                    user_prodi.find('select#kd_prodi').prop('required',true);
+                } else {
+                    user_prodi.hide();
+                    user_prodi.find('select#kd_prodi').prop('disabled',true);
+                    user_prodi.find('select#kd_prodi').prop('required',false);
+                }
             }
+        })
+
+        $('#modal-setting-user').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+
+            var cont           = $(this);
+            cont.find('#user_name').hide();
+            cont.find('#user_username').hide();
+            cont.find('#user_prodi').hide();
         })
     </script>
 @endpush

@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
                 'kd_prodi'   => null,
                 'name'       => 'Administrator',
                 'foto'       => 'administrator.jpg',
+                'defaultpass'=> false,
                 'is_active'  => true,
                 'created_at' => now()
             ],
@@ -79,7 +80,7 @@ class UserSeeder extends Seeder
                     // 'id'         => Str::uuid()->toString(),
                     'username'   => $t->nidn,
                     'password'   => Hash::make($t->nidn),
-                    'role'       => 'Dosen',
+                    'role'       => 'dosen',
                     'kd_prodi'   => null,
                     'name'       => $t->nama,
                     'defaultPass'=> true,
