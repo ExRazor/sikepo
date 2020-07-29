@@ -39,7 +39,8 @@ function chart(url,type) {
             jumlah.push(data);
         });
 
-        new Chart(canvas, {
+        // chartInit.destroy();
+        var chartInit = new Chart(canvas, {
             type: 'line',
             data: {
                 labels: tahun,

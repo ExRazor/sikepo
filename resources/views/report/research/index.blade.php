@@ -121,7 +121,19 @@
             var type_chart;
 
             $.ajax({
-
+                url: url,
+                data: {
+                    nidn:nidn,
+                    id_ta:id_ta
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (count) {
+                    cont.find('input[name=ps_intra]').val(count.schedule_ps);
+                    cont.find('input[name=ps_lain]').val(count.schedule_pt);
+                    cont.find('input[name=penelitian]').val(count.penelitian);
+                    cont.find('input[name=pkm]').val(count.pengabdian);
+                }
             });
 
             $.get(url, function(response){

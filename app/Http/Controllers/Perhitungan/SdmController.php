@@ -284,7 +284,7 @@ class SdmController extends Controller
         }
 
         $pembimbing = Minithesis::whereHas(
-                                    'pembimbingUtama', function($q) use($prodi) {
+                                    'pembimbingUtama.latestStatus.studyProgram', function($q) use($prodi) {
                                         $q->where('kd_prodi',$prodi);
                                     }
                                 )
@@ -450,7 +450,7 @@ class SdmController extends Controller
 
         $thn_akademik = AcademicYear::where('status','Aktif')->first();
         $publikasi = TeacherPublication::whereHas(
-                                            'teacher', function($q) use($prodi) {
+                                            'teacher.latestStatus', function($q) use($prodi) {
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
@@ -527,7 +527,7 @@ class SdmController extends Controller
 
         $thn_akademik = AcademicYear::where('status','Aktif')->first();
         $publikasi = TeacherPublication::whereHas(
-                                            'teacher', function($q) use($prodi) {
+                                            'teacher.latestStatus', function($q) use($prodi) {
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
@@ -605,7 +605,7 @@ class SdmController extends Controller
 
         $thn_akademik = AcademicYear::where('status','Aktif')->first();
         $publikasi = TeacherPublication::whereHas(
-                                            'teacher', function($q) use($prodi) {
+                                            'teacher.latestStatus', function($q) use($prodi) {
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
@@ -661,7 +661,7 @@ class SdmController extends Controller
         $thn_akademik = AcademicYear::where('status','Aktif')->first();
 
         $luaran = TeacherOutputActivity::whereHas(
-                                            'teacher', function($q) use($prodi) {
+                                            'teacher.latestStatus', function($q) use($prodi) {
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )

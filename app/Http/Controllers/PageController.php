@@ -63,10 +63,30 @@ class PageController extends Controller
                 );
 
         $count_card = array(
-            'penelitian'    => $penelitian->where('id_ta',current_academic()->id)->count(),
-            'pengabdian'    => $pengabdian->where('id_ta',current_academic()->id)->count(),
-            'publikasi'     => $publikasi->where('id_ta',current_academic()->id)->count(),
-            'luaran'        => $luaran->where('id_ta',current_academic()->id)->count(),
+            'penelitian'    => $penelitian->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+            'pengabdian'    => $pengabdian->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+            'publikasi'     => $publikasi->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+            'luaran'        => $luaran->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
         );
 
         return view('home.index',compact('prodi','count_card'));
@@ -74,54 +94,80 @@ class PageController extends Controller
 
     public function chart(Request $request)
     {
-        $penelitian = Research::whereHas(
-            'researchTeacher', function($q) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $q->prodiKetua(Auth::user()->kd_prodi);
-                } else {
-                    $q->jurusanKetua(setting('app_department_id'));
-                }
-            }
-        )->get();
+        //Tahun Akademik
+        $thn   = current_academic()->tahun_akademik;
 
-        $pengabdian = CommunityService::whereHas(
-            'serviceTeacher', function($q) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $q->prodiKetua(Auth::user()->kd_prodi);
-                } else {
-                    $q->jurusanKetua(setting('app_department_id'));
-                }
-            }
-        )->get();
+        //Query
+        $hehe = array();
+        for( $i=$thn-5; $i<=$thn; $i++ ) {
 
-        $publikasi = TeacherPublication::whereHas(
-            'teacher.latestStatus.studyProgram', function($query) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $query->where('kd_prodi',Auth::user()->kd_prodi);
-                } else {
-                    $query->where('kd_jurusan',setting('app_department_id'));
-                }
-            }
-        )->get();
+            //Penelitian
+            $result['Penelitian'][$i] = Research::whereHas(
+                                'researchTeacher', function($q) {
+                                    if(Auth::user()->hasRole('kaprodi')) {
+                                        $q->prodiKetua(Auth::user()->kd_prodi);
+                                    } else {
+                                        $q->jurusanKetua(setting('app_department_id'));
+                                    }
+                                }
+                            )
+                            ->whereHas(
+                                'academicYear', function($q) use($i) {
+                                    $q->where('tahun_akademik',$i);
+                                }
+                            )
+                            ->count();
 
-        $luaran = TeacherOutputActivity::whereHas(
-            'teacher.latestStatus.studyProgram', function($query) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $query->where('kd_prodi',Auth::user()->kd_prodi);
-                } else {
-                    $query->where('kd_jurusan',setting('app_department_id'));
-                }
-            }
-        )->get();
+            //Pengabdian
+            $result['Pengabdian'][$i] = CommunityService::whereHas(
+                                'serviceTeacher', function($q) {
+                                    if(Auth::user()->hasRole('kaprodi')) {
+                                        $q->prodiKetua(Auth::user()->kd_prodi);
+                                    } else {
+                                        $q->jurusanKetua(setting('app_department_id'));
+                                    }
+                                }
+                            )
+                            ->whereHas(
+                                'academicYear', function($q) use($i) {
+                                    $q->where('tahun_akademik',$i);
+                                }
+                            )
+                            ->count();
 
-        $thn = current_academic()->tahun_akademik;
-        $academicYear = AcademicYear::whereBetween('tahun_akademik',[$thn-5,$thn])->get();
+            //Publikasi
+            $result['Publikasi'][$i] = TeacherPublication::whereHas(
+                            'teacher.latestStatus.studyProgram', function($query) {
+                                if(Auth::user()->hasRole('kaprodi')) {
+                                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+                                } else {
+                                    $query->where('kd_jurusan',setting('app_department_id'));
+                                }
+                            }
+                        )
+                        ->whereHas(
+                            'academicYear', function($q) use($i) {
+                                $q->where('tahun_akademik',$i);
+                            }
+                        )
+                        ->count();
 
-        foreach($academicYear as $ay) {
-            $result['Penelitian'][$ay->tahun_akademik] = $penelitian->where('id_ta',$ay->id)->count();
-            $result['Pengabdian'][$ay->tahun_akademik] = $pengabdian->where('id_ta',$ay->id)->count();
-            $result['Publikasi'][$ay->tahun_akademik]  = $publikasi->where('id_ta',$ay->id)->count();
-            $result['Luaran'][$ay->tahun_akademik]     = $luaran->where('id_ta',$ay->id)->count();
+            //Luaran
+            $result['Luaran'][$i] = TeacherOutputActivity::whereHas(
+                        'teacher.latestStatus.studyProgram', function($query) {
+                            if(Auth::user()->hasRole('kaprodi')) {
+                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                            } else {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        }
+                    )
+                    ->whereHas(
+                        'academicYear', function($q) use($i) {
+                            $q->where('tahun_akademik',$i);
+                        }
+                    )
+                    ->count();
         }
 
         return response()->json($result);

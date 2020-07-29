@@ -33,7 +33,7 @@
 					<div class="mg-l-20">
 						<p class="tx-10 tx-spacing-1 tx-mont tx-semibold tx-uppercase tx-white-8 mg-b-10">Penelitian</p>
 						<p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1 hitung" data-value="{{$count_card['penelitian']}}">0</p>
-                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik.' - '.current_academic()->semester}}</span>
+                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik}}</span>
 					</div>
 				</div>
 				<div id="ch1" class="ht-50 tr-y-1"></div>
@@ -46,7 +46,7 @@
 					<div class="mg-l-20">
 						<p class="tx-10 tx-spacing-1 tx-mont tx-semibold tx-uppercase tx-white-8 mg-b-10">Pengabdian</p>
 						<p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1 hitung" data-value="{{$count_card['pengabdian']}}">0</p>
-                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik.' - '.current_academic()->semester}}</span>
+                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik}}</span>
 					</div>
 				</div>
 				<div id="ch3" class="ht-50 tr-y-1"></div>
@@ -59,7 +59,7 @@
 					<div class="mg-l-20">
 						<p class="tx-10 tx-spacing-1 tx-mont tx-semibold tx-uppercase tx-white-8 mg-b-10">Publikasi Dosen</p>
 						<p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1 hitung" data-value="{{$count_card['publikasi']}}">0</p>
-                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik.' - '.current_academic()->semester}}</span>
+                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik}}</span>
 					</div>
 				</div>
 				<div id="ch2" class="ht-50 tr-y-1"></div>
@@ -72,7 +72,7 @@
 					<div class="mg-l-20">
 						<p class="tx-10 tx-spacing-1 tx-mont tx-semibold tx-uppercase tx-white-8 mg-b-10">Luaran Dosen</p>
 						<p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1 hitung" data-value="{{$count_card['luaran']}}">0</p>
-                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik.' - '.current_academic()->semester}}</span>
+                        <span class="tx-11 tx-roboto tx-white-8">Periode {{current_academic()->tahun_akademik}}</span>
 					</div>
 				</div>
 				<div id="ch4" class="ht-50 tr-y-1"></div>
