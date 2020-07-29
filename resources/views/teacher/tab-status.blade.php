@@ -77,7 +77,6 @@ $('#table_teacher_status').on('click','.btn-edit',function(e){
                 .find('select[name=jabatan]').val(data.jabatan).end()
                 .find('input[name=periode]').val(data.periode).end()
                 .find('select[name=kd_prodi]').val(data.kd_prodi).end()
-                .find('.status_mahasiswa').hide().end()
                 .find('button[type=submit]').attr('data-id',id).end()
                 .modal('toggle').end();
         }

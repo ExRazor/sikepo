@@ -105,6 +105,9 @@ Route::middleware('auth')->group(function () {
         // Route::delete('user', 'UserController@destroy')->name('user.delete');
         // Route::get('user/{id}', 'UserController@edit')->name('user.edit');
         Route::post('user/resetpass', 'UserController@reset_password')->name('user.resetpass');
+
+        //User
+        Route::get('structural', 'TeacherStatusController@index_structural')->name('structural.index');
     });
 
     //Ajax
@@ -136,6 +139,9 @@ Route::middleware('auth')->group(function () {
         Route::post('user/datatable_user','UserController@datatable_user')->name('user.datatable.user');
         Route::post('user/datatable_dosen','UserController@datatable_dosen')->name('user.datatable.dosen');
 
+        //Setting - Struktural
+        Route::post('structural/datatable','TeacherStatusController@dt_structural')->name('structural.datatable');
+
         //Satisfaction Category
         Route::get('satisfaction-category/{id}','SatisfactionCategoryController@edit')->name('satisfaction-category.edit');
 
@@ -154,7 +160,7 @@ Route::middleware('auth')->group(function () {
         Route::post('teacher/datatable','TeacherController@datatable')->name('teacher.datatable');
         Route::post('teacher/get_by_studyProgram','TeacherController@get_by_studyProgram')->name('teacher.studyProgram');
 
-        //Student - Status
+        //Teacher - Status
         Route::get('teacher/status/{id}','TeacherStatusController@edit')->name('teacher.status.edit');
 
         //Teacher - EWMP
@@ -523,5 +529,12 @@ Route::middleware('auth')->group(function () {
         Route::post('tridharma/ipk', 'Perhitungan\TridharmaController@capaian_ipk');
         Route::post('tridharma/prestasi', 'Perhitungan\TridharmaController@prestasi_mahasiswa');
         Route::post('tridharma/tempat_lulusan', 'Perhitungan\TridharmaController@tempat_kerja_lulusan');
+    });
+
+    //Report
+    Route::prefix('report')->name('report.')->group(function () {
+        //Research
+        Route::get('research', 'ReportController@research_index')->name('research.index');
+        Route::post('collaboration', 'Perhitungan\KerjaSamaController@kerjasama');
     });
 });

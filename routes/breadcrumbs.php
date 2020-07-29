@@ -539,6 +539,12 @@ Breadcrumbs::for('setting-general', function ($trail) {
     $trail->push('Setelan Umum',route('setting.general'));
 });
 
+// Setelan > Struktural
+Breadcrumbs::for('setting-structural', function ($trail) {
+    $trail->parent('setting');
+    $trail->push('Manajemen Struktural',route('setting.structural.index'));
+});
+
 // Setelan > User
 Breadcrumbs::for('setting-user', function ($trail) {
     $trail->parent('setting');

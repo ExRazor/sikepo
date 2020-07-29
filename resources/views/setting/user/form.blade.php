@@ -92,6 +92,7 @@
             if ($(this).is(':checked') && $(this).val() == 'admin') {
                 //User Name
                 user_name.show();
+                user_name.find('input[name=name]').val("");
                 user_name.find('input[name=name]').prop('readonly',false);
                 user_name.find('input[name=name]').prop('disabled',false);
                 user_name.find('input[name=name]').prop('required',true);
@@ -103,6 +104,7 @@
                 user_username.find('input[name=username]').prop('required',true);
 
                 user_username.find('.select2').hide();
+                user_username.find('select[name=username]').val(null).trigger('change');
                 user_username.find('select[name=username]').prop('disabled',true);
                 user_username.find('select[name=username]').prop('required',false);
 
@@ -113,6 +115,7 @@
             } else {
                 //User Name
                 user_name.show();
+                user_name.find('input[name=name]').val(null);
                 user_name.find('input[name=name]').prop('disabled',false);
                 user_name.find('input[name=name]').prop('readonly',true);
                 $('select[name=username]').on('change', function() {

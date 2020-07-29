@@ -86,38 +86,6 @@
                                 <th class="text-center no-sort">Aksi</th>
                             </tr>
                         </thead>
-                        {{-- <tbody>
-                            @foreach ($dosen as $d)
-                            <tr>
-                                <td>{{ $d->username }}</td>
-                                <td>
-                                    @if($d->is_active)
-                                        <span class="badge badge-success tx-13">Aktif</span>
-                                    @else
-                                        <span class="badge badge-danger tx-13">Nonaktif</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($d->defaultPass=='1')
-                                    Belum
-                                    @else
-                                    Sudah ganti
-                                    @endif
-                                </td>
-                                <td>{{ $d->name }}</td>
-                                <td width="50" class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <button id="btn-action" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div><span class="fa fa-caret-down"></span></div>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                            <button class="dropdown-item reset-password" data-id="{{ encrypt($d->id) }}">Reset Password</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody> --}}
                     </table>
                 </div><!-- card-body -->
             </div>
