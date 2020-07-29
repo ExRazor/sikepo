@@ -40,7 +40,12 @@ class PenelitianController extends Controller
                             ->get();
 
         $jumlah = array(
-            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->count(),
+            'dtps'  => Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')->count(),
             'ni'    => $query->where('tingkat_penelitian','Internasional')->count(),
             'nn'    => $query->where('tingkat_penelitian','Nasional')->count(),
             'nl'    => $query->where('tingkat_penelitian','Lokal')->count()

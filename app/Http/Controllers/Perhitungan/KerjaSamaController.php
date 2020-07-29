@@ -47,7 +47,13 @@ class KerjaSamaController extends Controller
         );
 
         $jumlah = array(
-            'dtps'          => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->count(),
+            'dtps'          => Teacher::whereHas(
+                                    'latestStatus.studyProgram', function($query) use($prodi){
+                                        $query->where('kd_prodi',$prodi);
+                                    }
+                                )
+                                ->where('ikatan_kerja','Dosen Tetap PS')
+                                ->count(),
             'pendidikan'    => $kerjasama->where('jenis','Pendidikan')->count(),
             'penelitian'    => $kerjasama->where('jenis','Penelitian')->count(),
             'pengabdian'    => $kerjasama->where('jenis','Pengabdian')->count(),

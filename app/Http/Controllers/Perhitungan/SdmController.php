@@ -33,7 +33,12 @@ class SdmController extends Controller
         }
 
         $jumlah = array(
-            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->count(),
+            'dtps'  => Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')->count(),
         );
 
         if($jumlah['dtps']>=12) {
@@ -61,7 +66,12 @@ class SdmController extends Controller
             $prodi = $request->post('kd_prodi');
         }
 
-        $dtps = Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get();
+        $dtps = Teacher::whereHas(
+                    'latestStatus.studyProgram', function($query) use($prodi){
+                        $query->where('kd_prodi',$prodi);
+                    }
+                )
+                ->where('ikatan_kerja','Dosen Tetap PS')->get();
 
         $jumlah = array(
             'dtps'      => $dtps->count(),
@@ -95,7 +105,12 @@ class SdmController extends Controller
             $prodi = $request->post('kd_prodi');
         }
 
-        $dtps = Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get();
+        $dtps = Teacher::whereHas(
+                    'latestStatus.studyProgram', function($query) use($prodi){
+                        $query->where('kd_prodi',$prodi);
+                    }
+                )
+                ->where('ikatan_kerja','Dosen Tetap PS')->get();
 
         $jumlah = array(
             'dtps'      => $dtps->count(),
@@ -132,7 +147,12 @@ class SdmController extends Controller
             $prodi = $request->post('kd_prodi');
         }
 
-        $dtps = Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get();
+        $dtps = Teacher::whereHas(
+                    'latestStatus.studyProgram', function($query) use($prodi){
+                        $query->where('kd_prodi',$prodi);
+                    }
+                )
+                ->where('ikatan_kerja','Dosen Tetap PS')->get();
 
         $jumlah = array(
             'dtps'           => $dtps->count(),
@@ -166,7 +186,12 @@ class SdmController extends Controller
             $prodi = $request->post('kd_prodi');
         }
 
-        $dosen = Teacher::where('kd_prodi',$prodi)->get();
+        $dosen = Teacher::whereHas(
+                    'latestStatus.studyProgram', function($query) use($prodi){
+                        $query->where('kd_prodi',$prodi);
+                    }
+                )
+                ->get();
 
         $jumlah = array(
             'dosen' => $dosen->count(),
@@ -220,7 +245,12 @@ class SdmController extends Controller
                                         }
                                     )
                                     ->count(),
-            'dtps'       => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->count(),
+            'dtps'       => Teacher::whereHas(
+                                'latestStatus.studyProgram', function($query) use($prodi){
+                                    $query->where('kd_prodi',$prodi);
+                                }
+                            )
+                            ->where('ikatan_kerja','Dosen Tetap PS')->count(),
         );
 
         $rasio['dtps'] = ($jumlah['dtps']/$jumlah['mahasiswa'])*100;
@@ -306,7 +336,13 @@ class SdmController extends Controller
             $prodi = $request->post('kd_prodi');
         }
 
-        $dtps      = Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get();
+        $dtps      = Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')
+                        ->get();
         $total_sks = 0;
         $rata_sks = 0;
 
@@ -350,7 +386,13 @@ class SdmController extends Controller
             $prodi = $request->post('kd_prodi');
         }
 
-        $dtps      = Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get();
+        $dtps      = Teacher::whereHas(
+                        'latestStatus.studyProgram', function($query) use($prodi){
+                            $query->where('kd_prodi',$prodi);
+                        }
+                    )
+                    ->where('ikatan_kerja','Dosen Tetap PS')
+                    ->get();
 
         foreach($dtps as $dt) {
             $nidn[] = $dt->nidn;
@@ -420,7 +462,14 @@ class SdmController extends Controller
                                         ->get();
 
         $jumlah = array(
-            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'dtps'  => Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')
+                        ->get()
+                        ->count(),
             'na1'   => $publikasi->where('jenis_publikasi','1')->count(),
             'na2'   => $publikasi->where('jenis_publikasi','2')->count(),
             'na3'   => $publikasi->where('jenis_publikasi','3')->count(),
@@ -490,7 +539,14 @@ class SdmController extends Controller
                                         ->get();
 
         $jumlah = array(
-            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'dtps'  => Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')
+                        ->get()
+                        ->count(),
             'nb1'   => $publikasi->where('jenis_publikasi','5')->count(),
             'nb2'   => $publikasi->where('jenis_publikasi','6')->count(),
             'nb3'   => $publikasi->where('jenis_publikasi','7')->count(),
@@ -561,7 +617,12 @@ class SdmController extends Controller
                                         ->get();
 
         $jumlah = array(
-            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'dtps'  => Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
             'nas'   => $publikasi->where('sitasi','!=',null)->count(),
         );
 
@@ -612,7 +673,12 @@ class SdmController extends Controller
                                         ->get();
 
         $jumlah = array(
-            'dtps'  => Teacher::where('kd_prodi',$prodi)->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
+            'dtps'  => Teacher::whereHas(
+                            'latestStatus.studyProgram', function($query) use($prodi){
+                                $query->where('kd_prodi',$prodi);
+                            }
+                        )
+                        ->where('ikatan_kerja','Dosen Tetap PS')->get()->count(),
             'na'   => $luaran->where('id_kategori','1')->count(),
             'nb'   => $luaran->where('id_kategori','2')->count(),
             'nc'   => $luaran->where('id_kategori','3')->count(),
