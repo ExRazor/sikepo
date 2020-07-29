@@ -13,67 +13,109 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function research_index()
+    public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->select('tahun_akademik')->get();
 
-        return view('report.research.index',compact(['studyProgram','periodeTahun']));
+        return view('report.index',compact(['studyProgram','periodeTahun']));
     }
 
     public function chart(Request $request)
     {
+        //Validasi ajax
         if(!request()->ajax()) {
             abort(404);
         }
 
+        //Query Guru
         $teacher      = Teacher::whereHas(
-            'studyProgram', function($q) {
-                $q->where('kd_jurusan',setting('app_department_id'));
+            'latestStatus.studyProgram', function($q) use($request){
+                if($request->prodi) {
+                    $q->where('kd_prodi',$request->prodi);
+                } else {
+                    $q->where('kd_jurusan',setting('app_department_id'));
+                }
             }
         )
+
         ->orderBy('nama','asc')
         ->get();
 
+        //Batas
+        $batas = [$request->periode_awal,$request->periode_akhir];
+
         foreach($teacher as $t)
         {
-            $penelitian[$t->nidn] = Research::with([
-                                        'researchTeacher' => function($q1) use ($t) {
-                                            $q1->where('nidn',$t->nidn);
-                                        }
-                                    ])
-                                    ->whereHas(
-                                        'researchTeacher', function($q1) use ($t) {
-                                            $q1->where('nidn',$t->nidn);
-                                        }
-                                    )
-                                    ->count();
+            $penelitian[$t->nidn] = array(
+                'nama'      => $t->nama,
+                'jumlah'    => Research::with([
+                                    'researchTeacher.teacher' => function($q1) use ($t) {
+                                        $q1->where('nidn',$t->nidn)->orderBy('nama','asc');
+                                    }
+                                ])
+                                ->whereHas(
+                                    'researchTeacher.teacher', function($q1) use ($t) {
+                                        $q1->where('nidn',$t->nidn);
+                                    }
+                                )
+                                ->whereHas(
+                                    'academicYear', function($q) use($batas) {
+                                        $q->whereBetween('tahun_akademik',$batas);
+                                    }
+                                )
+                                ->count(),
+            );
 
-            $pengabdian[$t->nidn]   = CommunityService::with([
-                                        'serviceTeacher' => function($q1) use ($t) {
-                                            $q1->where('nidn',$t->nidn);
-                                        }
-                                    ])
-                                    ->whereHas(
-                                        'serviceTeacher', function($q1) use ($t) {
-                                            $q1->where('nidn',$t->nidn);
-                                        }
-                                    )
-                                    ->count();
+            $pengabdian[$t->nidn]   = array(
+                'nama'      => $t->nama,
+                'jumlah'    => CommunityService::with([
+                                    'serviceTeacher' => function($q1) use ($t) {
+                                        $q1->where('nidn',$t->nidn);
+                                    }
+                                ])
+                                ->whereHas(
+                                    'serviceTeacher', function($q1) use ($t) {
+                                        $q1->where('nidn',$t->nidn);
+                                    }
+                                )
+                                ->whereHas(
+                                    'academicYear', function($q) use($batas) {
+                                        $q->whereBetween('tahun_akademik',$batas);
+                                    }
+                                )
+                                ->count()
+            );
 
-            $publikasi[$t->nidn]    = TeacherPublication::whereHas(
-                                        'teacher', function($q1) use ($t) {
-                                            $q1->where('nidn',$t->nidn);
-                                        }
-                                    )
-                                    ->count();
+            $publikasi[$t->nidn]    = array(
+                'nama'      => $t->nama,
+                'jumlah'    => TeacherPublication::whereHas(
+                                    'teacher', function($q1) use ($t) {
+                                        $q1->where('nidn',$t->nidn);
+                                    }
+                                )
+                                ->whereHas(
+                                    'academicYear', function($q) use($batas) {
+                                        $q->whereBetween('tahun_akademik',$batas);
+                                    }
+                                )
+                                ->count()
+            );
 
-            $luaran[$t->nidn]    = TeacherOutputActivity::whereHas(
-                                        'teacher', function($q1) use ($t) {
-                                            $q1->where('nidn',$t->nidn);
-                                        }
-                                    )
-                                    ->count();
+            $luaran[$t->nidn]    = array(
+                'nama'      => $t->nama,
+                'jumlah'    => TeacherOutputActivity::whereHas(
+                                    'teacher', function($q1) use ($t) {
+                                        $q1->where('nidn',$t->nidn);
+                                    }
+                                )
+                                ->whereHas(
+                                    'academicYear', function($q) use($batas) {
+                                        $q->whereBetween('tahun_akademik',$batas);
+                                    }
+                                )
+                                ->count()
+            );
         }
 
         $result = [

@@ -252,6 +252,10 @@ Route::middleware('auth')->group(function () {
         Route::get('alumnus/suitable/{id}','AlumnusSuitableController@edit')->name('alumnus.suitable.edit');
         Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@edit')->name('alumnus.workplace.edit');
 
+        //Report
+        Route::post('report/chart','ReportController@chart')->name('report.chart');
+
+
     });
 
     //Teacher
@@ -534,7 +538,6 @@ Route::middleware('auth')->group(function () {
     //Report
     Route::prefix('report')->name('report.')->group(function () {
         //Research
-        Route::get('research', 'ReportController@research_index')->name('research.index');
-        Route::post('collaboration', 'Perhitungan\KerjaSamaController@kerjasama');
+        Route::get('index', 'ReportController@index')->name('index');
     });
 });
