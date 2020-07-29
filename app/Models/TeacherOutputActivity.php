@@ -12,7 +12,7 @@ class TeacherOutputActivity extends BaseModel
         'nidn',
         'id_kategori',
         'judul_luaran',
-        'thn_luaran',
+        'id_ta',
         'jenis_luaran',
         'nama_karya',
         'jenis_karya',
@@ -37,5 +37,10 @@ class TeacherOutputActivity extends BaseModel
     public function teacher()
     {
         return $this->belongsTo('App\Models\Teacher','nidn');
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo('App\Models\AcademicYear','id_ta');
     }
 }

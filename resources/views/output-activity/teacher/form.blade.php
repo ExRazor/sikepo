@@ -109,11 +109,11 @@
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-md-3 form-control-label">Tahun Luaran: <span class="tx-danger">*</span></label>
-                                        <div class="col-3">
-                                            <select class="form-control" name="thn_luaran" required>
-                                                @for($i=date('Y');$i>=2000;$i--)
-                                                <option value={{$i}} {{ isset($data) && $data->thn_luaran == $i || Request::old('thn_luaran') == $i ? 'selected' : ''}}>{{$i}}</option>
-                                                @endfor
+                                        <div class="col-md-8">
+                                            <select class="form-control select-academicYear" name="id_ta" required>
+                                                @isset($data)
+                                                <option value="{{$data->id_ta}}">{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</option>
+                                                @endisset
                                             </select>
                                         </div>
                                     </div>

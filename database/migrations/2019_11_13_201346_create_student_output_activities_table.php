@@ -20,7 +20,8 @@ class CreateStudentOutputActivitiesTable extends Migration
             $table->char('nim',10);
             $table->unsignedInteger('id_kategori');
             $table->string('judul_luaran');
-            $table->char('thn_luaran',4);
+            $table->unsignedInteger('id_ta');
+            // $table->char('thn_luaran',4);
             $table->string('jenis_luaran');
             $table->string('nama_karya');
             $table->string('jenis_karya')->nullable();
@@ -41,6 +42,7 @@ class CreateStudentOutputActivitiesTable extends Migration
 
             $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_kategori')->references('id')->on('output_activity_categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

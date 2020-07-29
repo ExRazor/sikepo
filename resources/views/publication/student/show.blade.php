@@ -116,7 +116,7 @@
                             <tr>
                                 <th>Tahun Terbit</th>
                                 <td>:</td>
-                                <td>{{$data->tahun}}</td>
+                                <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
                             </tr>
                             <tr>
                                 <th>Penerbit</th>

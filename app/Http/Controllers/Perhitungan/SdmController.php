@@ -412,7 +412,11 @@ class SdmController extends Controller
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
-                                        ->whereBetween('tahun', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->whereHas(
+                                            'academicYear', function($q) use($thn_akademik) {
+                                                $q->whereBetween('tahun_akademik', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik]);
+                                            }
+                                        )
                                         ->get();
 
         $jumlah = array(
@@ -478,7 +482,11 @@ class SdmController extends Controller
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
-                                        ->whereBetween('tahun', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->whereHas(
+                                            'academicYear', function($q) use($thn_akademik) {
+                                                $q->whereBetween('tahun_akademik', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik]);
+                                            }
+                                        )
                                         ->get();
 
         $jumlah = array(
@@ -545,7 +553,11 @@ class SdmController extends Controller
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
-                                        ->whereBetween('tahun', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->whereHas(
+                                            'academicYear', function($q) use($thn_akademik) {
+                                                $q->whereBetween('tahun_akademik', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik]);
+                                            }
+                                        )
                                         ->get();
 
         $jumlah = array(
@@ -592,7 +604,11 @@ class SdmController extends Controller
                                                 $q->where('kd_prodi',$prodi);
                                             }
                                         )
-                                        ->whereBetween('thn_luaran', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik])
+                                        ->whereHas(
+                                            'academicYear', function($q) use($thn_akademik) {
+                                                $q->whereBetween('tahun_akademik', [$thn_akademik->tahun_akademik-3,$thn_akademik->tahun_akademik]);
+                                            }
+                                        )
                                         ->get();
 
         $jumlah = array(

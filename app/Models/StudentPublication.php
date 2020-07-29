@@ -11,7 +11,8 @@ class StudentPublication extends BaseModel
         'jenis_publikasi',
         'judul',
         'penerbit',
-        'tahun',
+        'id_ta',
+        // 'tahun',
         'sesuai_prodi',
         'sitasi',
         'jurnal',
@@ -22,6 +23,11 @@ class StudentPublication extends BaseModel
     public function student()
     {
         return $this->belongsTo('App\Models\Student','nim');
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo('App\Models\AcademicYear','id_ta');
     }
 
     public function publicationCategory()

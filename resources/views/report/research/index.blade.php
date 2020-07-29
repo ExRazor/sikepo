@@ -48,33 +48,45 @@
                 @endforeach
             </select>
         </div>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <div class="row">
+                <div class="col-6 pr-1">
+                    <select id="periode_awal_filter" class="form-control filter-box">
+                        <option value="">- Thn Awal -</option>
+                        @foreach($periodeTahun as $pt)
+                        <option value="{{$pt->tahun_akademik}}">{{$pt->tahun_akademik}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-6 pl-0">
+                    <select id="periode_akhir_filter" class="form-control filter-box">
+                        <option value="">- Thn Akhir -</option>
+                        @foreach($periodeTahun as $pt)
+                        <option value="{{$pt->tahun_akademik}}">{{$pt->tahun_akademik}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+
+        </div>
     </div>
     @endif
-    <div class="widget-2">
-        <div class="card shadow-base mb-3">
-            <div class="card-header nm_jurusan">
-                <h6 class="card-title">
-                    <span class="nm_jurusan">
-                    @if(Auth::user()->hasRole('kaprodi'))
-                    {{ Auth::user()->studyProgram->nama }}
-                    @else
-                    {{ setting('app_department_name') }}
-                    @endif
-                     </span>
-                </h6>
+    <div class="row row-sm mg-t-20">
+        <div class="col-lg-12">
+            <div class="widget-2">
+                <div class="card shadow-base overflow-hidden">
+                    <div class="card-header">
+                        <h6 class="card-title">Tridharma Dosen <span class="tahun_periode"></span></h6>
+                    </div>
+                    <div class="card-body">
+                        <div><canvas id="chart" height="100" url-target={{route('ajax.index.chart')}}></canvas></div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body bd-color-gray-lighter">
-                <table id="table_research" class="table display responsive" data-order='[[ 0, "desc" ]]' data-page-length="25" url-target="{{route('ajax.research.datatable')}}">
-                    <thead>
-                        <tr>
-                            <th class="text-center all">Tahun Penelitian</th>
-                            <th class="text-center all">Judul Penelitian</th>
-                            <th class="text-center">Ketua Peneliti</th>
-                            <th class="text-center" width="50">Aksi</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div><!-- card-body -->
         </div>
     </div>
 </div>
@@ -93,40 +105,99 @@
 @endsection
 
 @push('custom-js')
-<script type="text/javascript">
-    var table = $('#table_research');
-    datatable(table);
+    <script type="text/javascript">
 
-    $('.filter-box').bind("keyup change", function(){
-        table.DataTable().clear().destroy();
-        datatable(table);
-    });
+        url = $('#chart').attr('url-target');
+        chart(url);
 
-    function datatable(table_ehm)
-    {
-        table_ehm.DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: table_ehm.attr('url-target'),
-                type: "post",
-                data: function(d){
-                    d.kd_prodi_filter  = $('#kd_prodi_filter').val();
-                    d._token           = $('meta[name="csrf-token"]').attr('content')
-                }
-            },
-            columns: [
-                { data: 'tahun', className: "text-center min-mobile-p"},
-                { data: 'penelitian', className: "min-mobile-p"},
-                { data: 'peneliti', className: "desktop"},
-                { data: 'aksi', className: "desktop text-center", orderable: false}
-            ],
-            hideEmptyCols: [ 3 ],
-            autoWidth: false,
-            language: {
-                url: "/assets/lib/datatables.net/indonesian.json",
-            }
-        })
-    }
-</script>
+        function chart(url) {
+            var dosen       = new Array();
+            var penelitian  = new Array();
+            var pengabdian  = new Array();
+            var publikasi   = new Array();
+            var luaran      = new Array();
+            var canvas      = $('#chart');
+            var title       = 'Tridharma Dosen Periode ';
+            var type_chart;
+
+            $.ajax({
+
+            });
+
+            $.get(url, function(response){
+
+                $.each(response.penelitian, function(index,data){
+                    dosen.push(index);
+                    penelitian.push(data);
+                });
+
+                $.each(response.pengabdian, function(index,data){
+                    pengabdian.push(data);
+                });
+
+                $.each(response.publikasi, function(index,data){
+                    publikasi.push(data);
+                });
+
+                $.each(response.luaran, function(index,data){
+                    luaran.push(data);
+                });
+
+                var dataChart = {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [{
+                        label: 'Dataset 1',
+                        backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.red,
+                        borderWidth: 1,
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor()
+                        ]
+                    }, {
+                        label: 'Dataset 2',
+                        backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.blue,
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor()
+                        ]
+                    }]
+                };
+
+                new Chart(canvas, {
+                    type: 'horizontalBar',
+                    data: dataChart,
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'TRIDHARMA DOSEN'
+                        }
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+
+            });
+        }
+    </script>
 @endpush

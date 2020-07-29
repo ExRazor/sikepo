@@ -68,7 +68,7 @@
                 <table id="table_publication_student" class="table display responsive" data-order='[[ 3, "desc" ]]' data-page-length="25" url-target="{{route('ajax.publication.student.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center" width="600">Judul Publikasi</th>
+                            <th class="text-center" width="450">Judul Publikasi</th>
                             <th class="text-center">Nama Mahasiswa</th>
                             <th class="text-center">Kategori</th>
                             <th class="text-center">Tahun Terbit</th>

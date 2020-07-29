@@ -73,7 +73,8 @@ class TeacherPublicationController extends Controller
             'nidn'            => 'required',
             'judul'           => 'required',
             'penerbit'        => 'required',
-            'tahun'           => 'required|numeric|digits:4',
+            'id_ta'           => 'required',
+            // 'tahun'           => 'required|numeric|digits:4',
             'jurnal'          => 'nullable',
             'sesuai_prodi'    => 'nullable',
             'akreditasi'      => 'nullable',
@@ -86,7 +87,7 @@ class TeacherPublicationController extends Controller
         $data->nidn             = $request->nidn;
         $data->judul            = $request->judul;
         $data->penerbit         = $request->penerbit;
-        $data->tahun            = $request->tahun;
+        $data->id_ta            = $request->id_ta;
         $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
         $data->akreditasi       = $request->akreditasi;
@@ -141,7 +142,8 @@ class TeacherPublicationController extends Controller
             'nidn'            => 'required',
             'judul'           => 'required',
             'penerbit'        => 'required',
-            'tahun'           => 'required|numeric|digits:4',
+            'id_ta'           => 'required',
+            // 'tahun'           => 'required|numeric|digits:4',
             'jurnal'          => 'nullable',
             'sesuai_prodi'    => 'nullable',
             'akreditasi'      => 'nullable',
@@ -154,7 +156,7 @@ class TeacherPublicationController extends Controller
         $data->nidn             = $request->nidn;
         $data->judul            = $request->judul;
         $data->penerbit         = $request->penerbit;
-        $data->tahun            = $request->tahun;
+        $data->id_ta            = $request->id_ta;
         $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
         $data->akreditasi       = $request->akreditasi;
@@ -303,6 +305,9 @@ class TeacherPublicationController extends Controller
                                             .$d->teacher->nama.
                                             '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->latestStatus->studyProgram->singkatan.'</small>
                                         </a>';
+                            })
+                            ->addColumn('tahun', function($d) {
+                                return  $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
                             })
                             ->addColumn('kategori', function($d) {
                                 return  $d->publicationCategory->nama;

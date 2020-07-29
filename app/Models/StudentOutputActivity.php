@@ -12,7 +12,7 @@ class StudentOutputActivity extends BaseModel
         'nim',
         'id_kategori',
         'judul_luaran',
-        'thn_luaran',
+        'id_ta',
         'jenis_luaran',
         'nama_karya',
         'jenis_karya',
@@ -37,5 +37,10 @@ class StudentOutputActivity extends BaseModel
     public function student()
     {
         return $this->belongsTo('App\Models\Student','nim');
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo('App\Models\AcademicYear','id_ta');
     }
 }

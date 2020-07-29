@@ -118,6 +118,15 @@
             <li class="sub-item"><a href="{{ route('assessment.tridharma') }}" class="sub-link {{ (request()->is('assessment/tridharma')) ? 'active' : '' }}">Capaian Tridharma</a></li>
         </ul>
     </li>
+    <li class="br-menu-item">
+        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'report') ? 'active' : '' }}">
+            <i class="menu-item-icon fa fa-file-invoice"></i>
+            <span class="menu-item-label">Laporan</span>
+        </a><!-- br-menu-link -->
+        <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('report.research.index') }}" class="sub-link {{ (request()->is('report/research*')) ? 'active' : '' }}">Penelitian</a></li>
+        </ul>
+    </li>
     @if (Auth::user()->hasRole('admin'))
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'master') ? 'active' : '' }}">
@@ -142,6 +151,7 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{route('setting.general')}}" class="sub-link {{ (request()->is('setting/general*')) ? 'active' : '' }}">Umum</a></li>
+            <li class="sub-item"><a href="{{route('setting.structural.index')}}" class="sub-link {{ (request()->is('setting/structural*')) ? 'active' : '' }}">Struktural</a></li>
             <li class="sub-item"><a href="{{route('setting.user.index')}}" class="sub-link {{ (request()->is('setting/user*')) ? 'active' : '' }}">Pengguna</a></li>
         </ul>
     </li>

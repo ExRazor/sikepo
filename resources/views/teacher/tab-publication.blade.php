@@ -24,7 +24,7 @@
                                     </a>
                                 </td>
                                 <td class="text-center">
-                                    {{ $pb->tahun }}
+                                    {{ $pb->academicYear->tahun_akademik.' - '.$pb->academicYear->semester }}
                                 </td>
                             </tr>
                             @endforeach

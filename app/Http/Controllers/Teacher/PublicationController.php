@@ -59,7 +59,7 @@ class PublicationController extends Controller
             'jenis_publikasi' => 'required',
             'judul'           => 'required',
             'penerbit'        => 'required',
-            'tahun'           => 'required|numeric|digits:4',
+            'id_ta'           => 'required',
             'jurnal'          => 'nullable',
             'sesuai_prodi'    => 'nullable',
             'akreditasi'      => 'nullable',
@@ -72,7 +72,7 @@ class PublicationController extends Controller
         $data->nidn             = Auth::user()->username;
         $data->judul            = $request->judul;
         $data->penerbit         = $request->penerbit;
-        $data->tahun            = $request->tahun;
+        $data->id_ta            = $request->id_ta;
         $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
         $data->akreditasi       = $request->akreditasi;
@@ -126,7 +126,7 @@ class PublicationController extends Controller
             'jenis_publikasi' => 'required',
             'judul'           => 'required',
             'penerbit'        => 'required',
-            'tahun'           => 'required|numeric|digits:4',
+            'id_ta'           => 'required',
             'jurnal'          => 'nullable',
             'sesuai_prodi'    => 'nullable',
             'akreditasi'      => 'nullable',
@@ -138,7 +138,7 @@ class PublicationController extends Controller
         $data->jenis_publikasi  = $request->jenis_publikasi;
         $data->judul            = $request->judul;
         $data->penerbit         = $request->penerbit;
-        $data->tahun            = $request->tahun;
+        $data->id_ta            = $request->id_ta;
         $data->sesuai_prodi     = $request->sesuai_prodi;
         $data->jurnal           = $request->jurnal;
         $data->akreditasi       = $request->akreditasi;

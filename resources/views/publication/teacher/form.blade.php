@@ -119,7 +119,11 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Tahun Terbit: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <input class="form-control number" type="text" name="tahun" value="{{ isset($data) ? $data->tahun : Request::old('tahun')}}" placeholder="Masukkan tahun penerbitan" maxlength="4" required>
+                                    <select class="form-control select-academicYear" name="id_ta" required>
+                                        @isset($data)
+                                        <option value="{{$data->id_ta}}">{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</option>
+                                        @endisset
+                                    </select>
                                 </div>
                             </div>
                             <div class="row mb-3">

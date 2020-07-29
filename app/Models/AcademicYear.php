@@ -65,6 +65,16 @@ class AcademicYear extends BaseModel
         return $this->hasMany('App\Models\Research','id_ta');
     }
 
+    public function teacherPublication()
+    {
+        return $this->hasMany('App\Models\TeacherPublication','id_ta');
+    }
+
+    public function studentPublication()
+    {
+        return $this->hasMany('App\Models\StudentPublication','id_ta');
+    }
+
     public function minithesis()
     {
         return $this->hasMany('App\Models\Minithesis','id_ta');

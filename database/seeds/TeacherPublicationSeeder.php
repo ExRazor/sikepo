@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Teacher;
+use App\Models\AcademicYear;
 use App\Models\PublicationCategory;
 
 class TeacherPublicationSeeder extends Seeder
@@ -69,7 +70,8 @@ class TeacherPublicationSeeder extends Seeder
                     'jenis_publikasi'   => $jenis->random()->id,
                     'judul'             => $judul[array_rand($judul)],
                     'penerbit'          => $penerbit[array_rand($penerbit)],
-                    'tahun'             => $tahun[array_rand($tahun)],
+                    'id_ta'             => AcademicYear::all()->random()->id,
+                    // 'tahun'             => $tahun[array_rand($tahun)],
                     'sitasi'            => $sitasi[array_rand($sitasi)],
                     'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
                     'created_at'        => now()

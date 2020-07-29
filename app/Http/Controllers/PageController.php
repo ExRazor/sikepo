@@ -65,8 +65,8 @@ class PageController extends Controller
         $count_card = array(
             'penelitian'    => $penelitian->where('id_ta',current_academic()->id)->count(),
             'pengabdian'    => $pengabdian->where('id_ta',current_academic()->id)->count(),
-            'publikasi'     => $publikasi->where('tahun',current_academic()->tahun_akademik)->count(),
-            'luaran'        => $luaran->where('thn_luaran',current_academic()->tahun_akademik)->count(),
+            'publikasi'     => $publikasi->where('id_ta',current_academic()->id)->count(),
+            'luaran'        => $luaran->where('id_ta',current_academic()->id)->count(),
         );
 
         return view('home.index',compact('prodi','count_card'));
@@ -120,8 +120,8 @@ class PageController extends Controller
         foreach($academicYear as $ay) {
             $result['Penelitian'][$ay->tahun_akademik] = $penelitian->where('id_ta',$ay->id)->count();
             $result['Pengabdian'][$ay->tahun_akademik] = $pengabdian->where('id_ta',$ay->id)->count();
-            $result['Publikasi'][$ay->tahun_akademik]  = $publikasi->where('tahun',$ay->tahun_akademik)->count();
-            $result['Luaran'][$ay->tahun_akademik]     = $luaran->where('thn_luaran',$ay->tahun_akademik)->count();
+            $result['Publikasi'][$ay->tahun_akademik]  = $publikasi->where('id_ta',$ay->id)->count();
+            $result['Luaran'][$ay->tahun_akademik]     = $luaran->where('id_ta',$ay->id)->count();
         }
 
         return response()->json($result);

@@ -19,7 +19,7 @@ class CreateTeacherPublicationsTable extends Migration
             $table->unsignedInteger('jenis_publikasi');
             $table->string('judul');
             $table->string('penerbit');
-            $table->char('tahun',4);
+            $table->unsignedInteger('id_ta');
             $table->char('sesuai_prodi',1)->nullable();
             $table->integer('sitasi')->nullable();
             $table->string('jurnal')->nullable();
@@ -31,6 +31,7 @@ class CreateTeacherPublicationsTable extends Migration
 
             $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('jenis_publikasi')->references('id')->on('publication_categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_ta')->references('id')->on('academic_years')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

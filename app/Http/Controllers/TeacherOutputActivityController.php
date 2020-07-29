@@ -69,7 +69,7 @@ class TeacherOutputActivityController extends Controller
             'nidn'              => 'required',
             'id_kategori'       => 'required',
             'judul_luaran'      => 'required',
-            'thn_luaran'        => 'required|numeric|digits:4',
+            'id_ta'             => 'required',
             'jenis_luaran'      => 'required',
             'url'               => 'url|nullable',
             'file_karya'        => 'mimes:pdf',
@@ -81,7 +81,7 @@ class TeacherOutputActivityController extends Controller
         $data->nidn             = $request->nidn;
         $data->id_kategori      = $request->id_kategori;
         $data->judul_luaran     = $request->judul_luaran;
-        $data->thn_luaran       = $request->thn_luaran;
+        $data->id_ta            = $request->id_ta;
         $data->jenis_luaran     = $request->jenis_luaran;
         $data->nama_karya       = $request->nama_karya;
         $data->jenis_karya      = $request->jenis_karya;
@@ -120,7 +120,7 @@ class TeacherOutputActivityController extends Controller
             'nidn'              => 'required',
             'id_kategori'       => 'required',
             'judul_luaran'      => 'required',
-            'thn_luaran'        => 'required|numeric|digits:4',
+            'id_ta'             => 'required',
             'jenis_luaran'      => 'required',
             'url'               => 'url|nullable',
             'file_karya'        => 'mimes:pdf',
@@ -132,7 +132,7 @@ class TeacherOutputActivityController extends Controller
         $data->nidn             = $request->nidn;
         $data->id_kategori      = $request->id_kategori;
         $data->judul_luaran     = $request->judul_luaran;
-        $data->thn_luaran       = $request->thn_luaran;
+        $data->id_ta            = $request->id_ta;
         $data->jenis_luaran     = $request->jenis_luaran;
         $data->nama_karya       = $request->nama_karya;
         $data->jenis_karya      = $request->jenis_karya;
@@ -301,6 +301,9 @@ class TeacherOutputActivityController extends Controller
                             })
                             ->addColumn('kategori', function($d) {
                                 return  $d->outputActivityCategory->nama;
+                            })
+                            ->addColumn('thn_luaran', function($d) {
+                                return  $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
                             })
                             ->addColumn('aksi', function($d) {
                                 if(!Auth::user()->hasRole('kajur')) {

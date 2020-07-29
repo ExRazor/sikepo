@@ -53,7 +53,7 @@ class StudentController extends Controller
         $id = decode_id($id);
         $data       = Student::where('nim',$id)->first();
 
-        if(!isset($data) || Auth::user()->kd_prodi != $data->kd_prodi) {
+        if(!isset($data) || (Auth::user()->hasRole('kaprodi') && Auth::user()->kd_prodi != $data->kd_prodi)) {
             return redirect(route('student.list.index'));
         }
 
@@ -74,28 +74,28 @@ class StudentController extends Controller
         }
 
         $research       = Research::whereHas(
-                                        'researchStudent', function($q1) use ($data) {
-                                            $q1->where('nim',$data->nim);
-                                        }
-                                    )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
+                            'researchStudent', function($q1) use ($data) {
+                                $q1->where('nim',$data->nim);
+                            }
+                        )
+                        ->orderBy('id_ta','desc')
+                        ->get();
 
         $service        = CommunityService::whereHas(
-                                        'serviceStudent', function($q1) use ($data) {
-                                            $q1->where('nim',$data->nim);
-                                        }
-                                    )
-                                    ->orderBy('id_ta','desc')
-                                    ->get();
+                            'serviceStudent', function($q1) use ($data) {
+                                $q1->where('nim',$data->nim);
+                            }
+                        )
+                        ->orderBy('id_ta','desc')
+                        ->get();
 
-        $publication        = StudentPublication::whereHas(
-                                                'student', function($q1) use ($data) {
-                                                    $q1->where('nim',$data->nim);
-                                                }
-                                            )
-                                            ->orderBy('tahun','desc')
-                                            ->get();
+        $publication    = StudentPublication::whereHas(
+                            'student', function($q1) use ($data) {
+                                $q1->where('nim',$data->nim);
+                            }
+                        )
+                        ->orderBy('id_ta','desc')
+                        ->get();
 
         return view('student.profile',compact(['data','status','statusList','academicYear','achievement','minithesis','research','service','publication']));
     }

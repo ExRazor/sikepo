@@ -84,8 +84,8 @@ class TeacherController extends Controller
         $achievement    = TeacherAchievement::where('nidn',$data->nidn)->orderBy('id_ta','desc')->get();
 
         $research       = Research::with([
-                                        'researchTeacher' => function($q1) use ($nidn) {
-                                            $q1->where('nidn',$nidn);
+                                        'researchTeacher' => function($q1) use ($data) {
+                                            $q1->where('nidn',$data->nidn);
                                         }
                                     ])
                                     ->whereHas(
@@ -97,8 +97,8 @@ class TeacherController extends Controller
                                     ->get();
 
         $service        = CommunityService::with([
-                                                'serviceTeacher' => function($q1) use ($nidn) {
-                                                    $q1->where('nidn',$nidn);
+                                                'serviceTeacher' => function($q1) use ($data) {
+                                                    $q1->where('nidn',$data->nidn);
                                                 }
                                             ])
                                             ->whereHas(
@@ -109,13 +109,13 @@ class TeacherController extends Controller
                                             ->orderBy('id_ta','desc')
                                             ->get();
 
-        $publication        = TeacherPublication::whereHas(
-                                                    'teacher', function($q1) use ($data) {
-                                                        $q1->where('nidn',$data->nidn);
-                                                    }
-                                                )
-                                                ->orderBy('tahun','desc')
-                                                ->get();
+        $publication    = TeacherPublication::whereHas(
+                                                'teacher', function($q1) use ($data) {
+                                                    $q1->where('nidn',$data->nidn);
+                                                }
+                                            )
+                                            ->orderBy('id_ta','desc')
+                                            ->get();
 
         return view('teacher/profile',compact(['data','academicYear','tahun','studyProgram','status','schedule','ewmp','achievement','minithesis','research','service','publication']));
     }
