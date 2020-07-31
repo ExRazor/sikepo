@@ -236,7 +236,7 @@ class UserController extends Controller
         }
         return DataTables::of($user)
                             ->editColumn('role', function($d) {
-                                $role = '<span class="'.$d->badge.'">'.ucfirst($d->role).(isset($d->kd_prodi) ? ' - '.$d->studyProgram->nama : '').'</span>';
+                                $role = '<span name="'.$d->role.'" class="'.$d->badge.'">'.ucfirst($d->role).(isset($d->kd_prodi) ? ' - '.$d->studyProgram->nama : '').'</span>';
                                 return $role;
                             })
                             ->addColumn('status', function($d) {

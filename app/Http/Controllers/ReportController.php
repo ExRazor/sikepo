@@ -9,7 +9,12 @@ use App\Models\Research;
 use App\Models\Teacher;
 use App\Models\TeacherPublication;
 use App\Models\TeacherOutputActivity;
+use App\Models\TeacherStatus;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
+use Illuminate\Support\Carbon;
+use stdClass;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -128,66 +133,138 @@ class ReportController extends Controller
         return response()->json($result);
     }
 
-    public function charts(Request $request)
+    public function pdf_tridharma()
     {
-        $penelitian = Research::whereHas(
-            'researchTeacher', function($q) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $q->prodiKetua(Auth::user()->kd_prodi);
-                } else {
-                    $q->jurusanKetua(setting('app_department_id'));
-                }
-            }
-        )->get();
+        $request = new stdClass;
+        $request->jenis         = 'Penelitian';
+        $request->periode_awal  = 2020;
+        $request->periode_akhir = 2020;
+        $request->kd_prodi      = null;
+        $request->disahkan      = "2019-08-01";
 
-        $pengabdian = CommunityService::whereHas(
-            'serviceTeacher', function($q) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $q->prodiKetua(Auth::user()->kd_prodi);
-                } else {
-                    $q->jurusanKetua(setting('app_department_id'));
-                }
-            }
-        )->get();
+        $data           = $this->getTridharmaData($request);
+        $ttd['kajur']   = $this->getStructural($request,'Kajur');
+        $ttd['kaprodi'] = $this->getStructural($request,'Kaprodi');
 
-        $publikasi = TeacherPublication::whereHas(
-            'teacher.latestStatus.studyProgram', function($query) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $query->where('kd_prodi',Auth::user()->kd_prodi);
-                } else {
-                    $query->where('kd_jurusan',setting('app_department_id'));
-                }
-            }
-        )->get();
-
-        $luaran = TeacherOutputActivity::whereHas(
-            'teacher.latestStatus.studyProgram', function($query) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $query->where('kd_prodi',Auth::user()->kd_prodi);
-                } else {
-                    $query->where('kd_jurusan',setting('app_department_id'));
-                }
-            }
-        )->get();
-
-        //Request
-        $thn_awal  = $request->thn_awal;
-        $thn_akhir = $request->thn_akhir;
-
-        $academicYear = AcademicYear::whereBetween('tahun_akademik',[$thn_awal,$thn_akhir])->get();
-        $teacher      = Teacher::whereHas(
-            'studyProgram.department', function($q) {
-                $q->where('kd_jurusan',setting('app_department_id'));
-            }
-        );
-
-        foreach($academicYear as $ay) {
-            $result['Penelitian'][$ay->tahun_akademik] = $penelitian->where('id_ta',$ay->id)->count();
-            $result['Pengabdian'][$ay->tahun_akademik] = $pengabdian->where('id_ta',$ay->id)->count();
-            $result['Publikasi'][$ay->tahun_akademik]  = $publikasi->where('tahun',$ay->tahun_akademik)->count();
-            $result['Luaran'][$ay->tahun_akademik]     = $luaran->where('thn_luaran',$ay->tahun_akademik)->count();
+        if($request->periode_awal == $request->periode_akhir || empty($request->periode_akhir)) {
+            $keterangan['periode'] = $request->periode_awal;
+        } else {
+            $keterangan['periode'] = $request->periode_awal.' - '.$request->periode_akhir;
         }
 
-        return response()->json($result);
+        $keterangan['jenis'] = $request->jenis;
+
+        $keterangan['fakultas'] = setting('app_faculty_name');
+        $keterangan['jurusan']  = setting('app_department_name');
+
+        if($request->kd_prodi) {
+            $query_prodi = StudyProgram::find($request->kd_prodi);
+            $keterangan['prodi']    = $query_prodi->nama;
+        } else {
+            $keterangan['prodi'] = null;
+        }
+
+        $keterangan['disahkan'] = Carbon::make($request->disahkan)->translatedFormat('d F Y');
+
+        // $html = PDF::loadView('report.pdf.penelitian',compact('data','ttd','keterangan'))->setPaper('A4', 'landscape');
+        // return PDF::loadHTML($html)->stream('mypdf.pdf');
+        // return $html->stream('hehe.pdf');
+
+        return view('report.pdf.penelitian',compact('data','ttd','keterangan'));
+
+    }
+
+    private function getTridharmaData($request)
+    {
+        //Batas
+        $batas = [$request->periode_awal,$request->periode_akhir];
+
+        switch($request->jenis) {
+            case 'Penelitian':
+                $data = Research::whereHas(
+                            'researchTeacher', function($q) use($request) {
+                                if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                    $q->prodiKetua($request->kd_prodi);
+                                } else {
+                                    $q->jurusanKetua(setting('app_department_id'));
+                                }
+                            }
+                        )
+                        ->whereHas(
+                            'academicYear', function($q) use($batas) {
+                                $q->whereBetween('tahun_akademik',$batas);
+                            }
+                        )
+                        ->get();
+            break;
+            case 'Pengabdian':
+                $data   = CommunityService::whereHas(
+                                    'serviceTeacher', function($q) use($request) {
+                                        if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                            $q->prodiKetua($request->kd_prodi);
+                                        } else {
+                                            $q->jurusanKetua(setting('app_department_id'));
+                                        }
+                                    }
+                                )
+                                ->whereHas(
+                                    'academicYear', function($q) use($batas) {
+                                        $q->whereBetween('tahun_akademik',$batas);
+                                    }
+                                )
+                                ->get();
+            break;
+            case 'Publikasi':
+                $data   = TeacherPublication::whereHas(
+                                    'teacher.latestStatus.studyProgram', function($q) use($request) {
+                                        if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                            $q->where('kd_prodi',$request->kd_prodi);
+                                        } else {
+                                            $q->where('kd_jurusan',setting('app_department_id'));
+                                        }
+                                    }
+                                )
+                                ->whereHas(
+                                    'academicYear', function($q) use($batas) {
+                                        $q->whereBetween('tahun_akademik',$batas);
+                                    }
+                                )
+                                ->get();
+            break;
+            case 'Luaran':
+                $data   = TeacherOutputActivity::whereHas(
+                                'teacher.latestStatus.studyProgram', function($q) use($request) {
+                                    if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                        $q->where('kd_prodi',$request->kd_prodi);
+                                    } else {
+                                        $q->where('kd_jurusan',setting('app_department_id'));
+                                    }
+                                }
+                            )
+                            ->whereHas(
+                                'academicYear', function($q) use($batas) {
+                                    $q->whereBetween('tahun_akademik',$batas);
+                                }
+                            )
+                            ->get();
+            break;
+            default:
+                $data = false;
+        }
+
+        return $data;
+
+    }
+
+    private function getStructural($request,$jabatan)
+    {
+        $query = TeacherStatus::where('jabatan',$jabatan)->where('periode','<=',$request->disahkan)->first();
+
+        $data = array(
+            'nama'  => $query->teacher->nama,
+            'nip'   => $query->teacher->nip
+        );
+
+        return $data;
     }
 }

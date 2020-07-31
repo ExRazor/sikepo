@@ -1,0 +1,73 @@
+/* BASIC */
+html, body, table, td {font-family: Tahoma, Verdana, Helvetica, sans-serif; font-size: 12px;}
+
+table { page-break-inside:auto }
+tr    { page-break-inside:avoid; page-break-after:auto }
+body  {margin: 8px;}
+
+/* KOP SURAT */
+.kop-surat .logo {
+    width: 120px;
+}
+
+.kop-surat .text {
+    text-align: center;
+    line-height: 1.1;
+}
+
+.kop-surat .text .caps{
+    font-size: 14pt;
+    text-transform: uppercase;
+}
+
+.kop-surat .text .small{
+    font-size: 10pt;
+}
+
+.batas-kop {
+    width: 100%;
+    margin: 20px 0;
+    border-bottom: 2.25px solid black;
+}
+
+/* HEADER */
+.header {
+    margin-bottom: 10px;
+}
+
+.header .title {
+    font-size: 16pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: underline;
+    margin-bottom: 20px;
+}
+
+.header .description {
+    font-size: 12pt;
+}
+
+/* CONTENT */
+.content .table-data td {
+    padding: 5px 8px;
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 50px;
+}
+
+.footer .sign {
+    text-align: center;
+    margin: 0 125px;
+}
+
+@media print {
+	.notprint { display: none; }
+}
+
+@page {
+    size: auto;
+    margin: 2cm;
+}

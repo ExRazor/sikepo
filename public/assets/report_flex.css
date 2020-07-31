@@ -1,0 +1,68 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* table.table-bordered{
+    border:1px solid black;
+    margin-top:20px;
+  }
+table.table-bordered > thead > tr > th{
+    border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+    border:1px solid black;
+} */
+
+.kop-surat {
+    position: relative;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 150px auto;
+    grid-column-gap: 20px;
+}
+
+.kop-surat .logo {
+    margin-top: 12px;
+}
+
+.kop-surat h1 {
+    font-size: 16pt;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.kop-surat h2 {
+    font-size: 14pt;
+    text-align: center;
+}
+
+.batas-kop {
+    width: 100%;
+    margin: 20px 0;
+    border-bottom: 2.25px solid black;
+}
+
+.header {
+    margin-bottom: 10px;
+}
+
+.header .title {
+    font-size: 16pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.header .description {
+    font-size: 12pt;
+}
+
+.footer {
+    margin-top: 50px;
+}
+
+.footer .sign {
+    text-align: center;
+    margin: 0 125px;
+}

@@ -539,5 +539,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('report')->name('report.')->group(function () {
         //Research
         Route::get('index', 'ReportController@index')->name('index');
+        Route::get('pdf/tridharma', 'ReportController@pdf_tridharma')->name('pdf.tridharma');
     });
 });

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Manajemen User')
+@section('title', 'Jabatan Struktural')
 
 @section('style')
 <link href="{{ asset ('assets/lib') }}/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">

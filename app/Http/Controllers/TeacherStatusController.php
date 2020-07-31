@@ -79,6 +79,7 @@ class TeacherStatusController extends Controller
             $data            = TeacherStatus::findOrFail($id);
             $data->nidn      = $request->_nidn;
             $data->periode   = date("Y-m-d", strtotime($val['periode']) );
+            $data->jabatan   = $val['jabatan'];
             $data->kd_prodi  = $val['kd_prodi'];
             $data->is_active = false;
             $data->save();
