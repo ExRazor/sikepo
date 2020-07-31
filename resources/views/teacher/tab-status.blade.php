@@ -38,10 +38,12 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
                                             <button class="dropdown-item btn-edit" data-id="{{encrypt($s->id)}}">Sunting</button>
+                                            @if(!$loop->first)
                                             <form method="POST">
                                                 <input type="hidden" value="{{encrypt($s->id)}}" name="id">
                                                 <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.status.destroy',$s->id) }}">Hapus</a>
                                             </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name'                ,
         'foto'                ,
         'defaultPass'         ,
+        'is_active'           ,
         'remember_token'      ,
     ];
 

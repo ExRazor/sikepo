@@ -37,7 +37,7 @@ class TeacherStatusController extends Controller
             $this->setStatus($request->_nidn);
 
             //Create User
-            // $this->addUser($request);
+            $this->storeStructural($request);
 
             $response = [
                 'title'   => 'Berhasil',
@@ -86,6 +86,9 @@ class TeacherStatusController extends Controller
             //Update status aktif jabatan
             $this->setStatus($request->_nidn);
 
+            //Create User
+            $this->storeStructural($request);
+
             $response = [
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil disunting',
@@ -114,7 +117,7 @@ class TeacherStatusController extends Controller
                 $data = TeacherStatus::find($id);
                 $data->delete();
 
-                // $this->deleteUser($data);
+                $this->destroyStructural($data);
 
                 //Update status aktif jabatan
                 $this->setStatus($data->nidn);
@@ -180,28 +183,51 @@ class TeacherStatusController extends Controller
                             ->make();
     }
 
-    private function addUser($request)
+    private function storeStructural($request)
     {
         $val = $request->validated();
 
         try {
-            $jabatan = 'Dosen';
 
-            if($val['jabatan'] != 'Dosen') {
-                $jabatan = $val['jabatan'];
+            //Tampung variabel jabatan
+            $jabatan = $val['jabatan'];
+
+            //Batal bila jabatan yg ditambahkan adalah dosen
+            if($jabatan=='Dosen' || $jabatan=='dosen') {
+                return false;
             }
 
+            if($jabatan=='Kaprodi' || $jabatan=='kaprodi') {
+                $prodi = $val['kd_prodi'];
+            } else {
+                $prodi = null;
+            }
+
+            //Cek ketersediaan username
+            $cek = User::where('username',$request->_nidn)->where('role',strtolower($jabatan))->first();
+
+            //Jika ada, password tidak diganti
+            if($cek) {
+                $userPass = $cek->password;
+                $defaultPass = false;
+            } else { //Jika tidak, password adalah NIDN
+                $userPass = Hash::make($request->_nidn);
+                $defaultPass = true;
+            }
+
+            //Query update atau simpan
             User::updateOrCreate(
                 [
                     'username' => $request->_nidn,
-                    'role'     => $jabatan,
+                    'role'     => strtolower($jabatan),
                 ],
                 [
-                    'password'   => Hash::make($request->_nidn),
-                    'kd_prodi'   => $val['kd_prodi'],
+                    'password'   => $userPass,
+                    'kd_prodi'   => $prodi,
                     'name'       => Teacher::find($request->_nidn)->nama,
                     'foto'       => Teacher::find($request->_nidn)->foto ?? null,
-                    'is_active'  => true,
+                    'defaultPass'=> $defaultPass,
+                    'is_active'  => false,
                 ]
             );
 
@@ -212,10 +238,15 @@ class TeacherStatusController extends Controller
         }
     }
 
-    private function deleteUser($data)
+    private function destroyStructural($data)
     {
         try {
-            User::where('username',$data->nidn)->where('role',$data->jabatan)->delete();
+
+            if($data->jabatan == 'Dosen' || $data->jabatan == 'dosen') {
+                return false;
+            }
+
+            User::where('username',$data->nidn)->where('role',strtolower($data->jabatan))->delete();
             return true;
 
         } catch(\Exception $e) {
