@@ -454,6 +454,18 @@ Breadcrumbs::for('alumnus-satisfaction-edit', function ($trail,$data) {
 });
 
 // Data Master
+Breadcrumbs::for('report', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Laporan');
+});
+
+// Data Master > Tahun Akademik
+Breadcrumbs::for('report-tridharma', function ($trail) {
+    $trail->parent('report');
+    $trail->push('Tridharma Dosen', route('report.tridharma.index'));
+});
+
+// Data Master
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Data Master');

@@ -119,10 +119,13 @@
         </ul>
     </li>
     <li class="br-menu-item">
-        <a href="{{ route('report.index') }}" class="br-menu-link {{ (request()->segment(1) == 'report') ? 'active' : '' }}">
+        <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'report') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-file-invoice"></i>
             <span class="menu-item-label">Laporan</span>
         </a><!-- br-menu-link -->
+        <ul class="br-menu-sub">
+            <li class="sub-item"><a href="{{ route('report.tridharma.index') }}" class="sub-link {{ (request()->is('report/tridharma*')) ? 'active' : '' }}">Tridharma Dosen</a></li>
+        </ul>
     </li>
     @if (Auth::user()->hasRole('admin'))
     <li class="br-menu-item">

@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('research') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('report-tridharma') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -18,19 +18,19 @@
     <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-file-invoice""></i>
         <div>
-            <h4>Laporan Tridharma</h4>
+            <h4>Laporan Tridharma Dosen</h4>
             <p class="mg-b-0">Grafik, ekspor, dan cetak laporan dari tridharma dosen</p>
         </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
         <div class="d-flex">
-            <div class="mr-2">
-                <a href="#" class="btn btn-primary btn-block text-white"><i class="fa fa-print mg-r-10"></i> Cetak</a>
-            </div>
             <div>
-                <a href="#" class="btn btn-teal btn-block text-white"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</a>
+                <button class="btn btn-primary btn-block text-white" data-toggle="modal" data-target="#modal-tridharma-print"><i class="fa fa-print mg-r-10"></i> Cetak</a>
             </div>
+            {{-- <div>
+                <a href="#" class="btn btn-teal btn-block text-white"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</a>
+            </div> --}}
         </div>
     </div>
     @endif
@@ -80,8 +80,8 @@
             <div class="widget-2">
                 <div class="card shadow-base overflow-hidden">
                     <div class="card-body">
-                        <div id="chart" url-target={{route('ajax.report.chart')}}>
-                            <canvas id="chart" height="1000px" ></canvas>
+                        <div id="chart" url-target={{route('ajax.report.tridharma.chart')}}>
+                            <canvas id="chart" height="1000px"></canvas>
                         </div>
                     </div>
                 </div>
@@ -89,6 +89,10 @@
         </div>
     </div>
 </div>
+<div id="iframe_cetak">
+
+</div>
+@include('report.tridharma.form_cetak')
 @endsection
 
 @section('js')

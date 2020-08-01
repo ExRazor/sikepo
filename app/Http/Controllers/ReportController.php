@@ -18,15 +18,15 @@ use PDF;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function tridharma_index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->select('tahun_akademik')->get();
 
-        return view('report.index',compact(['studyProgram','periodeTahun']));
+        return view('report.tridharma.index',compact(['studyProgram','periodeTahun']));
     }
 
-    public function chart(Request $request)
+    public function tridharma_chart(Request $request)
     {
         //Validasi ajax
         if(!request()->ajax()) {
@@ -133,7 +133,7 @@ class ReportController extends Controller
         return response()->json($result);
     }
 
-    public function pdf_tridharma()
+    public function tridharma_pdf()
     {
         $request = new stdClass;
         $request->jenis         = 'Penelitian';
@@ -170,8 +170,10 @@ class ReportController extends Controller
         // return PDF::loadHTML($html)->stream('mypdf.pdf');
         // return $html->stream('hehe.pdf');
 
+        // $html = view('report.pdf.penelitian',compact('data','ttd','keterangan'))->render();
         return view('report.pdf.penelitian',compact('data','ttd','keterangan'));
 
+        // return response()->json($html);
     }
 
     private function getTridharmaData($request)

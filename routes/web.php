@@ -253,8 +253,8 @@ Route::middleware('auth')->group(function () {
         Route::get('alumnus/workplace/{id}','AlumnusWorkplaceController@edit')->name('alumnus.workplace.edit');
 
         //Report
-        Route::post('report/chart','ReportController@chart')->name('report.chart');
-
+        Route::post('report/tridharma/chart','ReportController@tridharma_chart')->name('report.tridharma.chart');
+        Route::post('report/tridharma/pdf','ReportController@tridharma_pdf')->name('report.tridharma.pdf');
 
     });
 
@@ -538,7 +538,7 @@ Route::middleware('auth')->group(function () {
     //Report
     Route::prefix('report')->name('report.')->group(function () {
         //Research
-        Route::get('index', 'ReportController@index')->name('index');
-        Route::get('pdf/tridharma', 'ReportController@pdf_tridharma')->name('pdf.tridharma');
+        Route::get('tridharma', 'ReportController@tridharma_index')->name('tridharma.index');
+        Route::get('tridharma/pdf', 'ReportController@tridharma_pdf')->name('tridharma.pdf');
     });
 });

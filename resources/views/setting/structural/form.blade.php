@@ -67,7 +67,3 @@
         </div><!-- modal-dialog -->
     </form>
 </div><!-- modal -->
-@push('custom-style')
-<style>
-</style>
-@endpush
