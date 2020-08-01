@@ -26,7 +26,7 @@
             <td>{{ $d->judul_pengabdian }}</td>
             <td class="align-middle text-center">{{ $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester }}</td>
             <td>{{ $d->sumber_biaya ?? '-' }}</td>
-            <td>{{ rupiah($d->jumlah_biaya) ?? '-' }}</td>
+            <td class="align-middle text-right">{{ rupiah($d->jumlah_biaya) ?? '-' }}</td>
         </tr>
         @endforeach
     </tbody>

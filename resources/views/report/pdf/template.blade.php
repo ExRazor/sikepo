@@ -35,7 +35,7 @@
                             Ketua Program Studi
                             <br><br><br><br><br><br>
                             <u>{{$ttd['kaprodi']['nama']}}</u><br>
-                            NIP. {{$ttd['kaprodi']['nip']}}
+                            {{$ttd['kaprodi']['nip']}}
                             @endif
                         @endif
                     </td>
