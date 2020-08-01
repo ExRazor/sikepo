@@ -10,8 +10,8 @@
                 <tr><td class="caps">FAKULTAS TEKNIK</td></tr>
                 <tr><th class="caps">JURUSAN TEKNIK INFORMATIKA</th></tr>
                 <tr><td class="small">Jalan Jenderal Sudirman Nomor 6 Kota Gorontalo</td></tr>
-                <tr><td class="small">Kode Pos : 96128,  Fax. (0435) 821183</td></tr>
-                <tr><td class="small"><font style="margin-right:10px;">Laman : http://www.ung.ac.id</font>Email : ft@ung.ac.id</td></tr>
+                <tr><td class="small">Kode Pos : 96128,&nbsp;&nbsp;&nbsp;&nbsp;Fax. (0435) 821183</td></tr>
+                <tr><td class="small"><span style="margin-right:10px;">Laman : http://www.ung.ac.id</span>&nbsp;&nbsp;&nbsp;&nbsp;Email : ft@ung.ac.id</td></tr>
             </table>
         </td>
     </tr>

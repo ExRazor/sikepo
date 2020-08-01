@@ -19,10 +19,10 @@
                         <div class="col-sm-8">
                             <select class="form-control" name="jenis" required>
                                 <option value="">- Jenis Tridharma -</option>
-                                <option value="Penelitian">Penelitian</option>
-                                <option value="Pengabdian">Pengabdian</option>
-                                <option value="Publikasi">Publikasi</option>
-                                <option value="Luaran">Luaran</option>
+                                <option value="penelitian">Penelitian</option>
+                                <option value="pengabdian">Pengabdian</option>
+                                <option value="publikasi">Publikasi</option>
+                                <option value="luaran">Luaran</option>
                             </select>
                         </div>
                     </div>
@@ -50,7 +50,20 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Program Studi:<span class="tx-danger">*</span></label>
+                        <label class="col-sm-3 form-control-label">Tgl Disahkan: <span class="tx-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control datepicker" name="disahkan" placeholder="YYYY-MM-DD" data-provide='datepicker' data-date-container='#modal-tridharma-print' value="{{date('Y-m-d')}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mg-t-20">
+                        <label class="col-sm-3 form-control-label">Program Studi:</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="kd_prodi" required>
                                 <option value="">- Program Studi -</option>
@@ -63,7 +76,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-print" data-type="post" data-dest="{{route('ajax.report.tridharma.pdf')}}">
-                        Simpan
+                        Cetak
                     </button>
                     <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-cancel" data-dismiss="modal">Tutup</button>
                 </div>
@@ -76,6 +89,8 @@
     $('.btn-print').on('click', function(e) {
         e.preventDefault();
 
+        var modal   = $('#modal-tridharma-print');
+        var form    = $('#modal-tridharma-print').find('form');
         var button  = $(this);
         var url     = $(this).data('dest');
         var type    = $(this).data('type');
@@ -83,24 +98,27 @@
 
         $.ajax({
             url: url,
+            data: form.serialize(),
             type: type,
-            dataType: 'json',
             beforeSend: function() {
                 button.prop('disabled',true);
                 $('.btn-cancel').prop('disabled',true);
                 button.html('<i class="fa fa-spinner fa-spin"></i>');
-                $('body iframe').remove();
             },
             success: function (data) {
-                // $('#iframe_cetak').append('<iframe id="printf" style="display:none;" name="printf"></iframe>');
-                // $('#printf').html(data);
-                // window.frames["printf"].focus();
-                // window.frames["printf"].print();
+                var x=window.open(null,null,"width=1000,scrollbars=yes");
+                x.document.open();
+                x.document.write(data);
+                x.document.close();
 
-                $("#iframe_cetak").load(data);
-                document.getElementById('iframe_cetak').focus();
-                document.getElementById('iframe_cetak').print();
+                button.prop('disabled',false);
+                $('.btn-cancel').prop('disabled',false);
+                button.html(teks);
                 // console.log(data)
+
+                $('.alert-danger').html('').hide();
+                $('.is-invalid').removeClass('is-invalid');
+
             },
             error: function (request) {
                 json = $.parseJSON(request.responseText);

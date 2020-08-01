@@ -118,4 +118,40 @@ if (!function_exists('current_academic')) {
     }
 }
 
+if (!function_exists('get_structural')) {
+    /**
+     * description
+     *
+     * @param
+     * @return
+     */
+    function get_structural($periode,$jabatan,$prodi=null)
+    {
+        $q = App\Models\TeacherStatus::where('jabatan',$jabatan)->where('periode','<=',$periode);
+
+        if($prodi)
+        {
+            $q->where('kd_prodi',$prodi);
+        }
+
+        $query = $q->first();
+
+        if($query) {
+            $data = array(
+                'exist' => true,
+                'nama'  => $query->teacher->nama,
+                'nip'   => 'NIP.'.$query->teacher->nip
+            );
+        } else {
+            $data = array(
+                'exist' => false,
+                'nama'  => null,
+                'nip'   => null
+            );
+        }
+
+        return $data;
+    }
+}
+
 

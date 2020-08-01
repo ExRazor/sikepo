@@ -89,9 +89,7 @@
         </div>
     </div>
 </div>
-<div id="iframe_cetak">
-
-</div>
+<iframe id="iframe_cetak" style="display:none;" name="iframe_cetak"></iframe>
 @include('report.tridharma.form_cetak')
 @endsection
 

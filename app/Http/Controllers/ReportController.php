@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReportTridharmaRequest;
 use App\Models\StudyProgram;
 use App\Models\AcademicYear;
 use App\Models\CommunityService;
@@ -13,8 +14,10 @@ use App\Models\TeacherStatus;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
 use PDF;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 
 class ReportController extends Controller
 {
@@ -133,56 +136,57 @@ class ReportController extends Controller
         return response()->json($result);
     }
 
-    public function tridharma_pdf()
+    public function tridharma_pdf(ReportTridharmaRequest $request)
     {
-        $request = new stdClass;
-        $request->jenis         = 'Penelitian';
-        $request->periode_awal  = 2020;
-        $request->periode_akhir = 2020;
-        $request->kd_prodi      = null;
-        $request->disahkan      = "2019-08-01";
+        /* Ambil kode prodi dari session jika aksesnya Kaprodi */
+        if(Auth::user()->hasRole('kaprodi')) {
+            $request->kd_prodi   = Auth::user()->kd_prodi;
+        }
 
+        /* DATA & TANDA TANGAN */
         $data           = $this->getTridharmaData($request);
-        $ttd['kajur']   = $this->getStructural($request,'Kajur');
-        $ttd['kaprodi'] = $this->getStructural($request,'Kaprodi');
+        $ttd['kajur']   = get_structural($request->disahkan,'Kajur');
+        $ttd['kaprodi'] = get_structural($request->disahkan,'Kaprodi',$request->kd_prodi);
 
+        /* KETERANGAN */
         if($request->periode_awal == $request->periode_akhir || empty($request->periode_akhir)) {
             $keterangan['periode'] = $request->periode_awal;
         } else {
             $keterangan['periode'] = $request->periode_awal.' - '.$request->periode_akhir;
         }
-
-        $keterangan['jenis'] = $request->jenis;
-
+        $keterangan['jenis'] = ucfirst($request->jenis);
         $keterangan['fakultas'] = setting('app_faculty_name');
         $keterangan['jurusan']  = setting('app_department_name');
-
         if($request->kd_prodi) {
             $query_prodi = StudyProgram::find($request->kd_prodi);
-            $keterangan['prodi']    = $query_prodi->nama;
+            $keterangan['prodi'] = $query_prodi->nama;
         } else {
             $keterangan['prodi'] = null;
         }
-
         $keterangan['disahkan'] = Carbon::make($request->disahkan)->translatedFormat('d F Y');
 
+        return view('report.pdf.tridharma_dsn',compact('data','ttd','keterangan'));
+
+        /* RETURN PDF TAPI GAGAL + JELEK */
         // $html = PDF::loadView('report.pdf.penelitian',compact('data','ttd','keterangan'))->setPaper('A4', 'landscape');
-        // return PDF::loadHTML($html)->stream('mypdf.pdf');
         // return $html->stream('hehe.pdf');
 
         // $html = view('report.pdf.penelitian',compact('data','ttd','keterangan'))->render();
-        return view('report.pdf.penelitian',compact('data','ttd','keterangan'));
-
         // return response()->json($html);
     }
 
     private function getTridharmaData($request)
     {
         //Batas
-        $batas = [$request->periode_awal,$request->periode_akhir];
+        if(empty($request->periode_akhir)) {
+            $batas = [$request->periode_awal,$request->periode_awal];
+        } else {
+            $batas = [$request->periode_awal,$request->periode_akhir];
+        }
 
+        //Query berdasarkan jenis
         switch($request->jenis) {
-            case 'Penelitian':
+            case 'penelitian':
                 $data = Research::whereHas(
                             'researchTeacher', function($q) use($request) {
                                 if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
@@ -197,9 +201,10 @@ class ReportController extends Controller
                                 $q->whereBetween('tahun_akademik',$batas);
                             }
                         )
+                        ->orderBy('id_ta','desc')
                         ->get();
             break;
-            case 'Pengabdian':
+            case 'pengabdian':
                 $data   = CommunityService::whereHas(
                                     'serviceTeacher', function($q) use($request) {
                                         if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
@@ -216,7 +221,7 @@ class ReportController extends Controller
                                 )
                                 ->get();
             break;
-            case 'Publikasi':
+            case 'publikasi':
                 $data   = TeacherPublication::whereHas(
                                     'teacher.latestStatus.studyProgram', function($q) use($request) {
                                         if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
@@ -233,7 +238,7 @@ class ReportController extends Controller
                                 )
                                 ->get();
             break;
-            case 'Luaran':
+            case 'luaran':
                 $data   = TeacherOutputActivity::whereHas(
                                 'teacher.latestStatus.studyProgram', function($q) use($request) {
                                     if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
@@ -256,17 +261,5 @@ class ReportController extends Controller
 
         return $data;
 
-    }
-
-    private function getStructural($request,$jabatan)
-    {
-        $query = TeacherStatus::where('jabatan',$jabatan)->where('periode','<=',$request->disahkan)->first();
-
-        $data = array(
-            'nama'  => $query->teacher->nama,
-            'nip'   => $query->teacher->nip
-        );
-
-        return $data;
     }
 }
