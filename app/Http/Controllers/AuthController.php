@@ -115,7 +115,7 @@ class AuthController extends Controller
         //Validasi
         $this->validate($request, [
             'name'  => 'required',
-            'foto'  => 'dimensions:min_width=500,min_height=500'
+            'foto'  => 'nullable'
         ]);
 
         //Edit Foto
