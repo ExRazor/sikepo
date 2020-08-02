@@ -183,7 +183,6 @@ $(document).on('click','.btn-save',function(e) {
             cont.html('Simpan');
         },
     });
-
 });
 
 //Submit Button

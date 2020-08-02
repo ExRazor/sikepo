@@ -55,6 +55,12 @@ return [
             'visibility' => 'public',
         ],
 
+        'upload' => [
+            'driver' => 'local',
+            'root' => storage_path('app/upload'),
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -64,6 +70,21 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Symbolic Links
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the symbolic links that will be created when the
+    | `storage:link` Artisan command is executed. The array keys should be
+    | the locations of the links and the values should be their targets.
+    |
+    */
+    'links' => [
+        // public_path('storage') => storage_path('app/public'),
+        public_path('upload') => storage_path('app/upload'),
     ],
 
 ];

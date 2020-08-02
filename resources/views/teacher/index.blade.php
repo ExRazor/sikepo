@@ -23,10 +23,14 @@
         </div>
     </div>
     <div class="ml-auto">
-        @if(!Auth::user()->hasRole('kajur'))
-        <a href="{{ route('teacher.list.create') }}" class="btn btn-teal btn-block" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
-        {{-- <a href="{{ route('teacher.import') }}" class="btn btn-primary btn-block mg-y-10" style="color:white"><i class="fa fa-file-import mg-r-10"></i> Import Data</a> --}}
-        @endif
+        <div class="d-flex">
+            <div class="mr-2">
+                <a href="{{ route('teacher.list.create') }}" class="btn btn-teal btn-block" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
+            </div>
+            <div>
+                <button class="btn btn-teal btn-block text-white" data-toggle="modal" data-target="#modal-export-teacher"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
+           </div>
+        </div>
     </div>
 </div>
 <div class="br-pagebody">
@@ -98,6 +102,7 @@
         </div>
     </div>
 </div>
+@include('teacher.form-export');
 @endsection
 
 @section('style')

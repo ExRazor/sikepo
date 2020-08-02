@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TeacherExport;
 use Illuminate\Http\Request;
 use App\Models\Teacher;
 use App\Models\StudyProgram;
@@ -380,6 +381,19 @@ class TeacherController extends Controller
                 'type'    => 'success'
             ]);
         }
+    }
+
+    public function export(Request $request)
+	{
+		// Request
+        $tgl    = date('d-m-Y_h_i_s');
+        $prodi  = ($request->kd_prodi ? '_'.$request->kd_prodi.'_' : null);
+        $nama_file = 'Data Dosen_'.$prodi.$tgl.'.xlsx';
+
+		// Ekspor data
+        // return (new TeacherExport($request))->download($nama_file);
+        return (new TeacherExport($request))->store($nama_file,'upload');
+
     }
 
     public function show_by_prodi(Request $request)
