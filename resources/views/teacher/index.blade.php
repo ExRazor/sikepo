@@ -28,7 +28,7 @@
                 <a href="{{ route('teacher.list.create') }}" class="btn btn-teal btn-block" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Dosen</a>
             </div>
             <div>
-                <button class="btn btn-teal btn-block text-white" data-toggle="modal" data-target="#modal-export-teacher"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
+                <button class="btn btn-indigo btn-block text-white" data-toggle="modal" data-target="#modal-export-teacher"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
            </div>
         </div>
     </div>

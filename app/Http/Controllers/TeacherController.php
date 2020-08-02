@@ -187,7 +187,7 @@ class TeacherController extends Controller
 
         if($request->file('foto')) {
             $file = $request->file('foto');
-            $tujuan_upload = public_path('upload/teacher');
+            $tujuan_upload = storage_path('app/upload/teacher');
             $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
             $Teacher->foto = $filename;
@@ -251,24 +251,15 @@ class TeacherController extends Controller
         $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
         $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
-        $storagePath = public_path('upload/teacher/'.$Teacher->foto);
-        if($request->file('foto')) {
+        $storagePath = storage_path('app/upload/teacher/'.$Teacher->foto);
+        if($storagePath || $request->file('foto')) {
             if(File::exists($storagePath)) {
                 File::delete($storagePath);
             }
-
             $file = $request->file('foto');
-            $tujuan_upload = public_path('upload/teacher');
+            $tujuan_upload = storage_path('app/upload/teacher');
             $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$file->getClientOriginalExtension();
             $file->move($tujuan_upload,$filename);
-            $Teacher->foto = $filename;
-        }
-
-        if(isset($Teacher->foto) && File::exists($storagePath))
-        {
-            $ekstensi = File::extension($storagePath);
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$ekstensi;
-            File::move($storagePath,public_path('upload/teacher/'.$filename));
             $Teacher->foto = $filename;
         }
 
@@ -313,7 +304,7 @@ class TeacherController extends Controller
     {
         $file = decrypt($filename);
 
-        $storagePath = public_path('upload/teacher/'.$file);
+        $storagePath = storage_path('app/upload/teacher/'.$file);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -329,7 +320,7 @@ class TeacherController extends Controller
 
     public function delete_file($file)
     {
-        $storagePath = public_path('upload/teacher/'.$file);
+        $storagePath = storage_path('app/upload/teacher/'.$file);
         if(File::exists($storagePath)) {
             File::delete($storagePath);
         }
@@ -360,7 +351,7 @@ class TeacherController extends Controller
         $nama_file = $file->getClientOriginalName();
 
         // upload ke folder khusus di dalam folder public
-        $path = public_path('upload/teacher/excel_import/',$nama_file);
+        $path = storage_path('app/upload/teacher/excel_import/',$nama_file);
 		$file->move($path);
 
 		// import data
@@ -386,13 +377,17 @@ class TeacherController extends Controller
     public function export(Request $request)
 	{
 		// Request
-        $tgl    = date('d-m-Y_h_i_s');
-        $prodi  = ($request->kd_prodi ? '_'.$request->kd_prodi.'_' : null);
-        $nama_file = 'Data Dosen_'.$prodi.$tgl.'.xlsx';
+        $tgl         = date('d-m-Y_h_i_s');
+        $prodi       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+        $nama_file   = 'Data_Dosen_'.$prodi.$tgl.'.xlsx';
+        $lokasi_file = storage_path('app/upload/'.$nama_file);
 
 		// Ekspor data
-        // return (new TeacherExport($request))->download($nama_file);
-        return (new TeacherExport($request))->store($nama_file,'upload');
+        // return (new TeacherExport($request))->store($nama_file,storage_path('app/upload/teacher/excel_export'));
+        return Excel::download(new TeacherExport($request),$nama_file);
+        // Excel::download(new TeacherExport($request),$nama_file,'upload');
+
+        // return response()->json($lokasi_file);
 
     }
 

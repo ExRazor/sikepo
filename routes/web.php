@@ -267,7 +267,7 @@ Route::middleware('auth')->group(function () {
 
         //Teacher - List
         Route::get('list/import','TeacherController@import')->name('list.import');
-        Route::get('list/export','TeacherController@export')->name('list.export');
+        Route::post('list/export','TeacherController@export')->name('list.export');
         Route::resource('list', 'TeacherController');
 
         //Teacher - Status
