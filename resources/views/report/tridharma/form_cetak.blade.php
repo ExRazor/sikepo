@@ -22,7 +22,7 @@
                                 <option value="penelitian">Penelitian</option>
                                 <option value="pengabdian">Pengabdian</option>
                                 <option value="publikasi">Publikasi</option>
-                                <option value="luaran">Luaran</option>
+                                {{-- <option value="luaran">Luaran</option> --}}
                             </select>
                         </div>
                     </div>
@@ -63,14 +63,74 @@
                         </div>
                     </div>
                     <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Program Studi:</label>
+                        <label class="col-sm-3 form-control-label">Kelompok: <span class="tx-danger">*</span></label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="kd_prodi" required>
-                                <option value="">- Program Studi -</option>
-                                @foreach ($studyProgram as $sp)
-                                <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
-                                @endforeach
-                            </select>
+                            <div id="tampil_kelompok">
+                                <label class="rdiobox rdiobox-inline mb-0 mg-r-20">
+                                    <input name="tampil_kelompok" type="radio" value="tunggal" required>
+                                    <span>Tunggal</span>
+                                </label>
+                                <label class="rdiobox rdiobox-inline mb-0 mg-r-20">
+                                    <input name="tampil_kelompok" type="radio" value="kelompok" required>
+                                    <span>Kelompok</span>
+                                </label>
+                                <label class="rdiobox rdiobox-inline mb-0 mg-r-20">
+                                    <input name="tampil_kelompok" type="radio" value="semua" required>
+                                    <span>Semua</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mg-t-20">
+                        <label class="col-sm-3 form-control-label">Tipe: <span class="tx-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <div id="tampil_tipe">
+                                <label class="rdiobox rdiobox-inline mb-0 mg-r-20">
+                                    <input name="tampil_tipe" type="radio" value="prodi" required>
+                                    <span>Program Studi</span>
+                                </label>
+                                <label class="rdiobox rdiobox-inline mb-0 mg-r-20">
+                                    <input name="tampil_tipe" type="radio" value="individu" required>
+                                    <span>Individu</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="prodi_form" style="display:none;">
+                        <div class="form-group row mg-t-20">
+                            <label class="col-sm-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="kd_prodi" disabled>
+                                    <option value="">- Semua -</option>
+                                    @foreach ($studyProgram as $sp)
+                                    <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="individu_form" style="display:none;">
+                        <div class="form-group row mg-t-20">
+                            <label class="col-sm-3 form-control-label">NIDN: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control select2-dosen" name="nidn" disabled>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mg-t-20">
+                        <label class="col-sm-3 form-control-label">Anggota: <span class="tx-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <div id="tampil_ketua_anggota">
+                                <label class="ckbox ckbox-inline mg-r-20">
+                                    <input type="checkbox" name="tampil_ketua" value="1">
+                                    <span>Ketua</span>
+                                </label>
+                                <label class="ckbox ckbox-inline mg-r-20">
+                                    <input type="checkbox" name="tampil_anggota" value="1">
+                                    <span>Anggota</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,6 +146,53 @@
 </div><!-- modal -->
 @push('custom-js')
 <script>
+    select2_dosen($('.select2-dosen'));
+
+    $('#modal-tridharma-print').on('change','input[name=tampil_tipe]',function(){
+        var cont            = $('#modal-tridharma-print');
+        var prodi_form      = cont.find('#prodi_form');
+        var individu_form   = cont.find('#individu_form');
+
+        if ($(this).is(':checked') && $(this).val() == 'prodi') {
+
+            individu_form.hide();
+            individu_form.find('select').val(null).trigger('change').prop('disabled',true).prop('required',false);
+            individu_form.find('input').prop('disabled',true).prop('required',false);
+
+            prodi_form.show();
+            prodi_form.find('select').val(null).trigger('change').prop('disabled',false).prop('required',true);
+            prodi_form.find('input').prop('disabled',false).prop('required',true);
+
+            //Kode Prodi
+            // prodi_form.find('select[name=kd_prodi]').val(null).trigger('change');
+            // prodi_form.find('select[name=kd_prodi]').prop('disabled',false);
+            // prodi_form.find('select[name=kd_prodi]').prop('required',true);
+
+            // //Tampil Tipe
+            // prodi_form.find('input[name=tampil_tipe]').val(null);
+            // prodi_form.find('input[name=tampil_tipe]').prop('disabled',false);
+            // prodi_form.find('input[name=tampil_tipe]').prop('required',true);
+        } else {
+
+            prodi_form.hide();
+            prodi_form.find('select').val(null).trigger('change').prop('disabled',true).prop('required',false);
+            prodi_form.find('input').prop('disabled',true).prop('required',false);
+
+            individu_form.show();
+            individu_form.find('select').val(null).trigger('change').prop('disabled',false).prop('required',true);
+            individu_form.find('input').prop('disabled',false).prop('required',true);
+
+            // //NIDN
+            // individu_form.find('select[name=nidn]').prop('disabled',false);
+            // individu_form.find('select[name=nidn]').prop('required',true);
+
+            // //Tampil Anggota
+            // prodi_form.find('input[name=anggota_exist]').val(null);
+            // prodi_form.find('input[name=anggota_exist]').prop('disabled',false);
+            // prodi_form.find('input[name=anggota_exist]').prop('required',true);
+        }
+    })
+
     $('.btn-print').on('click', function(e) {
         e.preventDefault();
 
@@ -139,6 +246,14 @@
             },
         });
     });
+
+    $('#modal-tridharma-print').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+
+        var cont           = $(this);
+        cont.find('#prodi_form').hide();
+        cont.find('#individu_form').hide();
+    })
 </script>
 
 @endpush

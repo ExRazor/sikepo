@@ -138,6 +138,7 @@ class ReportController extends Controller
 
     public function tridharma_pdf(ReportTridharmaRequest $request)
     {
+
         /* Ambil kode prodi dari session jika aksesnya Kaprodi */
         if(Auth::user()->hasRole('kaprodi')) {
             $request->kd_prodi   = Auth::user()->kd_prodi;
@@ -154,18 +155,33 @@ class ReportController extends Controller
         } else {
             $keterangan['periode'] = $request->periode_awal.' - '.$request->periode_akhir;
         }
-        $keterangan['jenis'] = ucfirst($request->jenis);
+        $keterangan['jenis']    = ucfirst($request->jenis);
+        $keterangan['kelompok'] = ucfirst($request->tampil_kelompok);
+        $keterangan['disahkan'] = Carbon::make($request->disahkan)->translatedFormat('d F Y');
         $keterangan['fakultas'] = setting('app_faculty_name');
         $keterangan['jurusan']  = setting('app_department_name');
-        if($request->kd_prodi) {
-            $query_prodi = StudyProgram::find($request->kd_prodi);
-            $keterangan['prodi'] = $query_prodi->nama;
-        } else {
-            $keterangan['prodi'] = null;
-        }
-        $keterangan['disahkan'] = Carbon::make($request->disahkan)->translatedFormat('d F Y');
 
-        return view('report.pdf.tridharma_dsn',compact('data','ttd','keterangan'));
+        /* KETERANGAN - PRODI */
+        if($request->tampil_tipe == 'prodi') {
+            if($request->kd_prodi) {
+                $query_prodi = StudyProgram::find($request->kd_prodi);
+                $keterangan['prodi'] = $query_prodi->nama;
+            } else {
+                $keterangan['prodi'] = null;
+            }
+        } else {
+            $teacher = Teacher::find($request->nidn);
+            $keterangan['nama_dosen'] = $teacher->nama;
+            $keterangan['nidn_dosen'] = $teacher->nidn;
+            $keterangan['prodi']      = $teacher->latestStatus->studyProgram->nama;
+        }
+
+        /* FILTER TAMPILAN KOLOM */
+        $tampil['tipe']     = $request->tampil_tipe;
+        $tampil['ketua']    = $request->tampil_ketua ?? 0;
+        $tampil['anggota']  = $request->tampil_anggota ?? 0;
+
+        return view('report.pdf.tridharma_dsn',compact('data','ttd','keterangan','tampil'));
 
         /* RETURN PDF TAPI GAGAL + JELEK */
         // $html = PDF::loadView('report.pdf.penelitian',compact('data','ttd','keterangan'))->setPaper('A4', 'landscape');
@@ -187,56 +203,109 @@ class ReportController extends Controller
         //Query berdasarkan jenis
         switch($request->jenis) {
             case 'penelitian':
-                $data = Research::whereHas(
-                            'researchTeacher', function($q) use($request) {
-                                if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
-                                    $q->prodiKetua($request->kd_prodi);
-                                } else {
-                                    $q->jurusanKetua(setting('app_department_id'));
-                                }
-                            }
-                        )
-                        ->whereHas(
+                //Mulai query dengan filter tahun
+                $query = Research::whereHas(
                             'academicYear', function($q) use($batas) {
                                 $q->whereBetween('tahun_akademik',$batas);
                             }
-                        )
-                        ->orderBy('id_ta','desc')
-                        ->get();
+                        );
+
+                //Filter penelitian kelompok atau tunggal
+                if($request->tampil_kelompok == 'kelompok') {
+                    $query->has('researchTeacher', '>', 1);
+                } else if($request->tampil_kelompok == 'tunggal') {
+                    $query->has('researchTeacher', '=', 1);
+                }
+
+                //Filter tampil sesuai prodi atau individu
+                if($request->tampil_tipe == 'prodi') {
+                    $query->whereHas(
+                        'researchTeacher', function($q) use($request) {
+                            if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                $q->prodiKetua($request->kd_prodi);
+                            } else {
+                                $q->jurusanKetua(setting('app_department_id'));
+                            }
+                        }
+                    );
+                } else {
+                    $query->whereHas(
+                        'researchTeacher', function($q1) use ($request) {
+                            $q1->where('nidn',$request->nidn);
+                        }
+                    );
+                }
+
+                //Tampung ke variabel data
+                $data = $query->orderBy('id_ta','desc')->get();
             break;
             case 'pengabdian':
-                $data   = CommunityService::whereHas(
-                                    'serviceTeacher', function($q) use($request) {
-                                        if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
-                                            $q->prodiKetua($request->kd_prodi);
-                                        } else {
-                                            $q->jurusanKetua(setting('app_department_id'));
-                                        }
-                                    }
-                                )
-                                ->whereHas(
-                                    'academicYear', function($q) use($batas) {
-                                        $q->whereBetween('tahun_akademik',$batas);
-                                    }
-                                )
-                                ->get();
+                //Mulai query dengan filter tahun
+                $query = CommunityService::whereHas(
+                            'academicYear', function($q) use($batas) {
+                                $q->whereBetween('tahun_akademik',$batas);
+                            }
+                        );
+
+                //Filter pengabdian kelompok atau tunggal
+                if($request->tampil_kelompok == 'kelompok') {
+                    $query->has('serviceTeacher', '>', 1);
+                } else if($request->tampil_kelompok == 'tunggal') {
+                    $query->has('serviceTeacher', '=', 1);
+                }
+
+                //Filter tampil sesuai prodi atau individu
+                if($request->tampil_tipe == 'prodi') {
+                    $query->whereHas(
+                        'serviceTeacher', function($q) use($request) {
+                            if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                $q->prodiKetua($request->kd_prodi);
+                            } else {
+                                $q->jurusanKetua(setting('app_department_id'));
+                            }
+                        }
+                    );
+                } else {
+                    $query->whereHas(
+                        'serviceTeacher', function($q1) use ($request) {
+                            $q1->where('nidn',$request->nidn);
+                        }
+                    );
+                }
+
+                //Tampung ke variabel data
+                $data = $query->orderBy('id_ta','desc')->get();
             break;
             case 'publikasi':
-                $data   = TeacherPublication::whereHas(
-                                    'teacher.latestStatus.studyProgram', function($q) use($request) {
-                                        if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
-                                            $q->where('kd_prodi',$request->kd_prodi);
-                                        } else {
-                                            $q->where('kd_jurusan',setting('app_department_id'));
-                                        }
-                                    }
-                                )
-                                ->whereHas(
-                                    'academicYear', function($q) use($batas) {
-                                        $q->whereBetween('tahun_akademik',$batas);
-                                    }
-                                )
-                                ->get();
+                //Mulai query dengan filter tahun
+                $query = TeacherPublication::whereHas(
+                    'academicYear', function($q) use($batas) {
+                        $q->whereBetween('tahun_akademik',$batas);
+                    }
+                );
+
+                //Filter pengabdian kelompok atau tunggal
+                if($request->tampil_kelompok == 'kelompok') {
+                    $query->has('publicationMembers');
+                }
+
+                //Filter tampil sesuai prodi atau individu
+                if($request->tampil_tipe == 'prodi') {
+                    $query->whereHas(
+                        'teacher.latestStatus.studyProgram', function($q) use($request) {
+                            if(!empty($request->kd_prodi) || $request->kd_prodi != null) {
+                                $q->where('kd_prodi',$request->kd_prodi);
+                            } else {
+                                $q->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        }
+                    );
+                } else {
+                    $query->where('nidn',$request->nidn);
+                }
+
+                //Tampung ke variabel data
+                $data = $query->orderBy('id_ta','desc')->get();
             break;
             case 'luaran':
                 $data   = TeacherOutputActivity::whereHas(

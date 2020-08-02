@@ -28,6 +28,7 @@ class TeacherStatusRequest extends FormRequest
         if($this->_id) {
             $id = decrypt($this->_id);
         }
+
         return [
             'jabatan'       => 'required',
             // 'id_ta'         => [

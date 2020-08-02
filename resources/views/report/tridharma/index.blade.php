@@ -155,9 +155,9 @@
                     publikasi.push(data.jumlah);
                 });
 
-                $.each(response.luaran, function(index,data){
-                    luaran.push(data.jumlah);
-                });
+                // $.each(response.luaran, function(index,data){
+                //     luaran.push(data.jumlah);
+                // });
 
                 var dataChart = {
                     labels: dosen,
@@ -178,11 +178,11 @@
                             backgroundColor: '#1CAF9A',
                             data: publikasi
                         },
-                        {
-                            label: 'Luaran',
-                            backgroundColor: '#0866C6',
-                            data: luaran
-                        },
+                        // {
+                        //     label: 'Luaran',
+                        //     backgroundColor: '#0866C6',
+                        //     data: luaran
+                        // },
                     ]
                 };
 
