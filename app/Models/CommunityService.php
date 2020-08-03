@@ -24,7 +24,7 @@ class CommunityService extends BaseModel
 
     public function serviceTeacher()
     {
-        return $this->hasMany('App\Models\CommunityServiceTeacher','id_pengabdian');
+        return $this->hasMany('App\Models\CommunityServiceTeacher','id_pengabdian')->orderBy('sks','desc');
     }
 
     public function serviceKetua()

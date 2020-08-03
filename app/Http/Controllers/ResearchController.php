@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ResearchExport;
 use App\Models\AcademicYear;
 use App\Models\Research;
 use App\Models\StudyProgram;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
+
 
 class ResearchController extends Controller
 {
@@ -36,8 +38,9 @@ class ResearchController extends Controller
     {
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->select('tahun_akademik')->get();
 
-        return view('research.index',compact(['studyProgram','faculty']));
+        return view('research.index',compact(['studyProgram','faculty','periodeTahun']));
     }
 
     public function show($id)
@@ -290,6 +293,30 @@ class ResearchController extends Controller
                 ]);
             }
         }
+    }
+
+    public function export(Request $request)
+	{
+		// Request
+        $tgl         = date('dmYhis');
+
+        if($request->tipe == 'prodi') {
+            $idn       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+        } else {
+            $idn       = ($request->nidn ? $request->nidn.'_' : null);
+        }
+
+        if(empty($request->periode_akhir)) {
+            $periode = $request->periode_awal.'_';
+        } else {
+            $periode = $request->periode_awal.'-'.$request->periode_akhir.'_';
+        }
+
+        $nama_file   = 'Data_Penelitian_'.$idn.$periode.$tgl.'.xlsx';
+        $lokasi_file = storage_path('app/upload/temp/'.$nama_file);
+
+		// Ekspor data
+        return (new ResearchExport($request))->download($nama_file);
     }
 
     public function datatable(Request $request)

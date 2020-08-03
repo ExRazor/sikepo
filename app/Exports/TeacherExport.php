@@ -25,23 +25,19 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
     {
         $query = Teacher::query();
 
-        if(Auth::user()->hasRole('kaprodi')) {
-            $query->whereHas(
-                'latestStatus.studyProgram', function($query) {
+        $query->whereHas(
+            'latestStatus.studyProgram', function($query) {
+                if(Auth::user()->hasRole('kaprodi')) {
                     $query->where('kd_prodi',Auth::user()->kd_prodi);
-                }
-            );
-        } else {
-            $query->whereHas(
-                'latestStatus.studyProgram', function($query) {
+                } else {
                     if($this->kd_prodi) {
                         $query->where('kd_prodi',$this->kd_prodi);
                     } else {
                         $query->where('kd_jurusan',setting('app_department_id'));
                     }
                 }
-            );
-        }
+            }
+        );
 
         return $query;
     }

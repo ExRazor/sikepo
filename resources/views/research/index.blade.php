@@ -24,7 +24,14 @@
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
-        <a href="{{ route('research.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+        <div class="d-flex">
+            <div class="mr-2">
+                <a href="{{ route('research.create') }}" class="btn btn-teal btn-block mg-b-10 text-white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+            </div>
+            <div>
+                <button class="btn btn-indigo btn-block text-white" data-toggle="modal" data-target="#modal-export-research"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
+            </div>
+        </div>
     </div>
     @endif
 </div>
@@ -78,6 +85,7 @@
         </div>
     </div>
 </div>
+@include('research.form-export')
 @endsection
 
 @section('style')

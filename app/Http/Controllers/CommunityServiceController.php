@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CommunityServiceExport;
+use App\Models\AcademicYear;
 use App\Models\CommunityService;
 use App\Models\CommunityServiceTeacher;
 use App\Models\CommunityServiceStudent;
@@ -33,10 +35,11 @@ class CommunityServiceController extends Controller
     {
         $faculty = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->select('tahun_akademik')->get();
 
         // return response()->json($pengabdian);die;
 
-        return view('community-service.index',compact(['studyProgram','faculty']));
+        return view('community-service.index',compact(['studyProgram','faculty','periodeTahun']));
     }
 
     public function show($id)
@@ -282,6 +285,29 @@ class CommunityServiceController extends Controller
                 ]);
             }
         }
+    }
+
+    public function export(Request $request)
+	{
+		// Request
+        $tgl         = date('dmYhis');
+        if($request->tipe == 'prodi') {
+            $idn       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+        } else {
+            $idn       = ($request->nidn ? $request->nidn.'_' : null);
+        }
+
+        if(empty($request->periode_akhir)) {
+            $periode = $request->periode_awal.'_';
+        } else {
+            $periode = $request->periode_awal.'-'.$request->periode_akhir.'_';
+        }
+
+        $nama_file   = 'Data_Pengabdian_'.$idn.$periode.$tgl.'.xlsx';
+        $lokasi_file = storage_path('app/upload/temp/'.$nama_file);
+
+		// Ekspor data
+        return (new CommunityServiceExport($request))->download($nama_file);
     }
 
     public function datatable(Request $request)

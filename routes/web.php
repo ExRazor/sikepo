@@ -12,6 +12,9 @@
 */
 
 // Login Routes...
+
+use App\Http\Controllers\Teacher\ResearchController;
+
 Route::get('/tes', 'PageController@tes');
 Route::get('login', 'AuthController@login_form')->middleware('guest')->name('login');
 Route::post('login', 'AuthController@login_post')->name('login_post');
@@ -339,11 +342,13 @@ Route::middleware('auth')->group(function () {
 
     //Research
     Route::resource('research', 'ResearchController');
+    Route::post('research/export','ResearchController@export')->name('research.export');
     Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
     Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
 
     //Community Service
     Route::resource('community-service', 'CommunityServiceController');
+    Route::post('community-service/export','CommunityServiceController@export')->name('community-service.export');
     Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
     Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
