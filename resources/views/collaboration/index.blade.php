@@ -24,7 +24,14 @@
     </div>
     @if (Auth::user()->role!='kajur')
     <div class="ml-auto">
-        <a href="{{ route('collaboration.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Kerja Sama</a>
+        <div class="d-flex">
+            <div class="mr-2">
+                <a href="{{ route('collaboration.create') }}" class="btn btn-teal btn-block mg-b-10 text-white"><i class="fa fa-plus mg-r-10"></i> Kerja Sama</a>
+            </div>
+            <div>
+                <button class="btn btn-indigo btn-block text-white" data-toggle="modal" data-target="#modal-export-collaboration"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
+            </div>
+        </div>
     </div>
     @endif
 </div>
@@ -72,6 +79,7 @@
         </div>
     </div>
 </div>
+@include('collaboration.form-export')
 @endsection
 
 @section('style')

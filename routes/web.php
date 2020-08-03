@@ -339,6 +339,7 @@ Route::middleware('auth')->group(function () {
 
     //Collaboration
     Route::resource('collaboration', 'CollaborationController');
+    Route::post('collaboration/export','CollaborationController@export')->name('collaboration.export');
 
     //Research
     Route::resource('research', 'ResearchController');

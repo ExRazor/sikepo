@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CollaborationExport;
 use App\Models\Collaboration;
 use App\Models\StudyProgram;
 use App\Models\AcademicYear;
@@ -30,31 +31,9 @@ class CollaborationController extends Controller
         // $data = Collaboration::all();
 
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->select('tahun_akademik')->get();
 
-        foreach($studyProgram as $sp) {
-            $collab[$sp->kd_prodi] = Collaboration::where('kd_prodi',$sp->kd_prodi)->get();
-        }
-
-        if(Auth::user()->hasRole('kaprodi'))
-        {
-            $collab = Collaboration::whereHas(
-                                        'studyProgram', function($query) {
-                                            $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                        }
-                                    )
-                                    ->get();
-        }
-        else
-        {
-            $collab = Collaboration::whereHas(
-                                        'studyProgram', function($query) {
-                                            $query->where('kd_jurusan',setting('app_department_id'));
-                                        }
-                                    )
-                                    ->get();
-        }
-
-        return view('collaboration/index',compact(['studyProgram','collab']));
+        return view('collaboration/index',compact(['studyProgram','periodeTahun']));
     }
 
     public function create()
@@ -228,6 +207,25 @@ class CollaborationController extends Controller
         if(File::exists($storagePath)) {
             File::delete($storagePath);
         }
+    }
+
+    public function export(Request $request)
+	{
+		// Request
+        $tgl       = date('dmYhis');
+        $idn       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+
+        if(empty($request->periode_akhir)) {
+            $periode = $request->periode_awal.'_';
+        } else {
+            $periode = $request->periode_awal.'-'.$request->periode_akhir.'_';
+        }
+
+        $nama_file   = 'Data_Kerja_Sama_'.$idn.$periode.$tgl.'.xlsx';
+        $lokasi_file = storage_path('app/upload/temp/'.$nama_file);
+
+		// Ekspor data
+        return (new CollaborationExport($request))->download($nama_file);
     }
 
     public function datatable(Request $request)
