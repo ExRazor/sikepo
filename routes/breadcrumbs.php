@@ -46,7 +46,7 @@ Breadcrumbs::for('student', function ($trail) {
 
 Breadcrumbs::for('student-add', function ($trail) {
     $trail->parent('student');
-    $trail->push('Tambah Data Mahasiswa', route('student.list.add'));
+    $trail->push('Tambah Data Mahasiswa', route('student.list.create'));
 });
 
 Breadcrumbs::for('student-profile', function ($trail,$data) {
@@ -595,7 +595,7 @@ Breadcrumbs::for('profile-research', function ($trail) {
 
 Breadcrumbs::for('profile-research-add', function ($trail) {
     $trail->parent('profile');
-    $trail->push('Tambah Data Penelitian', route('profile.research.add'));
+    $trail->push('Tambah Data Penelitian', route('profile.research.create'));
 });
 
 Breadcrumbs::for('profile-research-show', function ($trail,$data) {

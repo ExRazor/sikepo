@@ -52,7 +52,7 @@ class Student extends BaseModel
 
     public function latestStatus()
     {
-        return $this->hasOne('App\Models\StudentStatus','nim')->orderBy('id_ta','desc')->orderBy('id','desc')->limit(1);
+        return $this->hasOne('App\Models\StudentStatus','nim')->orderBy('id_ta','desc')->orderBy('id','desc');
     }
 
     public function research()

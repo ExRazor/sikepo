@@ -28,7 +28,7 @@
                     <td class="text-center">{{ $sl->status }}</td>
                     <td class="text-center">{{ $sl->ipk_terakhir }}</td>
                     @if(!Auth::user()->hasRole('kajur'))
-                    <td width="50">
+                    <td width="50" class="text-center">
                         @if(!$loop->first)
                         <div class="btn-group hidden-xs-down">
                             <button class="btn btn-warning btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-studentStatus" data-id="{{ encrypt($sl->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>

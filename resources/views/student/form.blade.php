@@ -47,7 +47,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="student_form" action="@isset($data->nim) {{route('student.list.update',encrypt($data->nim))}} @else {{route('student.list.update',encrypt($data->nim))}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="student_form" action="@isset($data->nim) {{route('student.list.update',encrypt($data->nim))}} @else {{route('student.list.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">
@@ -58,7 +58,7 @@
                             @else
                                 @method('post')
                             @endif
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Jurusan: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     <select class="form-control" name="kd_jurusan" data-type="form">
@@ -74,17 +74,15 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     <select class="form-control" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
-                                        @isset($data)
-                                            @foreach($studyProgram as $sp)
-                                            <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                            @endforeach
-                                        @endisset
+                                        @foreach($studyProgram as $sp)
+                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -139,7 +137,13 @@
                                             <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
                                         </div>
                                         <div class="col-6">
-                                            <input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                                                    </div>
+                                                </div><input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -270,26 +274,26 @@
 
 $(document).ready(function() {
     var value = $('select[name=kd_jurusan]').val()
-    cek(value);
+    // cek(value);
 });
 
 $('#student_form').on('change','select[name=kd_jurusan]',function(){
     var value = $(this).val();
 
-    cek(value);
+    // cek(value);
 
 });
 
-function cek(value) {
-    if(value!={{setting('app_department_id')}}) {
-        $('.mhs-opsional').find('input').prop('required',false);
-        $('.mhs-opsional').find('select').prop('required',false);
-        $('.mhs-opsional').hide();
-    } else {
-        $('.mhs-opsional').find('input').prop('required',true);
-        $('.mhs-opsional').find('select').prop('required',true);
-        $('.mhs-opsional').show();
-    }
-}
+// function cek(value) {
+//     if(value!={{setting('app_department_id')}}) {
+//         $('.mhs-opsional').find('input').prop('required',false);
+//         $('.mhs-opsional').find('select').prop('required',false);
+//         $('.mhs-opsional').hide();
+//     } else {
+//         $('.mhs-opsional').find('input').prop('required',true);
+//         $('.mhs-opsional').find('select').prop('required',true);
+//         $('.mhs-opsional').show();
+//     }
+// }
 </script>
 @endpush

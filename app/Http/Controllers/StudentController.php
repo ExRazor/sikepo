@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentExport;
 use App\Models\Student;
 use App\Models\StudentStatus;
 use App\Models\Faculty;
@@ -59,7 +60,7 @@ class StudentController extends Controller
 
         $status       = $data->latestStatus;
         $academicYear = AcademicYear::orderBy('tahun_akademik','desc')->orderBy('semester','desc')->get();
-        $statusList   = StudentStatus::where('nim',$data->nim)->orderBy('id_ta','asc')->get();
+        $statusList   = StudentStatus::where('nim',$data->nim)->orderBy('id','asc')->get();
         $achievement  = StudentAchievement::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
         $minithesis   = Minithesis::where('nim',$data->nim)->orderBy('id_ta','desc')->get();
 
@@ -204,7 +205,20 @@ class StudentController extends Controller
                 'type'    => 'success'
             ]);
         }
-	}
+    }
+
+    public function export(Request $request)
+	{
+		// Request
+        $tgl         = date('d-m-Y_h_i_s');
+        $prodi       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+        $nama_file   = 'Data_Mahasiswa_'.$prodi.$tgl.'.xlsx';
+        $lokasi_file = storage_path('app/upload/'.$nama_file);
+
+		// Ekspor data
+        return Excel::download(new StudentExport($request),$nama_file);
+
+    }
 
     public function update(Request $request)
     {

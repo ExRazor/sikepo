@@ -24,12 +24,15 @@
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
-        <div class="row">
-            <div class="col-6 pr-2">
+        <div class="d-flex">
+            <div class="mr-2">
                 <a href="{{ route('student.list.create') }}" class="btn btn-teal btn-block text-white"><i class="fa fa-plus mg-r-10"></i> Tambah</a>
             </div>
-            <div class="col-6 pl-1">
+            <div class="mr-2">
                 <button class="btn btn-primary btn-block text-white" data-toggle="modal" data-target="#modal-import-student"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
+            </div>
+            <div>
+                <button class="btn btn-indigo btn-block text-white" data-toggle="modal" data-target="#modal-export-student"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
             </div>
         </div>
     </div>
@@ -124,6 +127,7 @@
     </div>
 </div>
 @include('student.form-import')
+@include('student.form-export')
 @endsection
 
 @section('style')

@@ -14,7 +14,69 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class StudentImport implements ToCollection, WithStartRow
 {
-    public function collection(Collection $rows)
+    public function collection(Collection $columns)
+    {
+        foreach ($columns as $column)
+        {
+            $kd_prodi    = StudyProgram::where('nama',$column[3])->first()->kd_prodi;
+            $thn_masuk   = AcademicYear::where('tahun_akademik',$column[4])->where('semester','Ganjil')->first();
+
+            if($column[6] != 0) {
+                $origDate   = Carbon::instance(Date::excelToDateTimeObject($column[8]));
+                $tgl_lhr    = date("Y-m-d", strtotime($origDate));
+            } else {
+                $tgl_lhr    = date("Y-m-d");
+            }
+
+            Student::updateOrCreate(
+                [
+                    'nim'       => $column[1],
+                ],
+                [
+                    'nama'              => ucwords(strtolower($column[2])),
+                    'kd_prodi'          => $kd_prodi,
+                    'angkatan'          => $column[4],
+                    'jk'                => $column[5],
+                    'agama'             => $column[6],
+                    'tpt_lhr'           => $column[7],
+                    'tgl_lhr'           => $tgl_lhr,
+                    'alamat'            => $column[9],
+                    'kewarganegaraan'   => $column[10],
+                    'kelas'             => $column[11],
+                    'tipe'              => $column[12],
+                    'program'           => $column[13],
+                    'seleksi_jenis'     => $column[14],
+                    'seleksi_jalur'     => $column[15],
+                    'status_masuk'      => $column[16],
+                ]
+            );
+
+            StudentStatus::create([
+                'id_ta'     => $thn_masuk->id,
+                'nim'       => $column[1],
+                'status'    => 'Aktif'
+            ]);
+
+            if($column[17]) {
+                $ta = explode(' - ',$column[19]);
+                $thn_status = AcademicYear::where('tahun_akademik',$ta[0])->where('semester',$ta[1])->first();
+
+                StudentStatus::create([
+                    'id_ta'         => $thn_status->id,
+                    'nim'           => $column[1],
+                    'status'        => $column[17],
+                    'ipk_terakhir'  => $column[18]
+                ]);
+            }
+        }
+    }
+
+    public function startRow() : int
+    {
+        return 2;
+    }
+
+    public function collection_old($rows)
     {
         foreach ($rows as $index => $row)
         {
@@ -45,7 +107,7 @@ class StudentImport implements ToCollection, WithStartRow
                     'nim'       => $row[4],
                 ],
                 [
-                    'nama'              => $row[5],
+                    'nama'              => ucwords(strtolower($row[5])),
                     'tpt_lhr'           => '',
                     'tgl_lhr'           => $newDate,
                     'jk'                => $jk,
@@ -77,10 +139,5 @@ class StudentImport implements ToCollection, WithStartRow
                 ]);
             }
         }
-    }
-
-    public function startRow() : int
-    {
-        return 3;
     }
 }

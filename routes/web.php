@@ -295,6 +295,7 @@ Route::middleware('auth')->group(function () {
 
         //Students - List
         Route::resource('list', 'StudentController');
+        Route::post('list/export','StudentController@export')->name('list.export');
         Route::post('list/upload_photo','StudentController@upload_photo')->name('photo');
         Route::post('list/import','StudentController@import')->name('import');
 
