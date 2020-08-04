@@ -81,7 +81,7 @@
                                 <div class="col-sm-6">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="bukti_file" id="bukti_file" {{ isset($data) ? '' : 'required'}}>
-                                        <label class="custom-file-label custom-file-label-primary" for="bukti_file">Pilih fail</label>
+                                        <label class="custom-file-label custom-file-label-primary" for="bukti_file">Pilih berkas</label>
                                     </div>
                                     <small class="w-100">
                                         Berkas harap dikemas dalam 1 PDF.

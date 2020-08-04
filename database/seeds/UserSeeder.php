@@ -74,20 +74,20 @@ class UserSeeder extends Seeder
 
         $teacher = Teacher::all();
 
-        foreach($teacher as $t) {
-            DB::table('users')->insert([
-                [
-                    // 'id'         => Str::uuid()->toString(),
-                    'username'   => $t->nidn,
-                    'password'   => Hash::make($t->nidn),
-                    'role'       => 'dosen',
-                    'kd_prodi'   => null,
-                    'name'       => $t->nama,
-                    'defaultPass'=> true,
-                    'is_active'  => true,
-                    'created_at' => now()
-                ],
-            ]);
-        }
+        // foreach($teacher as $t) {
+        //     DB::table('users')->insert([
+        //         [
+        //             // 'id'         => Str::uuid()->toString(),
+        //             'username'   => $t->nidn,
+        //             'password'   => Hash::make($t->nidn),
+        //             'role'       => 'dosen',
+        //             'kd_prodi'   => null,
+        //             'name'       => $t->nama,
+        //             'defaultPass'=> true,
+        //             'is_active'  => true,
+        //             'created_at' => now()
+        //         ],
+        //     ]);
+        // }
     }
 }

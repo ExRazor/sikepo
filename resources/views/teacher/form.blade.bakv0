@@ -248,7 +248,7 @@
                                     <div class="form-group mg-b-10-force">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" name="foto" id="foto_profil">
-                                            <label class="custom-file-label custom-file-label-primary" for="foto_profil">Pilih fail</label>
+                                            <label class="custom-file-label custom-file-label-primary" for="foto_profil">Pilih berkas</label>
                                         </div>
                                     </div>
                                 </div>

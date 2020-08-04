@@ -19,15 +19,15 @@
                             <div class="form-group mg-b-10-force">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" name="file" id="import_student">
-                                    <label class="custom-file-label custom-file-label-primary" for="import_student">Pilih fail</label>
+                                    <label class="custom-file-label custom-file-label-primary" for="import_student">Pilih berkas</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-save" value="post" data-dest="{{route('student.import')}}">
-                        Simpan
+                    <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-save" value="post" data-dest="{{route('student.list.import')}}">
+                        Impor
                     </button>
                     <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium" data-dismiss="modal">Tutup</button>
                 </div>

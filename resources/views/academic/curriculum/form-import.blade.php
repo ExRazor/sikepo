@@ -19,7 +19,7 @@
                             <div class="form-group mg-b-10-force">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" name="file" id="import_curriculum">
-                                    <label class="custom-file-label custom-file-label-primary" for="import_curriculum">Pilih fail</label>
+                                    <label class="custom-file-label custom-file-label-primary" for="import_curriculum">Pilih berkas</label>
                                 </div>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-save" value="post" data-dest="{{route('academic.curriculum.import')}}">
-                        Simpan
+                        Impor
                     </button>
                     <button type="button" class="btn btn-secondary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium" data-dismiss="modal">Tutup</button>
                 </div>

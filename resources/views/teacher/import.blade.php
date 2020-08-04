@@ -72,7 +72,7 @@
                                 <div class="col-6">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="bukti" id="bukti_kerjasama" {{ isset($data) ? '' : 'required'}}>
-                                        <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">Pilih fail</label>
+                                        <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">Pilih berkas</label>
                                     </div>
                                 </div>
                                 <div class="col-3">

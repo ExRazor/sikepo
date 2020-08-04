@@ -170,7 +170,7 @@
                                 <label class="form-control-label justify-content-start">Berkas Bukti Pelaksanaan: <span class="tx-danger">*</span></label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" name="bukti_file" accept=".pdf" {{ isset($data) ? '' : 'required'}}>
-                                    <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">{{ isset($data->bukti_file) ? $data->bukti_file : 'Pilih fail'}}</label>
+                                    <label class="custom-file-label custom-file-label-primary" for="bukti_kerjasama">{{ isset($data->bukti_file) ? $data->bukti_file : 'Pilih berkas'}}</label>
                                 </div>
                                 <small class="w-100">
                                     Jika berkas bukti lebih dari satu, mohon filenya dirangkum dalam bentuk 1 file PDF kemudian diunggah.

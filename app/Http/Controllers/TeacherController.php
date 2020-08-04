@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\TeacherExport;
 use Illuminate\Http\Request;
 use App\Models\Teacher;
 use App\Models\StudyProgram;
@@ -16,6 +15,7 @@ use App\Models\CommunityService;
 use App\Models\Minithesis;
 use App\Models\User;
 use App\Imports\TeacherImport;
+use App\Exports\TeacherExport;
 use App\Models\TeacherPublication;
 use App\Models\TeacherStatus;
 use Illuminate\Support\Facades\File;
@@ -347,15 +347,14 @@ class TeacherController extends Controller
 		$file = $request->file('file');
 
         // Mengambil nama file
-        $tgl_upload = date('d-m-Y');
-        $nama_file = $file->getClientOriginalName();
+        $tgl = date('Y-m-d');
+        $nama_file  = "Data_Dosen_Import_".$tgl.'.'.$file->getClientOriginalExtension();
 
-        // upload ke folder khusus di dalam folder public
-        $path = storage_path('app/upload/teacher/excel_import/',$nama_file);
-		$file->move($path);
+		// upload ke folder khusus di dalam folder public
+		$file->move(storage_path('app/upload/teacher/excel_import/',$nama_file));
 
 		// import data
-        $q = Excel::import(new TeacherImport, public_path('/upload/teacher/excel_import/'.$nama_file));
+        $q = Excel::import(new TeacherImport, storage_path('app/upload/teacher/excel_import/'.$nama_file));
 
         //Validasi jika terjadi error saat mengimpor
         if(!$q) {
@@ -365,7 +364,7 @@ class TeacherController extends Controller
                 'type'    => 'error'
             ]);
         } else {
-            File::delete(public_path('/upload/teacher/excel_import/'.$nama_file));
+            File::delete(storage_path('app/upload/teacher/excel_import/'.$nama_file));
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',

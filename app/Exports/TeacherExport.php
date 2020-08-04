@@ -9,8 +9,10 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use App\Library\NumberFormatExcel as NumberFormat;
 
-class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize
+class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithColumnFormatting
 {
     use Exportable;
 
@@ -49,6 +51,7 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             'NIDN',
             'Nama',
             'NIP',
+            'Program Studi',
             'Jenis Kelamin',
             'Agama',
             'Tempat Lahir',
@@ -56,10 +59,13 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             'Alamat',
             'No Telp',
             'Email',
-            'Program Studi',
-            'Pendidikan Terakhir',
+            'Jenjang Pendidikan',
+            'Jurusan Pendidikan',
+            'Bidang Keahlian',
+            'Sesuai Bidang Prodi',
             'Ikatan Kerja',
             'Jabatan Akademik',
+            'No. Sertifikat Pendidik',
         ];
     }
 
@@ -70,6 +76,7 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             $teacher->nidn,
             $teacher->nama,
             $teacher->nip,
+            $teacher->latestStatus->studyProgram->nama,
             $teacher->jk,
             $teacher->agama,
             $teacher->tpt_lhr,
@@ -77,10 +84,21 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             $teacher->alamat,
             $teacher->no_telp,
             $teacher->email,
-            $teacher->latestStatus->studyProgram->nama,
             $teacher->pend_terakhir_jenjang,
+            $teacher->pend_terakhir_jurusan,
+            implode(', ',json_decode($teacher->bidang_ahli)),
+            $teacher->sesuai_bidang_ps,
             $teacher->ikatan_kerja,
             $teacher->jabatan_akademik,
+            $teacher->sertifikat_pendidik,
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'B' => NumberFormat::FORMAT_NUMBER,
+            'D' => NumberFormat::FORMAT_NUMBER,
         ];
     }
 }

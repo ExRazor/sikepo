@@ -51,13 +51,16 @@ class StudentImport implements ToCollection, WithStartRow
                 ]
             );
 
-            StudentStatus::create([
-                'id_ta'     => $thn_masuk->id,
-                'nim'       => $column[1],
-                'status'    => 'Aktif'
-            ]);
+            $cekStatus = StudentStatus::where('nim',$column[1])->count();
+            if($cekStatus == 0) {
+                StudentStatus::create([
+                    'id_ta'     => $thn_masuk->id,
+                    'nim'       => $column[1],
+                    'status'    => 'Aktif'
+                ]);
+            }
 
-            if($column[17]) {
+            if($cekStatus > 0 && $column[17]) {
                 $ta = explode(' - ',$column[19]);
                 $thn_status = AcademicYear::where('tahun_akademik',$ta[0])->where('semester',$ta[1])->first();
 

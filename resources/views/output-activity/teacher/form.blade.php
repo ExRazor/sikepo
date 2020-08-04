@@ -209,7 +209,7 @@
                                             <div class="col-sm-7">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" name="file_karya" id="file_karya" accept=".pdf" {{ isset($data) ? '' : 'required'}}>
-                                                    <label class="custom-file-label custom-file-label-primary" for="file_karya">{{isset($data->file_karya) ? $data->file_karya : 'Pilih fail'}}</label>
+                                                    <label class="custom-file-label custom-file-label-primary" for="file_karya">{{isset($data->file_karya) ? $data->file_karya : 'Pilih berkas'}}</label>
                                                 </div>
                                                 <small class="w-100">
                                                     Harap dikemas dalam 1 PDF jika lebih dari 1 file.
