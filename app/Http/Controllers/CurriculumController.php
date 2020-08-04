@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CurriculumExport;
 use App\Models\Curriculum;
 use App\Models\StudyProgram;
 use App\Imports\CurriculumImport;
@@ -146,7 +147,19 @@ class CurriculumController extends Controller
                 'type'    => 'success'
             ]);
         }
-	}
+    }
+
+    public function export(Request $request)
+	{
+		// Request
+        $tgl         = date('d-m-Y_h_i_s');
+        $prodi       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+        $nama_file   = 'Data_Mata_Kuliah_'.$prodi.$tgl.'.xlsx';
+        $lokasi_file = storage_path('app/upload/'.$nama_file);
+
+		// Ekspor data
+        return Excel::download(new CurriculumExport($request),$nama_file);
+    }
 
     public function update(Request $request)
     {

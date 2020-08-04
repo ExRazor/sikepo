@@ -13,6 +13,6 @@ class CurriculumSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new CurriculumImport, public_path('/upload/curriculum/excel_import/matakuliah.xlsx'));
+        Excel::import(new CurriculumImport, public_path('upload/curriculum/excel_import/matakuliah.xlsx'));
     }
 }

@@ -323,6 +323,7 @@ Route::middleware('auth')->group(function () {
 
         //Academic - Curriculum
         Route::resource('curriculum', 'CurriculumController');
+        Route::post('curriculum/export','CurriculumController@export')->name('curriculum.export');
         Route::post('curriculum/import','CurriculumController@import')->name('curriculum.import');
 
         //Academic - Schedule

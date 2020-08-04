@@ -24,12 +24,15 @@
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
-        <div class="row">
-            <div class="col-6 pr-1">
-                <a href="{{ route('academic.curriculum.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Matkul</a>
+        <div class="d-flex">
+            <div class="mr-2">
+                <a href="{{ route('academic.curriculum.create') }}" class="btn btn-teal btn-block mg-b-10 text-white"><i class="fa fa-plus mg-r-10"></i> Matkul</a>
             </div>
-            <div class="col-6 pl-1">
+            <div class="mr-2">
                 <button class="btn btn-primary btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-import-curriculum"><i class="fa fa-file-import mg-r-10"></i> Impor</button>
+            </div>
+            <div>
+                <button class="btn btn-indigo btn-block mg-b-10 text-white" data-toggle="modal" data-target="#modal-export-curriculum"><i class="fa fa-file-excel mg-r-10"></i> Ekspor</button>
             </div>
         </div>
     </div>
@@ -115,6 +118,7 @@
 @if (!Auth::user()->hasRole('kajur'))
 @include('academic.curriculum.form-import')
 @endif
+@include('academic.curriculum.form-export')
 @endsection
 
 @section('style')

@@ -217,7 +217,6 @@ class StudentController extends Controller
 
 		// Ekspor data
         return Excel::download(new StudentExport($request),$nama_file);
-
     }
 
     public function update(Request $request)
