@@ -17,13 +17,14 @@ class DatabaseSeeder extends Seeder
         $this->call(DepartmentSeeder::class);
         $this->call(StudyProgramSeeder::class);
         $this->call(SettingSeeder::class);
+        $this->call(UserSeeder::class);
         // $this->call(CollaborationSeeder::class);
         $this->call(TeacherSeeder::class);
         // $this->call(TeacherAchievementSeeder::class);
-        $this->call(CurriculumSeeder::class);
+        // $this->call(CurriculumSeeder::class);
         // $this->call(CurriculumScheduleSeeder::class);
         // $this->call(StudentQuotaSeeder::class);
-        $this->call(StudentSeeder::class);
+        // $this->call(StudentSeeder::class);
         // $this->call(StudentStatusSeeder::class);
         // $this->call(StudentForeignSeeder::class);
         // $this->call(StudentAchievementSeeder::class);
@@ -54,6 +55,5 @@ class DatabaseSeeder extends Seeder
         // $this->call(AlumnusIdleSeeder::class);
         // $this->call(AlumnusSuitableSeeder::class);
         // $this->call(AlumnusWorkplaceSeeder::class);
-        $this->call(UserSeeder::class);
     }
 }
