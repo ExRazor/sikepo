@@ -269,7 +269,7 @@ Route::middleware('auth')->group(function () {
         });
 
         //Teacher - List
-        Route::get('list/import','TeacherController@import')->name('list.import');
+        Route::post('list/import','TeacherController@import')->name('list.import');
         Route::post('list/export','TeacherController@export')->name('list.export');
         Route::resource('list', 'TeacherController');
 

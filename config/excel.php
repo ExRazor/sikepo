@@ -163,7 +163,7 @@ return [
         | storing reading or downloading. Here you can customize that path.
         |
         */
-        'local_path'  => public_path('upload/temp_excel'),
+        'local_path'  => storage_path('app/temp/excel'),
 
         /*
         |--------------------------------------------------------------------------

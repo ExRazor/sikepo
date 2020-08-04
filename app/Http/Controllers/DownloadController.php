@@ -12,8 +12,12 @@ class DownloadController extends Controller
         $type = $request->input('type');
         $file = decrypt($request->input('id'));
 
+        if($type=='avatar') {
+            $storagePath = public_path('assets/images/avatar/'.$file);
+        } else {
+            $storagePath = public_path('upload/'.$type.'/'.$file);
+        }
 
-        $storagePath = public_path('upload/'.$type.'/'.$file);
         if( ! File::exists($storagePath)) {
             abort(404);
         } else {
@@ -25,5 +29,6 @@ class DownloadController extends Controller
 
             return response(file_get_contents($storagePath), 200, $headers);
         }
+
     }
 }

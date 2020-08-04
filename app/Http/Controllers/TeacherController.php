@@ -349,12 +349,13 @@ class TeacherController extends Controller
         // Mengambil nama file
         $tgl = date('Y-m-d');
         $nama_file  = "Data_Dosen_Import_".$tgl.'.'.$file->getClientOriginalExtension();
+        $file_dir   = storage_path('app/temp/excel/teacher/'.$nama_file);
 
 		// upload ke folder khusus di dalam folder public
-		$file->move(storage_path('app/upload/teacher/excel_import/',$nama_file));
+		$file->move($file_dir);
 
 		// import data
-        $q = Excel::import(new TeacherImport, storage_path('app/upload/teacher/excel_import/'.$nama_file));
+        $q = Excel::import(new TeacherImport, $file_dir);
 
         //Validasi jika terjadi error saat mengimpor
         if(!$q) {
@@ -364,7 +365,7 @@ class TeacherController extends Controller
                 'type'    => 'error'
             ]);
         } else {
-            File::delete(storage_path('app/upload/teacher/excel_import/'.$nama_file));
+            File::delete($file_dir);
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',

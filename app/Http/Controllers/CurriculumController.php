@@ -123,14 +123,16 @@ class CurriculumController extends Controller
 		// Menangkap file excel
 		$file = $request->file('file');
 
-		// Mengambil nama file
-        $nama_file = $file->getClientOriginalName();
+        // Mengambil nama file
+        $tgl = date('Y-m-d');
+        $nama_file  = "Data_Mahasiswa_Import_".$tgl.'.'.$file->getClientOriginalExtension();
+        $file_dir   = storage_path('app/temp/excel/curriculum/'.$nama_file);
 
 		// upload ke folder khusus di dalam folder public
-		$file->move(public_path('upload/curriculum/excel_import/',$nama_file));
+		$file->move($file_dir);
 
 		// import data
-        $q = Excel::import(new CurriculumImport, public_path('/upload/curriculum/excel_import/'.$nama_file));
+        $q = Excel::import(new CurriculumImport, $file_dir);
 
         //Validasi jika terjadi error saat mengimpor
         if(!$q) {
@@ -140,7 +142,7 @@ class CurriculumController extends Controller
                 'type'    => 'error'
             ]);
         } else {
-            File::delete(public_path('/upload/curriculum/excel_import/'.$nama_file));
+            File::delete($file_dir);
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',

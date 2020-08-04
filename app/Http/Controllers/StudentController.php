@@ -182,13 +182,15 @@ class StudentController extends Controller
 		$file = $request->file('file');
 
 		// Mengambil nama file
-        $nama_file = $file->getClientOriginalName();
+        $tgl = date('Y-m-d');
+        $nama_file  = "Data_Mahasiswa_Import_".$tgl.'.'.$file->getClientOriginalExtension();
+        $file_dir   = storage_path('app/temp/excel/student/'.$nama_file);
 
 		// upload ke folder khusus di dalam folder public
-		$file->move(storage_path('app/upload/student/excel_import/',$nama_file));
+		$file->move($file_dir);
 
 		// import data
-        $q = Excel::import(new StudentImport, public_path('/upload/student/excel_import/'.$nama_file));
+        $q = Excel::import(new StudentImport, $file_dir);
 
         //Validasi jika terjadi error saat mengimpor
         if(!$q) {
@@ -198,7 +200,7 @@ class StudentController extends Controller
                 'type'    => 'error'
             ]);
         } else {
-            File::delete(public_path('/upload/student/excel_import/'.$nama_file));
+            File::delete($file_dir);
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil diimpor',
