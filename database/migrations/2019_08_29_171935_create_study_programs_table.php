@@ -24,8 +24,8 @@ class CreateStudyProgramsTable extends Migration
             $table->date('tgl_sk')->nullable();
             $table->string('pejabat_sk')->nullable();
             $table->char('thn_menerima',4)->nullable();
-            $table->char('nip_kaprodi',18)->nullable();
-            $table->string('nm_kaprodi',50)->nullable();
+            // $table->char('nip_kaprodi',18)->nullable();
+            // $table->string('nm_kaprodi',50)->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

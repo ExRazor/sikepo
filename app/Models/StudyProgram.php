@@ -17,8 +17,8 @@ class StudyProgram extends BaseModel
                         'tgl_sk',
                         'pejabat_sk',
                         'thn_menerima',
-                        'nip_kaprodi',
-                        'nm_kaprodi',
+                        // 'nip_kaprodi',
+                        // 'nm_kaprodi',
                     ];
 
     public function department()

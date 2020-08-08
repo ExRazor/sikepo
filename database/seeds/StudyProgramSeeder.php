@@ -25,8 +25,8 @@ class StudyProgramSeeder extends Seeder
                 'tgl_sk' => '2008/04/20',
                 'pejabat_sk' => 'Kurniawan Salih, S.T, M.T',
                 'thn_menerima' => '2008',
-                'nip_kaprodi' => '198004172002122002',
-                'nm_kaprodi' => 'Lillyan Hadjaratie',
+                // 'nip_kaprodi' => '198004172002122002',
+                // 'nm_kaprodi' => 'Lillyan Hadjaratie',
                 'created_at' => now()
             ],
             [
@@ -40,8 +40,8 @@ class StudyProgramSeeder extends Seeder
                 'tgl_sk' => '2013/06/14',
                 'pejabat_sk' => 'Hermawan Prasetyo, M.Eng',
                 'thn_menerima' => '2013',
-                'nip_kaprodi' => '197511242001121001',
-                'nm_kaprodi' => 'Dian Novian',
+                // 'nip_kaprodi' => '197511242001121001',
+                // 'nm_kaprodi' => 'Dian Novian',
                 'created_at' => now()
             ],
         ]);

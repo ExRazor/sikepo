@@ -17,8 +17,8 @@ class CreateFacultiesTable extends Migration
             $table->increments('id');
             $table->string('nama');
             $table->string('singkatan');
-            $table->char('nip_dekan',18)->nullable();
-            $table->string('nm_dekan',50)->nullable();
+            // $table->char('nip_dekan',18)->nullable();
+            // $table->string('nm_dekan',50)->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

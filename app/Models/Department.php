@@ -11,8 +11,8 @@ class Department extends BaseModel
                             'kd_jurusan',
                             'id_fakultas',
                             'nama',
-                            'nip_kajur',
-                            'nm_kajur',
+                            // 'nip_kajur',
+                            // 'nm_kajur',
                         ];
 
     public function faculty()

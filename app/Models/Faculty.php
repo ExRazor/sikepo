@@ -9,8 +9,8 @@ class Faculty extends BaseModel
     protected $fillable = [
         'nama',
         'singkatan',
-        'nip_dekan',
-        'nm_dekan',
+        // 'nip_dekan',
+        // 'nm_dekan',
     ];
 
     public function department()
