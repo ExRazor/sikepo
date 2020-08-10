@@ -38,18 +38,6 @@
                             <input type="text" class="form-control" name="nama" placeholder="Tuliskan nama jurusan" required>
                         </div>
                     </div>
-                    <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">NIP Kajur:</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="nip_kajur" placeholder="Tuliskan NIP dari Kepala Jurusan saat ini" maxlength="18">
-                        </div>
-                    </div>
-                    <div class="form-group row mg-t-20">
-                        <label class="col-sm-3 form-control-label">Nama Kajur:</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="nm_kajur" placeholder="Tuliskan nama dari Kepala Jurusan saat ini">
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary tx-11 tx-uppercase pd-y-12 pd-x-25 tx-mont tx-medium btn-save" value="post" data-dest="{{route('master.department.store')}}">

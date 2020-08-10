@@ -51,23 +51,25 @@
                 </div>
                 <div class="card-body bd bd-t-0 rounded-bottom">
                     <form action="{{route('ajax.study-program.filter')}}" id="filter-study-program" method="POST">
-                        <div class="filter-box d-flex flex-row bd-highlight mg-b-10">
-                            <div class="mg-r-10">
-                                <select id="fakultas" class="form-control" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
-                                    <option value="all">Semua Jurusan</option>
-                                    @foreach($faculty as $f)
-                                        @if($f->department->count())
-                                        <optgroup label="{{$f->nama}}">
-                                            @foreach($f->department as $d)
-                                            <option value="{{$d->kd_jurusan}}" {{ ($d->kd_jurusan == setting('app_department_id') ? 'selected': '')}}>{{$d->nama}}</option>
-                                            @endforeach
-                                        </optgroup>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <button type="submit" class="btn btn-purple btn-block " style="color:white">Cari</a>
+                        <div class="filter-box row bd-highlight mg-b-10">
+                            <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+                                <div class="input-group">
+                                    <select id="fakultas" class="form-control mr-3" name="kd_jurusan" data-placeholder="Pilih Jurusan" required>
+                                        <option value="all">Semua Jurusan</option>
+                                        @foreach($faculty as $f)
+                                            @if($f->department->count())
+                                            <optgroup label="{{$f->nama}}">
+                                                @foreach($f->department as $d)
+                                                <option value="{{$d->kd_jurusan}}" {{ ($d->kd_jurusan == setting('app_department_id') ? 'selected': '')}}>{{$d->nama}}</option>
+                                                @endforeach
+                                            </optgroup>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                    <div>
+                                        <button type="submit" class="btn btn-purple btn-block btn-cari " style="color:white">Cari</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -78,12 +80,9 @@
                                 <th width="400">Nama Prodi</th>
                                 <th width="100">Singkatan</th>
                                 <th width="150">Jenjang</th>
-                                <th>Nama Kaprodi</th>
                                 <th width="150" class="no-sort">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
                     </table>
                 </div><!-- card-body -->
             </div>

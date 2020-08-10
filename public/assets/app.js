@@ -820,9 +820,7 @@ $('.btn-edit-faculty').click(function(e){
                 .find('input[name=_id]').val(id).end()
                 .find('input[name=nama]').val(data.nama).end()
                 .find('input[name=singkatan]').val(data.singkatan).end()
-                .find('input[name=nip_dekan]').val(data.nip_dekan).end()
-                .find('input[name=nm_dekan]').val(data.nm_dekan).end()
-                .modal('toggle').end();
+                .modal('toggle');
         }
     });
 });
@@ -874,19 +872,13 @@ function load_department_table()
                     var kd_jurusan   = data[i].kd_jurusan;
                     var nama         = data[i].nama;
                     var fakultas     = data[i].faculty.nama;
-                    var nip_kajur    = data[i].nip_kajur;
-                    var nm_kajur     = data[i].nm_kajur;
 
                     html += '<tr>'+
                                 '<td>'+kd_jurusan+'</td>'+
                                 '<td>'+nama+'</td>'+
                                 '<td>'+fakultas+'</td>'+
-                                '<td>'+
-                                    nm_kajur+'<br>'+
-                                    '<small>'+nip_kajur+'</small>'+
-                                '</td>'+
                                 '<td class="text-center">'+
-                                    '<div class="btn-group hidden-xs-down">'+
+                                    '<div class="btn-group">'+
                                         '<button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-department" data-id="'+encode_id(kd_jurusan)+'"><div><i class="fa fa-pencil-alt"></i></div></button>'+
                                         '<form method="POST">'+
                                             '<input type="hidden" value="'+encode_id(kd_jurusan)+'" name="id">'+
@@ -995,10 +987,6 @@ function load_studyProgram_table()
                                 '</td>'+
                                 '<td>'+singkatan+'</td>'+
                                 '<td>'+jenjang+'</td>'+
-                                '<td>'+
-                                    nm_kaprodi+'<br>'+
-                                    '<small>'+nip_kaprodi+'</small>'+
-                                '</td>'+
                                 '<td class="text-center">'+
                                     '<div class="btn-group hidden-xs-down">'+
                                         '<button class="btn btn-success btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-show-sp" data-id="'+encode_id(kd_prodi)+'" ><div><i class="fa fa-search-plus"></i></div></button>'+

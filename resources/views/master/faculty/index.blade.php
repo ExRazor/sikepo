@@ -38,41 +38,43 @@
     @endif
     <div class="card bd-0">
         <div class="card-body bd bd-t-0 rounded-bottom">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th width="25">ID</th>
-                        <th width="400">Nama Fakultas</th>
-                        <th width="150">Singkatan</th>
-                        <th>Nama Dekan</th>
-                        <th class="text-center" width="150">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($faculty as $f)
-                    <tr>
-                        <th scope="row" style="vertical-align:middle">{{$f->id}}</td>
-                        <td>{{$f->nama}}</td>
-                        <td>{{$f->singkatan}}</td>
-                        <td>
-                            {{$f->nm_dekan}}<br>
-                            <small>{{$f->nip_dekan}}</small>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group">
-                                <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
-                                <form method="POST">
-                                    <input type="hidden" value="{{encrypt($f->id)}}" name="_id">
-                                    <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.faculty.delete') }}">
-                                        <div><i class="fa fa-trash"></i></div>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="25">ID</th>
+                            <th width="400">Nama Fakultas</th>
+                            <th width="150">Singkatan</th>
+                            {{-- <th>Nama Dekan</th> --}}
+                            <th class="text-center" width="150">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($faculty as $f)
+                        <tr>
+                            <th scope="row" style="vertical-align:middle">{{$f->id}}</td>
+                            <td>{{$f->nama}}</td>
+                            <td>{{$f->singkatan}}</td>
+                            {{-- <td>
+                                {{$f->nm_dekan}}<br>
+                                <small>{{$f->nip_dekan}}</small>
+                            </td> --}}
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-edit btn-edit-faculty" data-id="{{ encrypt($f->id) }}"><div><i class="fa fa-pencil-alt"></i></div></button>
+                                    <form method="POST">
+                                        <input type="hidden" value="{{encrypt($f->id)}}" name="_id">
+                                        <button type="submit" class="btn btn-danger btn-sm btn-icon rounded-circle mg-r-5 mg-b-10 btn-delete" data-dest="{{ route('master.faculty.delete') }}">
+                                            <div><i class="fa fa-trash"></i></div>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div><!-- card-body -->
     </div>
 </div>

@@ -61,30 +61,26 @@
                         </div>
                     </div>
                 </form>
-                <table id="table_department" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th width="25">Kode</th>
-                            <th width="250">Nama Jurusan</th>
-                            <th width="300">Asal Fakultas</th>
-                            <th>Nama Kajur</th>
-                            <th class="text-center" width="150">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="table_department" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="25">Kode</th>
+                                <th width="250">Nama Jurusan</th>
+                                <th width="300">Asal Fakultas</th>
+                                {{-- <th>Nama Kajur</th> --}}
+                                <th class="text-center" width="150">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div><!-- card-body -->
         </div>
     </div>
 </div>
 @include('master.department.form');
-<script>
-    $(document).ready(function(){
-
-
-    })
-</script>
 @endsection
 
 @section('js')
