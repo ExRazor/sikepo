@@ -252,10 +252,11 @@ class TeacherController extends Controller
         $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
         $storagePath = storage_path('app/upload/teacher/'.$Teacher->foto);
-        if($storagePath || $request->file('foto')) {
-            if(File::exists($storagePath)) {
-                File::delete($storagePath);
-            }
+        if(File::exists($storagePath)) {
+            File::delete($storagePath);
+        }
+
+        if($request->file('foto')) {
             $file = $request->file('foto');
             $tujuan_upload = storage_path('app/upload/teacher');
             $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$file->getClientOriginalExtension();
