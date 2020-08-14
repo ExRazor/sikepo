@@ -80,7 +80,6 @@
                     <span class="nm_jurusan">
                     @if(Auth::user()->hasRole('kaprodi'))
                     {{ Auth::user()->studyProgram->nama }}
-
                     @else
                     {{ setting('app_department_name') }}
                     @endif

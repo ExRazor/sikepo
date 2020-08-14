@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AcademicYearRequest;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
+use App\Traits\LogActivity;
+use Illuminate\Support\Facades\DB;
 
 class AcademicYearController extends Controller
 {
+    use LogActivity;
+
     public function index()
     {
         $academicYears = AcademicYear::orderBy('tahun_akademik', 'desc')->orderBy('semester', 'desc')->get();
@@ -14,121 +19,151 @@ class AcademicYearController extends Controller
         return view('master.academic-year.index',compact('academicYears'));
     }
 
-    public function store(Request $request)
+    public function store(AcademicYearRequest $request)
     {
-        if($request->ajax()) {
-            $request->validate([
-                'tahun_akademik' => 'required|digits:4',
-                'semester'       => 'required',
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $academic = new AcademicYear;
+            $academic->tahun_akademik = $request->tahun_akademik;
+            $academic->semester       = $request->semester;
+            $academic->status         = false;
+            $academic->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $academic->id,
+                'name'  => $academic->tahun_akademik. ' - '.$academic->semester,
+                'url'   => route('master.academic-year')
+            ];
+            $this->log('created','Tahun Akademik',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
             ]);
 
-            $q = AcademicYear::create($request->all());
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
 
     }
 
     public function edit(Request $request)
     {
-        if(request()->ajax()){
-            $id = decrypt($request->id);
-            $data = AcademicYear::find($id);
-
-            return response()->json($data);
+        if(!request()->ajax()){
+            abort(404);
         }
+
+        $id = decrypt($request->id);
+        $data = AcademicYear::find($id);
+
+        return response()->json($data);
     }
 
-    public function update(Request $request)
+    public function update(AcademicYearRequest $request)
     {
-        if(request()->ajax()){
-            $id = decrypt($request->_id);
+        if(!request()->ajax()){
+            abort(404);
+        }
 
-            $request->validate([
-                'tahun_akademik' => 'required|digits:4',
-                'semester'       => 'required',
-            ]);
+        DB::beginTransaction();
+        try {
+            $id = decrypt($request->_id);
 
             $academic = AcademicYear::find($id);
             $academic->tahun_akademik = $request->tahun_akademik;
             $academic->semester       = $request->semester;
             $q = $academic->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $id,
+                'name'  => $academic->tahun_akademik. ' - '.$academic->semester,
+                'url'   => route('master.academic-year')
+            ];
+            $this->log('updated','Tahun Akademik',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()){
-            $id = decrypt($request->id);
-            $q  = AcademicYear::destroy($id);
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->route('master.academy-year');
+        if(!$request->ajax()){
+            abort(404);
         }
 
+        DB::beginTransaction();
+        try {
+            $id = decrypt($request->id);
+            $data  = AcademicYear::find($id);
+            $q     = $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $id,
+                'name'  => $data->tahun_akademik.' - '.$data->semester,
+            ];
+            $this->log('deleted','Tahun Akademik',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
     }
 
     public function setStatus(Request $request)
     {
-        if(request()->ajax()){
-            $academicYear = AcademicYear::find($request->id);
+        if(!request()->ajax()){
+            abort(404);
+        }
 
-            if($academicYear->status == true) {
-                return response()->json(['warning' => 'Status sudah aktif']);
-            } else {
-                AcademicYear::where('status',true)
-                            ->update([
-                                'status' => false
-                            ]);
+        $academicYear = AcademicYear::find($request->id);
 
-                $academicYear->status = true;
-                $academicYear->save();
+        if($academicYear->status == true) {
+            return response()->json(['warning' => 'Status sudah aktif']);
+        } else {
+            AcademicYear::where('status',true)
+                        ->update([
+                            'status' => false
+                        ]);
 
-                return response()->json([
-                    'title' => 'Berhasil',
-                    'message' => 'Status berhasil diubah',
-                    'type'    => 'success'
-                ]);
-            }
+            $academicYear->status = true;
+            $academicYear->save();
+
+            return response()->json([
+                'title' => 'Berhasil',
+                'message' => 'Status berhasil diubah',
+                'type'    => 'success'
+            ]);
         }
     }
 

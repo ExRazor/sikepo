@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\StudentExport;
+use App\Http\Requests\StudentRequest;
 use App\Models\Student;
 use App\Models\StudentStatus;
 use App\Models\Faculty;
@@ -14,14 +15,18 @@ use App\Models\StudentAchievement;
 use App\Models\Minithesis;
 use App\Imports\StudentImport;
 use App\Models\StudentPublication;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class StudentController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -122,53 +127,138 @@ class StudentController extends Controller
         return view('student/form',compact(['faculty','studyProgram','academicYear','data','status']));
     }
 
-    public function store(Request $request)
+    public function store(StudentRequest $request)
     {
-        $request->validate([
-            'nim'               => 'required|numeric|min:9',
-            'kd_prodi'          => 'required',
-            'nama'              => 'required',
-            'tpt_lhr'           => 'nullable',
-            'tgl_lhr'           => 'nullable',
-            'jk'                => 'required',
-            'agama'             => 'nullable',
-            'alamat'            => 'nullable',
-            'kewarganegaraan'   => 'required',
-            'kelas'             => 'nullable',
-            'tipe'              => 'nullable',
-            'program'           => 'nullable',
-            'seleksi_jenis'     => 'nullable',
-            'seleksi_jalur'     => 'nullable',
-            'status_masuk'      => 'nullable',
-            'tahun_masuk'       => 'required',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Query Data Mahasiswa
+            $query                  = new Student;
+            $query->kd_prodi        = $request->kd_prodi;
+            $query->nim             = $request->nim;
+            $query->nama            = $request->nama;
+            $query->tpt_lhr         = $request->tpt_lhr;
+            $query->tgl_lhr         = $request->tgl_lhr;
+            $query->jk              = $request->jk;
+            $query->agama           = $request->agama;
+            $query->alamat          = $request->alamat;
+            $query->kewarganegaraan = $request->kewarganegaraan;
+            $query->kelas           = $request->kelas;
+            $query->tipe            = $request->tipe;
+            $query->program         = $request->program;
+            $query->seleksi_jenis   = $request->seleksi_jenis;
+            $query->seleksi_jalur   = $request->seleksi_jalur;
+            $query->status_masuk    = $request->status_masuk;
+            $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
+            $query->save();
 
-        $query                  = new Student;
-        $query->kd_prodi        = $request->kd_prodi;
-        $query->nim             = $request->nim;
-        $query->nama            = $request->nama;
-        $query->tpt_lhr         = $request->tpt_lhr;
-        $query->tgl_lhr         = $request->tgl_lhr;
-        $query->jk              = $request->jk;
-        $query->agama           = $request->agama;
-        $query->alamat          = $request->alamat;
-        $query->kewarganegaraan = $request->kewarganegaraan;
-        $query->kelas           = $request->kelas;
-        $query->tipe            = $request->tipe;
-        $query->program         = $request->program;
-        $query->seleksi_jenis   = $request->seleksi_jenis;
-        $query->seleksi_jalur   = $request->seleksi_jalur;
-        $query->status_masuk    = $request->status_masuk;
-        $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
-        $query->save();
+            //Query Status Masuk Mahasiswa
+            $status         = new StudentStatus;
+            $status->nim    = $request->nim;
+            $status->id_ta  = $request->tahun_masuk;
+            $status->status = 'Aktif';
+            $status->save();
 
-        $status         = new StudentStatus;
-        $status->nim    = $request->nim;
-        $status->id_ta  = $request->tahun_masuk;
-        $status->status = 'Aktif';
-        $status->save();
+            //Activity Log
+            $property = [
+                'id'    => $query->nim,
+                'name'  => $query->nama.' ('.$query->nim.')',
+                'url'   => route('student.list.show',encode_id($query->nim)),
+            ];
+            $this->log('created','Mahasiswa',$property);
 
-        return redirect()->route('student.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            DB::commit();
+            return redirect()->route('student.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+    }
+
+    public function update(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->_id);
+
+            //Query Mahasiswa
+            $query                  = Student::find($id);
+            $query->kd_prodi        = $request->kd_prodi;
+            $query->nama            = $request->nama;
+            $query->tpt_lhr         = $request->tpt_lhr;
+            $query->tgl_lhr         = $request->tgl_lhr;
+            $query->jk              = $request->jk;
+            $query->agama           = $request->agama;
+            $query->alamat          = $request->alamat;
+            $query->kewarganegaraan = $request->kewarganegaraan;
+            $query->kelas           = $request->kelas;
+            $query->tipe            = $request->tipe;
+            $query->program         = $request->program;
+            $query->seleksi_jenis   = $request->seleksi_jenis;
+            $query->seleksi_jalur   = $request->seleksi_jalur;
+            $query->status_masuk    = $request->status_masuk;
+            $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
+            $query->save();
+
+            //Query Status Masuk Mahasiswa
+            $status        = StudentStatus::where('nim',$id)->orderBy('id','asc')->first();
+            $status->id_ta = $request->tahun_masuk;
+            $status->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $query->nim,
+                'name'  => $query->nama.' ('.$query->nim.')',
+                'url'   => route('student.list.show',encode_id($query->nim)),
+            ];
+            $this->log('updated','Mahasiswa',$property);
+
+            DB::commit();
+            return redirect()->route('student.list.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+
+    }
+
+    public function destroy(Request $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id     = decode_id($request->id);
+
+            //Query Hapus
+            $data   = Student::find($id);
+            $data->delete();
+
+            //Hapus Foto
+            $this->delete_photo($data->foto);
+
+            //Activity Log
+            $property = [
+                'id'    => $data->nim,
+                'name'  => $data->nama.' ('.$data->nim.')',
+            ];
+            $this->log('deleted','Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
     }
 
     public function import(Request $request)
@@ -220,76 +310,6 @@ class StudentController extends Controller
 
 		// Ekspor data
         return Excel::download(new StudentExport($request),$nama_file);
-    }
-
-    public function update(Request $request)
-    {
-        $id = decrypt($request->_id);
-
-        $request->validate([
-            'kd_prodi'          => 'required',
-            'nama'              => 'required',
-            'tpt_lhr'           => 'nullable',
-            'tgl_lhr'           => 'nullable',
-            'jk'                => 'required',
-            'agama'             => 'required',
-            'alamat'            => 'nullable',
-            'kewarganegaraan'   => 'required',
-            'kelas'             => 'nullable',
-            'tipe'              => 'nullable',
-            'program'           => 'nullable',
-            'seleksi_jenis'     => 'nullable',
-            'seleksi_jalur'     => 'nullable',
-            'status_masuk'      => 'nullable',
-            'tahun_masuk'       => 'required',
-        ]);
-
-        $query                  = Student::find($id);
-        $query->kd_prodi        = $request->kd_prodi;
-        $query->nama            = $request->nama;
-        $query->tpt_lhr         = $request->tpt_lhr;
-        $query->tgl_lhr         = $request->tgl_lhr;
-        $query->jk              = $request->jk;
-        $query->agama           = $request->agama;
-        $query->alamat          = $request->alamat;
-        $query->kewarganegaraan = $request->kewarganegaraan;
-        $query->kelas           = $request->kelas;
-        $query->tipe            = $request->tipe;
-        $query->program         = $request->program;
-        $query->seleksi_jenis   = $request->seleksi_jenis;
-        $query->seleksi_jalur   = $request->seleksi_jalur;
-        $query->status_masuk    = $request->status_masuk;
-        $query->angkatan        = AcademicYear::find($request->tahun_masuk)->tahun_akademik;
-        $query->save();
-
-        $status        = StudentStatus::where('nim',$id)->orderBy('id','asc')->first();
-        $status->id_ta = $request->tahun_masuk;
-        $status->save();
-
-        return redirect()->route('student.list.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
-    }
-
-    public function destroy(Request $request)
-    {
-        if(request()->ajax()) {
-            $id     = decode_id($request->id);
-            $data   = Student::find($id);
-            $q      = $data->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                $this->delete_photo($data->foto);
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        }
     }
 
     public function upload_photo(Request $request)

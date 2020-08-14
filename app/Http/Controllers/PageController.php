@@ -10,6 +10,8 @@ use App\Models\CommunityService;
 use App\Models\TeacherPublication;
 use App\Models\TeacherOutputActivity;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
+use Yajra\DataTables\DataTables;
 
 class PageController extends Controller
 {
@@ -21,73 +23,8 @@ class PageController extends Controller
 
         /*********** QUERY ***********/
         $prodi = StudyProgram::all();
+        $count_card = $this->count_card();
 
-        $penelitian = Research::whereHas(
-                        'researchTeacher', function($q) {
-                            if(Auth::user()->hasRole('kaprodi')) {
-                                $q->prodiKetua(Auth::user()->kd_prodi);
-                            } else {
-                                $q->jurusanKetua(setting('app_department_id'));
-                            }
-                        }
-                    );
-
-        $pengabdian = CommunityService::whereHas(
-                        'serviceTeacher', function($q) {
-                            if(Auth::user()->hasRole('kaprodi')) {
-                                $q->prodiKetua(Auth::user()->kd_prodi);
-                            } else {
-                                $q->jurusanKetua(setting('app_department_id'));
-                            }
-                        }
-                    );
-
-        $publikasi = TeacherPublication::whereHas(
-                        'teacher.latestStatus.studyProgram', function($query) {
-                            if(Auth::user()->hasRole('kaprodi')) {
-                                $query->where('kd_prodi',Auth::user()->kd_prodi);
-                            } else {
-                                $query->where('kd_jurusan',setting('app_department_id'));
-                            }
-                        }
-                    );
-
-        $luaran = TeacherOutputActivity::whereHas(
-                    'teacher.latestStatus.studyProgram', function($query) {
-                        if(Auth::user()->hasRole('kaprodi')) {
-                            $query->where('kd_prodi',Auth::user()->kd_prodi);
-                        } else {
-                            $query->where('kd_jurusan',setting('app_department_id'));
-                        }
-                    }
-                );
-
-        $count_card = array(
-            'penelitian'    => $penelitian->whereHas(
-                                    'academicYear', function($q) {
-                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
-                                    }
-                                )
-                                ->count(),
-            'pengabdian'    => $pengabdian->whereHas(
-                                    'academicYear', function($q) {
-                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
-                                    }
-                                )
-                                ->count(),
-            'publikasi'     => $publikasi->whereHas(
-                                    'academicYear', function($q) {
-                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
-                                    }
-                                )
-                                ->count(),
-            'luaran'        => $luaran->whereHas(
-                                    'academicYear', function($q) {
-                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
-                                    }
-                                )
-                                ->count(),
-        );
 
         return view('home.index',compact('prodi','count_card'));
     }
@@ -171,6 +108,108 @@ class PageController extends Controller
         }
 
         return response()->json($result);
+    }
+
+    public function count_card()
+    {
+        $penelitian = Research::whereHas(
+                        'researchTeacher', function($q) {
+                            if(Auth::user()->hasRole('kaprodi')) {
+                                $q->prodiKetua(Auth::user()->kd_prodi);
+                            } else {
+                                $q->jurusanKetua(setting('app_department_id'));
+                            }
+                        }
+                    );
+
+        $pengabdian = CommunityService::whereHas(
+                        'serviceTeacher', function($q) {
+                            if(Auth::user()->hasRole('kaprodi')) {
+                                $q->prodiKetua(Auth::user()->kd_prodi);
+                            } else {
+                                $q->jurusanKetua(setting('app_department_id'));
+                            }
+                        }
+                    );
+
+        $publikasi = TeacherPublication::whereHas(
+                        'teacher.latestStatus.studyProgram', function($query) {
+                            if(Auth::user()->hasRole('kaprodi')) {
+                                $query->where('kd_prodi',Auth::user()->kd_prodi);
+                            } else {
+                                $query->where('kd_jurusan',setting('app_department_id'));
+                            }
+                        }
+                    );
+
+        $luaran = TeacherOutputActivity::whereHas(
+                    'teacher.latestStatus.studyProgram', function($query) {
+                        if(Auth::user()->hasRole('kaprodi')) {
+                            $query->where('kd_prodi',Auth::user()->kd_prodi);
+                        } else {
+                            $query->where('kd_jurusan',setting('app_department_id'));
+                        }
+                    }
+                );
+
+        $count_card = array(
+            'penelitian'    => $penelitian->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+            'pengabdian'    => $pengabdian->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+            'publikasi'     => $publikasi->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+            'luaran'        => $luaran->whereHas(
+                                    'academicYear', function($q) {
+                                        $q->where('tahun_akademik',current_academic()->tahun_akademik);
+                                    }
+                                )
+                                ->count(),
+        );
+
+        return $count_card;
+    }
+
+    public function activity_log(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        $data = Activity::all();
+
+        return DataTables::of($data)
+                            ->addColumn('waktu', function($d) {
+                                return $d->created_at;
+                            })
+                            ->addColumn('aksi', function($d) {
+                                return $d->causer->name.' '.$d->description;
+                            })
+                            ->addColumn('target', function($d) {
+                                if($d->getExtraProperty('url')) {
+                                    $message = '<a name="'.$d->getExtraProperty('name').'" href="'.$d->getExtraProperty('url').'">'.
+                                                    $d->getExtraProperty('name').
+                                                '</a>';
+                                } else {
+                                    $message = $d->getExtraProperty('name');
+                                }
+
+                                return $message;
+                            })
+                            ->rawColumns(['aksi','target'])
+                            ->make();
     }
 
     public function set_prodi($kd_prodi)

@@ -45,6 +45,14 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="widget-2">
         <div class="card mb-3">
             <form id="student_form" action="@isset($data->nim) {{route('student.list.update',encrypt($data->nim))}} @else {{route('student.list.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
@@ -78,7 +86,7 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <select class="form-control" name="kd_prodi" required>
+                                    <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" required>
                                         <option value="">- Pilih Prodi -</option>
                                         @foreach($studyProgram as $sp)
                                         <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
@@ -89,13 +97,13 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">NIM: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <input class="form-control" type="text" name="nim" value="{{ isset($data) ? $data->nim : Request::old('nim')}}" placeholder="Masukkan NIM" {{ isset($data) ? 'disabled' : ''}} maxlength="9" required>
+                                    <input class="form-control {{ $errors->has('nim') ? 'is-invalid' : ''}}" type="text" name="nim" value="{{ isset($data) ? $data->nim : Request::old('nim')}}" placeholder="Masukkan NIM" {{ isset($data) ? 'disabled' : ''}} maxlength="9" required>
                                 </div>
                             </div>
                             <div id="mhs_nama" class="row mb-3">
                                 <label class="col-md-3 form-control-label">Nama Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan Nama Dosen" required>
+                                    <input class="form-control {{ $errors->has('nama') ? 'is-invalid' : ''}}" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Masukkan Nama Dosen" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -103,12 +111,12 @@
                                 <div class="col-md-8">
                                     <div id="jenis_kelamin" class="radio">
                                         <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="jk" type="radio" value="Laki-Laki" {{ isset($data) && ($data->jk=='Laki-Laki' || Request::old('jk')=='Laki-Laki') ? 'checked' : ''}} data-parsley-class-handler="#jenis_kelamin"
+                                            <input class="{{ $errors->has('jk') ? 'is-invalid' : ''}}" name="jk" type="radio" value="Laki-Laki" {{ (isset($data) && $data->jk=='Laki-Laki') || Request::old('jk')=='Laki-Laki' ? 'checked' : ''}} data-parsley-class-handler="#jenis_kelamin"
                                             data-parsley-errors-container="#errorsJK" required>
                                             <span>Laki-Laki</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </label>
                                         <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="jk" type="radio" value="Perempuan" {{ isset($data) && ($data->jk=='Perempuan' || Request::old('jk')=='Perempuan') ? 'checked' : ''}}>
+                                            <input class="{{ $errors->has('jk') ? 'is-invalid' : ''}}" name="jk" type="radio" value="Perempuan" {{ (isset($data) && $data->jk=='Perempuan') || Request::old('jk')=='Perempuan' ? 'checked' : ''}}>
                                             <span>Perempuan</span>
                                         </label>
                                     </div>
@@ -118,7 +126,7 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Agama:</label>
                                 <div class="col-md-8">
-                                    <select class="form-control" name="agama">
+                                    <select class="form-control {{ $errors->has('agama') ? 'is-invalid' : ''}}" name="agama">
                                         <option value="">- Pilih Agama -</option>
                                         <option value="Islam" {{ (isset($data) && ($data->agama=='Islam') || Request::old('agama')=='Islam') ? 'selected' : ''}}>Islam</option>
                                         <option value="Kristen Protestan" {{ (isset($data) && ($data->agama=='Kristen Protestan') || Request::old('agama')=='Kristen Protestan') ? 'selected' : ''}}>Kristen Protestan</option>
@@ -134,7 +142,7 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-6">
-                                            <input class="form-control" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
+                                            <input class="form-control {{ $errors->has('tpt_lhr') ? 'is-invalid' : ''}}" type="text" name="tpt_lhr" value="{{ isset($data) ? $data->tpt_lhr : Request::old('tpt_lhr')}}" placeholder="Masukkan Tempat Lahir">
                                         </div>
                                         <div class="col-6">
                                             <div class="input-group">
@@ -142,7 +150,7 @@
                                                     <div class="input-group-text">
                                                         <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
                                                     </div>
-                                                </div><input class="form-control datepicker" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
+                                                </div><input class="form-control datepicker {{ $errors->has('tgl_lhr') ? 'is-invalid' : ''}}" type="text" name="tgl_lhr" value="{{ isset($data) ? $data->tgl_lhr : Request::old('tgl_lhr')}}" placeholder="Masukkan Tanggal Lahir">
                                             </div>
                                         </div>
                                     </div>
@@ -151,7 +159,7 @@
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Alamat:</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" type="text" name="alamat" value="{{ isset($data) ? $data->alamat : Request::old('alamat')}}" placeholder="Masukkan Alamat Tempat Tinggal">
+                                    <input class="form-control {{ $errors->has('alamat') ? 'is-invalid' : ''}}" type="text" name="alamat" value="{{ isset($data) ? $data->alamat : Request::old('alamat')}}" placeholder="Masukkan Alamat Tempat Tinggal">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -159,12 +167,12 @@
                                 <div class="col-md-8">
                                     <div id="kewarganegaraan" class="radio">
                                         <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="kewarganegaraan" type="radio" value="WNI" {{ isset($data) && ($data->kewarganegaraan=='WNI' || Request::old('kewarganegaraan')=='WNI') ? 'checked' : ''}} data-parsley-class-handler="#kewarganegaraan"
+                                            <input class="{{ $errors->has('kewarganegaraan') ? 'is-invalid' : ''}}" name="kewarganegaraan" type="radio" value="WNI" {{ (isset($data) && $data->kewarganegaraan=='WNI') || Request::old('kewarganegaraan')=='WNI' ? 'checked' : ''}} data-parsley-class-handler="#kewarganegaraan"
                                             data-parsley-errors-container="#errorsKWNG" required>
                                             <span>Warga Negara Indonesia</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </label>
                                         <label class="rdiobox rdiobox-inline mb-0">
-                                            <input name="kewarganegaraan" type="radio" value="WNA" {{ isset($data) && ($data->kewarganegaraan=='WNA' || Request::old('kewarganegaraan')=='WNA') ? 'checked' : ''}}>
+                                            <input class="{{ $errors->has('kewarganegaraan') ? 'is-invalid' : ''}}" name="kewarganegaraan" type="radio" value="WNA" {{ (isset($data) && $data->kewarganegaraan=='WNA') || Request::old('kewarganegaraan')=='WNA' ? 'checked' : ''}}>
                                             <span>Warga Negara Asing</span>
                                         </label>
                                     </div>
@@ -174,7 +182,7 @@
                             <div class="row mb-3 mhs-opsional">
                                 <label class="col-md-3 form-control-label">Kelas Mahasiswa: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <select class="form-control" name="kelas" required>
+                                    <select class="form-control {{ $errors->has('kelas') ? 'is-invalid' : ''}}" name="kelas" required>
                                         <option value="">- Pilih Kelas Mahasiswa -</option>
                                         <option value="Reguler" {{ (isset($data) && ($data->kelas=='Reguler') || Request::old('kelas')=='Reguler') ? 'selected' : ''}}>Reguler</option>
                                         <option value="Non-Reguler" {{ (isset($data) && ($data->kelas=='Non-Reguler') || Request::old('kelas')=='Non-Reguler') ? 'selected' : ''}}>Non-Reguler</option>
@@ -186,7 +194,7 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-12" id="tipe_mahasiswa">
-                                            <select class="form-control" name="tipe" required>
+                                            <select class="form-control {{ $errors->has('tipe') ? 'is-invalid' : ''}}" name="tipe" required>
                                                 <option value="">- Pilih Tipe Mahasiswa -</option>
                                                 <option value="Reguler" {{ (isset($data) && ($data->tipe=='Reguler') || Request::old('tipe')=='Reguler') ? 'selected' : ''}}>Reguler</option>
                                                 <option value="Non-Reguler" {{ (isset($data) && ($data->tipe=='Non-Reguler') || Request::old('tipe')=='Non-Reguler') ? 'selected' : ''}}>Non-Reguler</option>
@@ -195,7 +203,7 @@
                                             </select>
                                         </div>
                                         <div class="col-6" id="tipe_lainlain" style="display:none">
-                                            <input class="form-control" name="tipe" type="text" value="{{ isset($data) ? $data->tipe : Request::old('tipe')}}" placeholder="Masukkan tipe mahasiswa" disabled>
+                                            <input class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="tipe" type="text" value="{{ isset($data) ? $data->tipe : Request::old('tipe')}}" placeholder="Masukkan tipe mahasiswa" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -203,7 +211,7 @@
                             <div class="row mb-3 mhs-opsional">
                                 <label class="col-md-3 form-control-label">Program: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <select class="form-control" name="program" required>
+                                    <select class="form-control {{ $errors->has('program') ? 'is-invalid' : ''}}" name="program" required>
                                         <option value="">- Pilih Program -</option>
                                         <option value="Reguler" {{ (isset($data) && ($data->program=='Reguler') || Request::old('program')=='Reguler') ? 'selected' : ''}}>Reguler</option>
                                         <option value="Asing" {{ (isset($data) && ($data->program=='Asing') || Request::old('program')=='Asing') ? 'selected' : ''}}>Asing</option>
@@ -215,7 +223,7 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-6">
-                                            <select class="form-control" name="seleksi_jenis" required>
+                                            <select class="form-control {{ $errors->has('seleksi_jenis') ? 'is-invalid' : ''}}" name="seleksi_jenis" required>
                                                 <option value="">- Pilih Jenis Seleksi -</option>
                                                 <option value="Nasional" {{ (isset($data) && ($data->seleksi_jenis=='Nasional') || Request::old('seleksi_jenis')=='Nasional') ? 'selected' : ''}}>Nasional</option>
                                                 <option value="Lokal" {{ (isset($data) && ($data->seleksi_jenis=='Lokal') || Request::old('seleksi_jenis')=='Lokal') ? 'selected' : ''}}>Lokal</option>
@@ -232,7 +240,7 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-md-6 mb-2 mhs-opsional">
-                                            <select class="form-control" name="status_masuk" required>
+                                            <select class="form-control {{ $errors->has('status_masuk') ? 'is-invalid' : ''}}" name="status_masuk" required>
                                                 <option value="">- Pilih Status Awal Masuk -</option>
                                                 <option value="Baru" {{ (isset($data) && ($data->status_masuk=='Baru') || Request::old('status_masuk')=='Baru') ? 'selected' : ''}}>Baru</option>
                                                 <option value="Pindahan" {{ (isset($data) && ($data->status_masuk=='Pindahan') || Request::old('status_masuk')=='Pindahan') ? 'selected' : ''}}>Pindahan</option>
@@ -240,7 +248,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="tahun_masuk" required>
+                                            <select class="form-control {{ $errors->has('tahun_masuk') ? 'is-invalid' : ''}}" name="tahun_masuk" required>
                                                 <option value="">- Pilih Tahun Masuk -</option>
                                                 @foreach($academicYear as $ay)
                                                 <option value="{{$ay->id}}" {{ (isset($status) && ($status->id_ta==$ay->id) || Request::old('tahun_masuk')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik}} - {{ $ay->semester }}</option>

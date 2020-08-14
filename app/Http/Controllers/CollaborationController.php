@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CollaborationExport;
+use App\Http\Requests\CollaborationRequest;
 use App\Models\Collaboration;
 use App\Models\StudyProgram;
 use App\Models\AcademicYear;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class CollaborationController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -61,102 +66,107 @@ class CollaborationController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(CollaborationRequest $request)
     {
-        $request->validate([
-            'kd_prodi'          => 'required',
-            'id_ta'             => 'required',
-            'jenis'             => 'required',
-            'nama_lembaga'      => 'required',
-            'tingkat'           => 'required',
-            'judul_kegiatan'    => 'required',
-            'manfaat_kegiatan'  => 'required',
-            'waktu'             => 'required',
-            'durasi'            => 'required',
-            'bukti_nama'        => 'required',
-            'bukti_file'        => 'required|mimes:pdf',
-        ]);
+        DB::beginTransaction();
+        try {
+            $collaboration = new Collaboration;
+            $collaboration->kd_prodi         = $request->kd_prodi;
+            $collaboration->id_ta            = $request->id_ta;
+            $collaboration->jenis            = $request->jenis;
+            $collaboration->nama_lembaga     = $request->nama_lembaga;
+            $collaboration->tingkat          = $request->tingkat;
+            $collaboration->judul_kegiatan   = $request->judul_kegiatan;
+            $collaboration->manfaat_kegiatan = $request->manfaat_kegiatan;
+            $collaboration->waktu            = $request->waktu;
+            $collaboration->durasi           = $request->durasi;
+            $collaboration->bukti_nama       = $request->bukti_nama;
 
-        $collaboration = new Collaboration;
-        $collaboration->kd_prodi         = $request->kd_prodi;
-        $collaboration->id_ta            = $request->id_ta;
-        $collaboration->jenis            = $request->jenis;
-        $collaboration->nama_lembaga     = $request->nama_lembaga;
-        $collaboration->tingkat          = $request->tingkat;
-        $collaboration->judul_kegiatan   = $request->judul_kegiatan;
-        $collaboration->manfaat_kegiatan = $request->manfaat_kegiatan;
-        $collaboration->waktu            = $request->waktu;
-        $collaboration->durasi           = $request->durasi;
-        $collaboration->bukti_nama       = $request->bukti_nama;
-
-        if($request->file('bukti_file')) {
-            $file = $request->file('bukti_file');
-            $tgl_skrg = date('Y_m_d_H_i_s');
-            $tujuan_upload = public_path('upload/collaboration');
-            $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $collaboration->bukti_file = $filename;
-        }
-
-        $collaboration->save();
-
-
-        return redirect()->route('collaboration.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-    }
-
-    public function update(Request $request)
-    {
-        $id = decrypt($request->id);
-
-        $request->validate([
-            'kd_prodi'          => 'required',
-            'id_ta'             => 'required',
-            'jenis'             => 'required',
-            'nama_lembaga'      => 'required',
-            'tingkat'           => 'required',
-            'judul_kegiatan'    => 'required',
-            'manfaat_kegiatan'  => 'required',
-            'waktu'             => 'required',
-            'durasi'            => 'required',
-            'bukti_nama'        => 'required',
-            'bukti_file'        => 'mimes:pdf',
-        ]);
-
-        $collaboration = Collaboration::find($id);
-        $collaboration->kd_prodi         = $request->kd_prodi;
-        $collaboration->id_ta            = $request->id_ta;
-        $collaboration->jenis            = $request->jenis;
-        $collaboration->nama_lembaga     = $request->nama_lembaga;
-        $collaboration->tingkat          = $request->tingkat;
-        $collaboration->judul_kegiatan   = $request->judul_kegiatan;
-        $collaboration->manfaat_kegiatan = $request->manfaat_kegiatan;
-        $collaboration->waktu            = $request->waktu;
-        $collaboration->durasi           = $request->durasi;
-        $collaboration->bukti_nama       = $request->bukti_nama;
-
-        //Upload File
-        $storagePath = public_path('upload/collaboration/'.$collaboration->bukti_file);
-        $tgl_skrg = date('Y_m_d_H_i_s');
-        if($request->file('bukti_file')) {
-            if(File::exists($storagePath)) {
-                File::delete($storagePath);
+            if($request->file('bukti_file')) {
+                $file = $request->file('bukti_file');
+                $tgl_skrg = date('Y_m_d_H_i_s');
+                $tujuan_upload = public_path('upload/collaboration');
+                $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $collaboration->bukti_file = $filename;
             }
 
-            $file = $request->file('bukti_file');
-            $tujuan_upload = public_path('upload/collaboration');
-            $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $collaboration->bukti_file = $filename;
-        } else {
-            $ekstensi = File::extension($storagePath);
-            $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$ekstensi;
-            File::move($storagePath,public_path('upload/collaboration/'.$filename));
-            $collaboration->bukti_file = $filename;
+            $collaboration->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $collaboration->id,
+                'name'  => $collaboration->nama_lembaga,
+                'url'   => route('collaboration.show',$collaboration->id)
+            ];
+            $this->log('created','Kerja Sama',$property);
+
+            DB::commit();
+            return redirect()->route('collaboration.index')->with('flash.message', 'Data berhasil ditambahkan.')->with('flash.class', 'success');
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        $collaboration->save();
 
-        return redirect()->route('collaboration.show',$collaboration->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+    }
+
+    public function update(CollaborationRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $id = decrypt($request->id);
+
+            $collaboration = Collaboration::find($id);
+            $collaboration->kd_prodi         = $request->kd_prodi;
+            $collaboration->id_ta            = $request->id_ta;
+            $collaboration->jenis            = $request->jenis;
+            $collaboration->nama_lembaga     = $request->nama_lembaga;
+            $collaboration->tingkat          = $request->tingkat;
+            $collaboration->judul_kegiatan   = $request->judul_kegiatan;
+            $collaboration->manfaat_kegiatan = $request->manfaat_kegiatan;
+            $collaboration->waktu            = $request->waktu;
+            $collaboration->durasi           = $request->durasi;
+            $collaboration->bukti_nama       = $request->bukti_nama;
+
+            //Upload File
+            $storagePath = public_path('upload/collaboration/'.$collaboration->bukti_file);
+            $tgl_skrg = date('Y_m_d_H_i_s');
+            if($request->file('bukti_file')) {
+                if(File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
+
+                $file = $request->file('bukti_file');
+                $tujuan_upload = public_path('upload/collaboration');
+                $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $collaboration->bukti_file = $filename;
+            } else {
+                $ekstensi = File::extension($storagePath);
+                $filename = $request->kd_prodi.'_'.$request->nama_lembaga.'_'.$request->tingkat.'_'.$request->judul_kegiatan.'_'.$request->waktu.'_'.$tgl_skrg.'.'.$ekstensi;
+                File::move($storagePath,public_path('upload/collaboration/'.$filename));
+                $collaboration->bukti_file = $filename;
+            }
+
+            $collaboration->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $collaboration->id,
+                'name'  => $collaboration->nama_lembaga,
+                'url'   => route('collaboration.show',$collaboration->id)
+            ];
+            $this->log('updated','Kerja Sama',$property);
+
+            DB::commit();
+            return redirect()->route('collaboration.show',$collaboration->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+
     }
 
     public function destroy(Request $request)
@@ -165,22 +175,31 @@ class CollaborationController extends Controller
             abort(404);
         }
 
-        $id     = decode_id($request->id);
-        $data   = Collaboration::find($id);
-        $q      = $data->delete();
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Terjadi kesalahan saat menghapus',
-                'type'    => 'error'
-            ]);
-        } else {
+        DB::beginTransaction();
+        try {
+            $id     = decrypt($request->id);
+            $data   = Collaboration::find($id);
+            $data->delete();
             $this->delete_file($data->bukti_file);
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama_lembaga,
+            ];
+            $this->log('deleted','Kepuasan Akademik',$property);
+
+            DB::commit();
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil dihapus',
                 'type'    => 'success'
             ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

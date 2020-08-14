@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DepartmentRequest;
 use App\Models\Department;
 use App\Models\Faculty;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use LogActivity;
+
     public function index()
     {
         $faculty    = Faculty::all();
@@ -21,52 +21,6 @@ class DepartmentController extends Controller
         return view('master.department.index',compact(['faculty','department']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        if(request()->ajax()) {
-            $request->validate([
-                'id_fakultas' => 'required',
-                'kd_jurusan'  => 'required|numeric|digits:5',
-                'nama'        => 'required',
-                'nip_kajur'   => 'numeric|digits:18|nullable',
-            ]);
-
-            $data              = new Department;
-            $data->kd_jurusan  = $request->kd_jurusan;
-            $data->id_fakultas = $request->id_fakultas;
-            $data->nama        = $request->nama;
-            $data->nip_kajur   = $request->nip_kajur;
-            $data->nm_kajur    = $request->nm_kajur;
-            $q = $data->save();
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Department  $department
-     * @return \Illuminate\Http\Response
-     */
     public function show(Request $request)
     {
         if($request->ajax()) {
@@ -85,12 +39,6 @@ class DepartmentController extends Controller
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Department  $department
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request)
     {
         if(request()->ajax()) {
@@ -102,74 +50,113 @@ class DepartmentController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Department  $department
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
+    public function store(DepartmentRequest $request)
     {
-        if(request()->ajax()) {
-            $request->validate([
-                'id_fakultas' => 'required',
-                'nama'        => 'required',
-                'nip_kajur'   => 'numeric|digits:18|nullable',
-            ]);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            $data              = Department::find($request->_id);
+        DB::beginTransaction();
+        try {
+            //Query
+            $data              = new Department;
+            $data->kd_jurusan  = $request->kd_jurusan;
             $data->id_fakultas = $request->id_fakultas;
             $data->nama        = $request->nama;
-            $data->nip_kajur   = $request->nip_kajur;
-            $data->nm_kajur    = $request->nm_kajur;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_jurusan,
+                'name'  => $data->nama,
+                'url'   => route('master.department')
+            ];
+            $this->log('created','Jurusan',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Department  $department
-     * @return \Illuminate\Http\Response
-     */
+    public function update(DepartmentRequest $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Query
+            $data              = Department::find($request->_id);
+            $data->id_fakultas = $request->id_fakultas;
+            $data->nama        = $request->nama;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_jurusan,
+                'name'  => $data->nama,
+                'url'   => route('master.department')
+            ];
+            $this->log('updated','Jurusan',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+    }
+
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = decode_id($request->id);
 
-            $q = Department::destroy($id);
+            //Query
+            $data = Department::find($id);
+            $data->delete();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_jurusan,
+                'name'  => $data->nama,
+            ];
+            $this->log('deleted','Jurusan',$property);
 
-        } else {
-            return redirect()->route('master.department');
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

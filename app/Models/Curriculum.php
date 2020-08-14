@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 
 class Curriculum extends BaseModel
 {
-    public $incrementing    = false;
+    // public $incrementing    = true;
     // protected $primaryKey   = 'kd_matkul';
     protected $casts        = ['capaian' => 'array'];
 

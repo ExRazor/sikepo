@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ResearchExport;
+use App\Http\Requests\ResearchRequest;
 use App\Models\AcademicYear;
 use App\Models\Research;
 use App\Models\StudyProgram;
@@ -10,6 +11,7 @@ use App\Models\Faculty;
 use App\Models\Teacher;
 use App\Models\ResearchStudent;
 use App\Models\ResearchTeacher;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +21,8 @@ use Yajra\DataTables\DataTables;
 
 class ResearchController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -45,8 +49,8 @@ class ResearchController extends Controller
 
     public function show($id)
     {
-        $id   = decode_id($id);
-        $data         = Research::where('id',$id)->first();
+        $id   = decrypt($id);
+        $data = Research::where('id',$id)->first();
 
         return view('research.show',compact(['data']));
     }
@@ -60,7 +64,7 @@ class ResearchController extends Controller
 
     public function edit($id)
     {
-        $id   = decode_id($id);
+        $id   = decrypt($id);
 
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $data         = Research::where('id',$id)->first();
@@ -68,189 +72,208 @@ class ResearchController extends Controller
         return view('research.form',compact(['data','studyProgram']));
     }
 
-    public function store(Request $request)
+    public function store(ResearchRequest $request)
     {
-        $request->validate([
-            'id_ta'             => 'required',
-            'ketua_nidn'        => 'required',
-            'judul_penelitian'  => 'required',
-            'tema_penelitian'   => 'required',
-            'tingkat_penelitian'=> 'required',
-            'sks_penelitian'    => 'required|numeric',
-            'sesuai_prodi'      => 'nullable',
-            'sumber_biaya'      => 'required',
-            'sumber_biaya_nama' => 'nullable',
-            'jumlah_biaya'      => 'required',
-        ]);
+        DB::beginTransaction();
+        try{
+            //Simpan Data Penelitian
+            $research                    = new Research;
+            $research->id_ta             = $request->id_ta;
+            $research->judul_penelitian  = $request->judul_penelitian;
+            $research->tema_penelitian   = $request->tema_penelitian;
+            $research->tingkat_penelitian= $request->tingkat_penelitian;
+            $research->sks_penelitian    = $request->sks_penelitian;
+            $research->sesuai_prodi      = $request->sesuai_prodi;
+            $research->sumber_biaya      = $request->sumber_biaya;
+            $research->sumber_biaya_nama = $request->sumber_biaya_nama;
+            $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
+            $research->save();
 
-        //Simpan Data Penelitian
-        $research                    = new Research;
-        $research->id_ta             = $request->id_ta;
-        $research->judul_penelitian  = $request->judul_penelitian;
-        $research->tema_penelitian   = $request->tema_penelitian;
-        $research->tingkat_penelitian= $request->tingkat_penelitian;
-        $research->sks_penelitian    = $request->sks_penelitian;
-        $research->sesuai_prodi      = $request->sesuai_prodi;
-        $research->sumber_biaya      = $request->sumber_biaya;
-        $research->sumber_biaya_nama = $request->sumber_biaya_nama;
-        $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
-        $research->save();
+            //Jumlah SKS
+            $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
+            $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
 
-        //Jumlah SKS
-        $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
-        $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
+            //Tambah Ketua
+            $ketua                  = new ResearchTeacher;
+            $ketua->id_penelitian   = $research->id;
+            $ketua->nidn            = $request->ketua_nidn;
+            $ketua->status          = 'Ketua';
+            $ketua->sks             = $sks_ketua;
+            $ketua->save();
 
-        //Tambah Ketua
-        $ketua                  = new ResearchTeacher;
-        $ketua->id_penelitian   = $research->id;
-        $ketua->nidn            = $request->ketua_nidn;
-        $ketua->status          = 'Ketua';
-        $ketua->sks             = $sks_ketua;
-        $ketua->save();
-
-        //Tambah Anggota Dosen
-        if($request->anggota_nidn) {
-            $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
-                ResearchTeacher::updateOrCreate(
-                    [
-                        'id_penelitian' => $research->id,
-                        'nidn'          => $request->anggota_nidn[$i],
-                    ],
-                    [
-                        'status'     => 'Anggota',
-                        'sks'        => $sks_anggota,
-                    ]
-                );
+            //Tambah Anggota Dosen
+            if($request->anggota_nidn) {
+                $hitungDsn = count($request->anggota_nidn);
+                for($i=0;$i<$hitungDsn;$i++) {
+                    ResearchTeacher::updateOrCreate(
+                        [
+                            'id_penelitian' => $research->id,
+                            'nidn'          => $request->anggota_nidn[$i],
+                        ],
+                        [
+                            'status'     => 'Anggota',
+                            'sks'        => $sks_anggota,
+                        ]
+                    );
+                }
             }
-        }
 
-
-        //Tambah Mahasiswa
-        if($request->mahasiswa_nim) {
-            $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
-                ResearchStudent::updateOrCreate(
-                    [
-                        'id_penelitian' => $research->id,
-                        'nim'           => $request->mahasiswa_nim[$i],
-                    ]
-                );
+            //Tambah Mahasiswa
+            if($request->mahasiswa_nim) {
+                $hitungMhs = count($request->mahasiswa_nim);
+                for($i=0;$i<$hitungMhs;$i++) {
+                    ResearchStudent::updateOrCreate(
+                        [
+                            'id_penelitian' => $research->id,
+                            'nim'           => $request->mahasiswa_nim[$i],
+                        ]
+                    );
+                }
             }
-        }
 
-        return redirect()->route('research.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            //Activity Log
+            $property = [
+                'id'    => $research->id,
+                'name'  => $research->judul_penelitian,
+                'url'   => route('research.show',encrypt($research->id))
+            ];
+            $this->log('created','Penelitian',$property);
+
+            DB::commit();
+            return redirect()->route('research.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
-    public function update(Request $request)
+    public function update(ResearchRequest $request)
     {
-        $id = decrypt($request->id);
+        DB::beginTransaction();
+        try{
+            //Decrypt ID
+            $id = decrypt($request->id);
 
-        // dd($request->all());
+            //Simpan Data Penelitian
+            $research                    = Research::find($id);
+            $research->id_ta             = $request->id_ta;
+            $research->judul_penelitian  = $request->judul_penelitian;
+            $research->tema_penelitian   = $request->tema_penelitian;
+            $research->tingkat_penelitian= $request->tingkat_penelitian;
+            $research->sks_penelitian    = $request->sks_penelitian;
+            $research->sesuai_prodi      = $request->sesuai_prodi;
+            $research->sumber_biaya      = $request->sumber_biaya;
+            $research->sumber_biaya_nama = $request->sumber_biaya_nama;
+            $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
+            $research->save();
 
-        $request->validate([
-            'id_ta'             => 'required',
-            // 'ketua_nidn'        => 'required|unique:research_teachers,nidn,'.$id.',id_penelitian',
-            'judul_penelitian'  => 'required',
-            'tema_penelitian'   => 'required',
-            'tingkat_penelitian'=> 'required',
-            'sks_penelitian'    => 'required|numeric',
-            'sesuai_prodi'      => 'nullable',
-            'sumber_biaya'      => 'required',
-            'sumber_biaya_nama' => 'nullable',
-            'jumlah_biaya'      => 'required',
-        ]);
+            //Jumlah SKS
+            $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
+            $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
 
-        //Simpan Data Penelitian
-        $research                    = Research::find($id);
-        $research->id_ta             = $request->id_ta;
-        $research->judul_penelitian  = $request->judul_penelitian;
-        $research->tema_penelitian   = $request->tema_penelitian;
-        $research->tingkat_penelitian= $request->tingkat_penelitian;
-        $research->sks_penelitian    = $request->sks_penelitian;
-        $research->sesuai_prodi      = $request->sesuai_prodi;
-        $research->sumber_biaya      = $request->sumber_biaya;
-        $research->sumber_biaya_nama = $request->sumber_biaya_nama;
-        $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
-        $research->save();
+            //Update Ketua
+            $ketua = ResearchTeacher::where('id_penelitian',$id)->where('status','Ketua');
+            if($ketua != $request->ketua_nidn) {
+                $ketua->delete();
 
-        //Jumlah SKS
-        $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
-        $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
+                $new_ketua                  = new ResearchTeacher;
+                $new_ketua->id_penelitian   = $id;
+                $new_ketua->nidn            = $request->ketua_nidn;
+                $new_ketua->status          = 'Ketua';
+                $new_ketua->sks             = $sks_ketua;
+                $new_ketua->save();
+            } else {
 
-        //Update Ketua
-        $ketua = ResearchTeacher::where('id_penelitian',$id)->where('status','Ketua');
-        if($ketua != $request->ketua_nidn) {
-            $ketua->delete();
-
-            $new_ketua                  = new ResearchTeacher;
-            $new_ketua->id_penelitian   = $id;
-            $new_ketua->nidn            = $request->ketua_nidn;
-            $new_ketua->status          = 'Ketua';
-            $new_ketua->sks             = $sks_ketua;
-            $new_ketua->save();
-        } else {
-
-            $ketua->id_penelitian = $id;
-            $ketua->nidn          = $request->ketua_nidn;
-            $ketua->sks           = $sks_ketua;
-            $ketua->save();
-        }
-
-        //Update Anggota
-        if($request->anggota_nidn) {
-            $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
-
-                ResearchTeacher::updateOrCreate(
-                    [
-                        'id_penelitian' => $id,
-                        'nidn'          => $request->anggota_nidn[$i],
-                    ],
-                    [
-                        'status'     => 'Anggota',
-                        'sks'        => $sks_anggota,
-                    ]
-                );
+                $ketua->id_penelitian = $id;
+                $ketua->nidn          = $request->ketua_nidn;
+                $ketua->sks           = $sks_ketua;
+                $ketua->save();
             }
-        }
 
-        //Update Mahasiswa
-        if($request->mahasiswa_nim) {
-            $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
+            //Update Anggota
+            if($request->anggota_nidn) {
+                $hitungDsn = count($request->anggota_nidn);
+                for($i=0;$i<$hitungDsn;$i++) {
 
-                ResearchStudent::updateOrCreate(
-                    [
-                        'id_penelitian' => $id,
-                        'nim'           => $request->mahasiswa_nim[$i],
-                    ]
-                );
+                    ResearchTeacher::updateOrCreate(
+                        [
+                            'id_penelitian' => $id,
+                            'nidn'          => $request->anggota_nidn[$i],
+                        ],
+                        [
+                            'status'     => 'Anggota',
+                            'sks'        => $sks_anggota,
+                        ]
+                    );
+                }
             }
+
+            //Update Mahasiswa
+            if($request->mahasiswa_nim) {
+                $hitungMhs = count($request->mahasiswa_nim);
+                for($i=0;$i<$hitungMhs;$i++) {
+
+                    ResearchStudent::updateOrCreate(
+                        [
+                            'id_penelitian' => $id,
+                            'nim'           => $request->mahasiswa_nim[$i],
+                        ]
+                    );
+                }
+            }
+
+            //Activity Log
+            $property = [
+                'id'    => $research->id,
+                'name'  => $research->judul_penelitian,
+                'url'   => route('research.show',encrypt($research->id))
+            ];
+            $this->log('updated','Penelitian',$property);
+
+            DB::commit();
+            return redirect()->route('research.show',encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        return redirect()->route('research.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id = decode_id($request->id);
-            $q  = Research::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!$request->ajax()) {
+            abort(404);
         }
+
+        DB::beginTransaction();
+        try{
+            //Decrypt ID
+            $id     = decrypt($request->id);
+
+            //Query
+            $data   = Research::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul_penelitian,
+            ];
+            $this->log('deleted','Penelitian',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
     }
 
     public function destroy_teacher(Request $request)
@@ -350,7 +373,7 @@ class ResearchController extends Controller
 
         return DataTables::of($data->get())
                             ->addColumn('penelitian', function($d) {
-                                return  '<a href="'.route('research.show',encode_id($d->id)).'" target="_blank">'
+                                return  '<a href="'.route('research.show',encrypt($d->id)).'" target="_blank">'
                                             .$d->judul_penelitian.
                                         '</a>';
                             })

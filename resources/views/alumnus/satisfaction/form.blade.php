@@ -33,17 +33,13 @@
 </div>
 
 <div class="br-pagebody">
-    @if($errors->any())
-    <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-        </button>
-        <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-        </ul>
-    </div>
+            </button>
+            {{ session('flash.message') }}
+        </div>
     @endif
     <div class="widget-2">
         <div class="card mb-3">

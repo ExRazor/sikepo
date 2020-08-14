@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentAchievementRequest;
 use App\Models\StudentAchievement;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class StudentAchievementController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -25,57 +30,10 @@ class StudentAchievementController extends Controller
 
     public function index()
     {
-        if(Auth::user()->hasRole('kaprodi')) {
-            $achievement    = StudentAchievement::whereHas(
-                                                    'student.studyProgram',function($query) {
-                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                                    }
-                                                )
-                                                ->orderBy('id_ta','desc')->get();
-        } else {
-            $achievement    = StudentAchievement::whereHas(
-                                                    'student.studyProgram',function($query) {
-                                                        $query->where('kd_jurusan',setting('app_department_id'));
-                                                    }
-                                                )
-                                                ->orderBy('id_ta','desc')->get();
-        }
-
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        return view('student.achievement.index',compact(['achievement','studyProgram']));
+        return view('student.achievement.index',compact(['studyProgram']));
     }
-
-    public function store(Request $request)
-    {
-        if(request()->ajax()) {
-            $request->validate([
-                'nim'               => 'required',
-                'id_ta'             => 'required',
-                'kegiatan_nama'     => 'required',
-                'kegiatan_tingkat'  => 'required',
-                'prestasi'          => 'required',
-                'prestasi_jenis'    => 'required',
-            ]);
-
-            $q = StudentAchievement::create($request->all());
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
-        }
-    }
-
 
     public function show($id)
     {
@@ -89,68 +47,113 @@ class StudentAchievementController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function store(StudentAchievementRequest $request)
     {
-        if(request()->ajax()) {
-            // $id = decode_id($request->_id);
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Query
+            $data = StudentAchievement::create($request->all());
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->prestasi.' ('.$data->prestasi_jenis.')',
+            ];
+            $this->log('created','Prestasi Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+    }
+
+    public function update(StudentAchievementRequest $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = $request->_id;
 
-            $request->validate([
-                'nim'               => 'required',
-                'id_ta'             => 'required',
-                'kegiatan_nama'     => 'required',
-                'kegiatan_tingkat'  => 'required',
-                'prestasi'          => 'required',
-                'prestasi_jenis'    => 'required',
+            //Query
+            $data                    = StudentAchievement::find($id);
+            $data->nim               = $request->nim;
+            $data->id_ta             = $request->id_ta;
+            $data->kegiatan_nama     = $request->kegiatan_nama;
+            $data->kegiatan_tingkat  = $request->kegiatan_tingkat;
+            $data->prestasi          = $request->prestasi;
+            $data->prestasi_jenis    = $request->prestasi_jenis;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->prestasi.' ('.$data->prestasi_jenis.')',
+            ];
+            $this->log('updated','Prestasi Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
             ]);
-
-            $acv                    = StudentAchievement::find($id);
-            $acv->nim               = $request->nim;
-            $acv->id_ta             = $request->id_ta;
-            $acv->kegiatan_nama     = $request->kegiatan_nama;
-            $acv->kegiatan_tingkat  = $request->kegiatan_tingkat;
-            $acv->prestasi          = $request->prestasi;
-            $acv->prestasi_jenis    = $request->prestasi_jenis;
-
-            $q = $acv->save();
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
-            $id = decode_id($request->_id);
-            $q = StudentAchievement::destroy($id);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->route('student.achievement');
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decode_id($request->_id);
+
+            //Query
+            $data = StudentAchievement::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->prestasi.' ('.$data->prestasi_jenis.')',
+            ];
+            $this->log('deleted','Prestasi Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

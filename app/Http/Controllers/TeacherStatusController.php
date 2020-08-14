@@ -8,11 +8,15 @@ use App\Http\Requests\TeacherStatusRequest;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 
 class TeacherStatusController extends Controller
 {
+    use LogActivity;
+
     public function index_structural()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -20,11 +24,25 @@ class TeacherStatusController extends Controller
         return view('setting.structural.index',compact(['studyProgram']));
     }
 
+    public function edit($id)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        $id = decrypt($id);
+        $data = TeacherStatus::with('teacher')->find($id);
+        return response()->json($data);
+    }
+
     public function store(TeacherStatusRequest $request)
     {
-        $val = $request->validated();
-
+        DB::beginTransaction();
         try {
+            //Validated
+            $val = $request->validated();
+
+            //Query
             $data                = new TeacherStatus;
             $data->nidn          = $request->_nidn;
             $data->periode       = date("Y-m-d", strtotime($val['periode']) );
@@ -39,43 +57,40 @@ class TeacherStatusController extends Controller
             //Create User
             $this->storeStructural($request);
 
-            $response = [
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' ('.$data->jabatan.')',
+                'url'   => route('teacher.list.show',$data->nidn).'#status'
+            ];
+            $this->log('created','Status Dosen',$property);
+
+            DB::commit();
+            return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil disimpan',
                 'type'    => 'success'
-            ];
-
-            return response()->json($response);
+            ]);
 
         } catch(\Exception $e) {
-            return $response = [
-                'title'   => 'Gagal',
+            DB::rollback();
+            return response()->json([
                 'message' => $e->getMessage(),
-                'type'    => 'error'
-            ];
-
-            return response()->json($response);
-        }
-    }
-
-    public function edit($id)
-    {
-        if(request()->ajax()) {
-            $id = decrypt($id);
-            $data = TeacherStatus::with('teacher')->find($id);
-            return response()->json($data);
-        } else {
-            abort(404);
+            ],400);
         }
     }
 
     public function update(TeacherStatusRequest $request)
     {
-        $val = $request->validated();
-
-        $id = decrypt($request->_id);
-
+        DB::beginTransaction();
         try {
+            //Validated
+            $val = $request->validated();
+
+            //Decrypt ID
+            $id = decrypt($request->_id);
+
+            //Query
             $data            = TeacherStatus::findOrFail($id);
             $data->nidn      = $request->_nidn;
             $data->periode   = date("Y-m-d", strtotime($val['periode']) );
@@ -90,52 +105,70 @@ class TeacherStatusController extends Controller
             //Create User
             $this->storeStructural($request);
 
-            $response = [
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' ('.$data->jabatan.')',
+                'url'   => route('teacher.list.show',$data->nidn).'#status'
+            ];
+            $this->log('updated','Status Dosen',$property);
+
+            DB::commit();
+            return response()->json([
                 'title'   => 'Berhasil',
-                'message' => 'Data berhasil disunting',
+                'message' => 'Data berhasil disimpan',
                 'type'    => 'success'
-            ];
+            ]);
 
-            return response()->json($response);
-
-        } catch (\Exception $e) {
-            $response = [
-                'title'   => 'Gagal',
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
                 'message' => $e->getMessage(),
-                'type'    => 'error'
-            ];
-
-            return response()->json($response);
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = decrypt($request->id);
 
-            try {
-                $data = TeacherStatus::find($id);
-                $data->delete();
+            //Query
+            $data = TeacherStatus::find($id);
+            $data->delete();
 
-                $this->destroyStructural($data);
+            //Hapus Hak Akses Struktural
+            $this->destroyStructural($data);
 
-                //Update status aktif jabatan
-                $this->setStatus($data->nidn);
+            //Update status aktif jabatan
+            $this->setStatus($data->nidn);
 
-            } catch(\Exception $e) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => $e->getMessage(),
-                    'type'    => 'error'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' ('.$data->jabatan.')',
+                'url'   => route('teacher.list.show',$data->nidn).'#status'
+            ];
+            $this->log('deleted','Status Dosen',$property);
 
+            DB::commit();
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil dihapus',
                 'type'    => 'success'
             ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

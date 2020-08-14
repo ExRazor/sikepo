@@ -75,5 +75,51 @@
 
 @endsection
 
-@section('js')
-@endsection
+@push('custom-js')
+<script>
+    $('.toggle-ay-status').click(function(e){
+        e.preventDefault();
+
+        var id     = $(this).data('id');
+        var toggle = $(this);
+        // $(this).toggleClass('on');
+        $.ajax({
+            url: base_url+'/ajax/academic-year/status',
+            data: {id:id},
+            type: 'POST',
+            dataType: 'json',
+            success: function (state) {
+
+                if(state.warning) {
+                    alertify.warning(state.warning);
+                } else {
+                    $('.toggle-ay-status').removeClass('on');
+                    toggle.toggleClass('on');
+
+                    alertify.success(state.message);
+                }
+
+            }
+        });
+    })
+
+    $('.btn-edit-ay').click(function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+        $.ajax({
+            url: base_url+'/ajax/academic-year/edit',
+            data: {id:id},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                $('#academicYear-form')
+                    .find('input[name=_id]').val(id).end()
+                    .find('input[name=tahun_akademik]').val(data.tahun_akademik).end()
+                    .find('select[name=semester]').val(data.semester).end()
+                    .find('button[type=submit]').attr('data-id',id).end()
+                    .modal('toggle');
+            }
+        });
+    });
+</script>
+@endpush

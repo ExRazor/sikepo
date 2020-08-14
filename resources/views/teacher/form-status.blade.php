@@ -9,11 +9,7 @@
                     </button>
                 </div>
                 <div class="modal-body pd-20">
-                    <div class="alert alert-danger" style="display:none">
-                        @foreach ($errors->all() as $error)
-                            {{ $error }}
-                        @endforeach
-                    </div>
+                    @include('layouts.alert')
                     <input type="hidden" name="_id">
                     <input type="hidden" name="_nidn" value="{{$data->nidn}}">
                     @if(!Auth::user()->hasRole('admin'))

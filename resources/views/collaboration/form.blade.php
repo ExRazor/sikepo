@@ -41,6 +41,14 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="widget-2">
         <div class="card bd-0">
             <div class="card-body bd bd-t-0 rounded-bottom">

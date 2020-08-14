@@ -166,21 +166,35 @@ $(document).on('click','.btn-save',function(e) {
 
         },
         error: function (request) {
+            //Button
+            cont.prop('disabled',false);
+            $('.btn-cancel').prop('disabled',false);
+            cont.html('Simpan');
+
+            //Parse Message
             json = $.parseJSON(request.responseText);
-            $('.alert-danger').html('');
+
+            //Init alert variable
+            var alert_cont = $('.alert-danger');
+            alert_cont.hide();
+
+            //Clear exist message and error
+            alert_cont.find('span.error').html(json.message);
+            alert_cont.find('ul').html(null)
             $('.is-invalid').removeClass('is-invalid');
+
+            //Repopulate error
             $.each(json.errors, function(key, value){
-                $('.alert-danger').show();
-                $('.alert-danger').append('<span>'+value+'</span><br>');
+                alert_cont.find('ul').append('<li>'+value+'</li>');
                 $('#'+key).addClass('is-invalid');
                 $('[name='+key+']').addClass('is-invalid');
                 $('[name='+key+']').parents('div.radio').addClass('is-invalid');
                 $('[aria-labelledby*=select2-'+key+']').addClass('is-invalid');
             });
 
-            cont.prop('disabled',false);
-            $('.btn-cancel').prop('disabled',false);
-            cont.html('Simpan');
+            //Show Error
+            alert_cont.show();
+
         },
     });
 });
@@ -227,7 +241,7 @@ $(document).on('click','.btn-delete',function(e){
                             title: state.title,
                             text: state.message,
                             type: state.type,
-                            timer: 2000,
+                            // timer: 2000,
                             onClose: () => {
                                 if(redir) {
                                     window.location.replace(redir);
@@ -236,15 +250,19 @@ $(document).on('click','.btn-delete',function(e){
                                 }
                             }
                         });
-                    } else {
-                        Swal.fire({
-                            title: state.title,
-                            text: state.message,
-                            type: state.type,
-                            timer: 2000,
-                        });
                     }
                 },
+                error: function(request) {
+                    //Parse Message
+                    json = $.parseJSON(request.responseText);
+
+                    //Error Swal
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: json.message,
+                        type: 'error',
+                    });
+                }
             });
             // console.log(result.value);
         }
@@ -752,58 +770,6 @@ function load_select_dsn(selectElementObj) {
 
 
 /****************************************************************************/
-
-/********************************* TAHUN AKADEMIK *********************************/
-$('#tahunAkademik').mask('9999');
-$('input#tahunAkademik').keyup(function(){
-    var year = parseInt($(this).val());
-    $('span.ta_next').text('/ '+(year+1));
-})
-
-$('.toggle-ay-status').click(function(e){
-    e.preventDefault();
-
-    var id     = $(this).data('id');
-    var toggle = $(this);
-    // $(this).toggleClass('on');
-    $.ajax({
-        url: base_url+'/ajax/academic-year/status',
-        data: {id:id},
-        type: 'POST',
-        dataType: 'json',
-        success: function (state) {
-
-            if(state.warning) {
-                alertify.warning(state.warning);
-            } else {
-                $('.toggle-ay-status').removeClass('on');
-                toggle.toggleClass('on');
-
-                alertify.success(state.message);
-            }
-
-        }
-    });
-})
-
-$('.btn-edit-ay').click(function(e){
-    e.preventDefault();
-    var id = $(this).data('id');
-    $.ajax({
-        url: base_url+'/ajax/academic-year/edit',
-        data: {id:id},
-        type: 'POST',
-        dataType: 'json',
-        success: function (data) {
-            $('#academicYear-form')
-                .find('input[name=_id]').val(id).end()
-                .find('input[name=tahun_akademik]').val(data.tahun_akademik).end()
-                .find('select[name=semester]').val(data.semester).end()
-                .modal('toggle').end();
-        }
-    });
-});
-/*********************************************************************************/
 
 /********************************* FAKULTAS *********************************/
 $('.btn-edit-faculty').click(function(e){
@@ -1510,29 +1476,7 @@ function load_seleksi_jenis() {
 /**********************************************************************************/
 
 /********************************* DATA STATUS MAHASISWA *********************************/
-$('button.btn-add-studentStatus').on('click', function(){
-    $('#modal-student-status .status_mahasiswa').show();
-})
 
-$('#table_student_status').on('click','.btn-edit',function(e){
-
-    var id  = $(this).data('id');
-    var url = base_url+'/ajax/student/status/'+id;
-
-    $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            $('#modal-student-status')
-                .find('input[name=_id]').val(id).end()
-                .find('select[name=id_ta]').val(data.id_ta).end()
-                .find('input[name=ipk_terakhir]').val(data.ipk_terakhir).end()
-                .find('.status_mahasiswa').hide().end()
-                .modal('toggle').end();
-        }
-    });
-});
 /****************************************************************************************/
 
 /********************************* DATA KATEGORI PENDANAAN *********************************/
@@ -2900,33 +2844,6 @@ $('#modal-alumnus-idle, #modal-alumnus-suitable, #modal-alumnus-workplace').on('
         dataType: 'json',
         success: function (data) {
             $('input[name=jumlah_lulusan]').val(data).prop('readonly', true);
-        }
-    });
-})
-
-$('#table-alumnusIdle').on('click','.btn-edit',function(){
-
-    var id  = $(this).data('id');
-    var url = base_url+'/ajax/alumnus/idle/'+id;
-
-    $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            $('#modal-alumnus-idle')
-                .find('input[name=id]').val(id).end()
-                .find('input[name=tahun_lulus]').val(data.tahun_lulus).end()
-                .find('select[name=tahun_lulus]').hide().end()
-                .find('input[name=tahun_lulus]').show().end()
-                .find('input#manual').prop('checked',true).end()
-                .find('input[name=jumlah_lulusan]').val(data.jumlah_lulusan).prop('readonly',false).end()
-                .find('input[name=lulusan_terlacak]').val(data.lulusan_terlacak).end()
-                .find('input[name=kriteria_1]').val(data.kriteria_1).end()
-                .find('input[name=kriteria_2]').val(data.kriteria_2).end()
-                .find('input[name=kriteria_3]').val(data.kriteria_3).end()
-                .modal('toggle').end();
-
         }
     });
 })

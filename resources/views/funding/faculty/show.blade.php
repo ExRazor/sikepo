@@ -23,19 +23,19 @@
     <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-balance-scale"></i>
         <div>
-            <h4>Dana {{ $data->faculty->singkatan }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
+            <h4>Dana {{ $data->faculty->nama }} Tahun {{ $data->academicYear->tahun_akademik }}</h4>
             <p class="mg-b-0">Rincian keuangan untuk {{ $data->faculty->nama }} periode tahun {{ $data->academicYear->tahun_akademik }}</p>
         </div>
     </div>
-    <div class="row ml-auto">
-        <div class="col-6 pr-1">
+    <div class="d-flex ml-auto">
+        <div class="mr-2">
             <form method="POST">
                 <input type="hidden" value="{{encrypt($data->kd_dana)}}" name="id">
                 <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('funding.faculty.delete') }}" data-redir="{{ route('funding.faculty') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
-        <div class="col-6">
-            <a href="{{ route('funding.faculty.edit',encrypt($data->kd_dana)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+        <div>
+            <a href="{{ route('funding.faculty.edit',encrypt($data->kd_dana)) }}" class="btn btn-warning btn-block text-white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
 </div>

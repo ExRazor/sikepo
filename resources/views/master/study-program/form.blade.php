@@ -43,10 +43,18 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="card bd-0">
         <div class="card-body bd bd-t-0 rounded-bottom">
             <div class="form-layout form-layout-2">
-                <form action="/master/study-program" method="POST">
+                <form action="{{ isset($data) ? route('master.study-program.update',$data->kd_prodi) : route('master.study-program.store') }}" method="POST">
                     @csrf
                     @if(isset($data))
                         @method('put')
@@ -54,7 +62,7 @@
                         @method('post')
                     @endif
                     <div class="row no-gutters">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label">Fakultas: <span class="tx-danger">*</span></label>
                                 <select class="form-control" data-placeholder="Pilih fakultas" name="id_fakultas">
@@ -65,17 +73,17 @@
                                 </select>
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Jurusan: <span class="tx-danger">*</span></label>
                                 <select class="form-control" data-placeholder="Pilih jenjang" name="kd_jurusan">
-                                    @isset($data)
+                                    @if(!empty($data) || Request::old('kd_jurusan'))
                                         @foreach($department as $d)
-                                        <option value="{{$d->kd_jurusan}}" {{ (isset($data) && ($d->kd_jurusan==$data->kd_jurusan) || Request::old('jenjang')==$d->kd_jurusan) ? 'selected' : ''}}>{{$d->nama}}</option>
+                                        <option value="{{$d->kd_jurusan}}" {{ (isset($data) && ($d->kd_jurusan==$data->kd_jurusan) || Request::old('kd_jurusan')==$d->kd_jurusan) ? 'selected' : ''}}>{{$d->nama}}</option>
                                         @endforeach
                                     @else
                                     <option value="">- PILIH FAKULTAS DULU -</option>
-                                    @endisset
+                                    @endif
                                 </select>
                             </div>
                         </div><!-- col-4 -->
@@ -85,16 +93,33 @@
                                 <input class="form-control" type="text" name="kd_prodi" maxlength="5" value="{{ isset($data) ? $data->kd_prodi : Request::old('kd_prodi')}}" placeholder="Isikan kode prodi" {{ isset($data) ? 'readonly' : ''}}>
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <div class="form-group mg-md-l--1">
+                                <label class="form-control-label">Kode Unik: <span class="tx-danger">*</span></label>
+                                <input class="form-control" type="text" name="kd_unik" value="{{ isset($data) ? $data->kd_unik : Request::old('kd_unik')}}" placeholder="Isikan kode unik prodi" required>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-md-5 mg-t--1">
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Nama Prodi: <span class="tx-danger">*</span></label>
                                 <input class="form-control" type="text" name="nama" value="{{ isset($data) ? $data->nama : Request::old('nama')}}" placeholder="Isikan nama program studi">
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-2">
+                        <div class="col-md-4 mg-t--1">
                             <div class="form-group mg-md-l--1">
                                 <label class="form-control-label">Singkatan:</label>
                                 <input class="form-control" type="text" name="singkatan" value="{{ isset($data) ? $data->singkatan : Request::old('singkatan')}}" placeholder="Isikan singkatan">
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-md-3 mg-t--1">
+                            <div class="form-group mg-md-l--1">
+                                <label class="form-control-label">Jenjang Pendidikan: <span class="tx-danger">*</span></label>
+                                <select class="form-control" data-placeholder="Pilih jenjang" name="jenjang">
+                                    <option value="D3" {{ (isset($data) && ($data->jenjang==='D3') || Request::old('jenjang')==='D3') ? 'selected' : ''}}>Diploma D3</option>
+                                    <option value="S1" {{ (isset($data) && ($data->jenjang==='S1') || Request::old('jenjang')==='S1') ? 'selected' : ''}}>Strata 1 / Sarjana</option>
+                                    <option value="S2" {{ (isset($data) && ($data->jenjang==='S2') || Request::old('jenjang')==='S2') ? 'selected' : ''}}>Strata 2 / Magister</option>
+                                    <option value="S3" {{ (isset($data) && ($data->jenjang==='S3') || Request::old('jenjang')==='S3') ? 'selected' : ''}}>Strata 3 / Doktor</option>
+                                </select>
                             </div>
                         </div><!-- col-4 -->
                         <div class="col-md-3">
@@ -121,36 +146,6 @@
                                 <input class="form-control" type="text" name="thn_menerima" maxlength="4" value="{{ isset($data) ? $data->thn_menerima : Request::old('thn_menerima')}}" placeholder="Tahun pertama menerima mahasiswa">
                             </div>
                         </div><!-- col-4 -->
-                        <div class="col-md-3 mg-t--1">
-                            <div class="form-group">
-                                <label class="form-control-label">Jenjang Pendidikan: <span class="tx-danger">*</span></label>
-                                <select class="form-control" data-placeholder="Pilih jenjang" name="jenjang">
-                                    <option value="D3" {{ (isset($data) && ($data->jenjang==='D3') || Request::old('jenjang')==='D3') ? 'selected' : ''}}>Diploma D3</option>
-                                    <option value="S1" {{ (isset($data) && ($data->jenjang==='S1') || Request::old('jenjang')==='S1') ? 'selected' : ''}}>Strata 1 / Sarjana</option>
-                                    <option value="S2" {{ (isset($data) && ($data->jenjang==='S2') || Request::old('jenjang')==='S2') ? 'selected' : ''}}>Strata 2 / Magister</option>
-                                    <option value="S3" {{ (isset($data) && ($data->jenjang==='S3') || Request::old('jenjang')==='S3') ? 'selected' : ''}}>Strata 3 / Doktor</option>
-                                </select>
-                            </div>
-                        </div><!-- col-4 -->
-                        <div class="col-md-3 mg-md-t--1">
-                            <div class="form-group mg-md-l--1">
-                                <label class="form-control-label">NIP Kepala Program Studi:</label>
-                                <input class="form-control" type="text" name="nip_kaprodi" value="{{ isset($data) ? $data->nip_kaprodi : Request::old('nip_kaprodi')}}" placeholder="Isikan NIP kepala program studi">
-                            </div>
-                        </div><!-- col-4 -->
-                        <div class="col-md-4 mg-md-t--1">
-                            <div class="form-group mg-md-l--1">
-                                <label class="form-control-label">Nama Kepala Program Studi:</label>
-                                <input class="form-control" type="text" name="nm_kaprodi" value="{{ isset($data) ? $data->nm_kaprodi : Request::old('nm_kaprodi')}}" placeholder="Isikan nama kepala program studi">
-                            </div>
-                        </div><!-- col-4 -->
-                        <div class="col-md-2 mg-md-t--1">
-                            <div class="form-group mg-md-l--1">
-                                <label class="form-control-label">Kode Unik Program Studi: <span class="tx-danger">*</span></label>
-                                <input class="form-control" type="text" name="kode_unik" value="{{ isset($data) ? $data->kode_unik : Request::old('kode_unik')}}" placeholder="Isikan kode unik prodi" required>
-                            </div>
-                        </div><!-- col-4 -->
-
                     </div><!-- row -->
                     <div class="form-layout-footer bd pd-20 bd-t-0">
                         <button type="submit" class="btn btn-info btn-submit">Simpan</button>
@@ -163,5 +158,8 @@
 </div>
 @endsection
 
-@section('js')
-@endsection
+@push('custom-js')
+<script>
+
+</script>
+@endpush

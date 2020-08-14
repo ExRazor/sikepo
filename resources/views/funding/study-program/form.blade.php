@@ -33,21 +33,17 @@
 </div>
 
 <div class="br-pagebody">
-    @if($errors->any())
-    <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-        </button>
-        <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-        </ul>
-    </div>
+            </button>
+            {{ session('flash.message') }}
+        </div>
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="funding_studyProgram_form" action="{{route('funding.study-program.store')}}" method="POST" enctype="multipart/form-data">
+            <form id="funding_studyProgram_form" action="{{isset($data) ? route('funding.study-program.update',encrypt($data->kd_dana)) : route('funding.study-program.store')}}" method="POST" enctype="multipart/form-data">
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-10 mx-auto">
@@ -66,7 +62,7 @@
                                             @if(Auth::user()->hasRole('kaprodi'))
                                             <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                                             @endif
-                                            <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" {{isset($data) || Auth::user()->hasRole('kaprodi') ? 'disabled' : 'required'}}>
+                                            <select class="form-control {{ $errors->has('kd_prodi') ? 'is-invalid' : ''}}" name="kd_prodi" required>
                                                 <option value="">- Pilih Prodi -</option>
                                                 @foreach($studyProgram as $sp)
                                                 <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->kd_prodi)) || Request::old('kd_prodi')==$sp->kd_prodi || Auth::user()->kd_prodi==$sp->kd_prodi ? 'selected' : ''}}>{{$sp->nama}}</option>
@@ -79,7 +75,7 @@
                                             @endif
                                         </div>
                                         <div class="col-6">
-                                            <select class="form-control {{ $errors->has('id_ta') ? 'is-invalid' : ''}}" name="id_ta" {{isset($data) ? 'disabled' : 'required'}}>
+                                            <select class="form-control {{ $errors->has('id_ta') ? 'is-invalid' : ''}}" name="id_ta" required>
                                                 <option value="">- Pilih Tahun -</option>
                                                 @foreach($academicYear as $ay)
                                                 <option value="{{$ay->id}}" {{ (isset($data) && ($data->id_ta==$ay->id) || Request::old('id_ta')==$ay->id) ? 'selected' : ''}}>{{$ay->tahun_akademik}}</option>

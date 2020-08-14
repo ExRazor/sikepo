@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TeacherAchievementRequest;
 use App\Models\StudyProgram;
 use App\Models\TeacherAchievement;
 use App\Models\Teacher;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class TeacherAchievementController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -29,26 +34,8 @@ class TeacherAchievementController extends Controller
     public function index()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $teacher = null;
 
-        if(Auth::user()->hasRole('kaprodi')) {
-
-            $achievement    = TeacherAchievement::whereHas(
-                                                    'teacher.latestStatus.studyProgram',function($query) {
-                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                                    }
-                                                )
-                                                ->orderBy('id_ta','desc')->get();
-        } else {
-            $achievement    = TeacherAchievement::whereHas(
-                                                    'teacher.latestStatus.studyProgram',function($query) {
-                                                        $query->where('kd_jurusan',setting('app_department_id'));
-                                                    }
-                                                )
-                                                ->orderBy('id_ta','desc')->get();
-        }
-
-        return view('teacher.achievement.index',compact(['achievement','studyProgram']));
+        return view('teacher.achievement.index',compact(['studyProgram']));
     }
 
     public function edit($id)
@@ -62,19 +49,15 @@ class TeacherAchievementController extends Controller
         return response()->json($data);
     }
 
-    public function store(Request $request)
+    public function store(TeacherAchievementRequest $request)
     {
-        if(request()->ajax()) {
-            $request->validate([
-                'nidn'              => 'required',
-                'id_ta'             => 'required',
-                'prestasi'          => 'required',
-                'tingkat_prestasi'  => 'required',
-                'bukti_nama'        => 'required',
-                'bukti_file'        => 'required|mimes:jpeg,jpg,png,pdf,zip',
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            ]);
-
+        DB::beginTransaction();
+        try {
+            //Start Query
             $acv                    = new TeacherAchievement;
             $acv->nidn              = $request->nidn;
             $acv->id_ta             = $request->id_ta;
@@ -82,6 +65,7 @@ class TeacherAchievementController extends Controller
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
             $acv->bukti_nama        = $request->bukti_nama;
 
+            //Simpan Berkas Bukti
             if($file = $request->file('bukti_file')) {
                 $tgl_skrg = date('Y_m_d_H_i_s');
                 $tujuan_upload = public_path('upload/teacher/achievement');
@@ -90,38 +74,45 @@ class TeacherAchievementController extends Controller
                 $acv->bukti_file = $filename;
             }
 
-            $q = $acv->save();
+            //Simpan Query
+            $acv->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $acv->id,
+                'name'  => $acv->prestasi.' ('.$acv->teacher->nama.')',
+                'url'   => route('teacher.list.show',$acv->nidn).'#achievement'
+            ];
+            $this->log('created','Prestasi Dosen',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
+
     }
 
     public function update(Request $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             // $id  = decode_id($request->_id);
             $id = $request->_id;
 
-            $request->validate([
-                'id_ta'             => 'required',
-                'prestasi'          => 'required',
-                'tingkat_prestasi'  => 'required',
-                'bukti_nama'        => 'required',
-                'bukti_file'        => 'mimes:jpeg,jpg,png,pdf,zip',
-            ]);
-
+            //Mulai Query
             $acv                    = TeacherAchievement::find($id);
             $acv->nidn              = $request->nidn;
             $acv->id_ta             = $request->id_ta;
@@ -151,48 +142,69 @@ class TeacherAchievementController extends Controller
                 $acv->bukti_file = $filename;
             }
 
-            //Simpan
-            $q = $acv->save();
+            //Simpan Query
+            $acv->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $acv->id,
+                'name'  => $acv->prestasi.' ('.$acv->teacher->nama.')',
+                'url'   => route('teacher.list.show',$acv->nidn).'#achievement'
+            ];
+            $this->log('updated','Prestasi Dosen',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
+
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
-            $id     = decode_id($request->_id);
-            $data   = TeacherAchievement::find($id);
-            $q      = $data->delete();
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                $this->delete_file($data->bukti_file);
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->route('teacher.achievement.index');
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id     = decode_id($request->_id);
+
+            //Query
+            $data   = TeacherAchievement::find($id);
+            $data->delete();
+
+            //Hapus berkas
+            $this->delete_file($data->bukti_file);
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->prestasi.' ('.$data->teacher->nama.')',
+                'url'   => route('teacher.list.show',$data->nidn).'#achievement'
+            ];
+            $this->log('deleted','Prestasi Dosen',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

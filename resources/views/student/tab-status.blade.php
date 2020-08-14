@@ -52,3 +52,30 @@
         </table>
     </div>
 </div>
+@push('custom-js')
+<script>
+    $('button.btn-add-studentStatus').on('click', function(){
+        $('#modal-student-status .status_mahasiswa').show();
+    })
+
+    $('#table_student_status').on('click','.btn-edit',function(e){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/ajax/student/status/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-student-status')
+                    .find('input[name=_id]').val(id).end()
+                    .find('select[name=id_ta]').val(data.id_ta).end()
+                    .find('input[name=ipk_terakhir]').val(data.ipk_terakhir).end()
+                    .find('.status_mahasiswa').hide().end()
+                    .modal('toggle');
+            }
+        });
+    });
+</script>
+@endpush

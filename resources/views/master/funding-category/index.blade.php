@@ -110,11 +110,7 @@
                 </div>
                 <div class="card-body bd-color-gray-lighter">
                     <form id="form-fundCat" enctype="multipart/form-data">
-                        <div class="alert alert-danger" style="display:none">
-                            @foreach ($errors->all() as $error)
-                                {{ $error }}
-                            @endforeach
-                        </div>
+                        @include('layouts.alert')
                         <div class="row mg-t-20 select_parent">
                             <label class="col-sm-3 form-control-label">Induk:</label>
                             <div class="col-sm-9 mg-t-10 mg-sm-t-0">

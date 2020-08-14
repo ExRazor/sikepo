@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AlumnusWorkplaceRequest;
 use App\Models\AlumnusWorkplace;
 use App\Models\AcademicYear;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AlumnusWorkplaceController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -66,25 +71,15 @@ class AlumnusWorkplaceController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(AlumnusWorkplaceRequest $request)
     {
-        $kd_prodi = decrypt($request->kd_prodi);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-        if(request()->ajax()) {
-            $request->validate([
-                'tahun_lulus'             => [
-                    'required',
-                    Rule::unique('alumnus_workplaces')->where(function ($query) use($kd_prodi) {
-                        return $query->where('kd_prodi', $kd_prodi);
-                    }),
-                    'numeric'
-                ],
-                'lulusan_bekerja'       => 'required|numeric',
-                'jumlah_lulusan'        => 'required|numeric',
-                'kerja_lokal'           => 'required|numeric',
-                'kerja_nasional'        => 'required|numeric',
-                'kerja_internasional'   => 'required|numeric',
-            ]);
+        DB::beginTransaction();
+        try {
+            $kd_prodi = decrypt($request->kd_prodi);
 
             $data                       = new AlumnusWorkplace;
             $data->kd_prodi             = $kd_prodi;
@@ -94,36 +89,40 @@ class AlumnusWorkplaceController extends Controller
             $data->kerja_lokal          = $request->kerja_lokal;
             $data->kerja_nasional       = $request->kerja_nasional;
             $data->kerja_internasional  = $request->kerja_internasional;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->tahun_lulus.' - '.$data->studyProgram->nama,
+                'url'   => route('alumnus.workplace.show',encrypt($data->kd_prodi))
+            ];
+            $this->log('created','Tempat Kerja Lulusan',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    public function update(Request $request)
+    public function update(AlumnusWorkplaceRequest $request)
     {
-        $id       = decrypt($request->id);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-        if(request()->ajax()) {
-            $request->validate([
-                'jumlah_lulusan'        => 'required|numeric',
-                'lulusan_bekerja'       => 'required|numeric',
-                'kerja_lokal'           => 'required|numeric',
-                'kerja_nasional'        => 'required|numeric',
-                'kerja_internasional'   => 'required|numeric',
-            ]);
+        DB::beginTransaction();
+        try {
+            $id = decrypt($request->id);
 
             $data                       = AlumnusWorkplace::find($id);
             $data->jumlah_lulusan       = $request->jumlah_lulusan;
@@ -131,42 +130,61 @@ class AlumnusWorkplaceController extends Controller
             $data->kerja_lokal          = $request->kerja_lokal;
             $data->kerja_nasional       = $request->kerja_nasional;
             $data->kerja_internasional  = $request->kerja_internasional;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $id,
+                'name'  => $data->tahun_lulus.' - '.$data->studyProgram->nama,
+                'url'   => route('alumnus.workplace.show',encrypt($data->kd_prodi))
+            ];
+            $this->log('updated','Tempat Kerja Lulusan',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = AlumnusWorkplace::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $id    = decrypt($request->id);
+            $data  = AlumnusWorkplace::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $id,
+                'name'  => $data->tahun_lulus.' - '.$data->studyProgram->nama,
+            ];
+            $this->log('deleted','Tempat Kerja Lulusan',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 }

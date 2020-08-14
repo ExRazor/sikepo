@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentPublicationRequest;
 use App\Models\PublicationCategory;
 use App\Models\StudentPublication;
 use App\Models\StudentPublicationMember;
 use App\Models\StudyProgram;
 use App\Models\Student;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class StudentPublicationController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -31,21 +36,7 @@ class StudentPublicationController extends Controller
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
-        if(Auth::user()->hasRole('kaprodi')) {
-            $publikasi    = StudentPublication::whereHas(
-                                                    'student.studyProgram', function($query) {
-                                                        $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                                    }
-                                                )->get();
-        } else {
-            $publikasi    = StudentPublication::whereHas(
-                                                    'student.studyProgram', function($query) {
-                                                        $query->where('kd_jurusan',setting('app_department_id'));
-                                                    }
-                                                )->get();
-        }
-
-        return view('publication.student.index',compact(['publikasi','studyProgram']));
+        return view('publication.student.index',compact(['studyProgram']));
     }
 
     public function create()
@@ -76,127 +67,147 @@ class StudentPublicationController extends Controller
         return view('publication.student.form',compact(['jenis','data','studyProgram','student']));
     }
 
-    public function store(Request $request)
+    public function store(StudentPublicationRequest $request)
     {
-        $request->validate([
-            'jenis_publikasi' => 'required',
-            'nim'             => 'required',
-            'judul'           => 'required',
-            'penerbit'        => 'required',
-            'id_ta'           => 'required',
-            // 'tahun'           => 'required|numeric|digits:4',
-            'jurnal'          => 'nullable',
-            'sesuai_prodi'    => 'nullable',
-            'akreditasi'      => 'nullable',
-            'sitasi'          => 'nullable|numeric',
-            'tautan'          => 'nullable|url',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Query
+            $data                   = new StudentPublication;
+            $data->jenis_publikasi  = $request->jenis_publikasi;
+            $data->nim              = $request->nim;
+            $data->judul            = $request->judul;
+            $data->penerbit         = $request->penerbit;
+            $data->id_ta            = $request->id_ta;
+            $data->sesuai_prodi     = $request->sesuai_prodi;
+            $data->jurnal           = $request->jurnal;
+            $data->akreditasi       = $request->akreditasi;
+            $data->sitasi           = $request->sitasi;
+            $data->tautan           = $request->tautan;
+            $data->save();
 
-        $data                   = new StudentPublication;
-        $data->jenis_publikasi  = $request->jenis_publikasi;
-        $data->nim              = $request->nim;
-        $data->judul            = $request->judul;
-        $data->penerbit         = $request->penerbit;
-        $data->id_ta            = $request->id_ta;
-        $data->sesuai_prodi     = $request->sesuai_prodi;
-        $data->jurnal           = $request->jurnal;
-        $data->akreditasi       = $request->akreditasi;
-        $data->sitasi           = $request->sitasi;
-        $data->tautan           = $request->tautan;
-        $data->save();
-
-        //Tambah Mahasiswa
-        if($request->anggota_nim) {
-            $hitungMhs = count($request->anggota_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
-
-                StudentPublicationMember::updateOrCreate(
-                    [
-                        'id_publikasi'  => $data->id,
-                        'nim'           => $request->anggota_nim[$i],
-                    ],
-                    [
-                        'nama'          => $request->anggota_nama[$i],
-                        'kd_prodi'      => $request->anggota_prodi[$i],
-                    ]
-                );
+            //Tambah Mahasiswa
+            if($request->anggota_nim) {
+                $hitungMhs = count($request->anggota_nim);
+                for($i=0;$i<$hitungMhs;$i++) {
+                    StudentPublicationMember::updateOrCreate(
+                        [
+                            'id_publikasi'  => $data->id,
+                            'nim'           => $request->anggota_nim[$i],
+                        ],
+                        [
+                            'nama'          => $request->anggota_nama[$i],
+                            'kd_prodi'      => $request->anggota_prodi[$i],
+                        ]
+                    );
+                }
             }
-        }
 
-        return redirect()->route('publication.student.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul.' ('.$data->student->nama.')',
+                'url'   => route('publication.student.show',encode_id($data->id)),
+            ];
+            $this->log('created','Publikasi Mahasiswa',$property);
+
+            DB::commit();
+            return redirect()->route('publication.student.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
-    public function update(Request $request)
+    public function update(StudentPublicationRequest $request)
     {
-        $id = decrypt($request->id);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
 
-        $request->validate([
-            'jenis_publikasi' => 'required',
-            'nim'             => 'required',
-            'judul'           => 'required',
-            'penerbit'        => 'required',
-            'id_ta'           => 'required',
-            // 'tahun'           => 'required|numeric|digits:4',
-            'jurnal'          => 'nullable',
-            'sesuai_prodi'    => 'nullable',
-            'akreditasi'      => 'nullable',
-            'sitasi'          => 'nullable|numeric',
-            'tautan'          => 'nullable|url',
-        ]);
+            //Query
+            $data                   = StudentPublication::find($id);
+            $data->jenis_publikasi  = $request->jenis_publikasi;
+            $data->nim              = $request->nim;
+            $data->judul            = $request->judul;
+            $data->penerbit         = $request->penerbit;
+            $data->id_ta            = $request->id_ta;
+            $data->sesuai_prodi     = $request->sesuai_prodi;
+            $data->jurnal           = $request->jurnal;
+            $data->akreditasi       = $request->akreditasi;
+            $data->sitasi           = $request->sitasi;
+            $data->tautan           = $request->tautan;
+            $data->save();
 
-        $data                   = StudentPublication::find($id);
-        $data->jenis_publikasi  = $request->jenis_publikasi;
-        $data->nim              = $request->nim;
-        $data->judul            = $request->judul;
-        $data->penerbit         = $request->penerbit;
-        $data->id_ta            = $request->id_ta;
-        $data->sesuai_prodi     = $request->sesuai_prodi;
-        $data->jurnal           = $request->jurnal;
-        $data->akreditasi       = $request->akreditasi;
-        $data->sitasi           = $request->sitasi;
-        $data->tautan           = $request->tautan;
-        $data->save();
+            //Update Mahasiswa
+            if($request->anggota_nim) {
+                $hitungMhs = count($request->anggota_nim);
+                for($i=0;$i<$hitungMhs;$i++) {
 
-        //Update Mahasiswa
-        if($request->anggota_nim) {
-            $hitungMhs = count($request->anggota_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
-
-                StudentPublicationMember::updateOrCreate(
-                    [
-                        'id_publikasi'  => $id,
-                        'nim'           => $request->anggota_nim[$i],
-                    ],
-                    [
-                        'nama'          => $request->anggota_nama[$i],
-                        'kd_prodi'      => $request->anggota_prodi[$i],
-                    ]
-                );
+                    StudentPublicationMember::updateOrCreate(
+                        [
+                            'id_publikasi'  => $id,
+                            'nim'           => $request->anggota_nim[$i],
+                        ],
+                        [
+                            'nama'          => $request->anggota_nama[$i],
+                            'kd_prodi'      => $request->anggota_prodi[$i],
+                        ]
+                    );
+                }
             }
-        }
 
-        return redirect()->route('publication.student.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul.' ('.$data->student->nama.')',
+                'url'   => route('publication.student.show',encode_id($data->id)),
+            ];
+            $this->log('updated','Publikasi Mahasiswa',$property);
+
+            DB::commit();
+            return redirect()->route('publication.student.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id = decode_id($request->id);
-            $q  = StudentPublication::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!$request->ajax()) {
+            abort(404);
         }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decode_id($request->id);
+
+            //Query
+            $data  = StudentPublication::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul.' ('.$data->student->nama.')',
+            ];
+            $this->log('deleted','Publikasi Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
     }
 
     public function destroy_member(Request $request)

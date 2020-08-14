@@ -26,15 +26,15 @@
         <p class="mg-b-0">Rincian keuangan untuk program studi {{ $data->studyProgram->nama }} periode tahun {{ $data->academicYear->tahun_akademik }}</p>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
-    <div class="row ml-auto" style="width:300px">
-        <div class="col-6 pr-1">
+    <div class="d-flex ml-auto">
+        <div class="mr-2">
             <form method="POST">
                 <input type="hidden" value="{{encrypt($data->kd_dana)}}" name="id">
                 <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('funding.study-program.delete') }}" data-redir="{{ route('funding.study-program') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
-        <div class="col-6">
-            <a href="{{ route('funding.study-program.edit',encrypt($data->kd_dana)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+        <div>
+            <a href="{{ route('funding.study-program.edit',encrypt($data->kd_dana)) }}" class="btn btn-warning btn-block text-white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
     @endif

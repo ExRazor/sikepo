@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EwmpRequest;
 use App\Models\Ewmp;
 use App\Models\AcademicYear;
 use App\Models\CurriculumSchedule;
 use App\Models\Research;
 use App\Models\CommunityService;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class EwmpController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use LogActivity;
+
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -35,41 +34,35 @@ class EwmpController extends Controller
 
     public function edit($id)
     {
-        if(request()->ajax()) {
-            $id = decrypt($id);
-            $data = Ewmp::where('id',$id)->with('teacher.latestStatus.studyProgram','academicYear')->first();
-
-            return response()->json($data);
-        } else {
+        if(!request()->ajax()) {
             abort(404);
         }
+
+        $id = decrypt($id);
+        $data = Ewmp::where('id',$id)->with('teacher.latestStatus.studyProgram','academicYear')->first();
+
+        return response()->json($data);
     }
 
-    public function store(Request $request)
+    public function store(EwmpRequest $request)
     {
-        $nidn = decrypt($request->nidn);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-        if(request()->ajax()) {
-            $request->validate([
-                'id_ta'             => [
-                    'required',
-                    Rule::unique('ewmps')->where(function ($query) use($nidn) {
-                        return $query->where('nidn', $nidn);
-                    }),
-                ],
-                'ps_intra'              => 'nullable|numeric',
-                'ps_lain'               => 'nullable|numeric',
-                'ps_luar'               => 'required|numeric',
-                'penelitian'            => 'nullable|numeric',
-                'pkm'                   => 'nullable|numeric',
-                'tugas_tambahan'        => 'required|numeric',
-            ]);
+        DB::beginTransaction();
+        try {
+            //Decrypt NIDN
+            $nidn = decrypt($request->nidn);
 
+            //Hitung jumlah SKS dari Penelitian, Pengabdian
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
+            //Total dan rata jumlah SKS
             $total_sks = $sks['schedule_ps']+$request->ps_lain+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
             $rata_sks  = $total_sks/6;
 
+            //Query
             $ewmp                   = new Ewmp;
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
@@ -81,51 +74,49 @@ class EwmpController extends Controller
             $ewmp->tugas_tambahan   = $request->tugas_tambahan;
             $ewmp->total_sks        = $total_sks;
             $ewmp->rata_sks         = $rata_sks;
+            $ewmp->save();
 
-            $q = $ewmp->save();
+            //Activity Log
+            $property = [
+                'id'    => $ewmp->id,
+                'name'  => $ewmp->teacher->nama.' ('.$ewmp->academicYear->tahun_akademik.' - '.$ewmp->academicYear->semester.')',
+            ];
+            $this->log('created','EWMP Dosen',$property);
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    public function update(Request $request)
+    public function update(EwmpRequest $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID & NIDN
             $id   = decrypt($request->_id);
             $nidn = decrypt($request->nidn);
 
-            $request->validate([
-                'id_ta'             => [
-                    'required',
-                    Rule::unique('ewmps')->where(function ($query) use($nidn) {
-                        return $query->where('nidn', $nidn);
-                    })->ignore($id,'id'),
-                ],
-                'ps_intra'              => 'nullable|numeric',
-                'ps_lain'               => 'nullable|numeric',
-                'ps_luar'               => 'required|numeric',
-                'penelitian'            => 'nullable|numeric',
-                'pkm'                   => 'nullable|numeric',
-                'tugas_tambahan'        => 'required|numeric',
-            ]);
-
+            //Hitung jumlah SKS dari Penelitian, Pengabdian
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
 
+            //Total dan rata jumlah SKS
             $total_sks = $sks['schedule_ps']+$request->ps_lain+$request->ps_luar+$sks['penelitian']+$sks['pengabdian']+$request->tugas_tambahan;
             $rata_sks  = $total_sks/6;
 
+            //Query
             $ewmp                   = Ewmp::find($id);
             $ewmp->nidn             = $nidn;
             $ewmp->id_ta            = $request->id_ta;
@@ -137,46 +128,60 @@ class EwmpController extends Controller
             $ewmp->tugas_tambahan   = $request->tugas_tambahan;
             $ewmp->total_sks        = $total_sks;
             $ewmp->rata_sks         = $rata_sks;
+            $ewmp->save();
 
-            $q = $ewmp->save();
+            //Activity Log
+            $property = [
+                'id'    => $ewmp->id,
+                'name'  => $ewmp->teacher->nama.' ('.$ewmp->academicYear->tahun_akademik.' - '.$ewmp->academicYear->semester.')',
+            ];
+            $this->log('updated','EWMP Dosen',$property);
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
-            $id = decrypt($request->_id);
-            $q  = Ewmp::destroy($id);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->url('/');
+        DB::beginTransaction();
+        try {
+            $id = decrypt($request->_id);
+            $data  = Ewmp::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' ('.$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester.')',
+            ];
+            $this->log('deleted','EWMP Dosen',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

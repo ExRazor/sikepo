@@ -6,7 +6,10 @@ use App\Models\BaseModel;
 
 class Department extends BaseModel
 {
+
+    public $incrementing  = false;
     protected $primaryKey = 'kd_jurusan';
+    protected $keyType = 'char';
     protected $fillable = [
                             'kd_jurusan',
                             'id_fakultas',

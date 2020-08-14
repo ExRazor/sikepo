@@ -45,6 +45,14 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="row">
         <div class="col-md-9 order-2 order-md-1">
             <div class="widget-2">

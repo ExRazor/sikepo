@@ -6,7 +6,7 @@
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
             <a class="dropdown-item" href="{{ route('teacher.list.edit',$d->nidn) }}">Sunting</a>
             <form method="POST">
-                <input type="hidden" value="{{encode_id($d->nidn)}}" name="id">
+                <input type="hidden" value="{{encrypt($d->nidn)}}" name="id">
                 <button class="dropdown-item btn-delete" data-dest="{{ route('teacher.list.destroy',$d->nidn) }}">Hapus</button>
             </form>
         </div>

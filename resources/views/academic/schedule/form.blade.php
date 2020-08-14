@@ -45,6 +45,14 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="widget-2">
         <div class="card mb-3">
             <div class="card-header bd rounded-top bd-color-gray-lighter">
@@ -65,7 +73,7 @@
                             <input type="hidden" name="url_previous" value="{{ url()->previous() }}">
                             @if(isset($data))
                                 @method('put')
-                                <input type="hidden" name="id" value="{{encode_id($data->id)}}">
+                                <input type="hidden" name="id" value="{{encrypt($data->id)}}">
                             @else
                                 @method('post')
                             @endif

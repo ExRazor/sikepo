@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CurriculumExport;
+use App\Http\Requests\CurriculumRequest;
 use App\Models\Curriculum;
 use App\Models\StudyProgram;
 use App\Imports\CurriculumImport;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class CurriculumController extends Controller
 {
+    use LogActivity;
 
     public function __construct()
     {
@@ -32,25 +36,9 @@ class CurriculumController extends Controller
     public function index()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-
-        if(Auth::user()->hasRole('kaprodi')) {
-            $curriculum     = Curriculum::whereHas(
-                                            'studyProgram', function($query) {
-                                                $query->where('kd_prodi',Auth::user()->kd_prodi);
-                                            }
-                                        )
-                                        ->get();
-        } else {
-            $curriculum     = Curriculum::whereHas(
-                                            'studyProgram', function($query) {
-                                                $query->where('kd_jurusan',setting('app_department_id'));
-                                            }
-                                        )
-                                        ->get();
-        }
         $thn_kurikulum  = Curriculum::groupBy('versi')->get('versi');
 
-        return view('academic.curriculum.index',compact(['studyProgram','curriculum','thn_kurikulum']));
+        return view('academic.curriculum.index',compact(['studyProgram','thn_kurikulum']));
     }
 
     public function create()
@@ -62,55 +50,134 @@ class CurriculumController extends Controller
 
     public function show($id)
     {
-        $data = Curriculum::where('id',$id)->first();
+        $data = Curriculum::find($id);
 
         return view('academic.curriculum.show',compact(['data']));
     }
 
     public function edit($id)
     {
-        // $id             = decode_id($id);
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         $data           = Curriculum::find($id);
 
         return view('academic.curriculum.form',compact(['studyProgram','data']));
     }
 
-    public function store(Request $request)
+    public function store(CurriculumRequest $request)
     {
-        $request->validate([
-            'kd_matkul'         => 'required|unique:curricula,kd_matkul',
-            'kd_prodi'          => 'required',
-            'versi'             => 'required|numeric|digits:4',
-            'nama'              => 'required',
-            'semester'          => 'required|numeric',
-            'jenis'             => 'required',
-            'sks_teori'         => 'nullable|numeric',
-            'sks_seminar'       => 'nullable|numeric',
-            'sks_praktikum'     => 'nullable|numeric',
-            'capaian'           => 'required',
-            'kompetensi_prodi'  => 'nullable',
-            'dokumen_nama'      => 'nullable',
-            'unit_penyelenggara'=> 'required',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Query
+            $curriculum                  = new Curriculum;
+            $curriculum->kd_matkul       = $request->kd_matkul;
+            $curriculum->kd_prodi        = $request->kd_prodi;
+            $curriculum->versi           = $request->versi;
+            $curriculum->nama            = $request->nama;
+            $curriculum->semester        = $request->semester;
+            $curriculum->jenis           = $request->jenis;
+            $curriculum->sks_teori       = intval($request->sks_teori);
+            $curriculum->sks_seminar     = intval($request->sks_seminar);
+            $curriculum->sks_praktikum   = intval($request->sks_praktikum);
+            $curriculum->capaian         = $request->capaian;
+            $curriculum->kompetensi_prodi= $request->kompetensi_prodi;
+            $curriculum->dokumen_nama    = $request->dokumen_nama;
+            $curriculum->unit_penyelenggara = $request->unit_penyelenggara;
+            $curriculum->save();
 
-        $query                  = new Curriculum;
-        $query->kd_matkul       = $request->kd_matkul;
-        $query->kd_prodi        = $request->kd_prodi;
-        $query->versi           = $request->versi;
-        $query->nama            = $request->nama;
-        $query->semester        = $request->semester;
-        $query->jenis           = $request->jenis;
-        $query->sks_teori       = intval($request->sks_teori);
-        $query->sks_seminar     = intval($request->sks_seminar);
-        $query->sks_praktikum   = intval($request->sks_praktikum);
-        $query->capaian         = $request->capaian;
-        $query->kompetensi_prodi= $request->kompetensi_prodi;
-        $query->dokumen_nama    = $request->dokumen_nama;
-        $query->unit_penyelenggara = $request->unit_penyelenggara;
-        $query->save();
+            //Activity Log
+            $property = [
+                'id'    => $curriculum->id,
+                'name'  => $curriculum->nama,
+                'url'   => route('academic.curriculum.show',$curriculum->id)
+            ];
+            $this->log('created','Kurikulum',$property);
 
-        return redirect()->route('academic.curriculum.index',$query->id)->with('flash.message', 'Data berhasil disimpan!')->with('flash.class', 'success');
+            DB::commit();
+            return redirect()->route('academic.curriculum.index',$curriculum->id)->with('flash.message', 'Data berhasil disimpan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+
+    }
+
+    public function update(CurriculumRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
+
+            //Query
+            $curriculum                  = Curriculum::find($id);
+            $curriculum->kd_matkul       = $request->kd_matkul;
+            $curriculum->kd_prodi        = $request->kd_prodi;
+            $curriculum->versi           = $request->versi;
+            $curriculum->nama            = $request->nama;
+            $curriculum->semester        = $request->semester;
+            $curriculum->jenis           = $request->jenis;
+            $curriculum->sks_teori       = intval($request->sks_teori);
+            $curriculum->sks_seminar     = intval($request->sks_seminar);
+            $curriculum->sks_praktikum   = intval($request->sks_praktikum);
+            $curriculum->capaian         = $request->capaian;
+            $curriculum->kompetensi_prodi= $request->kompetensi_prodi;
+            $curriculum->dokumen_nama    = $request->dokumen_nama;
+            $curriculum->unit_penyelenggara = $request->unit_penyelenggara;
+            $curriculum->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $curriculum->id,
+                'name'  => $curriculum->nama,
+                'url'   => route('academic.curriculum.show',$curriculum->id)
+            ];
+            $this->log('updated','Kurikulum',$property);
+
+            DB::commit();
+            return redirect()->route('academic.curriculum.show',$curriculum->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger');
+        }
+
+    }
+
+    public function destroy(Request $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
+
+            //Query
+            $data = Curriculum::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+            ];
+            $this->log('deleted','Kurikulum',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
     }
 
     public function import(Request $request)
@@ -162,66 +229,6 @@ class CurriculumController extends Controller
 
 		// Ekspor data
         return Excel::download(new CurriculumExport($request),$nama_file);
-    }
-
-    public function update(Request $request)
-    {
-        $id = decrypt($request->id);
-
-        $request->validate([
-            'kd_matkul'         => 'required|unique:curricula,kd_matkul,'.$request->kd_matkul.',kd_matkul',
-            'kd_prodi'          => 'required',
-            'versi'             => 'required|numeric|digits:4',
-            'nama'              => 'required',
-            'semester'          => 'required|numeric',
-            'jenis'             => 'required',
-            'sks_teori'         => 'nullable|numeric',
-            'sks_seminar'       => 'nullable|numeric',
-            'sks_praktikum'     => 'nullable|numeric',
-            'capaian'           => 'required',
-            'kompetensi_prodi'  => 'nullable',
-            'dokumen_nama'      => 'nullable',
-            'unit_penyelenggara'=> 'required',
-        ]);
-
-        $query                  = Curriculum::find($id);
-        $query->kd_matkul       = $request->kd_matkul;
-        $query->kd_prodi        = $request->kd_prodi;
-        $query->versi           = $request->versi;
-        $query->nama            = $request->nama;
-        $query->semester        = $request->semester;
-        $query->jenis           = $request->jenis;
-        $query->sks_teori       = intval($request->sks_teori);
-        $query->sks_seminar     = intval($request->sks_seminar);
-        $query->sks_praktikum   = intval($request->sks_praktikum);
-        $query->capaian         = $request->capaian;
-        $query->kompetensi_prodi= $request->kompetensi_prodi;
-        $query->dokumen_nama    = $request->dokumen_nama;
-        $query->unit_penyelenggara = $request->unit_penyelenggara;
-        $query->save();
-
-        return redirect()->route('academic.curriculum.show',$query->id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
-    }
-
-    public function destroy(Request $request)
-    {
-        if($request->ajax()) {
-            $id = decode_id($request->id);
-            $q  = Curriculum::destroy($id);
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        }
     }
 
     public function datatable(Request $request)

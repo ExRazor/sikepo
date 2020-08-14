@@ -49,15 +49,6 @@
                     <span class="tx-bold tx-uppercase">Tahun Terima Mahasiswa :</span>
                     <span name="thn_menerima_prodi"></span>
                 </p>
-                <p class="d-flex justify-content-between mg-b-5">
-                    <span class="tx-bold tx-uppercase">NIP Kaprodi :</span>
-                    <span name="nip_kaprodi"></span>
-                </p>
-                <p class="d-flex justify-content-between mg-b-5">
-                    <span class="tx-bold tx-uppercase">Nama Kaprodi :</span>
-                    <span name="nm_kaprodi"></span>
-                </p>
-
             </div>
         </div><!-- modal-body -->
         <div class="modal-footer">

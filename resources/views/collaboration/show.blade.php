@@ -26,7 +26,7 @@
     <div class="row ml-auto">
         <div class="col-6 pr-1">
             <form method="POST">
-                <input type="hidden" value="{{encode_id($data->id)}}" name="id">
+                <input type="hidden" value="{{encrypt($data->id)}}" name="id">
                 <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('collaboration.destroy',$data->id) }}" data-redir="{{ route('collaboration.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>

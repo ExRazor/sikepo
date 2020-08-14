@@ -74,9 +74,9 @@
                 <table id="table_research" class="table display responsive" data-order='[[ 0, "desc" ]]' data-page-length="25" url-target="{{route('ajax.research.datatable')}}">
                     <thead>
                         <tr>
-                            <th class="text-center all">Tahun Penelitian</th>
-                            <th class="text-center all">Judul Penelitian</th>
-                            <th class="text-center">Ketua Peneliti</th>
+                            <th class="text-center" width="100">Tahun Penelitian</th>
+                            <th class="text-center">Judul Penelitian</th>
+                            <th class="text-center" width="250">Ketua Peneliti</th>
                             <th class="text-center" width="50">Aksi</th>
                         </tr>
                     </thead>

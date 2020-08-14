@@ -9,11 +9,7 @@
                     </button>
                 </div>
                 <div class="modal-body pd-20">
-                    <div class="alert alert-danger" style="display:none">
-                        @foreach ($errors->all() as $error)
-                            {{ $error }}
-                        @endforeach
-                    </div>
+                    @include('layouts.alert')
                     <div class="form-group row mg-t-20">
                         <div class="offset-sm-2 col-sm-8">
                             <div class="form-group mg-b-10-force">

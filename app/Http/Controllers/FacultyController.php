@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FacultyRequest;
 use App\Models\Faculty;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FacultyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use LogActivity;
+
     public function index()
     {
         $faculty = Faculty::all();
@@ -19,135 +19,128 @@ class FacultyController extends Controller
         return view('master.faculty.index',compact(['faculty']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function edit(Request $request)
     {
-        if(request()->ajax()) {
-            $request->validate([
-                'nama'        => 'required',
-                'singkatan'   => 'required',
-            ]);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
+        $id = decrypt($request->id);
+        $data = Faculty::find($id);
+
+        return response()->json($data);
+    }
+
+    public function store(FacultyRequest $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Query
             $data             = new Faculty;
             $data->nama       = $request->nama;
             $data->singkatan  = $request->singkatan;
-            $data->nip_dekan  = $request->nip_dekan;
-            $data->nm_dekan   = $request->nm_dekan;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+                'url'   => route('master.faculty')
+            ];
+            $this->log('created','Fakultas',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Request $request)
-    {
-        if(request()->ajax()) {
-            $id = decrypt($request->id);
-            $data = Faculty::find($id);
-
-            return response()->json($data);
-        } else {
-            abort(404);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            //Decrypt ID
             $id  = decrypt($request->_id);
 
-            $request->validate([
-                'nama'        => 'required',
-                'singkatan'   => 'required',
-            ]);
-
+            //Query
             $data             = Faculty::find($id);
             $data->nama       = $request->nama;
             $data->singkatan  = $request->singkatan;
-            $data->nip_dekan  = $request->nip_dekan;
-            $data->nm_dekan   = $request->nm_dekan;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+                'url'   => route('master.faculty')
+            ];
+            $this->log('updated','Fakultas',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id = decrypt($request->_id);
-            $q  = Faculty::destroy($id);
+        if(!$request->ajax()) {
+            abort(404);
+        }
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->route('master.faculty');
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->_id);
+
+            //Query
+            $data = Faculty::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+            ];
+            $this->log('deleted','Fakultas',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 }

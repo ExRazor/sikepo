@@ -75,53 +75,12 @@
                 <table id="table_communityService" class="table display responsive" data-order='[[ 0, "desc" ]]' data-page-length="25" url-target="{{route('ajax.community-service.datatable')}}">
                     <thead>
                         <tr>
+                            <th class="text-center" width="100">Tahun Pengabdian</th>
                             <th class="text-center">Judul Pengabdian</th>
-                            <th class="text-center">Tahun Pengabdian</th>
-                            <th class="text-center">Ketua Pelaksana</th>
-                            @if(!Auth::user()->hasRole('kajur'))
-                            <th class="text-center">Aksi</th>
-                            @endif
+                            <th class="text-center" width="250">Ketua Pelaksana</th>
+                            <th class="text-center" width="50">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {{-- @foreach ($pengabdian as $p)
-                        <tr>
-                            <td>
-                                <a href="{{route('community-service.show',encode_id($p->id))}}">
-                                    {{ $p->judul_pengabdian }}
-                                </a>
-                            </td>
-                            <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
-                            <td>
-                                <a href="{{route('teacher.show',encode_id($p->serviceKetua->teacher->nip))}}#community-service">
-                                    {{ $p->serviceKetua->teacher->nama }}<br>
-                                    <small>NIDN.{{ $p->serviceKetua->teacher->nidn }} / {{ $p->serviceKetua->teacher->studyProgram->singkatan }}</small>
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                @isset($p->sesuai_prodi)
-                                    <i class="fa fa-check"></i>
-                                @endisset
-                            </td>
-                            @if(!Auth::user()->hasRole('kajur'))
-                            <td class="text-center" width="50">
-                                <div class="btn-group" role="group">
-                                    <button id="btn-action" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div><span class="fa fa-caret-down"></span></div>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('community-service.edit',encode_id($p->id)) }}">Sunting</a>
-                                        <form method="POST">
-                                            <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('community-service.delete') }}">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                            @endif
-                        </tr>
-                        @endforeach --}}
-                    </tbody>
                 </table>
             </div><!-- card-body -->
         </div>

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FundingStudyProgramRequest;
 use App\Models\FundingStudyProgram;
 use App\Models\FundingCategory;
 use App\Models\StudyProgram;
 use App\Models\AcademicYear;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +15,7 @@ use Illuminate\Validation\Rule;
 
 class FundingStudyProgramController extends Controller
 {
+    use LogActivity;
 
     public function __construct()
     {
@@ -53,8 +56,6 @@ class FundingStudyProgramController extends Controller
                                                 ->select('kd_dana','kd_prodi','id_ta')
                                                 ->get();
         }
-
-
 
         $funding      = FundingStudyProgram::groupBy('kd_dana')->get('kd_dana');
 
@@ -134,94 +135,113 @@ class FundingStudyProgramController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(FundingStudyProgramRequest $request)
     {
-        // dd($request->except(['_token','_method']));
+        DB::beginTransaction();
+        try {
+            //Init Kode Dana
+            $kd_dana = 'pd'.$request->kd_prodi.'_thn'.$request->id_ta;
 
-        $request->validate([
-            'kd_prodi'          => [
-                'required',
-                Rule::unique('funding_study_programs')->where(function ($query) use($request) {
-                    return $query->where('id_ta', $request->id_ta);
-                }),
-            ],
-            'id_ta'             => [
-                'required',
-                Rule::unique('funding_study_programs')->where(function ($query) use($request) {
-                    return $query->where('kd_prodi', $request->kd_prodi);
-                }),
-            ],
-        ]);
+            //Query
+            foreach($request->id_kategori as $index => $value) {
+                $nominal = ($value) ? $value : '0';
 
-        $kd_dana = 'pd'.$request->kd_prodi.'_thn'.$request->id_ta;
+                $query                 = new FundingStudyProgram;
+                $query->kd_dana        = $kd_dana;
+                $query->kd_prodi       = $request->kd_prodi;
+                $query->id_ta          = $request->id_ta;
+                $query->id_kategori    = $index;
+                $query->nominal        = str_replace(".", "", $nominal);
+                $query->save();
+            }
 
-        foreach($request->id_kategori as $index => $value) {
-            $nominal = ($value) ? $value : '0';
+            //Activity Log
+            $property = [
+                'id'    => $query->kd_dana,
+                'name'  => $query->studyProgram->nama.' - '.$query->academicYear->tahun_akademik,
+                'url'   => route('funding.study-program.show',encrypt($query->kd_dana))
+            ];
+            $this->log('created','Keuangan Program Studi',$property);
 
-            $query                 = new FundingStudyProgram;
-            $query->kd_dana        = $kd_dana;
-            $query->kd_prodi       = $request->kd_prodi;
-            $query->id_ta          = $request->id_ta;
-            $query->id_kategori    = $index;
-            $query->nominal        = str_replace(".", "", $nominal);
-            $query->save();
+            DB::commit();
+            return redirect()->route('funding.study-program')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        return redirect()->route('funding.study-program')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
 
-    public function update(Request $request)
+    public function update(FundingStudyProgramRequest $request)
     {
-        $kd_dana = decrypt($request->_id);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $kd_dana = decrypt($request->_id);
 
-        $request->validate([
-            'kd_prodi'          => [
-                'required',
-                Rule::unique('funding_study_programs')->where(function ($query) use($request) {
-                    return $query->where('id_ta', $request->id_ta);
-                })->ignore($kd_dana,'kd_dana'),
-            ],
-            'id_ta'             => [
-                'required',
-                Rule::unique('funding_study_programs')->where(function ($query) use($request) {
-                    return $query->where('kd_prodi', $request->kd_prodi);
-                })->ignore($kd_dana,'kd_dana'),
-            ],
-        ]);
+            //Query
+            foreach($request->id_kategori as $index => $value) {
+                $nominal = ($value) ? $value : '0';
 
-        foreach($request->id_kategori as $index => $value) {
-            $nominal = ($value) ? $value : '0';
+                $query                 = FundingStudyProgram::where('kd_dana',$kd_dana)->where('id_kategori',$index)->first();
+                $query->kd_prodi       = $request->kd_prodi;
+                $query->id_ta          = $request->id_ta;
+                $query->nominal        = str_replace(".", "", $nominal);
+                $query->save();
+            }
 
-            $query                 = FundingStudyProgram::where('kd_dana',$kd_dana)->where('id_kategori',$index)->first();
-            $query->kd_prodi       = $request->kd_prodi;
-            $query->id_ta          = $request->id_ta;
-            $query->nominal        = str_replace(".", "", $nominal);
-            $query->save();
+            //Activity Log
+            $property = [
+                'id'    => $query->kd_dana,
+                'name'  => $query->studyProgram->nama.' - '.$query->academicYear->tahun_akademik,
+                'url'   => route('funding.study-program.show',encrypt($query->kd_dana))
+            ];
+            $this->log('updated','Keuangan Program Studi',$property);
+
+            DB::commit();
+            return redirect()->route('funding.study-program.show',$request->_id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        return redirect()->route('funding.study-program.show',$request->_id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = decrypt($request->id);
-            $q  = FundingStudyProgram::where('kd_dana',$id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+
+            //Query
+            $data = FundingStudyProgram::where('kd_dana',$id)->first();
+            FundingStudyProgram::where('kd_dana',$id)->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_dana,
+                'name'  => $data->faculty->nama.' - '.$data->academicYear->tahun_akademik,
+            ];
+            $this->log('deleted','Keuangan Fakultas',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 }

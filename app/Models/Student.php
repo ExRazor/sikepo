@@ -8,7 +8,7 @@ class Student extends BaseModel
 {
     use \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 
-    protected $increment = false;
+    public $incrementing = false;
     protected $primaryKey = 'nim';
     protected $keyType = 'char';
     protected $fillable = [

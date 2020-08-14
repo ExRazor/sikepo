@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CurriculumIntegrationRequest;
 use App\Models\CurriculumIntegration;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class CurriculumIntegrationController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -43,72 +48,103 @@ class CurriculumIntegrationController extends Controller
         return view('academic.integration.form',compact(['data']));
     }
 
-    public function store(Request $request)
+    public function store(CurriculumIntegrationRequest $request)
     {
-        $request->validate([
-            'id_ta'             => 'required',
-            'kegiatan'          => 'required',
-            'nidn'              => 'required',
-            'kd_matkul'         => 'required',
-            'bentuk_integrasi'  => 'required',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Query
+            $data                   = new CurriculumIntegration;
+            $data->id_ta            = $request->id_ta;
+            $data->id_penelitian    = $request->has('id_penelitian') ? $request->id_penelitian : null;
+            $data->id_pengabdian    = $request->has('id_pengabdian') ? $request->id_pengabdian : null;
+            $data->kegiatan         = $request->kegiatan;
+            $data->nidn             = $request->nidn;
+            $data->kd_matkul        = $request->kd_matkul;
+            $data->bentuk_integrasi = $request->bentuk_integrasi;
+            $data->save();
 
-        $data                   = new CurriculumIntegration;
-        $data->id_ta            = $request->id_ta;
-        $data->id_penelitian    = $request->has('id_penelitian') ? $request->id_penelitian : null;
-        $data->id_pengabdian    = $request->has('id_pengabdian') ? $request->id_pengabdian : null;
-        $data->kegiatan         = $request->kegiatan;
-        $data->nidn             = $request->nidn;
-        $data->kd_matkul        = $request->kd_matkul;
-        $data->bentuk_integrasi = $request->bentuk_integrasi;
-        $data->save();
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nidn.' - '.$data->kegiatan,
+                'url'   => route('academic.integration.index')
+            ];
+            $this->log('created','Integrasi Kurikulum',$property);
 
-        return redirect()->route('academic.integration.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            DB::commit();
+            return redirect()->route('academic.integration.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
-    public function update(Request $request)
+    public function update(CurriculumIntegrationRequest $request)
     {
-        $id = decrypt($request->id);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
 
-        $request->validate([
-            'id_ta'             => 'required',
-            'kegiatan'          => 'required',
-            'nidn'              => 'required',
-            'kd_matkul'         => 'required',
-            'bentuk_integrasi'  => 'required',
-        ]);
+            //Query
+            $data                   = CurriculumIntegration::find($id);
+            $data->id_ta            = $request->id_ta;
+            $data->id_penelitian    = $request->has('id_penelitian') ? $request->id_penelitian : null;
+            $data->id_pengabdian    = $request->has('id_pengabdian') ? $request->id_pengabdian : null;
+            $data->kegiatan         = $request->kegiatan;
+            $data->nidn             = $request->nidn;
+            $data->kd_matkul        = $request->kd_matkul;
+            $data->bentuk_integrasi = $request->bentuk_integrasi;
+            $data->save();
 
-        $data                   = CurriculumIntegration::find($id);
-        $data->id_ta            = $request->id_ta;
-        $data->id_penelitian    = $request->has('id_penelitian') ? $request->id_penelitian : null;
-        $data->id_pengabdian    = $request->has('id_pengabdian') ? $request->id_pengabdian : null;
-        $data->kegiatan         = $request->kegiatan;
-        $data->nidn             = $request->nidn;
-        $data->kd_matkul        = $request->kd_matkul;
-        $data->bentuk_integrasi = $request->bentuk_integrasi;
-        $data->save();
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nidn.' - '.$data->kegiatan,
+                'url'   => route('academic.integration.index')
+            ];
+            $this->log('updated','Integrasi Kurikulum',$property);
 
-        return redirect()->route('academic.integration.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            DB::commit();
+            return redirect()->route('academic.integration.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+
+
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
             $id = decrypt($request->id);
-            $q  = CurriculumIntegration::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+            $data  = CurriculumIntegration::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nidn.' - '.$data->kegiatan,
+            ];
+            $this->log('deleted','Integrasi Kurikulum',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

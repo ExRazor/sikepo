@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FundingFacultyRequest;
 use App\Models\FundingFaculty;
 use App\Models\FundingCategory;
 use App\Models\AcademicYear;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class FundingFacultyController extends Controller
 {
+    use LogActivity;
 
     public function index()
     {
@@ -103,81 +106,116 @@ class FundingFacultyController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(FundingFacultyRequest $request)
     {
-        $id_fakultas = decrypt($request->id_fakultas);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID Fakultas
+            $id_fakultas = decrypt($request->id_fakultas);
 
-        $request->validate([
-            'id_ta'             => [
-                'required',
-                Rule::unique('funding_faculties')->where(function ($query) use($id_fakultas) {
-                    return $query->where('id_fakultas', $id_fakultas);
-                }),
-            ],
-        ]);
+            //Init Kode Dana
+            $kd_dana     = 'pd'.$id_fakultas.'_thn'.$request->id_ta;
 
-        $kd_dana     = 'pd'.$id_fakultas.'_thn'.$request->id_ta;
+            //Query
+            foreach($request->id_kategori as $index => $value) {
+                $nominal = ($value) ? $value : '0';
 
-        foreach($request->id_kategori as $index => $value) {
-            $nominal = ($value) ? $value : '0';
+                $query                 = new FundingFaculty;
+                $query->kd_dana        = $kd_dana;
+                $query->id_fakultas    = $id_fakultas;
+                $query->id_ta          = $request->id_ta;
+                $query->id_kategori    = $index;
+                $query->nominal        = str_replace(".", "", $nominal);
+                $query->save();
+            }
 
-            $query                 = new FundingFaculty;
-            $query->kd_dana        = $kd_dana;
-            $query->id_fakultas    = $id_fakultas;
-            $query->id_ta          = $request->id_ta;
-            $query->id_kategori    = $index;
-            $query->nominal        = str_replace(".", "", $nominal);
-            $query->save();
+            //Activity Log
+            $property = [
+                'id'    => $query->kd_dana,
+                'name'  => $query->faculty->nama.' - '.$query->academicYear->tahun_akademik,
+                'url'   => route('funding.faculty.show',encrypt($query->kd_dana))
+            ];
+            $this->log('created','Keuangan Fakultas',$property);
+
+            DB::commit();
+            return redirect()->route('funding.faculty')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        return redirect()->route('funding.faculty')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+
     }
 
-    public function update(Request $request)
+    public function update(FundingFacultyRequest $request)
     {
-        $kd_dana     = decrypt($request->_id);
-        $id_fakultas = decrypt($request->id_fakultas);
+        DB::beginTransaction();
+        try {
+            $kd_dana     = decrypt($request->_id);
+            $id_fakultas = decrypt($request->id_fakultas);
 
-        $request->validate([
-            'id_ta'             => [
-                'required',
-                Rule::unique('funding_faculties')->where(function ($query) use($id_fakultas) {
-                    return $query->where('id_fakultas', $id_fakultas);
-                })->ignore($kd_dana,'kd_dana'),
-            ],
-        ]);
+            foreach($request->id_kategori as $index => $value) {
+                $nominal = ($value) ? $value : '0';
 
-        foreach($request->id_kategori as $index => $value) {
-            $nominal = ($value) ? $value : '0';
+                $query                 = FundingFaculty::where('kd_dana',$kd_dana)->where('id_kategori',$index)->first();
+                $query->id_fakultas    = $id_fakultas;
+                $query->id_ta          = $request->id_ta;
+                $query->nominal        = str_replace(".", "", $nominal);
+                $query->save();
+            }
 
-            $query                 = FundingFaculty::where('kd_dana',$kd_dana)->where('id_kategori',$index)->first();
-            $query->id_fakultas    = $id_fakultas;
-            $query->id_ta          = $request->id_ta;
-            $query->nominal        = str_replace(".", "", $nominal);
-            $query->save();
+            //Activity Log
+            $property = [
+                'id'    => $query->kd_dana,
+                'name'  => $query->faculty->nama.' - '.$query->academicYear->tahun_akademik,
+                'url'   => route('funding.faculty.show',$request->_id)
+            ];
+            $this->log('updated','Keuangan Fakultas',$property);
+
+            DB::commit();
+            return redirect()->route('funding.faculty.show',$request->_id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        return redirect()->route('funding.faculty.show',$request->_id)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = FundingFaculty::where('kd_dana',$id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!$request->ajax()) {
+            abort(404);
         }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
+
+            //Query
+            $data  = FundingFaculty::where('kd_dana',$id)->first();
+            FundingFaculty::where('kd_dana',$id)->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_dana,
+                'name'  => $data->faculty->nama.' - '.$data->academicYear->tahun_akademik,
+            ];
+            $this->log('deleted','Keuangan Fakultas',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
+
     }
 }

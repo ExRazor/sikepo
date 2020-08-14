@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudyProgramRequest;
 use App\Models\StudyProgram;
 use App\Models\Department;
 use App\Models\Faculty;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudyProgramController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use LogActivity;
+
     public function index()
     {
         $data          = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -22,48 +22,14 @@ class StudyProgramController extends Controller
         return view('master.study-program.index',compact(['data','faculty']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $department = "";
+        $department = Department::where('id_fakultas',request()->old('id_fakultas'))->get();
         $faculty = Faculty::all();
 
         return view('master.study-program.form',compact(['department','faculty']));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'kd_prodi'      => 'required|numeric|digits:5',
-            'kd_jurusan'    => 'required',
-            'kd_unik'       => 'required|numeric|digits:4',
-            'nama'          => 'required',
-            'jenjang'       => 'required',
-            'thn_menerima'  => 'numeric|digits:4|nullable',
-        ]);
-
-        StudyProgram::create($request->all());
-
-        return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\StudyProgram  $studyProgram
-     * @return \Illuminate\Http\Response
-     */
     public function show(Request $request)
     {
         if(request()->ajax()) {
@@ -76,12 +42,6 @@ class StudyProgramController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\StudyProgram  $studyProgram
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $id         = decode_id($id);
@@ -92,72 +52,99 @@ class StudyProgramController extends Controller
         return view('master.study-program.form',compact('data','department','faculty'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\StudyProgram  $studyProgram
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
+    public function store(StudyProgramRequest $request)
     {
-        $id = $request->kd_prodi;
+        DB::beginTransaction();
+        try {
+            //Query Program Studi
+            $data = StudyProgram::create($request->all());
 
-        $request->validate([
-            'kd_unik'       => 'required|numeric|digits:4',
-            'kd_jurusan'    => 'required',
-            'nama'          => 'required',
-            'jenjang'       => 'required',
-            'thn_menerima'  => 'numeric|digits:4|nullable',
-        ]);
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_prodi,
+                'name'  => $data->nama,
+                'url'   => route('master.study-program')
+            ];
+            $this->log('created','Program Studi',$property);
 
-        $studyProgram = StudyProgram::find($id);
-        $studyProgram->kd_jurusan     = $request->kd_jurusan;
-        $studyProgram->kd_unik        = $request->kd_unik;
-        $studyProgram->nama           = $request->nama;
-        $studyProgram->jenjang        = $request->jenjang;
-        $studyProgram->no_sk          = $request->no_sk;
-        $studyProgram->tgl_sk         = $request->tgl_sk;
-        $studyProgram->pejabat_sk     = $request->pejabat_sk;
-        $studyProgram->thn_menerima   = $request->thn_menerima;
-        $studyProgram->singkatan      = $request->singkatan;
-        $studyProgram->nip_kaprodi    = $request->nip_kaprodi;
-        $studyProgram->nm_kaprodi     = $request->nm_kaprodi;
-        $studyProgram->save();
-
-        return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
-
+            DB::commit();
+            return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\StudyProgram  $studyProgram
-     * @return \Illuminate\Http\Response
-     */
+    public function update(StudyProgramRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            //Variabel ID
+            $id = $request->kd_prodi;
+
+            //Query
+            $data                 = StudyProgram::find($id);
+            $data->kd_jurusan     = $request->kd_jurusan;
+            $data->kd_unik        = $request->kd_unik;
+            $data->nama           = $request->nama;
+            $data->jenjang        = $request->jenjang;
+            $data->no_sk          = $request->no_sk;
+            $data->tgl_sk         = $request->tgl_sk;
+            $data->pejabat_sk     = $request->pejabat_sk;
+            $data->thn_menerima   = $request->thn_menerima;
+            $data->singkatan      = $request->singkatan;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_prodi,
+                'name'  => $data->nama,
+                'url'   => route('master.study-program')
+            ];
+            $this->log('updated','Program Studi',$property);
+
+            DB::commit();
+            return redirect()->route('master.study-program')->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+    }
+
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        try {
+            //Decrypt ID
             $id = decode_id($request->id);
 
-            $q = StudyProgram::destroy($id);
+            //Query
+            $data = StudyProgram::find($id);
+            $data->delete();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
-        } else {
-            return redirect()->route('master.study-program');
+            //Activity Log
+            $property = [
+                'id'    => $data->kd_prodi,
+                'name'  => $data->nama,
+            ];
+            $this->log('deleted','Program Studi',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
+
     }
 
     public function get_by_department(Request $request)

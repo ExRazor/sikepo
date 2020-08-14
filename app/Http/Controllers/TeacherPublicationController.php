@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TeacherPublicationRequest;
 use App\Models\PublicationCategory;
 use App\Models\TeacherPublication;
 use App\Models\TeacherPublicationMember;
 use App\Models\TeacherPublicationStudent;
 use App\Models\StudyProgram;
 use App\Models\Teacher;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class TeacherPublicationController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -66,162 +71,183 @@ class TeacherPublicationController extends Controller
         return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
     }
 
-    public function store(Request $request)
+    public function store(TeacherPublicationRequest $request)
     {
-        $request->validate([
-            'jenis_publikasi' => 'required',
-            'nidn'            => 'required',
-            'judul'           => 'required',
-            'penerbit'        => 'required',
-            'id_ta'           => 'required',
-            // 'tahun'           => 'required|numeric|digits:4',
-            'jurnal'          => 'nullable',
-            'sesuai_prodi'    => 'nullable',
-            'akreditasi'      => 'nullable',
-            'sitasi'          => 'nullable|numeric',
-            'tautan'          => 'nullable|url',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Query
+            $data                   = new TeacherPublication;
+            $data->jenis_publikasi  = $request->jenis_publikasi;
+            $data->nidn             = $request->nidn;
+            $data->judul            = $request->judul;
+            $data->penerbit         = $request->penerbit;
+            $data->id_ta            = $request->id_ta;
+            $data->sesuai_prodi     = $request->sesuai_prodi;
+            $data->jurnal           = $request->jurnal;
+            $data->akreditasi       = $request->akreditasi;
+            $data->sitasi           = $request->sitasi;
+            $data->tautan           = $request->tautan;
+            $data->save();
 
-        $data                   = new TeacherPublication;
-        $data->jenis_publikasi  = $request->jenis_publikasi;
-        $data->nidn             = $request->nidn;
-        $data->judul            = $request->judul;
-        $data->penerbit         = $request->penerbit;
-        $data->id_ta            = $request->id_ta;
-        $data->sesuai_prodi     = $request->sesuai_prodi;
-        $data->jurnal           = $request->jurnal;
-        $data->akreditasi       = $request->akreditasi;
-        $data->sitasi           = $request->sitasi;
-        $data->tautan           = $request->tautan;
-        $data->save();
-
-        //Tambah Anggota Dosen
-        if($request->anggota_nidn) {
-            $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
-                TeacherPublicationMember::updateOrCreate(
-                    [
-                        'id_publikasi' => $data->id,
-                        'nidn'         => $request->anggota_nidn[$i],
-                    ],
-                    [
-                        'nama'         => $request->anggota_nama[$i],
-                        'kd_prodi'     => $request->anggota_prodi[$i],
-                    ]
-                );
+            //Tambah Anggota Dosen
+            if($request->anggota_nidn) {
+                $hitungDsn = count($request->anggota_nidn);
+                for($i=0;$i<$hitungDsn;$i++) {
+                    TeacherPublicationMember::updateOrCreate(
+                        [
+                            'id_publikasi' => $data->id,
+                            'nidn'         => $request->anggota_nidn[$i],
+                        ],
+                        [
+                            'nama'         => $request->anggota_nama[$i],
+                            'kd_prodi'     => $request->anggota_prodi[$i],
+                        ]
+                    );
+                }
             }
-        }
 
-        //Tambah Mahasiswa
-        if($request->mahasiswa_nim) {
-            $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
-
-                TeacherPublicationStudent::updateOrCreate(
-                    [
-                        'id_publikasi'  => $data->id,
-                        'nim'           => $request->mahasiswa_nim[$i],
-                    ],
-                    [
-                        'nama'          => $request->mahasiswa_nama[$i],
-                        'kd_prodi'      => $request->mahasiswa_prodi[$i],
-                    ]
-                );
+            //Tambah Mahasiswa
+            if($request->mahasiswa_nim) {
+                $hitungMhs = count($request->mahasiswa_nim);
+                for($i=0;$i<$hitungMhs;$i++) {
+                    TeacherPublicationStudent::updateOrCreate(
+                        [
+                            'id_publikasi'  => $data->id,
+                            'nim'           => $request->mahasiswa_nim[$i],
+                        ],
+                        [
+                            'nama'          => $request->mahasiswa_nama[$i],
+                            'kd_prodi'      => $request->mahasiswa_prodi[$i],
+                        ]
+                    );
+                }
             }
-        }
 
-        return redirect()->route('publication.teacher.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul.' ('.$data->teacher->nama.')',
+                'url'   => route('publication.teacher.show',encode_id($data->id)),
+            ];
+            $this->log('created','Publikasi Dosen',$property);
+
+            DB::commit();
+            return redirect()->route('publication.teacher.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
     public function update(Request $request)
     {
-        $id = decrypt($request->id);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
 
-        $request->validate([
-            'jenis_publikasi' => 'required',
-            'nidn'            => 'required',
-            'judul'           => 'required',
-            'penerbit'        => 'required',
-            'id_ta'           => 'required',
-            // 'tahun'           => 'required|numeric|digits:4',
-            'jurnal'          => 'nullable',
-            'sesuai_prodi'    => 'nullable',
-            'akreditasi'      => 'nullable',
-            'sitasi'          => 'nullable|numeric',
-            'tautan'          => 'nullable|url',
-        ]);
+            //Query
+            $data                   = TeacherPublication::find($id);
+            $data->jenis_publikasi  = $request->jenis_publikasi;
+            $data->nidn             = $request->nidn;
+            $data->judul            = $request->judul;
+            $data->penerbit         = $request->penerbit;
+            $data->id_ta            = $request->id_ta;
+            $data->sesuai_prodi     = $request->sesuai_prodi;
+            $data->jurnal           = $request->jurnal;
+            $data->akreditasi       = $request->akreditasi;
+            $data->sitasi           = $request->sitasi;
+            $data->tautan           = $request->tautan;
+            $data->save();
 
-        $data                   = TeacherPublication::find($id);
-        $data->jenis_publikasi  = $request->jenis_publikasi;
-        $data->nidn             = $request->nidn;
-        $data->judul            = $request->judul;
-        $data->penerbit         = $request->penerbit;
-        $data->id_ta            = $request->id_ta;
-        $data->sesuai_prodi     = $request->sesuai_prodi;
-        $data->jurnal           = $request->jurnal;
-        $data->akreditasi       = $request->akreditasi;
-        $data->sitasi           = $request->sitasi;
-        $data->tautan           = $request->tautan;
-        $data->save();
+            //Update Anggota Dosen
+            if($request->anggota_nidn) {
+                $hitungDsn = count($request->anggota_nidn);
+                for($i=0;$i<$hitungDsn;$i++) {
 
-        //Update Anggota Dosen
-        if($request->anggota_nidn) {
-            $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
-
-                TeacherPublicationMember::updateOrCreate(
-                    [
-                        'id_publikasi'  => $id,
-                        'nidn'           => $request->anggota_nidn[$i],
-                    ],
-                    [
-                        'nama'          => $request->anggota_nama[$i],
-                        'kd_prodi'      => $request->anggota_prodi[$i],
-                    ]
-                );
+                    TeacherPublicationMember::updateOrCreate(
+                        [
+                            'id_publikasi'  => $id,
+                            'nidn'           => $request->anggota_nidn[$i],
+                        ],
+                        [
+                            'nama'          => $request->anggota_nama[$i],
+                            'kd_prodi'      => $request->anggota_prodi[$i],
+                        ]
+                    );
+                }
             }
+
+            //Update Mahasiswa
+            if($request->mahasiswa_nim) {
+                $hitungMhs = count($request->mahasiswa_nim);
+                for($i=0;$i<$hitungMhs;$i++) {
+
+                    TeacherPublicationStudent::updateOrCreate(
+                        [
+                            'id_publikasi'  => $id,
+                            'nim'           => $request->mahasiswa_nim[$i],
+                        ],
+                        [
+                            'nama'          => $request->mahasiswa_nama[$i],
+                            'kd_prodi'      => $request->mahasiswa_prodi[$i],
+                        ]
+                    );
+                }
+            }
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul.' ('.$data->teacher->nama.')',
+                'url'   => route('publication.teacher.show',encode_id($data->id)),
+            ];
+            $this->log('updated','Publikasi Dosen',$property);
+
+            DB::commit();
+            return redirect()->route('publication.teacher.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        //Update Mahasiswa
-        if($request->mahasiswa_nim) {
-            $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
-
-                TeacherPublicationStudent::updateOrCreate(
-                    [
-                        'id_publikasi'  => $id,
-                        'nim'           => $request->mahasiswa_nim[$i],
-                    ],
-                    [
-                        'nama'          => $request->mahasiswa_nama[$i],
-                        'kd_prodi'      => $request->mahasiswa_prodi[$i],
-                    ]
-                );
-            }
-        }
-
-        return redirect()->route('publication.teacher.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id = decode_id($request->id);
-            $q  = TeacherPublication::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!$request->ajax()) {
+            abort(404);
         }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decode_id($request->id);
+
+            //Query
+            $data = TeacherPublication::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul.' ('.$data->teacher->nama.')',
+            ];
+            $this->log('deleted','Publikasi Dosen',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
     }
 
     public function destroy_member(Request $request)

@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentForeignRequest;
 use App\Models\StudentForeign;
 use App\Models\Student;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+use App\Traits\LogActivity;
 
 class StudentForeignController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use LogActivity;
+
     public function index()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -36,43 +36,6 @@ class StudentForeignController extends Controller
         return view('student.foreign.index',compact(['studentForeign','studyProgram']));
     }
 
-    public function store(Request $request)
-    {
-        if(request()->ajax()) {
-
-            $request->validate([
-                'nim'           => 'required|unique:student_foreigns',
-                'asal_negara'   => 'required',
-                'durasi'        => 'required',
-            ]);
-
-            $data               = new StudentForeign;
-            $data->nim          = $request->nim;
-            $data->asal_negara  = $request->asal_negara;
-            $data->durasi       = $request->durasi;
-            $q = $data->save();
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-
-                $student = Student::find($request->nim);
-                $student->kewarganegaraan = 'WNA';
-                $student->save();
-
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
-        }
-    }
-
     public function show($id)
     {
         if(request()->ajax()) {
@@ -84,21 +47,60 @@ class StudentForeignController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function store(StudentForeignRequest $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            // $id = decode_id($request->_id);
+        DB::beginTransaction();
+        try {
+            //Query Mahasiswa Asing
+            $data               = new StudentForeign;
+            $data->nim          = $request->nim;
+            $data->asal_negara  = $request->asal_negara;
+            $data->durasi       = $request->durasi;
+            $data->save();
+
+            //Ubah Kewarganegaraan
+            $student = Student::find($request->nim);
+            $student->kewarganegaraan = 'WNA';
+            $student->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->student->nama.' ~ '.$data->asal_negara.' ('.$data->durasi.')',
+            ];
+            $this->log('created','Mahasiswa Asing',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+    }
+
+    public function update(StudentForeignRequest $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Variabel ID
             $id = $request->_id;
 
-            $request->validate([
-                'nim'           => 'required|unique:student_foreigns,nim,'.$id,
-                'asal_negara'   => 'required',
-                'durasi'        => 'required',
-            ]);
-
+            //Ubah Kewarganegaraan
             $data               = StudentForeign::find($id);
-
             if($data->nim!=$request->nim) {
                 $student = Student::find($data->nim);
                 $student->kewarganegaraan = 'WNI';
@@ -109,50 +111,71 @@ class StudentForeignController extends Controller
                 $student->save();
             }
 
+            //Query Mahasiswa Asing
             $data->nim          = $request->nim;
             $data->asal_negara  = $request->asal_negara;
             $data->durasi       = $request->durasi;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->student->nama.' ~ '.$data->asal_negara.' ('.$data->durasi.')',
+            ];
+            $this->log('updated','Mahasiswa Asing',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
-            $id   = decode_id($request->_id);
-            $data = StudentForeign::find($id);
-            $q    = StudentForeign::destroy($id);
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                $student = Student::find($data->nim);
-                $student->kewarganegaraan = 'WNI';
-                $student->save();
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id   = decode_id($request->_id);
+
+            //Query
+            $data = StudentForeign::find($id);
+            $data->delete();
+
+            //Ubah Kewarganegaraan
+            $student = Student::find($data->nim);
+            $student->kewarganegaraan = 'WNI';
+            $student->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->student->nama.' ~ '.$data->asal_negara.' ('.$data->durasi.')',
+            ];
+            $this->log('deleted','Mahasiswa Asing',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

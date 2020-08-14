@@ -45,9 +45,17 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="funding_faculty_form" action="{{route('funding.faculty.store')}}" method="POST" enctype="multipart/form-data">
+            <form id="funding_faculty_form" action="{{isset($data) ? route('funding.faculty.update',encrypt($data->kd_dana)) : route('funding.faculty.store')}}" method="POST" enctype="multipart/form-data">
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-10 mx-auto">

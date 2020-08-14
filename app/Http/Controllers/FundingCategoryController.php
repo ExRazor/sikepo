@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FundingCategoryRequest;
 use App\Models\FundingCategory;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FundingCategoryController extends Controller
 {
+    use LogActivity;
 
     public function index()
     {
@@ -15,121 +19,139 @@ class FundingCategoryController extends Controller
         return view('master.funding-category.index',compact(['category']));
     }
 
-    public function store(Request $request)
+    public function edit($id)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            if(!$request->id_parent) {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                    'jenis'      => 'required',
-                ]);
-            } else {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                ]);
-            }
+        $id = decrypt($id);
+        $data = FundingCategory::find($id);
+        return response()->json($data);
+    }
 
+    public function store(FundingCategoryRequest $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Query
             $data               = new FundingCategory;
             $data->id_parent    = $request->id_parent;
             $data->nama         = $request->nama;
             $data->jenis        = $request->jenis;
             $data->deskripsi    = $request->deskripsi;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+                'url'   => route('master.funding-category')
+            ];
+            $this->log('created','Kategori Dana',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    public function edit($id)
+    public function update(FundingCategoryRequest $request)
     {
-        if(request()->ajax()) {
-            $id = decrypt($id);
-            $data = FundingCategory::find($id);
-            return response()->json($data);
-        } else {
+        if(!request()->ajax()) {
             abort(404);
         }
-    }
 
-    public function update(Request $request)
-    {
-        if(request()->ajax()) {
-
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = decrypt($request->_id);
 
-            if(!$request->id_parent) {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                    'jenis'      => 'required',
-                ]);
-            } else {
-                $request->validate([
-                    'id_parent'  => 'nullable',
-                    'nama'       => 'required',
-                    'deskripsi'  => 'nullable',
-                ]);
-            }
-
+            //Query
             $data               = FundingCategory::find($id);
             $data->id_parent    = $request->id_parent;
             $data->nama         = $request->nama;
             $data->jenis        = $request->jenis;
             $data->deskripsi    = $request->deskripsi;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menyimpan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil diubah',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+                'url'   => route('master.funding-category')
+            ];
+            $this->log('updated','Kategori Dana',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil diubah',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = decrypt($request->_id);
-            $q  = FundingCategory::destroy($id);
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+
+            //Query
+            $data  = FundingCategory::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->nama,
+            ];
+            $this->log('deleted','Kategori Dana',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
+
+        try {
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

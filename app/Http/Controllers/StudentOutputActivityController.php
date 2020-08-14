@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentOutputActivityRequest;
 use App\Models\StudentOutputActivity;
 use App\Models\OutputActivityCategory;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Yajra\DataTables\DataTables;
 
 class StudentOutputActivityController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -74,140 +79,165 @@ class StudentOutputActivityController extends Controller
         return view('output-activity.student.form',compact(['category','data']));
     }
 
-    public function store(Request $request)
+    public function store(StudentOutputActivityRequest $request)
     {
-        $request->validate([
-            'kegiatan'          => 'required',
-            'nm_kegiatan'       => 'nullable',
-            'nim'               => 'required',
-            'id_kategori'       => 'required',
-            'judul_luaran'      => 'required',
-            'id_ta'             => 'required',
-            'jenis_luaran'      => 'required',
-            'url'               => 'url|nullable',
-            'file_karya'        => 'mimes:pdf',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Query
+            $data                   = new StudentOutputActivity;
+            $data->kegiatan         = $request->kegiatan;
+            $data->nm_kegiatan      = $request->nm_kegiatan;
+            $data->nim              = $request->nim;
+            $data->id_kategori      = $request->id_kategori;
+            $data->judul_luaran     = $request->judul_luaran;
+            $data->id_ta            = $request->id_ta;
+            $data->jenis_luaran     = $request->jenis_luaran;
+            $data->nama_karya       = $request->nama_karya;
+            $data->jenis_karya      = $request->jenis_karya;
+            $data->pencipta_karya   = $request->pencipta_karya;
+            $data->issn             = $request->issn;
+            $data->no_paten         = $request->no_paten;
+            $data->tgl_sah          = $request->tgl_sah;
+            $data->no_permohonan    = $request->no_permohonan;
+            $data->tgl_permohonan   = $request->tgl_permohonan;
+            $data->penerbit         = $request->penerbit;
+            $data->penyelenggara    = $request->penyelenggara;
+            $data->url              = $request->url;
+            $data->keterangan       = $request->keterangan;
+            $data->save();
 
-        $data                   = new StudentOutputActivity;
-        $data->kegiatan         = $request->kegiatan;
-        $data->nm_kegiatan      = $request->nm_kegiatan;
-        $data->nim              = $request->nim;
-        $data->id_kategori      = $request->id_kategori;
-        $data->judul_luaran     = $request->judul_luaran;
-        $data->id_ta            = $request->id_ta;
-        $data->jenis_luaran     = $request->jenis_luaran;
-        $data->nama_karya       = $request->nama_karya;
-        $data->jenis_karya      = $request->jenis_karya;
-        $data->pencipta_karya   = $request->pencipta_karya;
-        $data->issn             = $request->issn;
-        $data->no_paten         = $request->no_paten;
-        $data->tgl_sah          = $request->tgl_sah;
-        $data->no_permohonan    = $request->no_permohonan;
-        $data->tgl_permohonan   = $request->tgl_permohonan;
-        $data->penerbit         = $request->penerbit;
-        $data->penyelenggara    = $request->penyelenggara;
-        $data->url              = $request->url;
-        $data->keterangan       = $request->keterangan;
-        $data->save();
-
-        if($file = $request->file('file_karya')) {
-            $tujuan_upload = public_path('upload/output-activity/student');
-            $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nim.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $data->update([
-                    'file_karya' => $filename
-                ]);
-        }
-
-        return redirect()->route('output-activity.student.show',encode_id($data->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-
-    }
-
-    public function update(Request $request)
-    {
-        $id = decrypt($request->id);
-
-        $request->validate([
-            'kegiatan'          => 'required',
-            'nm_kegiatan'       => 'nullable',
-            'nim'               => 'required',
-            'id_kategori'       => 'required',
-            'judul_luaran'      => 'required',
-            'id_ta'             => 'required',
-            'jenis_luaran'      => 'required',
-            'url'               => 'url|nullable',
-            'file_karya'        => 'mimes:pdf',
-        ]);
-
-        $data                   = StudentOutputActivity::find($id);
-        $data->kegiatan         = $request->kegiatan;
-        $data->nm_kegiatan      = $request->nm_kegiatan;
-        $data->nim              = $request->nim;
-        $data->id_kategori      = $request->id_kategori;
-        $data->judul_luaran     = $request->judul_luaran;
-        $data->id_ta            = $request->id_ta;
-        $data->jenis_luaran     = $request->jenis_luaran;
-        $data->nama_karya       = $request->nama_karya;
-        $data->jenis_karya      = $request->jenis_karya;
-        $data->pencipta_karya   = $request->pencipta_karya;
-        $data->issn             = $request->issn;
-        $data->no_paten         = $request->no_paten;
-        $data->tgl_sah          = $request->tgl_sah;
-        $data->no_permohonan    = $request->no_permohonan;
-        $data->tgl_permohonan   = $request->tgl_permohonan;
-        $data->penerbit         = $request->penerbit;
-        $data->penyelenggara    = $request->penyelenggara;
-        $data->url              = $request->url;
-        $data->keterangan       = $request->keterangan;
-        $data->save();
-
-        $storagePath = public_path('upload/output-activity/student'.$data->file_karya);
-        if($file = $request->file('file_karya')) {
-            if(File::exists($storagePath)) {
-                File::delete($storagePath);
+            //Upload berkas jika ada
+            if($file = $request->file('file_karya')) {
+                $tujuan_upload = public_path('upload/output-activity/student');
+                $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nim.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $data->update([
+                        'file_karya' => $filename
+                    ]);
             }
 
-            $tujuan_upload = public_path('upload/output-activity/student');
-            $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nim.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $data->update([
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul_luaran.' ('.$data->student->nama.')',
+                'url'   => route('output-activity.student.show',encode_id($data->id)),
+            ];
+            $this->log('created','Luaran Mahasiswa',$property);
+
+            DB::commit();
+            return redirect()->route('output-activity.student.show',encode_id($data->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
+    }
+
+    public function update(StudentOutputActivityRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
+
+            //Query
+            $data                   = StudentOutputActivity::find($id);
+            $data->kegiatan         = $request->kegiatan;
+            $data->nm_kegiatan      = $request->nm_kegiatan;
+            $data->nim              = $request->nim;
+            $data->id_kategori      = $request->id_kategori;
+            $data->judul_luaran     = $request->judul_luaran;
+            $data->id_ta            = $request->id_ta;
+            $data->jenis_luaran     = $request->jenis_luaran;
+            $data->nama_karya       = $request->nama_karya;
+            $data->jenis_karya      = $request->jenis_karya;
+            $data->pencipta_karya   = $request->pencipta_karya;
+            $data->issn             = $request->issn;
+            $data->no_paten         = $request->no_paten;
+            $data->tgl_sah          = $request->tgl_sah;
+            $data->no_permohonan    = $request->no_permohonan;
+            $data->tgl_permohonan   = $request->tgl_permohonan;
+            $data->penerbit         = $request->penerbit;
+            $data->penyelenggara    = $request->penyelenggara;
+            $data->url              = $request->url;
+            $data->keterangan       = $request->keterangan;
+            $data->save();
+
+            //Upload file
+            $storagePath = public_path('upload/output-activity/student'.$data->file_karya);
+            if($file = $request->file('file_karya')) {
+                if(File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
+
+                $tujuan_upload = public_path('upload/output-activity/student');
+                $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nim.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $data->update([
+                        'file_karya' => $filename
+                    ]);
+            }
+
+            if(isset($data->file_karya) && File::exists($storagePath)){
+                $ekstensi = File::extension($storagePath);
+                $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nim.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$ekstensi;
+                File::move($storagePath,public_path('upload/output-activity/student/'.$filename));
+                $data->update([
                     'file_karya' => $filename
                 ]);
-        }
+            }
 
-        if(isset($data->file_karya) && File::exists($storagePath)){
-            $ekstensi = File::extension($storagePath);
-            $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nim.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$ekstensi;
-            File::move($storagePath,public_path('upload/output-activity/student/'.$filename));
-            $data->update([
-                'file_karya' => $filename
-            ]);
-        }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul_luaran.' ('.$data->student->nama.')',
+                'url'   => route('output-activity.student.show',encode_id($data->id)),
+            ];
+            $this->log('updated','Luaran Mahasiswa',$property);
 
-        return redirect()->route('output-activity.student.show',encode_id($data->id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            DB::commit();
+            return redirect()->route('output-activity.student.show',encode_id($data->id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
+        }
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
-            $id     = decode_id($request->id);
-            $data   = StudentOutputActivity::find($id);
-            $q      = $data->delete();
+        if(!$request->ajax()) {
+            abort(404);
+        }
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                $this->delete_all_file($data->file_karya);
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id     = decode_id($request->id);
+
+            //Query
+            $data   = StudentOutputActivity::find($id);
+            $data->delete();
+
+            //Hapus berkas
+            $this->delete_all_file($data->file_karya);
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->judul_luaran.' ('.$data->student->nama.')',
+            ];
+            $this->log('deleted','Luaran Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

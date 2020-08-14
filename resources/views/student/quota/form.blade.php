@@ -9,11 +9,7 @@
                     </button>
                 </div>
                 <div class="modal-body pd-20">
-                    <div class="alert alert-danger" style="display:none">
-                        @foreach ($errors->all() as $error)
-                            {{ $error }}
-                        @endforeach
-                    </div>
+                    @include('layouts.alert')
                     <div class="row mb-3">
                         <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                         <div class="col-md-8">

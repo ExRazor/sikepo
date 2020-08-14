@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'output-activity-student-edit' : 'output-activity-student-add', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'output-activity-student-edit' : 'output-activity-student-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -44,6 +44,14 @@
         @endforeach
         </ul>
     </div>
+    @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
     @endif
     <div class="row">
         <div class="col-md-9 order-2 order-md-1">

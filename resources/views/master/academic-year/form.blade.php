@@ -9,11 +9,7 @@
                     </button>
                 </div>
                 <div class="modal-body pd-20">
-                    <div class="alert alert-danger" style="display:none">
-                        @foreach ($errors->all() as $error)
-                            {{ $error }}
-                        @endforeach
-                    </div>
+                    @include('layouts.alert')
                     <div class="form-group row mg-t-20">
                         <input type="hidden" name="_id">
                         <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Tahun Akademik:</label>
@@ -45,3 +41,12 @@
         </div><!-- modal-dialog -->
     </form>
 </div><!-- modal -->
+@push('custom-js')
+<script>
+    $('#tahunAkademik').mask('9999');
+    $('input#tahunAkademik').keyup(function(){
+        var year = parseInt($(this).val());
+        $('span.ta_next').text('/ '+(year+1));
+    })
+</script>
+@endpush

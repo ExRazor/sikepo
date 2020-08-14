@@ -80,11 +80,7 @@
                 </div>
                 <div class="card-body bd-color-gray-lighter">
                     <form id="form-student-foreign" enctype="multipart/form-data">
-                        <div class="alert alert-danger" style="display:none">
-                            @foreach ($errors->all() as $error)
-                                {{ $error }}
-                            @endforeach
-                        </div>
+                        @include('layouts.alert')
                         @isset(Auth::user()->kd_prodi)
                         <input type="hidden" name="kd_prodi" value="{{Auth::user()->kd_prodi}}">
                         @endisset

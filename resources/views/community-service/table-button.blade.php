@@ -3,9 +3,9 @@
         <div><span class="fa fa-caret-down"></span></div>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-        <a class="dropdown-item" href="{{ route('community-service.edit',encode_id($d->id)) }}">Sunting</a>
+        <a class="dropdown-item" href="{{ route('community-service.edit',encrypt($d->id)) }}">Sunting</a>
         <form method="POST">
-            <input type="hidden" value="{{encode_id($d->id)}}" name="id">
+            <input type="hidden" value="{{encrypt($d->id)}}" name="id">
             <button class="dropdown-item btn-delete" data-dest="{{ route('community-service.destroy',$d->id) }}">Hapus</button>
         </form>
     </div>

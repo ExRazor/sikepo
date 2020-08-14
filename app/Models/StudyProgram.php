@@ -6,20 +6,23 @@ use App\Models\BaseModel;
 
 class StudyProgram extends BaseModel
 {
+    public $incrementing  = false;
     protected $primaryKey = 'kd_prodi';
+    protected $keyType = 'char';
     protected $fillable = [
-                        'kd_prodi',
-                        'kd_jurusan',
-                        'nama',
-                        'singkatan',
-                        'jenjang',
-                        'no_sk',
-                        'tgl_sk',
-                        'pejabat_sk',
-                        'thn_menerima',
-                        // 'nip_kaprodi',
-                        // 'nm_kaprodi',
-                    ];
+        'kd_jurusan',
+        'kd_prodi',
+        'kd_unik',
+        'nama',
+        'singkatan',
+        'jenjang',
+        'no_sk',
+        'tgl_sk',
+        'pejabat_sk',
+        'thn_menerima',
+        // 'nip_kaprodi',
+        // 'nm_kaprodi',
+    ];
 
     public function department()
     {

@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
         //Academic Year
         Route::get('academic-year', 'AcademicYearController@index')->name('academic-year');
         Route::post('academic-year','AcademicYearController@store' )->name('academic-year.store');
-        Route::put('academic-year','AcademicYearController@update' )->name('academic-year.update');
+        Route::put('academic-year/{id}','AcademicYearController@update' )->name('academic-year.update');
         Route::delete('academic-year','AcademicYearController@destroy')->name('academic-year.delete');
 
         //Faculty
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
         Route::get('faculty/add', 'FacultyController@create')->name('faculty.add');
         Route::get('faculty/{id}', 'FacultyController@show')->name('faculty.show');
         Route::post('faculty', 'FacultyController@store')->name('faculty.store');
-        Route::put('faculty','FacultyController@update')->name('faculty.update');
+        Route::put('faculty/{id}','FacultyController@update')->name('faculty.update');
         Route::delete('faculty','FacultyController@destroy')->name('faculty.delete');
 
         //Department
@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
         Route::get('department/add', 'DepartmentController@create')->name('department.add');
         Route::post('department/show', 'DepartmentController@show')->name('department.show');
         Route::post('department', 'DepartmentController@store')->name('department.store');
-        Route::put('department','DepartmentController@update')->name('department.update');
+        Route::put('department/{id}','DepartmentController@update')->name('department.update');
         Route::delete('department','DepartmentController@destroy')->name('department.delete');
 
         //Study Program
@@ -66,31 +66,31 @@ Route::middleware('auth')->group(function () {
         Route::get('study-program/add', 'StudyProgramController@create')->name('study-program.add');
         Route::get('study-program/{id}/edit', 'StudyProgramController@edit')->name('study-program.edit');
         Route::post('study-program', 'StudyProgramController@store')->name('study-program.store');
-        Route::put('study-program','StudyProgramController@update')->name('study-program.update');
+        Route::put('study-program/{id}','StudyProgramController@update')->name('study-program.update');
         Route::delete('study-program','StudyProgramController@destroy')->name('study-program.delete');
 
         //Satisfaction Category
         Route::get('satisfaction-category', 'SatisfactionCategoryController@index')->name('satisfaction-category');
         Route::post('satisfaction-category', 'SatisfactionCategoryController@store')->name('satisfaction-category.store');
-        Route::put('satisfaction-category','SatisfactionCategoryController@update')->name('satisfaction-category.update');
+        Route::put('satisfaction-category/{id}','SatisfactionCategoryController@update')->name('satisfaction-category.update');
         Route::delete('satisfaction-category','SatisfactionCategoryController@destroy')->name('satisfaction-category.delete');
 
         //Publication Category
         Route::get('publication-category','PublicationCategoryController@index')->name('publication-category');
         Route::post('publication-category','PublicationCategoryController@store')->name('publication-category.store');
-        Route::put('publication-category','PublicationCategoryController@update')->name('publication-category.update');
+        Route::put('publication-category/{id}','PublicationCategoryController@update')->name('publication-category.update');
         Route::delete('publication-category','PublicationCategoryController@destroy')->name('publication-category.delete');
 
         //Output Activity Category
         Route::get('outputactivity-category','OutputActivityCategoryController@index')->name('outputactivity-category');
         Route::post('outputactivity-category','OutputActivityCategoryController@store')->name('outputactivity-category.store');
-        Route::put('outputactivity-category','OutputActivityCategoryController@update')->name('outputactivity-category.update');
+        Route::put('outputactivity-category/{id}','OutputActivityCategoryController@update')->name('outputactivity-category.update');
         Route::delete('outputactivity-category','OutputActivityCategoryController@destroy')->name('outputactivity-category.delete');
 
         //Funding Category
         Route::get('funding-category','FundingCategoryController@index')->name('funding-category');
         Route::post('funding-category','FundingCategoryController@store')->name('funding-category.store');
-        Route::put('funding-category','FundingCategoryController@update')->name('funding-category.update');
+        Route::put('funding-category/{id}','FundingCategoryController@update')->name('funding-category.update');
         Route::delete('funding-category','FundingCategoryController@destroy')->name('funding-category.delete');
     });
 
@@ -118,6 +118,7 @@ Route::middleware('auth')->group(function () {
 
         //Page Controller
         Route::get('index/chart','PageController@chart')->name('index.chart');
+        Route::post('index/activity_log','PageController@activity_log')->name('index.activity_log');
 
         //Academic Year
         Route::post('academic-year/edit', 'AcademicYearController@edit');
@@ -171,7 +172,7 @@ Route::middleware('auth')->group(function () {
         Route::post('ewmp/list','EwmpController@show_by_filter')->name('ewmp.show_filter');
         Route::get('ewmp/{id}','EwmpController@edit')->name('ewmp.edit');
         Route::post('ewmp','EwmpController@store')->name('ewmp.store');
-        Route::put('ewmp','EwmpController@update')->name('ewmp.update');
+        Route::put('ewmp/{id}','EwmpController@update')->name('ewmp.update');
         Route::delete('ewmp','EwmpController@destroy')->name('ewmp.delete');
 
         //Teacher - Achievement
@@ -304,7 +305,7 @@ Route::middleware('auth')->group(function () {
 
         //Students - Status
         Route::post('status','StudentStatusController@store')->name('status.store');
-        Route::put('status','StudentStatusController@update')->name('status.update');
+        Route::put('status/{id}','StudentStatusController@update')->name('status.update');
         Route::delete('status','StudentStatusController@destroy')->name('status.delete');
 
         //Students - Foreign
@@ -393,7 +394,7 @@ Route::middleware('auth')->group(function () {
             Route::get('faculty/{id}','FundingFacultyController@show')->name('funding.faculty.show');
             Route::get('faculty/{id}/edit','FundingFacultyController@edit')->name('funding.faculty.edit');
             Route::post('faculty','FundingFacultyController@store')->name('funding.faculty.store');
-            Route::put('faculty','FundingFacultyController@update')->name('funding.faculty.update');
+            Route::put('faculty/{id}','FundingFacultyController@update')->name('funding.faculty.update');
             Route::delete('faculty','FundingFacultyController@destroy')->name('funding.faculty.delete');
         });
 
@@ -404,7 +405,7 @@ Route::middleware('auth')->group(function () {
             Route::get('study-program/{id}','FundingStudyProgramController@show')->name('funding.study-program.show');
             Route::get('study-program/{id}/edit','FundingStudyProgramController@edit')->name('funding.study-program.edit');
             Route::post('study-program','FundingStudyProgramController@store')->name('funding.study-program.store');
-            Route::put('study-program','FundingStudyProgramController@update')->name('funding.study-program.update');
+            Route::put('study-program/{id}','FundingStudyProgramController@update')->name('funding.study-program.update');
             Route::delete('study-program','FundingStudyProgramController@destroy')->name('funding.study-program.delete');
         });
     });
@@ -420,21 +421,21 @@ Route::middleware('auth')->group(function () {
         Route::get('idle','AlumnusIdleController@index')->name('alumnus.idle');
         Route::get('idle/{id}','AlumnusIdleController@show')->name('alumnus.idle.show');
         Route::post('idle','AlumnusIdleController@store')->name('alumnus.idle.store');
-        Route::put('idle','AlumnusIdleController@update')->name('alumnus.idle.update');
+        Route::put('idle/{id}','AlumnusIdleController@update')->name('alumnus.idle.update');
         Route::delete('idle','AlumnusIdleController@destroy')->name('alumnus.idle.delete');
 
         //Alumnus - Suitable
         Route::get('suitable','AlumnusSuitableController@index')->name('alumnus.suitable');
         Route::get('suitable/{id}','AlumnusSuitableController@show')->name('alumnus.suitable.show');
         Route::post('suitable','AlumnusSuitableController@store')->name('alumnus.suitable.store');
-        Route::put('suitable','AlumnusSuitableController@update')->name('alumnus.suitable.update');
+        Route::put('suitable/{id}','AlumnusSuitableController@update')->name('alumnus.suitable.update');
         Route::delete('suitable','AlumnusSuitableController@destroy')->name('alumnus.suitable.delete');
 
         //Alumnus - Workplace
         Route::get('workplace','AlumnusWorkplaceController@index')->name('alumnus.workplace');
         Route::get('workplace/{id}','AlumnusWorkplaceController@show')->name('alumnus.workplace.show');
         Route::post('workplace','AlumnusWorkplaceController@store')->name('alumnus.workplace.store');
-        Route::put('workplace','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
+        Route::put('workplace/{id}','AlumnusWorkplaceController@update')->name('alumnus.workplace.update');
         Route::delete('workplace','AlumnusWorkplaceController@destroy')->name('alumnus.workplace.delete');
 
         //Alumnus - Satisfaction
@@ -443,7 +444,7 @@ Route::middleware('auth')->group(function () {
         Route::get('satisfaction/{id}','AlumnusSatisfactionController@show')->name('alumnus.satisfaction.show');
         Route::get('satisfaction/{id}/edit','AlumnusSatisfactionController@edit')->name('alumnus.satisfaction.edit');
         Route::post('satisfaction','AlumnusSatisfactionController@store')->name('alumnus.satisfaction.store');
-        Route::put('satisfaction','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
+        Route::put('satisfaction/{id}','AlumnusSatisfactionController@update')->name('alumnus.satisfaction.update');
         Route::delete('satisfaction','AlumnusSatisfactionController@destroy')->name('alumnus.satisfaction.delete');
     });
 

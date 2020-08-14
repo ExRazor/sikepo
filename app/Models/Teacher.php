@@ -9,7 +9,7 @@ class Teacher extends BaseModel
 {
     // use Uuid;
 
-    protected $increment = false;
+    public $incrementing = false;
     protected $primaryKey = 'nidn';
     protected $keyType = 'char';
     protected $fillable = [
@@ -41,6 +41,12 @@ class Teacher extends BaseModel
     public function teacherStatus()
     {
         return $this->hasMany('App\Models\TeacherStatus','nidn')->latest('periode');
+    }
+
+    public function firstStatus()
+    {
+        // return $this->hasOne('App\Models\TeacherStatus','nidn')->orderBy('periode','desc');
+        return $this->hasOne('App\Models\TeacherStatus','nidn')->orderBy('periode','asc')->limit(1);
     }
 
     public function latestStatus()

@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentQuotaRequest;
 use App\Models\StudentQuota;
 use App\Models\Faculty;
 use App\Models\StudyProgram;
 use App\Models\AcademicYear;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class StudentQuotaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use LogActivity;
+
     public function index()
     {
         $faculty      = Faculty::all();
@@ -25,57 +25,6 @@ class StudentQuotaController extends Controller
         $academicYear = AcademicYear::where('semester','Ganjil')->orderBy('tahun_akademik','desc')->get();
 
         return view('student.quota.index',compact(['faculty','studyProgram','academicYear']));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        if(request()->ajax()) {
-            $request->validate([
-                'kd_prodi'          => [
-                    'required',
-                    Rule::unique('student_quotas')->where(function ($query) use($request) {
-                        return $query->where('id_ta', $request->id_ta);
-                    }),
-                ],
-                'id_ta'             => [
-                    'required',
-                    Rule::unique('student_quotas')->where(function ($query) use($request) {
-                        return $query->where('kd_prodi', $request->kd_prodi);
-                    }),
-                ],
-                'daya_tampung'      => 'required|numeric',
-                'calon_pendaftar'   => 'numeric|nullable',
-                'calon_lulus'       => 'numeric|nullable',
-            ]);
-
-            $data                   = new StudentQuota;
-            $data->kd_prodi         = $request->kd_prodi;
-            $data->id_ta            = $request->id_ta;
-            $data->daya_tampung     = $request->daya_tampung;
-            $data->calon_pendaftar  = $request->calon_pendaftar;
-            $data->calon_lulus      = $request->calon_lulus;
-            $q = $data->save();
-
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
-        }
     }
 
     public function show($id)
@@ -89,29 +38,53 @@ class StudentQuotaController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function store(StudentQuotaRequest $request)
     {
-        if(request()->ajax()) {
-            // $id = decrypt($request->_id);
-            $id = $request->_id;
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-            $request->validate([
-                'kd_prodi'          => [
-                    'required',
-                    Rule::unique('student_quotas')->where(function ($query) use($request) {
-                        return $query->where('id_ta', $request->id_ta);
-                    })->ignore($id),
-                ],
-                'id_ta'             => [
-                    'required',
-                    Rule::unique('student_quotas')->where(function ($query) use($request) {
-                        return $query->where('kd_prodi', $request->kd_prodi);
-                    })->ignore($id),
-                ],
-                'daya_tampung'      => 'required|numeric',
-                'calon_pendaftar'   => 'numeric|nullable',
-                'calon_lulus'       => 'numeric|nullable',
+        DB::beginTransaction();
+        try {
+            //Query
+            $data                   = new StudentQuota;
+            $data->kd_prodi         = $request->kd_prodi;
+            $data->id_ta            = $request->id_ta;
+            $data->daya_tampung     = $request->daya_tampung;
+            $data->calon_pendaftar  = $request->calon_pendaftar;
+            $data->calon_lulus      = $request->calon_lulus;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->studyProgram->nama.' ~ '.$data->academicYear->tahun_akademik,
+            ];
+            $this->log('created','Kuota Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
             ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+    }
+
+    public function update(StudentQuotaRequest $request)
+    {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $id = $request->_id;
 
             $data                   = StudentQuota::find($id);
             $data->kd_prodi         = $request->kd_prodi;
@@ -119,48 +92,62 @@ class StudentQuotaController extends Controller
             $data->daya_tampung     = $request->daya_tampung;
             $data->calon_pendaftar  = $request->calon_pendaftar;
             $data->calon_lulus      = $request->calon_lulus;
-            $q = $data->save();
+            $data->save();
 
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
-            }
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->studyProgram->nama.' ~ '.$data->academicYear->tahun_akademik,
+            ];
+            $this->log('updated','Kuota Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\StudentQuota  $studentQuota
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
+        if(!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
             $id = decrypt($request->id);
-            $q  = StudentQuota::destroy($id);
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+
+            //Query
+            $data  = StudentQuota::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->studyProgram->nama.' ~ '.$data->academicYear->tahun_akademik,
+            ];
+            $this->log('deleted','Kuota Mahasiswa',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 

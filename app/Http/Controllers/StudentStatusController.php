@@ -2,103 +2,137 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentStatusRequest;
 use App\Models\StudentStatus;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentStatusController extends Controller
 {
-    public function store(Request $request)
+    use LogActivity;
+
+    public function edit($id)
     {
-        $request->validate([
-            'id_ta'             => 'required',
-            'status'            => 'required',
-            'ipk_terakhir'      => 'nullable',
-        ]);
+        if(!request()->ajax()) {
+            abort(404);
+        }
 
-        $nim = decrypt($request->_nim);
+        $id = decrypt($id);
+        $data = StudentStatus::find($id);
+        return response()->json($data);
 
-        $data                = new StudentStatus;
-        $data->id_ta         = $request->id_ta;
-        $data->nim           = decrypt($request->_nim);
-        $data->status        = $request->status;
-        $data->ipk_terakhir  = $request->ipk_terakhir;
-        $q = $data->save();
+    }
 
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Terjadi kesalahan',
-                'type'    => 'error'
-            ]);
-        } else {
+    public function store(StudentStatusRequest $request)
+    {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $data                = new StudentStatus;
+            $data->id_ta         = $request->id_ta;
+            $data->nim           = decrypt($request->_nim);
+            $data->status        = $request->status;
+            $data->ipk_terakhir  = $request->ipk_terakhir;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->student->nama.' ('.$data->status.')',
+                'url'   => route('student.list.show',encode_id($data->nim)).'#status'
+            ];
+            $this->log('created','Status Mahasiswa',$property);
+
+            DB::commit();
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil disimpan',
                 'type'    => 'success'
             ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
-    public function edit($id)
+    public function update(StudentStatusRequest $request)
     {
-        if(request()->ajax()) {
-            $id = decrypt($id);
-            $data = StudentStatus::find($id);
-            return response()->json($data);
-        } else {
+        if(!$request->ajax()) {
             abort(404);
         }
-    }
 
-    public function update(Request $request)
-    {
-        $request->validate([
-            'id_ta'             => 'required',
-            'ipk_terakhir'      => 'nullable',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->_id);
 
-        $id = decrypt($request->_id);
-        $nim = decrypt($request->_nim);
+            //Query
+            $data                = StudentStatus::find($id);
+            $data->id_ta         = $request->id_ta;
+            $data->nim           = decrypt($request->_nim);
+            $data->ipk_terakhir  = $request->ipk_terakhir;
+            $data->save();
 
-        $data                = StudentStatus::find($id);
-        $data->id_ta         = $request->id_ta;
-        $data->nim           = decrypt($request->_nim);
-        $data->ipk_terakhir  = $request->ipk_terakhir;
-        $q = $data->save();
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->student->nama.' ('.$data->status.')',
+                'url'   => route('student.list.show',encode_id($data->nim)).'#status'
+            ];
+            $this->log('updated','Status Mahasiswa',$property);
 
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Terjadi kesalahan',
-                'type'    => 'error'
-            ]);
-        } else {
+            DB::commit();
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil disunting',
                 'type'    => 'success'
             ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
+
     }
 
     public function destroy(Request $request)
     {
-        if($request->ajax()) {
+        if(!$request->ajax()) {
+            abort(404);
+        }
+
+        try {
+            //Decrypt ID
             $id = decrypt($request->id);
-            $q  = StudentStatus::find($id)->delete();
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+
+            //Query
+            $data = StudentStatus::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->student->nama.' ('.$data->status.')',
+            ];
+            $this->log('deleted','Status Mahasiswa',$property);
+
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 }

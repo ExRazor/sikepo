@@ -44,6 +44,14 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="widget-2">
         <div class="card mb-3">
             <form id="publication_form" action="@isset($data) {{route('publication.teacher.update',encode_id($data->id))}} @else {{route('publication.teacher.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
@@ -90,7 +98,7 @@
                                                 <select class="form-control mb-2" name="jenis_publikasi" required>
                                                     <option value="">- Pilih Jenis Publikasi -</option>
                                                     @foreach ($jenis as $j)
-                                                        <option value="{{$j->id}}" {{isset($data) && $data->jenis_publikasi == $j->id ? 'selected':''}}>{{$j->nama}}</option>
+                                                        <option value="{{$j->id}}" {{(isset($data) && $data->jenis_publikasi == $j->id) || old('jenis_publikasi') == $j->id ? 'selected':''}}>{{$j->nama}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

@@ -45,13 +45,13 @@
                 <select id="tahun_filter" class="form-control filter-box mr-3">
                     <option value="">- Tahun -</option>
                     @foreach($ay_year as $year)
-                    <option value="{{$year->tahun_akademik}}" @if($year->tahun_akademik == current_academic()->tahun_akademik) selected @endif>{{$year->tahun_akademik}}</option>
+                    <option value="{{$year->tahun_akademik}}">{{$year->tahun_akademik}}</option>
                     @endforeach
                 </select>
                 <select id="semester_filter" class="form-control filter-box">
                     <option value="">- Semester -</option>
                     @foreach($ay_semester as $semester)
-                    <option value="{{$semester->semester}}" @if($semester->semester == current_academic()->semester) selected @endif>{{$semester->semester}}</option>
+                    <option value="{{$semester->semester}}">{{$semester->semester}}</option>
                     @endforeach
                 </select>
             </div>
@@ -70,7 +70,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="card-block pd-20">
-                    <table id="table_curriculum_schedule" class="table display responsive nowrap" data-order='[[ 1, "asc" ]]' data-page-length="25" url-target="{{route('ajax.schedule.datatable')}}">
+                    <table id="table_curriculum_schedule" class="table display responsive nowrap" data-order='[[ 1, "desc" ]]' data-page-length="25" url-target="{{route('ajax.schedule.datatable')}}">
                         <thead>
                             <tr>
                                 <th class="text-center">Matkul</th>

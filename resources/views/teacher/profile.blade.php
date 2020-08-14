@@ -33,9 +33,9 @@
             @if(!Auth::user()->hasRole('kajur'))
             <p class="mg-b-0 tx-24">
                 <form method="POST">
-                    <input type="hidden" value="{{encode_id($data->nidn)}}" name="id">
-                    <a href="{{ route('teacher.list.edit',$data->nidn) }}" class="btn btn-sm btn-warning mg-b-10" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i> Sunting</a>
-                    <button class="btn btn-sm btn-danger mg-b-10 btn-delete" data-dest="{{ route('teacher.list.destroy',$data->nidn) }}"><i class="fa fa-trash-alt mg-r-10"></i> Hapus</button>
+                    <input type="hidden" value="{{encrypt($data->nidn)}}" name="id">
+                    <a href="{{ route('teacher.list.edit',$data->nidn) }}" class="btn btn-sm btn-warning mg-b-10 text-white"><i class="fa fa-pencil-alt mg-r-10"></i> Sunting</a>
+                    <button class="btn btn-sm btn-danger mg-b-10 btn-delete" data-dest="{{ route('teacher.list.destroy',encrypt($data->nidn)) }}" data-redir="{{ route('teacher.list.index') }}"><i class="fa fa-trash-alt mg-r-10"></i> Hapus</button>
                 </form>
             </p>
             @endif

@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CurriculumScheduleRequest;
 use App\Models\CurriculumSchedule;
 use App\Models\Curriculum;
 use App\Models\Teacher;
 use App\Models\AcademicYear;
 use App\Models\Faculty;
 use App\Models\StudyProgram;
+use App\Traits\LogActivity;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class CurriculumScheduleController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -63,164 +67,121 @@ class CurriculumScheduleController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(CurriculumScheduleRequest $request)
     {
-        $url_current  = $request->url_current;
-        $url_previous = $request->url_previous;
-
-        $request->validate([
-            'id_ta'      => [
-                                'required',
-                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
-                                    return $query->where('nidn', $request->nidn)->where('kd_matkul',$request->kd_matkul);
-                                }),
-                            ],
-            'nidn'       => [
-                                'required',
-                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
-                                    return $query->where('id_ta', $request->id_ta)->where('kd_matkul',$request->kd_matkul);
-                                }),
-                            ],
-            'kd_matkul'  => [
-                                'required',
-                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
-                                    return $query->where('id_ta', $request->id_ta)->where('nidn',$request->nidn);
-                                }),
-                            ],
-            'sesuai_bidang'  => 'nullable',
-        ]);
-
-        $dosen  = Teacher::find($request->nidn)->kd_prodi;
-        $matkul = Curriculum::where('kd_matkul',$request->kd_matkul)->first()->kd_prodi;
-
-        if($dosen==$matkul){
-            $sesuai_prodi = '1';
-        } else {
-            $sesuai_prodi = null;
-        }
-
-        $query                  = new CurriculumSchedule;
-        $query->id_ta           = $request->id_ta;
-        $query->nidn            = $request->nidn;
-        $query->kd_matkul       = $request->kd_matkul;
-        $query->sesuai_prodi    = $sesuai_prodi;
-        $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
-        $query->save();
-
-        // if($url_current != $url_previous) {
-        //     $url_tujuan = $request->url_previous;
-        // } else {
-        //     $url_tujuan = route('academic.schedule.index');
-        // }
-
-        if(request()->ajax()) {
-            if(!$query) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
+        DB::beginTransaction();
+        try {
+            //Set Kesesuaian Prodi dengan Matkul
+            $dosen  = Teacher::find($request->nidn)->latestStatus->kd_prodi;
+            $matkul = Curriculum::where('kd_matkul',$request->kd_matkul)->first()->kd_prodi;
+            if($dosen==$matkul){
+                $sesuai_prodi = '1';
             } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
+                $sesuai_prodi = null;
             }
-        } else {
+
+            //Query
+            $data                  = new CurriculumSchedule;
+            $data->id_ta           = $request->id_ta;
+            $data->nidn            = $request->nidn;
+            $data->kd_matkul       = $request->kd_matkul;
+            $data->sesuai_prodi    = $sesuai_prodi;
+            $data->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' -> '.$data->curriculum->nama.' ('.$data->curriculum->studyProgram->singkatan.')',
+                'url'   => route('academic.schedule.index')
+            ];
+            $this->log('created','Jadwal Kurikulum',$property);
+
+            DB::commit();
             return redirect()->route('academic.schedule.index')->with('flash.message', 'Data jadwal kurikulum berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
     }
 
-    public function update(Request $request)
+    public function update(CurriculumScheduleRequest $request)
     {
-        $id  = decode_id($request->id);
-        $url_current  = $request->url_current;
-        $url_previous = $request->url_previous;
+        DB::beginTransaction();
 
-        $request->validate([
-            'id_ta'      => [
-                                'required',
-                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
-                                    return $query->where('nidn', $request->nidn)->where('kd_matkul',$request->kd_matkul);
-                                })->ignore($id,'id'),
-                            ],
-            'nidn'       => [
-                                'required',
-                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
-                                    return $query->where('id_ta', $request->id_ta)->where('kd_matkul',$request->kd_matkul);
-                                })->ignore($id,'id'),
-                            ],
-            'kd_matkul'  => [
-                                'required',
-                                Rule::unique('curriculum_schedules')->where(function ($query) use($request) {
-                                    return $query->where('id_ta', $request->id_ta)->where('nidn',$request->nidn);
-                                })->ignore($id,'id'),
-                            ],
-            'sesuai_bidang'  => 'nullable',
-        ]);
+        try {
+            //Decrypt ID
+            $id  = decrypt($request->id);
 
-        $dosen  = Teacher::find($request->nidn)->kd_prodi;
-        $matkul = Curriculum::where('kd_matkul',$request->kd_matkul)->first()->kd_prodi;
-
-        if($dosen==$matkul){
-            $sesuai_prodi = '1';
-        } else {
-            $sesuai_prodi = null;
-        }
-
-        $query                  = CurriculumSchedule::find($id);
-        $query->id_ta           = $request->id_ta;
-        $query->nidn            = $request->nidn;
-        $query->kd_matkul       = $request->kd_matkul;
-        $query->sesuai_prodi    = $sesuai_prodi;
-        $query->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
-        $query->save();
-
-        // if($url_current != $url_previous) {
-        //     $url_tujuan = $request->url_previous;
-        // } else {
-        //     $url_tujuan = route('academic.schedule');
-        // }
-
-        if(request()->ajax()) {
-            if(!$query) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan',
-                    'type'    => 'error'
-                ]);
+            //Set Kesesuaian Prodi dengan Matkul
+            $dosen  = Teacher::find($request->nidn)->latestStatus->kd_prodi;
+            $matkul = Curriculum::where('kd_matkul',$request->kd_matkul)->first()->kd_prodi;
+            if($dosen==$matkul){
+                $sesuai_prodi = '1';
             } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil disimpan',
-                    'type'    => 'success'
-                ]);
+                $sesuai_prodi = null;
             }
-        } else {
+
+            //Query
+            $data                  = CurriculumSchedule::find($id);
+            $data->id_ta           = $request->id_ta;
+            $data->nidn            = $request->nidn;
+            $data->kd_matkul       = $request->kd_matkul;
+            $data->sesuai_prodi    = $sesuai_prodi;
+            $data->sesuai_bidang   = $request->has('sesuai_bidang') ? $request->sesuai_bidang : null;
+            $data->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' -> '.$data->curriculum->nama.' ('.$data->curriculum->studyProgram->singkatan.')',
+                'url'   => route('academic.schedule.index')
+            ];
+            $this->log('updated','Jadwal Kurikulum',$property);
+
+            DB::commit();
             return redirect()->route('academic.schedule.index')->with('flash.message', 'Data jadwal kurikulum berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
     }
 
     public function destroy(Request $request)
     {
-        if(request()->ajax()) {
-            $id = decode_id($request->id);
-            $q  = CurriculumSchedule::destroy($id);
-            if(!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
-            } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
-            }
+        if(!request()->ajax()) {
+            abort(404);
         }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($request->id);
+
+            //Query
+            $data  = CurriculumSchedule::find($id);
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data->id,
+                'name'  => $data->teacher->nama.' -> '.$data->curriculum->nama.' ('.$data->curriculum->studyProgram->singkatan.')',
+            ];
+            $this->log('deleted','Jadwal Kurikulum',$property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
+        }
+
     }
 
     public function datatable(Request $request)

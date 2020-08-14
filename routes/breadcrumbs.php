@@ -100,6 +100,7 @@ Breadcrumbs::for('academic-curriculum-create', function ($trail) {
 });
 
 Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
+    $trail->parent('academic-curriculum');
     $trail->push('Sunting Mata Kuliah');
 });
 
@@ -115,6 +116,7 @@ Breadcrumbs::for('academic-schedule-create', function ($trail) {
 });
 
 Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
+    $trail->parent('academic-curriculum');
     $trail->push('Sunting Jadwal Kurikulum');
 });
 
@@ -130,6 +132,7 @@ Breadcrumbs::for('academic-integration-create', function ($trail) {
 });
 
 Breadcrumbs::for('academic-integration-edit', function ($trail,$data) {
+    $trail->parent('academic-curriculum');
     $trail->push('Sunting Integrasi Kurikulum');
 });
 
@@ -145,6 +148,7 @@ Breadcrumbs::for('academic-minithesis-create', function ($trail) {
 });
 
 Breadcrumbs::for('academic-minithesis-edit', function ($trail,$data) {
+    $trail->parent('academic-curriculum');
     $trail->push('Sunting Tugas Akhir');
 });
 

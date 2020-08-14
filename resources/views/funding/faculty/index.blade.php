@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('funding.faculty.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Data Keuangan</a>
+        <a href="{{ route('funding.faculty.add') }}" class="btn btn-teal btn-block mg-b-10 text-white"><i class="fa fa-plus mg-r-10"></i> Data Keuangan</a>
     </div>
 </div>
 

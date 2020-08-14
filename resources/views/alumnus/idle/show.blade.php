@@ -105,3 +105,35 @@
 <script src="{{asset('assets/lib')}}/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('assets/lib')}}/datatables.net-responsive-dt/js/responsive.dataTables.min.js"></script>
 @endsection
+
+@push('custom-js')
+<script>
+    $('#table-alumnusIdle').on('click','.btn-edit',function(){
+
+        var id  = $(this).data('id');
+        var url = base_url+'/ajax/alumnus/idle/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-alumnus-idle')
+                    .find('input[name=id]').val(id).end()
+                    .find('input[name=tahun_lulus]').val(data.tahun_lulus).end()
+                    .find('select[name=tahun_lulus]').hide().end()
+                    .find('input[name=tahun_lulus]').show().end()
+                    .find('input#manual').prop('checked',true).end()
+                    .find('input[name=jumlah_lulusan]').val(data.jumlah_lulusan).prop('readonly',false).end()
+                    .find('input[name=lulusan_terlacak]').val(data.lulusan_terlacak).end()
+                    .find('input[name=kriteria_1]').val(data.kriteria_1).end()
+                    .find('input[name=kriteria_2]').val(data.kriteria_2).end()
+                    .find('input[name=kriteria_3]').val(data.kriteria_3).end()
+                    .find('button[type=submit]').attr('data-id',id).end()
+                    .modal('toggle');
+            }
+        });
+    })
+</script>
+
+@endpush

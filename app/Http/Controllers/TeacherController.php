@@ -16,16 +16,21 @@ use App\Models\Minithesis;
 use App\Models\User;
 use App\Imports\TeacherImport;
 use App\Exports\TeacherExport;
+use App\Http\Requests\TeacherRequest;
 use App\Models\TeacherPublication;
 use App\Models\TeacherStatus;
+use App\Traits\LogActivity;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 
 class TeacherController extends Controller
 {
+    use LogActivity;
+
     public function __construct()
     {
         $method = [
@@ -142,162 +147,197 @@ class TeacherController extends Controller
         return view('teacher/form',compact(['data','faculty','studyProgram']));
     }
 
-    public function store(Request $request)
+    public function store(TeacherRequest $request)
     {
-        $request->validate([
-            'nidn'                  => 'required|numeric|min:8',
-            // 'kd_prodi'              => 'required',
-            'nip'                   => 'nullable|numeric|digits:18',
-            'nama'                  => 'required',
-            'jk'                    => 'required',
-            'agama'                 => 'nullable',
-            'tpt_lhr'               => 'nullable',
-            'tgl_lhr'               => 'nullable',
-            'email'                 => 'email|nullable',
-            'pend_terakhir_jenjang' => 'nullable',
-            'pend_terakhir_jurusan' => 'nullable',
-            'bidang_ahli'           => 'nullable',
-            'sesuai_bidang_ps'      => 'nullable',
-            'ikatan_kerja'          => 'required',
-            'jabatan_akademik'      => 'required',
-            'foto'                  => 'mimes:jpeg,jpg,png',
-        ]);
+        DB::beginTransaction();
+        try {
+            //Bidang Keahlian
+            $bidang_ahli = explode(", ",$request->bidang_ahli);
 
-        $bidang_ahli = explode(", ",$request->bidang_ahli);
+            //Query Dosen
+            $Teacher                            = new Teacher;
+            $Teacher->nidn                      = $request->nidn;
+            $Teacher->nip                       = $request->nip;
+            $Teacher->nama                      = $request->nama;
+            $Teacher->jk                        = $request->jk;
+            $Teacher->agama                     = $request->agama;
+            $Teacher->tpt_lhr                   = $request->tpt_lhr;
+            $Teacher->tgl_lhr                   = $request->tgl_lhr;
+            $Teacher->alamat                    = $request->alamat;
+            $Teacher->no_telp                   = $request->no_telp;
+            $Teacher->email                     = $request->email;
+            $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
+            $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
+            $Teacher->bidang_ahli               = json_encode($bidang_ahli);
+            $Teacher->ikatan_kerja              = $request->ikatan_kerja;
+            $Teacher->jabatan_akademik          = $request->jabatan_akademik;
+            $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
+            $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
-        $Teacher                            = new Teacher;
-        $Teacher->nidn                      = $request->nidn;
-        // $Teacher->kd_prodi                  = $request->kd_prodi;
-        $Teacher->nip                       = $request->nip;
-        $Teacher->nama                      = $request->nama;
-        $Teacher->jk                        = $request->jk;
-        $Teacher->agama                     = $request->agama;
-        $Teacher->tpt_lhr                   = $request->tpt_lhr;
-        $Teacher->tgl_lhr                   = $request->tgl_lhr;
-        $Teacher->alamat                    = $request->alamat;
-        $Teacher->no_telp                   = $request->no_telp;
-        $Teacher->email                     = $request->email;
-        $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
-        $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
-        $Teacher->bidang_ahli               = json_encode($bidang_ahli);
-        $Teacher->ikatan_kerja              = $request->ikatan_kerja;
-        $Teacher->jabatan_akademik          = $request->jabatan_akademik;
-        $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
-        $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
+            //Upload Foto
+            if($request->file('foto')) {
+                $file = $request->file('foto');
+                $tujuan_upload = storage_path('app/upload/teacher');
+                $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $Teacher->foto = $filename;
+            }
 
-        if($request->file('foto')) {
-            $file = $request->file('foto');
-            $tujuan_upload = storage_path('app/upload/teacher');
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $Teacher->foto = $filename;
+            //Simpan Data Dosen
+            $Teacher->save();
+
+            //Status Dosen
+            $status             = new TeacherStatus;
+            $status->nidn       = $Teacher->nidn;
+            $status->kd_prodi   = $request->kd_prodi;
+            $status->periode    = $request->periode_prodi;
+            $status->jabatan    = 'Dosen';
+            $status->is_active  = false;
+            $status->save();
+            $this->setStatus($Teacher->nidn);
+
+            //Buat User Dosen
+            $user               = new User;
+            $user->username     = $Teacher->nidn;
+            $user->password     = Hash::make($Teacher->nidn);
+            $user->role         = 'dosen';
+            $user->defaultPass  = 1;
+            $user->name         = $Teacher->nama;
+            $user->foto         = $Teacher->foto;
+            $user->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $Teacher->nidn,
+                'name'  => $Teacher->nama.' ('.$Teacher->nidn.')',
+                'url'   => route('teacher.list.show',$Teacher->nidn),
+            ];
+            $this->log('created','Dosen',$property);
+
+            DB::commit();
+            return redirect()->route('teacher.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
-
-        $Teacher->save();
-
-        //Buat User Dosen
-        $user               = new User;
-        $user->username     = $Teacher->nidn;
-        $user->password     = Hash::make($Teacher->nidn);
-        $user->role         = 'dosen';
-        $user->defaultPass  = 1;
-        $user->name         = $Teacher->nama;
-        $user->foto         = $Teacher->foto;
-        $user->save();
-
-        return redirect()->route('teacher.list.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
     }
 
-    public function update(Request $request)
+    public function update(TeacherRequest $request)
     {
-        $id  = decrypt($request->_id);
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id  = decrypt($request->_id);
 
-        $request->validate([
-            // 'kd_prodi'              => 'required',
-            'nip'                   => 'nullable|numeric|digits:18',
-            'nama'                  => 'required',
-            'jk'                    => 'required',
-            'agama'                 => 'nullable',
-            'tpt_lhr'               => 'nullable',
-            'tgl_lhr'               => 'nullable',
-            'email'                 => 'email|nullable',
-            'pend_terakhir_jenjang' => 'nullable',
-            'pend_terakhir_jurusan' => 'nullable',
-            'bidang_ahli'           => 'nullable',
-            'sesuai_bidang_ps'      => 'nullable',
-            'ikatan_kerja'          => 'required',
-            'jabatan_akademik'      => 'required',
-            'foto'                  => 'mimes:jpeg,jpg,png',
-        ]);
+            //Bidang Keahlian
+            $bidang_ahli = explode(", ",$request->bidang_ahli);
 
-        $bidang_ahli = explode(", ",$request->bidang_ahli);
+            //Query Dosen
+            $Teacher                            = Teacher::find($id);
+            $Teacher->nip                       = $request->nip;
+            $Teacher->nama                      = $request->nama;
+            $Teacher->jk                        = $request->jk;
+            $Teacher->agama                     = $request->agama;
+            $Teacher->tpt_lhr                   = $request->tpt_lhr;
+            $Teacher->tgl_lhr                   = $request->tgl_lhr;
+            $Teacher->alamat                    = $request->alamat;
+            $Teacher->no_telp                   = $request->no_telp;
+            $Teacher->email                     = $request->email;
+            $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
+            $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
+            $Teacher->bidang_ahli               = json_encode($bidang_ahli);
+            $Teacher->ikatan_kerja              = $request->ikatan_kerja;
+            $Teacher->jabatan_akademik          = $request->jabatan_akademik;
+            $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
+            $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
-        $Teacher                            = Teacher::find($id);
-        // $Teacher->kd_prodi                  = $request->kd_prodi;
-        $Teacher->nip                       = $request->nip;
-        $Teacher->nama                      = $request->nama;
-        $Teacher->jk                        = $request->jk;
-        $Teacher->agama                     = $request->agama;
-        $Teacher->tpt_lhr                   = $request->tpt_lhr;
-        $Teacher->tgl_lhr                   = $request->tgl_lhr;
-        $Teacher->alamat                    = $request->alamat;
-        $Teacher->no_telp                   = $request->no_telp;
-        $Teacher->email                     = $request->email;
-        $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
-        $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
-        $Teacher->bidang_ahli               = json_encode($bidang_ahli);
-        $Teacher->ikatan_kerja              = $request->ikatan_kerja;
-        $Teacher->jabatan_akademik          = $request->jabatan_akademik;
-        $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
-        $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
+            //Upload Foto
+            $storagePath = storage_path('app/upload/teacher/'.$Teacher->foto);
+            if($request->file('foto')) {
+                if(File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
+                $file = $request->file('foto');
+                $tujuan_upload = storage_path('app/upload/teacher');
+                $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
+                $Teacher->foto = $filename;
+            }
 
-        $storagePath = storage_path('app/upload/teacher/'.$Teacher->foto);
-        if(File::exists($storagePath)) {
-            File::delete($storagePath);
+            //Simpan Data Dosen
+            $Teacher->save();
+
+            //Status Dosen
+            TeacherStatus::where('nidn',$id)->update(['nidn'=>$Teacher->nidn]);
+            $status             = TeacherStatus::where('nidn',$Teacher->nidn)->orderBy('periode','desc')->first();
+            $status->nidn       = $Teacher->nidn;
+            $status->kd_prodi   = $request->kd_prodi;
+            $status->periode    = $request->periode_prodi;
+            $status->jabatan    = 'Dosen';
+            $status->is_active  = false;
+            $status->save();
+            $this->setStatus($Teacher->nidn);
+
+            //Update User Dosen
+            $user          = User::where('username',$id)->first();
+            $user->name    = $Teacher->nama;
+            $user->foto    = $Teacher->foto;
+            $user->save();
+
+            //Activity Log
+            $property = [
+                'id'    => $Teacher->nidn,
+                'name'  => $Teacher->nama.' ('.$Teacher->nidn.')',
+                'url'   => route('teacher.list.show',$Teacher->nidn),
+            ];
+            $this->log('updated','Dosen',$property);
+
+            DB::commit();
+            return redirect()->route('teacher.list.show',$Teacher->nidn)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch(\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
 
-        if($request->file('foto')) {
-            $file = $request->file('foto');
-            $tujuan_upload = storage_path('app/upload/teacher');
-            $filename = $Teacher->nidn.'_'.str_replace(' ', '', $Teacher->nama).'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
-            $Teacher->foto = $filename;
-        }
-
-        $Teacher->save();
-
-        //Update User Dosen
-        $user          = User::where('username',$id)->first();
-        $user->name    = $Teacher->nama;
-        $user->foto    = $Teacher->foto;
-        $user->save();
-
-        return redirect()->route('teacher.list.show',$Teacher->nidn)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function destroy(Request $request)
     {
         if(!request()->ajax()) {
-            return redirect()->route('teacher');
+            abort(404);
         }
 
-        $id     = decode_id($request->id);
-        $data   = Teacher::find($id);
-        $q      = $data->delete();
-        if(!$q) {
-            return response()->json([
-                'title'   => 'Gagal',
-                'message' => 'Terjadi kesalahan saat menghapus',
-                'type'    => 'error'
-            ]);
-        } else {
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id     = decrypt($request->id);
+
+            //Query Hapus Dosen
+            $data   = Teacher::find($id);
+            $data->delete();
+
+            //Hapus Foto
             $this->delete_file($data->foto);
             $this->delete_user($id);
+
+            //Activity Log
+            $property = [
+                'id'    => $data->nidn,
+                'name'  => $data->nama.' ('.$data->nidn.')',
+            ];
+            $this->log('deleted','Dosen',$property);
+
+            DB::commit();
             return response()->json([
                 'title'   => 'Berhasil',
                 'message' => 'Data berhasil dihapus',
                 'type'    => 'success'
             ]);
+        } catch(\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],400);
         }
     }
 
@@ -390,7 +430,14 @@ class TeacherController extends Controller
         // Excel::download(new TeacherExport($request),$nama_file,'upload');
 
         // return response()->json($lokasi_file);
+    }
 
+    private function setStatus($nidn)
+    {
+        $status_terbaru = TeacherStatus::where('nidn',$nidn)->latest('periode')->first()->id;
+
+        TeacherStatus::where('nidn',$nidn)->where('is_active',true)->update(['is_active'=>false]);
+        TeacherStatus::where('id',$status_terbaru)->update(['is_active'=>true]);
     }
 
     public function show_by_prodi(Request $request)

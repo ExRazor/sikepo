@@ -28,15 +28,15 @@
         </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
-    <div class="row ml-auto">
-        <div class="col-6">
+    <div class="d-flex ml-auto">
+        <div class="mr-2">
             <form method="POST">
-                <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('research.destroy',$data->id) }}" data-redir="{{ route('research.index') }}"><i class="fa fa-trash"></i> Hapus</button>
+                <input type="hidden" value="{{encrypt($data->id)}}" name="id">
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('research.destroy',encrypt($data->id)) }}" data-redir="{{ route('research.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
-        <div class="col-6">
-            <a href="{{ route('research.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt"></i> Sunting</a>
+        <div>
+            <a href="{{ route('research.edit',encrypt($data->id)) }}" class="btn btn-warning btn-block text-white"><i class="fa fa-pencil-alt mg-r-10"></i> Sunting</a>
         </div>
     </div>
     @endif
@@ -52,7 +52,7 @@
     @endif
     <div class="widget-2">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="card shadow-base mb-3">
                     <div class="card-body bd-color-gray-lighter">
                         <table class="table table-show display">
