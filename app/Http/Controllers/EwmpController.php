@@ -11,6 +11,7 @@ use App\Models\CommunityService;
 use App\Models\StudyProgram;
 use App\Traits\LogActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,14 @@ class EwmpController extends Controller
         $filter = session()->get('data');
 
         return view('ewmp.index',compact(['studyProgram','academicYear','ewmp','filter']));
+    }
+
+    public function index_teacher()
+    {
+        $nidn = Auth::user()->username;
+        $ewmp = Ewmp::where('nidn',$nidn)->orderBy('id_ta','desc')->get();
+
+        return view('teacher-view.ewmp.index',compact(['ewmp']));
     }
 
     public function edit($id)
@@ -53,7 +62,11 @@ class EwmpController extends Controller
         DB::beginTransaction();
         try {
             //Decrypt NIDN
-            $nidn = decrypt($request->nidn);
+            if(Auth::user()->hasRole('dosen')) {
+                $nidn = Auth::user()->username;
+            } else {
+                $nidn = decrypt($request->nidn);
+            }
 
             //Hitung jumlah SKS dari Penelitian, Pengabdian
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
@@ -107,7 +120,13 @@ class EwmpController extends Controller
         try {
             //Decrypt ID & NIDN
             $id   = decrypt($request->_id);
-            $nidn = decrypt($request->nidn);
+
+            //NIDN
+            if(Auth::user()->hasRole('dosen')) {
+                $nidn = Auth::user()->username;
+            } else {
+                $nidn = decrypt($request->nidn);
+            }
 
             //Hitung jumlah SKS dari Penelitian, Pengabdian
             $sks = $this->countSKS_manual($nidn,$request->id_ta);
@@ -243,7 +262,7 @@ class EwmpController extends Controller
     {
         $nidn           = decrypt($request->nidn);
         $curriculum_ps  = CurriculumSchedule::where('nidn',$nidn)->where('id_ta',$request->id_ta)->whereNotNull('sesuai_prodi')->get();
-        $curriculum_pt  = CurriculumSchedule::where('nidn',$nidn)->where('id_ta',$request->id_ta)->whereNull('sesuai_prodi')->get();
+        // $curriculum_pt  = CurriculumSchedule::where('nidn',$nidn)->where('id_ta',$request->id_ta)->whereNull('sesuai_prodi')->get();
 
         $penelitian     = Research::where('id_ta',$request->id_ta)
                                     ->with([
@@ -272,16 +291,16 @@ class EwmpController extends Controller
                                     ->get();
 
         $count_ps = array(0);
-        $count_pt = array(0);
+        // $count_pt = array(0);
         $count_penelitian = array(0);
         $count_pengabdian = array(0);
 
         foreach($curriculum_ps as $ps) {
             $count_ps[] = $ps->curriculum->sks_teori + $ps->curriculum->sks_seminar + $ps->curriculum->sks_praktikum;
         }
-        foreach($curriculum_pt as $pt) {
-            $count_pt[] = $pt->curriculum->sks_teori + $pt->curriculum->sks_seminar + $pt->curriculum->sks_praktikum;
-        }
+        // foreach($curriculum_pt as $pt) {
+        //     $count_pt[] = $pt->curriculum->sks_teori + $pt->curriculum->sks_seminar + $pt->curriculum->sks_praktikum;
+        // }
 
         foreach($penelitian as $p) {
             foreach($p->researchTeacher as $pt) {
@@ -297,7 +316,7 @@ class EwmpController extends Controller
 
         $data = array(
             'schedule_ps'   => array_sum($count_ps),
-            'schedule_pt'   => array_sum($count_pt),
+            // 'schedule_pt'   => array_sum($count_pt),
             'penelitian'    => array_sum($count_penelitian),
             'pengabdian'    => array_sum($count_pengabdian)
         );

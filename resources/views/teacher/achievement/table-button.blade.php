@@ -8,7 +8,7 @@
             <form method="POST">
                 @method('delete')
                 @csrf
-                <input type="hidden" value="{{encode_id($d->id)}}" name="_id">
+                <input type="hidden" value="{{encrypt($d->id)}}" name="_id">
                 <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('teacher.achievement.destroy',$d->id) }}">Hapus</a>
             </form>
         </div>

@@ -24,11 +24,6 @@ class TeacherPublicationController extends Controller
         $method = [
             'create',
             'edit',
-            'store',
-            'update',
-            'destroy',
-            'destroy_member',
-            'destroy_student',
         ];
 
         $this->middleware('role:admin,kaprodi', ['only' => $method]);
@@ -41,6 +36,20 @@ class TeacherPublicationController extends Controller
         return view('publication.teacher.index',compact(['studyProgram']));
     }
 
+    public function index_teacher()
+    {
+        $publikasiKetua    = TeacherPublication::where('nidn',Auth::user()->username)->get();
+
+        $publikasiAnggota  = TeacherPublication::whereHas(
+                                                    'publicationMembers', function($query) {
+                                                        $query->where('nidn',Auth::user()->username);
+                                                    }
+                                                )
+                                                ->get();
+
+        return view('teacher-view.publication.index',compact(['publikasiKetua','publikasiAnggota']));
+    }
+
     public function create()
     {
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
@@ -49,12 +58,28 @@ class TeacherPublicationController extends Controller
         return view('publication.teacher.form',compact(['studyProgram','jenis']));
     }
 
+    public function create_teacher()
+    {
+        $jenis        = PublicationCategory::all();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
+        return view('teacher-view.publication.form',compact(['studyProgram','jenis']));
+    }
+
     public function show($id)
     {
         $id   = decode_id($id);
         $data = TeacherPublication::find($id);
 
         return view('publication.teacher.show',compact(['data']));
+    }
+
+    public function show_teacher($id)
+    {
+        $id   = decode_id($id);
+        $data = TeacherPublication::find($id);
+
+        return view('teacher-view.publication.show',compact(['data']));
     }
 
     public function edit($id)
@@ -71,14 +96,33 @@ class TeacherPublicationController extends Controller
         return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
     }
 
+    public function edit_teacher($id)
+    {
+        $id   = decode_id($id);
+
+        $jenis        = PublicationCategory::all();
+        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
+        $teacher      = Teacher::whereHas('latestStatus.studyProgram', function($q) use($data) {
+                            $q->where('kd_prodi',$data->teacher->latestStatus->studyProgram->kd_prodi);
+                        })->get();
+
+        return view('teacher-view.publication.form',compact(['jenis','data','teacher']));
+    }
+
     public function store(TeacherPublicationRequest $request)
     {
         DB::beginTransaction();
         try {
+            if(Auth::user()->hasRole('dosen')) {
+                $nidn = Auth::user()->username;
+            } else {
+                $nidn = $request->nidn;
+            }
+
             //Query
             $data                   = new TeacherPublication;
             $data->jenis_publikasi  = $request->jenis_publikasi;
-            $data->nidn             = $request->nidn;
+            $data->nidn             = $nidn;
             $data->judul            = $request->judul;
             $data->penerbit         = $request->penerbit;
             $data->id_ta            = $request->id_ta;
@@ -132,7 +176,11 @@ class TeacherPublicationController extends Controller
             $this->log('created','Publikasi Dosen',$property);
 
             DB::commit();
-            return redirect()->route('publication.teacher.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            if(Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.publication')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('publication.teacher.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
@@ -146,10 +194,16 @@ class TeacherPublicationController extends Controller
             //Decrypt ID
             $id = decrypt($request->id);
 
+            if(Auth::user()->hasRole('dosen')) {
+                $nidn = Auth::user()->username;
+            } else {
+                $nidn = $request->nidn;
+            }
+
             //Query
             $data                   = TeacherPublication::find($id);
             $data->jenis_publikasi  = $request->jenis_publikasi;
-            $data->nidn             = $request->nidn;
+            $data->nidn             = $nidn;
             $data->judul            = $request->judul;
             $data->penerbit         = $request->penerbit;
             $data->id_ta            = $request->id_ta;
@@ -205,7 +259,12 @@ class TeacherPublicationController extends Controller
             $this->log('updated','Publikasi Dosen',$property);
 
             DB::commit();
-            return redirect()->route('publication.teacher.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+
+            if(Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.publication.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('publication.teacher.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());

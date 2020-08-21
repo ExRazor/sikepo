@@ -78,9 +78,9 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('profile.community-service.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('profile.community-service.edit',encrypt($p->id)) }}">Sunting</a>
                                         <form method="POST">
-                                            <input type="hidden" value="{{encode_id($p->id)}}" name="id">
+                                            <input type="hidden" value="{{encrypt($p->id)}}" name="id">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('profile.community-service.delete') }}">Hapus</button>
                                         </form>
                                     </div>

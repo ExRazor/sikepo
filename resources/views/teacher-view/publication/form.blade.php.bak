@@ -58,7 +58,6 @@
                             @else
                                 @method('post')
                             @endif
-                            <input type="hidden" name="nidn" value="{{Auth::user()->username}}">
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jenis Publikasi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
@@ -67,7 +66,7 @@
                                             <select class="form-control" name="jenis_publikasi" required>
                                                 <option value="">- Pilih Jenis Publikasi -</option>
                                                 @foreach ($jenis as $j)
-                                                    <option value="{{$j->id}}" {{(isset($data) && $data->jenis_publikasi == $j->id) || old('jenis_publikasi') == $j->id ? 'selected':''}}>{{$j->nama}}</option>
+                                                    <option value="{{$j->id}}" {{isset($data) && $data->jenis_publikasi == $j->id ? 'selected':''}}>{{$j->nama}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -83,30 +82,26 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Judul: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="judul" value="{{ isset($data) ? $data->judul : old('judul')}}" placeholder="Contoh: Permasalahan Permukiman Perdesaan Di Indonesia: Kajian geografi Permukiman" required>
+                                    <input class="form-control" type="text" name="judul" value="{{ isset($data) ? $data->judul : Request::old('judul')}}" placeholder="Contoh: Permasalahan Permukiman Perdesaan Di Indonesia: Kajian geografi Permukiman" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Penerbit: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="penerbit" value="{{ isset($data) ? $data->penerbit : old('penerbit')}}" placeholder="Contoh: Kenangan Press" required>
+                                    <input class="form-control" type="text" name="penerbit" value="{{ isset($data) ? $data->penerbit : Request::old('penerbit')}}" placeholder="Contoh: Kenangan Press" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-md-3 form-control-label">Tahun Terbit: <span class="tx-danger">*</span></label>
-                                <div class="col-md-8">
-                                    <select class="form-control select-academicYear" name="id_ta" required>
-                                        @isset($data)
-                                        <option value="{{$data->id_ta}}">{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</option>
-                                        @endisset
-                                    </select>
+                                <label class="col-3 form-control-label">Tahun Terbit: <span class="tx-danger">*</span></label>
+                                <div class="col-8">
+                                    <input class="form-control number" type="text" name="tahun" value="{{ isset($data) ? $data->tahun : Request::old('tahun')}}" placeholder="Masukkan tahun penerbitan" maxlength="4" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Bidang: </label>
                                 <div class="col-8">
                                     <label class="ckbox ckbox-inline mb-0 mr-4">
-                                        <input name="sesuai_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->sesuai_prodi) || old('sesuai_prodi')=='1' ? 'checked' : ''}}>
+                                        <input name="sesuai_prodi" type="checkbox" value="1" {{ isset($data) && isset($data->sesuai_prodi) || Request::old('sesuai_prodi')=='1' ? 'checked' : ''}}>
                                         <span class="pl-0">Sesuai Bidang Prodi?</span>
                                     </label>
                                 </div>
@@ -114,25 +109,25 @@
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Nama Terbitan:</label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="jurnal" value="{{ isset($data) ? $data->jurnal : old('jurnal')}}" placeholder="Contoh: Asian Social Science Vol.9, No.12">
+                                    <input class="form-control" type="text" name="jurnal" value="{{ isset($data) ? $data->jurnal : Request::old('jurnal')}}" placeholder="Contoh: Asian Social Science Vol.9, No.12">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jumlah Sitasi:</label>
                                 <div class="col-8">
-                                    <input class="form-control number" type="text" name="sitasi" value="{{ isset($data) ? $data->sitasi : old('sitasi')}}" placeholder="Masukkan jumlah sitasi">
+                                    <input class="form-control number" type="text" name="sitasi" value="{{ isset($data) ? $data->sitasi : Request::old('sitasi')}}" placeholder="Masukkan jumlah sitasi">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Akreditasi:</label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="akreditasi" value="{{ isset($data) ? $data->akreditasi : old('akreditasi')}}" placeholder="Jika belum terakreditasi, dikosongkan saja">
+                                    <input class="form-control" type="text" name="akreditasi" value="{{ isset($data) ? $data->akreditasi : Request::old('akreditasi')}}" placeholder="Jika belum terakreditasi, dikosongkan saja">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Tautan:</label>
                                 <div class="col-8">
-                                    <input class="form-control" type="text" name="tautan" value="{{ isset($data) ? $data->tautan : old('tautan')}}" placeholder="Jika belum ada tautan digital, dikosongkan saja">
+                                    <input class="form-control" type="text" name="tautan" value="{{ isset($data) ? $data->tautan : Request::old('tautan')}}" placeholder="Jika belum ada tautan digital, dikosongkan saja">
                                 </div>
                             </div>
                         </div>
@@ -145,7 +140,7 @@
                             <div id="daftarDosen">
                                 @foreach ($data->publicationMembers as $i => $pm)
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.member',encrypt($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.publication.delete.member',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-2">
                                         <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ $pm->nidn }}" placeholder="NIDN" maxlength="9" readonly>
                                     </div>
@@ -180,7 +175,7 @@
                             <div id="daftarMahasiswa">
                                 @foreach ($data->publicationStudents as $i => $ps)
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.publication.delete.student',encrypt($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.publication.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
                                     <div class="col-2">
                                         <input class="form-control number" type="text" name="mahasiswa_nim[]" value="{{ $ps->nim }}" placeholder="NIM" maxlength="9" readonly>
                                     </div>
@@ -224,10 +219,5 @@
 </div>
 @endsection
 
-@push('custom-js')
-<script>
-    var cont  = $('.select2-dosen');
-    var prodi = cont.attr('data-prodi');
-    select2_dosen(cont,prodi);
-</script>
-@endpush
+@section('js')
+@endsection

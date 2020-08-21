@@ -31,12 +31,12 @@
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
-                <input type="hidden" value="{{encode_id($data->id)}}" name="id">
+                <input type="hidden" value="{{encrypt($data->id)}}" name="id">
                 <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('profile.community-service.delete') }}" data-redir="{{ route('profile.community-service') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('profile.community-service.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('profile.community-service.edit',encrypt($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
     @endif
@@ -52,149 +52,155 @@
         </div>
     @endif
     <div class="widget-2">
-        <div class="card shadow-base mb-3">
-            <div class="card-body bd-color-gray-lighter">
-                <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
-                    <tbody>
-                        <tr>
-                            <td>Judul Pengabdian</td>
-                            <td>:</td>
-                            <td>{{$data->judul_pengabdian}}</td>
-                        </tr>
-                        <tr>
-                            <td>Tema Pengabdian</td>
-                            <td>:</td>
-                            <td>{{$data->tema_pengabdian}}</td>
-                        </tr>
-                        <tr>
-                            <td>Bidang Program Studi</td>
-                            <td>:</td>
-                            <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah SKS Pengabdian</td>
-                            <td>:</td>
-                            <td>{{$data->sks_pengabdian}}</td>
-                        </tr>
-                        <tr>
-                            <td>Tahun Pengabdian</td>
-                            <td>:</td>
-                            <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
-                        </tr>
-                        <tr>
-                            <td>Sumber Biaya Pengabdian</td>
-                            <td>:</td>
-                            <td>{{$data->sumber_biaya}}</td>
-                        </tr>
-                        <tr>
-                            <td>Nama Lembaga Penunjang Biaya</td>
-                            <td>:</td>
-                            <td>{{isset($data->sumber_biaya_nama) ? $data->sumber_biaya_nama : ''}}</td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah Biaya Pengabdian</td>
-                            <td>:</td>
-                            <td>{{rupiah($data->jumlah_biaya)}}</td>
-                        </tr>
-                        <tr>
-                            <td>Dosen yang Terlibat</td>
-                            <td>:</td>
-                            <td>
-                                <table class="table table-bordered table-colored table-purple">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <td>Nama Dosen</td>
-                                            <td>Asal/Program Studi</td>
-                                            <td>Status Anggota</td>
-                                            <td>SKS</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($data->serviceTeacher as $st)
-                                        <tr>
-                                            @if(!$st->nama_lain)
-                                            <td>
-                                                {{$st->teacher->nama}}<br>
-                                                <small>NIDN. {{$st->nidn}}</small>
-                                            </td>
-                                            <td>
-                                                {{$st->teacher->studyProgram->nama}}<br>
-                                                <small>{{$st->teacher->studyProgram->department->nama.' / '.$st->teacher->studyProgram->department->faculty->singkatan}}</small>
-                                            </td>
-                                            @else
-                                            <td>
-                                                {{$st->nama_lain}}<br>
-                                                <small>NIDN. {{$st->nidn}}</small>
-                                            </td>
-                                            <td>
-                                                {{$st->asal_lain}}<br>
-                                            </td>
-                                            @endif
-                                            <td class="text-center">
-                                                {{$st->status}}
-                                            </td>
-                                            <td class="text-center">
-                                                {{$st->sks}}
-                                            </td>
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td class="text-center" colspan="4">
-                                                BELUM ADA DATA
-                                            </td>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Mahasiswa yang Terlibat</td>
-                            <td>:</td>
-                            <td>
-                                <table class="table table-bordered table-colored table-pink">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <td>Nama Mahasiswa</td>
-                                            <td>Asal/Program Studi</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($data->serviceStudent as $ss)
-                                        <tr>
-                                            @if(!$ss->nama_lain)
-                                            <td>
-                                                {{$ss->student->nama}}<br>
-                                                <small>NIDN. {{$ss->nim}}</small>
-                                            </td>
-                                            <td>
-                                                {{$ss->student->studyProgram->nama}}<br>
-                                                <small>{{$ss->student->studyProgram->department->nama.' / '.$ss->student->studyProgram->department->faculty->singkatan}}</small>
-                                            </td>
-                                            @else
-                                            <td>
-                                                {{$ss->nama_lain}}<br>
-                                                <small>NIM. {{$ss->nim}}</small>
-                                            </td>
-                                            <td>
-                                                {{$ss->asal_lain}}<br>
-                                            </td>
-                                            @endif
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td class="text-center" colspan="2">
-                                                BELUM ADA DATA
-                                            </td>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div><!-- card-body -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-base mb-3">
+                    <div class="card-body bd-color-gray-lighter">
+                        <table id="table_teacher" class="table display responsive nowrap" data-sort="desc">
+                            <tbody>
+                                <tr>
+                                    <th>Judul Pengabdian</th>
+                                    <td>:</td>
+                                    <td>{{$data->judul_pengabdian}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tema Pengabdian</th>
+                                    <td>:</td>
+                                    <td>{{$data->tema_pengabdian}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bidang Program Studi</th>
+                                    <td>:</td>
+                                    <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Jumlah SKS Pengabdian</th>
+                                    <td>:</td>
+                                    <td>{{$data->sks_pengabdian}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tahun Pengabdian</th>
+                                    <td>:</td>
+                                    <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sumber Biaya Pengabdian</th>
+                                    <td>:</td>
+                                    <td>{{$data->sumber_biaya}}</td>
+                                </tr>
+                                @isset($data->sumber_biaya_nama)
+                                <tr>
+                                    <th>Nama Lembaga Penunjang Biaya</th>
+                                    <td>:</td>
+                                    <td>{{$data->sumber_biaya_nama}}</td>
+                                </tr>
+                                @endisset
+                                <tr>
+                                    <th>Jumlah Biaya Pengabdian</th>
+                                    <td>:</td>
+                                    <td>{{rupiah($data->jumlah_biaya)}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Dosen yang Terlibat</th>
+                                    <td>:</td>
+                                    <td>
+                                        <table class="table table-bordered table-colored table-purple">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <td>Nama Dosen</td>
+                                                    <td>Asal/Program Studi</td>
+                                                    <td>Status Anggota</td>
+                                                    <td>SKS</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($data->serviceTeacher as $st)
+                                                <tr>
+                                                    @if(!$st->nama_lain)
+                                                    <td>
+                                                        {{$st->teacher->nama}}<br>
+                                                        <small>NIDN. {{$st->nidn}}</small>
+                                                    </td>
+                                                    <td>
+                                                        {{$st->teacher->latestStatus->studyProgram->nama}}<br>
+                                                        <small>{{$st->teacher->latestStatus->studyProgram->department->nama.' / '.$st->teacher->latestStatus->studyProgram->department->faculty->singkatan}}</small>
+                                                    </td>
+                                                    @else
+                                                    <td>
+                                                        {{$st->nama_lain}}<br>
+                                                        <small>NIDN. {{$st->nidn}}</small>
+                                                    </td>
+                                                    <td>
+                                                        {{$st->asal_lain}}<br>
+                                                    </td>
+                                                    @endif
+                                                    <td class="text-center">
+                                                        {{$st->status}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{$st->sks}}
+                                                    </td>
+                                                </tr>
+                                                @empty
+                                                <tr>
+                                                    <td class="text-center" colspan="4">
+                                                        BELUM ADA DATA
+                                                    </td>
+                                                </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Mahasiswa yang Terlibat</th>
+                                    <td>:</td>
+                                    <td>
+                                        <table class="table table-bordered table-colored table-pink">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <td>Nama Mahasiswa</td>
+                                                    <td>Asal/Program Studi</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($data->serviceStudent as $ss)
+                                                <tr>
+                                                    @if(!$ss->nama_lain)
+                                                    <td>
+                                                        {{$ss->student->nama}}<br>
+                                                        <small>NIDN. {{$ss->nim}}</small>
+                                                    </td>
+                                                    <td>
+                                                        {{$ss->student->studyProgram->nama}}<br>
+                                                        <small>{{$ss->student->studyProgram->department->nama.' / '.$ss->student->studyProgram->department->faculty->singkatan}}</small>
+                                                    </td>
+                                                    @else
+                                                    <td>
+                                                        {{$ss->nama_lain}}<br>
+                                                        <small>NIM. {{$ss->nim}}</small>
+                                                    </td>
+                                                    <td>
+                                                        {{$ss->asal_lain}}<br>
+                                                    </td>
+                                                    @endif
+                                                </tr>
+                                                @empty
+                                                <tr>
+                                                    <td class="text-center" colspan="2">
+                                                        BELUM ADA DATA
+                                                    </td>
+                                                </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- card-body -->
+                </div>
+            </div>
         </div>
     </div>
 </div>

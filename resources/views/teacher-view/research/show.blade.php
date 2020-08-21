@@ -31,12 +31,12 @@
     <div class="row ml-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
-                <input type="hidden" value="{{encode_id($data->id)}}" name="id">
+                <input type="hidden" value="{{encrypt($data->id)}}" name="id">
                 <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('profile.research.delete') }}" data-redir="{{ route('profile.research') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('profile.research.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('profile.research.edit',encrypt($data->id)) }}" class="btn btn-warning btn-block" style="color:white"><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
     @endif
@@ -93,11 +93,13 @@
                                     <td>:</td>
                                     <td>{{$data->sumber_biaya}}</td>
                                 </tr>
+                                @isset($data->sumber_biaya_nama)
                                 <tr>
                                     <th>Nama Lembaga Penunjang Biaya</th>
                                     <td>:</td>
-                                    <td>{{isset($data->sumber_biaya_nama) ? $data->sumber_biaya_nama : ''}}</td>
+                                    <td>{{$data->sumber_biaya_nama}}</td>
                                 </tr>
+                                @endisset
                                 <tr>
                                     <th>Jumlah Biaya Penelitian</th>
                                     <td>:</td>
@@ -122,7 +124,7 @@
                                                     <td>
                                                         <a href="{{route('teacher.list.show',$rt->teacher->nidn)}}">
                                                             {{$rt->teacher->nama}}<br>
-                                                            <small>NIDN. {{$rt->teacher->nidn}} / {{$rt->teacher->studyProgram->singkatan}}</small>
+                                                            <small>NIDN. {{$rt->teacher->nidn}} / {{$rt->teacher->latestStatus->studyProgram->singkatan}}</small>
                                                         </a>
                                                     </td>
                                                     @else

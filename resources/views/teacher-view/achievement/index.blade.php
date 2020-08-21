@@ -44,7 +44,7 @@
     <div class="widget-2">
         <div class="card shadow-base mb-3">
             <div class="card-body bd-color-gray-lighter">
-                <table id="table-teacherAcv" class="table table-bordered mb-0 datatable" data-sort="desc">
+                <table id="table_teacher_acv" class="table table-bordered mb-0 datatable" data-sort="desc">
                     <thead>
                         <tr>
                             <th class="text-center align-middle defaultSort" width="100">Tanggal Diperoleh</th>
@@ -71,11 +71,11 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item btn-edit" href="#" data-id="{{ encode_id($acv->id) }}" data-dest="{{ route('profile.achievement') }}">Sunting</a>
+                                        <a class="dropdown-item btn-edit" href="#" data-id="{{ $acv->id }}" data-dest="{{ route('profile.achievement') }}">Sunting</a>
                                         <form method="POST">
                                             @method('delete')
                                             @csrf
-                                            <input type="hidden" value="{{encode_id($acv->id)}}" name="_id">
+                                            <input type="hidden" value="{{encrypt($acv->id)}}" name="_id">
                                             <a href="#" class="dropdown-item btn-delete" data-dest="{{ route('profile.achievement.delete') }}">Hapus</a>
                                         </form>
                                     </div>
@@ -104,4 +104,50 @@
 @endsection
 
 @push('custom-js')
+<script>
+    $('#table_teacher_acv').on('click','.btn-edit',function(e){
+        e.preventDefault();
+
+        var id   = $(this).data('id');
+        var url  = $(this).data('dest')+'/'+id+'/edit';
+        // var url = base_url+'/teacher/achievement/'+id;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var option_ta     = $("<option selected></option>").val(data.id_ta).text(data.academic_year.tahun_akademik+' - '+data.academic_year.semester);
+                var option_nidn   = $("<option selected></option>").val(data.nidn).text(data.teacher.nama+' ('+data.teacher.nidn+')');
+
+                if($('#modal-teach-acv').find('select[name=nidn]').length) {
+                    $('#selectProdi').attr('data-nidn',data.nidn);
+                    $('#selectProdi').val(data.teacher.latest_status.study_program.kd_prodi);
+                }
+
+                $('#modal-teach-acv')
+                    .find('input[name=_id]').val(id).end()
+                    .find('input[name=prestasi]').val(data.prestasi).end()
+                    .find('select[name=nidn]').val(null).html(option_nidn).trigger('change').end()
+                    .find('select[name=id_ta]').append(option_ta).trigger('change').end()
+                    .find('input[name=bukti_nama]').val(data.bukti_nama).end()
+                    .find('button[type=submit]').attr('data-id',id);
+
+                switch(data.tingkat_prestasi) {
+                    case 'Wilayah':
+                        $('input:radio[name=tingkat_prestasi][value="Wilayah"]').prop('checked',true);
+                    break;
+                    case 'Nasional':
+                        $('input:radio[name=tingkat_prestasi][value="Nasional"]').prop('checked',true);
+                    break;
+                    case 'Internasional':
+                        $('input:radio[name=tingkat_prestasi][value="Internasional"]').prop('checked',true);
+                    break;
+                }
+
+                $('#modal-teach-acv').modal('toggle');
+            }
+        });
+    });
+</script>
 @endpush

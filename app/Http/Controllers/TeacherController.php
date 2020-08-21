@@ -36,11 +36,6 @@ class TeacherController extends Controller
         $method = [
             'create',
             'edit',
-            'store',
-            'update',
-            'destroy',
-            'delete_file',
-            'delete_user',
             'import'
         ];
 
@@ -67,6 +62,19 @@ class TeacherController extends Controller
         }
 
         return view('teacher/index',compact(['studyProgram','faculty','data']));
+    }
+
+    public function index_teacher()
+    {
+        $nidn         = Auth::user()->username;
+        $data         = Teacher::where('nidn',$nidn)->first();
+        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
+
+        $bidang       = json_decode($data->bidang_ahli);
+        $data->bidang_ahli   = implode(', ',$bidang);
+
+        return view('teacher-view.profile',compact(['data','studyProgram']));
     }
 
     public function show($nidn)
@@ -293,7 +301,12 @@ class TeacherController extends Controller
             $this->log('updated','Dosen',$property);
 
             DB::commit();
-            return redirect()->route('teacher.list.show',$Teacher->nidn)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+
+            if(Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.biodata')->with('flash.message', 'Biodata berhasil diperbarui!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('teacher.list.show',$Teacher->nidn)->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());

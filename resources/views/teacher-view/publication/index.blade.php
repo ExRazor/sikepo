@@ -66,7 +66,7 @@
                                 <a href="{{route('profile.publication.show',encode_id($p->id))}}">{{ $p->judul }}</a>
                             </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
-                            <td class="text-center">{{ $p->tahun }}</td>
+                            <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
                             <td class="text-center">
                                 @isset($p->sesuai_prodi)
                                     <i class="fa fa-check"></i>
@@ -117,7 +117,7 @@
                                 <a href="{{route('profile.publication.show',encode_id($p->id))}}">{{ $p->judul }}</a>
                             </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
-                            <td class="text-center">{{ $p->tahun }}</td>
+                            <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
                             <td class="text-center">
                                 @isset($p->sesuai_prodi)
                                     <i class="fa fa-check"></i>

@@ -597,7 +597,7 @@ Breadcrumbs::for('profile-research', function ($trail) {
     $trail->push('Data Penelitian', route('profile.research'));
 });
 
-Breadcrumbs::for('profile-research-add', function ($trail) {
+Breadcrumbs::for('profile-research-create', function ($trail) {
     $trail->parent('profile');
     $trail->push('Tambah Data Penelitian', route('profile.research.create'));
 });

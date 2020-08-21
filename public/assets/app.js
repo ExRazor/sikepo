@@ -1267,7 +1267,7 @@ $('#modal-teach-ewmp').on('change','select[name=id_ta]',function(e){
         dataType: 'json',
         success: function (count) {
             cont.find('input[name=ps_intra]').val(count.schedule_ps);
-            cont.find('input[name=ps_lain]').val(count.schedule_pt);
+            // cont.find('input[name=ps_lain]').val(count.schedule_pt);
             cont.find('input[name=penelitian]').val(count.penelitian);
             cont.find('input[name=pkm]').val(count.pengabdian);
         }
@@ -1296,7 +1296,7 @@ $('#ewmp').on('click','.btn-edit',function(e){
                 .find('input[name=ps_luar]').val(data.ps_luar).end()
                 .find('input[name=penelitian]').val(data.penelitian).end()
                 .find('input[name=pkm]').val(data.pkm).end()
-                .find('input[name=tugas_tambahan]').val(data.tugas_tambahan).end()
+                .find('input[name=tugas_tambahan]').val(data.tugas_tambahan);
 
             $('#modal-teach-ewmp').modal('toggle');
         }

@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('profile.research.add') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+        <a href="{{ route('profile.research.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
     </div>
 </div>
 
@@ -78,9 +78,9 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('profile.research.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('profile.research.edit',encrypt($p->id)) }}">Sunting</a>
                                         <form method="POST">
-                                            <input type="hidden" value="{{encode_id($p->id)}}" name="id">
+                                            <input type="hidden" value="{{encrypt($p->id)}}" name="id">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('profile.research.delete') }}">Hapus</button>
                                         </form>
                                     </div>

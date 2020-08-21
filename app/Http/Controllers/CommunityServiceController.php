@@ -26,11 +26,6 @@ class CommunityServiceController extends Controller
         $method = [
             'create',
             'edit',
-            'store',
-            'update',
-            'destroy',
-            'destroy_teacher',
-            'destroy_students',
         ];
 
         $this->middleware('role:admin,kaprodi', ['only' => $method]);
@@ -47,6 +42,27 @@ class CommunityServiceController extends Controller
         return view('community-service.index',compact(['studyProgram','faculty','periodeTahun']));
     }
 
+    public function index_teacher()
+    {
+        $pengabdianKetua     = CommunityService::whereHas(
+                                                    'serviceTeacher', function($q) {
+                                                        $q->where('nidn',Auth::user()->username)->where('status','Ketua');
+                                                    }
+                                                )
+                                                ->get();
+
+        $pengabdianAnggota   = CommunityService::whereHas(
+                                                    'serviceTeacher', function($q) {
+                                                        $q->where('nidn',Auth::user()->username)->where('status','Anggota');
+                                                    }
+                                                )
+                                                ->get();
+
+        // return response()->json($pengabdian);die;
+
+        return view('teacher-view.community-service.index',compact(['pengabdianKetua','pengabdianAnggota']));
+    }
+
     public function show($id)
     {
         $id   = decrypt($id);
@@ -55,11 +71,26 @@ class CommunityServiceController extends Controller
         return view('community-service.show',compact(['data']));
     }
 
+    public function show_teacher($id)
+    {
+        $id     = decode_id($id);
+        $nidn   = Auth::user()->username;
+        $data   = CommunityService::where('id',$id)->first();
+        $status = CommunityServiceTeacher::where('id_pengabdian',$id)->where('nidn',$nidn)->first()->status;
+
+        return view('teacher-view.community-service.show',compact(['data','status']));
+    }
+
     public function create()
     {
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
         return view('community-service.form',compact(['studyProgram','faculty']));
+    }
+
+    public function create_teacher()
+    {
+        return view('teacher-view.community-service.form');
     }
 
     public function edit($id)
@@ -70,6 +101,20 @@ class CommunityServiceController extends Controller
         $data         = CommunityService::where('id',$id)->first();
 
         return view('community-service.form',compact(['data','studyProgram']));
+    }
+
+    public function edit_teacher($id)
+    {
+        $id     = decrypt($id);
+        $nidn   = Auth::user()->username;
+        $data   = CommunityService::where('id',$id)->first();
+        $status = CommunityServiceTeacher::where('id_pengabdian',$id)->where('nidn',$nidn)->first()->status;
+
+        if($status=='Ketua') {
+            return view('teacher-view.community-service.form',compact(['data']));
+        } else {
+            return abort(404);
+        }
     }
 
     public function store(CommunityServiceRequest $request)
@@ -139,7 +184,11 @@ class CommunityServiceController extends Controller
             $this->log('created','Pengabdian',$property);
 
             DB::commit();
-            return redirect()->route('community-service.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            if(Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('community-service.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
@@ -228,7 +277,12 @@ class CommunityServiceController extends Controller
             $this->log('updated','Pengabdian',$property);
 
             DB::commit();
-            return redirect()->route('community-service.show',encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+
+            if(Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.community-service.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('community-service.show',encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());

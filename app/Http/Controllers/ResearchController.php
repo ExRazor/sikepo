@@ -28,11 +28,6 @@ class ResearchController extends Controller
         $method = [
             'create',
             'edit',
-            'store',
-            'update',
-            'destroy',
-            'destroy_teacher',
-            'destroy_students',
         ];
 
         $this->middleware('role:admin,kaprodi', ['only' => $method]);
@@ -47,6 +42,25 @@ class ResearchController extends Controller
         return view('research.index',compact(['studyProgram','faculty','periodeTahun']));
     }
 
+    public function index_teacher()
+    {
+        $penelitianKetua    = Research::whereHas(
+                                            'researchTeacher', function($q) {
+                                                $q->where('nidn',Auth::user()->username)->where('status','Ketua');
+                                            }
+                                        )
+                                        ->get();
+
+        $penelitianAnggota   = Research::whereHas(
+                                            'researchTeacher', function($q) {
+                                                $q->where('nidn',Auth::user()->username)->where('status','Anggota');
+                                            }
+                                        )
+                                        ->get();
+
+        return view('teacher-view.research.index',compact(['penelitianKetua','penelitianAnggota']));
+    }
+
     public function show($id)
     {
         $id   = decrypt($id);
@@ -55,11 +69,27 @@ class ResearchController extends Controller
         return view('research.show',compact(['data']));
     }
 
+    public function show_teacher($id)
+    {
+        $id     = decode_id($id);
+        $nidn   = Auth::user()->username;
+        $data   = Research::where('id',$id)->first();
+        $status = ResearchTeacher::where('id_penelitian',$id)->where('nidn',$nidn)->first()->status;
+
+        return view('teacher-view.research.show',compact(['data','status']));
+    }
+
     public function create()
     {
         $faculty      = Faculty::all();
         $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+
         return view('research.form',compact(['studyProgram','faculty']));
+    }
+
+    public function create_teacher()
+    {
+        return view('teacher-view.research.form');
     }
 
     public function edit($id)
@@ -70,6 +100,20 @@ class ResearchController extends Controller
         $data         = Research::where('id',$id)->first();
 
         return view('research.form',compact(['data','studyProgram']));
+    }
+
+    public function edit_teacher($id)
+    {
+        $id     = decrypt($id);
+        $nidn   = Auth::user()->username;
+        $data   = Research::where('id',$id)->first();
+        $status = ResearchTeacher::where('id_penelitian',$id)->where('nidn',$nidn)->first()->status;
+
+        if($status=='Ketua') {
+            return view('teacher-view.research.form',compact(['data']));
+        } else {
+            return abort(404);
+        }
     }
 
     public function store(ResearchRequest $request)
@@ -140,7 +184,12 @@ class ResearchController extends Controller
             $this->log('created','Penelitian',$property);
 
             DB::commit();
-            return redirect()->route('research.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+
+            if(Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.research')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('research.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
@@ -231,7 +280,11 @@ class ResearchController extends Controller
             $this->log('updated','Penelitian',$property);
 
             DB::commit();
-            return redirect()->route('research.show',encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            if(Auth::user()->hasRole('dosen')) {
+            return redirect()->route('profile.research.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            } else {
+                return redirect()->route('research.show',encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            }
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());

@@ -12,9 +12,6 @@
 */
 
 // Login Routes...
-
-use App\Http\Controllers\Teacher\ResearchController;
-
 Route::get('/tes', 'PageController@tes');
 Route::get('login', 'AuthController@login_form')->middleware('guest')->name('login');
 Route::post('login', 'AuthController@login_post')->name('login_post');
@@ -452,53 +449,54 @@ Route::middleware('auth')->group(function () {
     Route::prefix('profile')->name('profile.')->middleware('role:dosen')->group(function () {
 
         //Biodata
-        Route::get('biodata','Teacher\BiodataController@index')->name('biodata');
-        Route::put('biodata','Teacher\BiodataController@update')->name('biodata.update');
+        Route::get('biodata','TeacherController@index_teacher')->name('biodata');
+        Route::put('biodata/{id}','TeacherController@update')->name('biodata.update');
 
         //Achievement
-        Route::get('achievement','Teacher\AchievementController@index')->name('achievement');
-        Route::get('achievement/{id}','Teacher\AchievementController@edit')->name('achievement.edit');
-        Route::post('achievement','Teacher\AchievementController@store')->name('achievement.store');
-        Route::put('achievement','Teacher\AchievementController@update')->name('achievement.update');
-        Route::delete('achievement','Teacher\AchievementController@destroy')->name('achievement.delete');
+        Route::get('achievement','TeacherAchievementController@index_teacher')->name('achievement');
+        Route::get('achievement/{id}/edit','TeacherAchievementController@edit')->name('achievement.edit');
+        Route::post('achievement','TeacherAchievementController@store')->name('achievement.store');
+        Route::put('achievement/{id}','TeacherAchievementController@update')->name('achievement.update');
+        Route::delete('achievement','TeacherAchievementController@destroy')->name('achievement.delete');
 
         //EWMP
-        Route::get('ewmp','Teacher\EwmpController@index')->name('ewmp');
-        Route::post('ewmp','Teacher\EwmpController@store')->name('ewmp.store');
-        Route::put('ewmp','Teacher\EwmpController@update')->name('ewmp.update');
+        Route::get('ewmp','EwmpController@index_teacher')->name('ewmp');
+        Route::post('ewmp','EwmpController@store')->name('ewmp.store');
+        Route::put('ewmp/{id}','EwmpController@update')->name('ewmp.update');
+        Route::delete('ewmp','EwmpController@destroy')->name('ewmp.destroy');
 
         //Research
-        Route::get('research','Teacher\ResearchController@index')->name('research');
-        Route::get('research/add','Teacher\ResearchController@create')->name('research.add');
-        Route::get('research/{id}','Teacher\ResearchController@show')->name('research.show');
-        Route::get('research/{id}/edit','Teacher\ResearchController@edit')->name('research.edit');
-        Route::post('research','Teacher\ResearchController@store')->name('research.store');
-        Route::put('research','Teacher\ResearchController@update')->name('research.update');
-        Route::delete('research','Teacher\ResearchController@destroy')->name('research.delete');
-        Route::get('research/delete_teacher/{id}','Teacher\ResearchController@destroy_teacher')->name('research.teacher.delete');
-        Route::get('research/delete_student/{id}','Teacher\ResearchController@destroy_students')->name('research.students.delete');
+        Route::get('research','ResearchController@index_teacher')->name('research');
+        Route::get('research/add','ResearchController@create_teacher')->name('research.create');
+        Route::get('research/{id}','ResearchController@show_teacher')->name('research.show');
+        Route::get('research/{id}/edit','ResearchController@edit_teacher')->name('research.edit');
+        Route::post('research','ResearchController@store')->name('research.store');
+        Route::put('research','ResearchController@update')->name('research.update');
+        Route::delete('research','ResearchController@destroy')->name('research.delete');
+        Route::get('research/delete_teacher/{id}','ResearchController@destroy_teacher')->name('research.teacher.delete');
+        Route::get('research/delete_student/{id}','ResearchController@destroy_students')->name('research.students.delete');
 
         //Community Service
-        Route::get('community-service','Teacher\CommunityServiceController@index')->name('community-service');
-        Route::get('community-service/add','Teacher\CommunityServiceController@create')->name('community-service.add');
-        Route::get('community-service/{id}','Teacher\CommunityServiceController@show')->name('community-service.show');
-        Route::get('community-service/{id}/edit','Teacher\CommunityServiceController@edit')->name('community-service.edit');
-        Route::post('community-service','Teacher\CommunityServiceController@store')->name('community-service.store');
-        Route::put('community-service','Teacher\CommunityServiceController@update')->name('community-service.update');
-        Route::delete('community-service','Teacher\CommunityServiceController@destroy')->name('community-service.delete');
-        Route::get('community-service/delete_teacher/{id}','Teacher\CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
-        Route::get('community-service/delete_student/{id}','Teacher\CommunityServiceController@destroy_students')->name('community-service.students.delete');
+        Route::get('community-service','CommunityServiceController@index_teacher')->name('community-service');
+        Route::get('community-service/add','CommunityServiceController@create_teacher')->name('community-service.add');
+        Route::get('community-service/{id}','CommunityServiceController@show_teacher')->name('community-service.show');
+        Route::get('community-service/{id}/edit','CommunityServiceController@edit_teacher')->name('community-service.edit');
+        Route::post('community-service','CommunityServiceController@store')->name('community-service.store');
+        Route::put('community-service','CommunityServiceController@update')->name('community-service.update');
+        Route::delete('community-service','CommunityServiceController@destroy')->name('community-service.delete');
+        Route::get('community-service/delete_teacher/{id}','CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
+        Route::get('community-service/delete_student/{id}','CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
         //Publication
-        Route::get('publication','Teacher\PublicationController@index')->name('publication');
-        Route::get('publication/add','Teacher\PublicationController@create')->name('publication.add');
-        Route::get('publication/{id}','Teacher\PublicationController@show')->name('publication.show');
-        Route::get('publication/{id}/edit','Teacher\PublicationController@edit')->name('publication.edit');
-        Route::post('publication','Teacher\PublicationController@store')->name('publication.store');
-        Route::put('publication','Teacher\PublicationController@update')->name('publication.update');
-        Route::delete('publication','Teacher\PublicationController@destroy')->name('publication.delete');
-        Route::get('publication/delete_member/{id}','Teacher\PublicationController@destroy_member')->name('publication.delete.member');
-        Route::get('publication/delete_student/{id}','Teacher\PublicationController@destroy_student')->name('publication.delete.student');
+        Route::get('publication','TeacherPublicationController@index_teacher')->name('publication');
+        Route::get('publication/add','TeacherPublicationController@create_teacher')->name('publication.add');
+        Route::get('publication/{id}','TeacherPublicationController@show_teacher')->name('publication.show');
+        Route::get('publication/{id}/edit','TeacherPublicationController@edit_teacher')->name('publication.edit');
+        Route::post('publication','TeacherPublicationController@store')->name('publication.store');
+        Route::put('publication','TeacherPublicationController@update')->name('publication.update');
+        Route::delete('publication','TeacherPublicationController@destroy')->name('publication.delete');
+        Route::get('publication/delete_member/{id}','TeacherPublicationController@destroy_member')->name('publication.delete.member');
+        Route::get('publication/delete_student/{id}','TeacherPublicationController@destroy_student')->name('publication.delete.student');
     });
 
     //Download

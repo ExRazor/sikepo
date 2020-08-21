@@ -17,25 +17,19 @@ class TeacherAchievementController extends Controller
 {
     use LogActivity;
 
-    public function __construct()
-    {
-        $method = [
-            'create',
-            'edit',
-            'store',
-            'update',
-            'destroy',
-            'delete_file',
-        ];
-
-        $this->middleware('role:admin,kaprodi', ['only' => $method]);
-    }
-
     public function index()
     {
         $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
 
         return view('teacher.achievement.index',compact(['studyProgram']));
+    }
+
+    public function index_teacher()
+    {
+        $nidn        = Auth::user()->username;
+        $achievement = TeacherAchievement::where('nidn',$nidn)->orderBy('id_ta','desc')->get();
+
+        return view('teacher-view.achievement.index',compact(['achievement']));
     }
 
     public function edit($id)
@@ -57,9 +51,16 @@ class TeacherAchievementController extends Controller
 
         DB::beginTransaction();
         try {
+            //NIDN
+            if(Auth::user()->hasRole('dosen')) {
+                $nidn = Auth::user()->username;
+            } else {
+                $nidn = $request->nidn;
+            }
+
             //Start Query
             $acv                    = new TeacherAchievement;
-            $acv->nidn              = $request->nidn;
+            $acv->nidn              = $nidn;
             $acv->id_ta             = $request->id_ta;
             $acv->prestasi          = $request->prestasi;
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
@@ -112,9 +113,16 @@ class TeacherAchievementController extends Controller
             // $id  = decode_id($request->_id);
             $id = $request->_id;
 
+            //NIDN
+            if(Auth::user()->hasRole('dosen')) {
+                $nidn = Auth::user()->username;
+            } else {
+                $nidn = $request->nidn;
+            }
+
             //Mulai Query
             $acv                    = TeacherAchievement::find($id);
-            $acv->nidn              = $request->nidn;
+            $acv->nidn              = $nidn;
             $acv->id_ta             = $request->id_ta;
             $acv->prestasi          = $request->prestasi;
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
@@ -177,7 +185,7 @@ class TeacherAchievementController extends Controller
         DB::beginTransaction();
         try {
             //Decrypt ID
-            $id     = decode_id($request->_id);
+            $id     = decrypt($request->_id);
 
             //Query
             $data   = TeacherAchievement::find($id);
