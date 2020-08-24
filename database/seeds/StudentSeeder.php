@@ -32,7 +32,7 @@ class StudentSeeder extends Seeder
         $status       = ['Aktif','Nonaktif','Lulus'];
 
         // Excel::import(new StudentImport, public_path('upload/student/excel_import/DATA MAHASISWA JURUSAN TEKNIK INFORMATIKA - GANJIL 2019-2020.xls'));
-        Excel::import(new StudentImport, public_path('upload/student/excel_import/Mahasiswa_2019.xlsx'));
+        Excel::import(new StudentImport, public_path('import_seed/mahasiswa_2019.xlsx'));
 
     	// for($i = 0; $i < 200; $i++){
         //     $nim            = rand(000000000, 999999999);

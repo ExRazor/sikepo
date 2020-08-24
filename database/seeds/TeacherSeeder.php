@@ -31,7 +31,7 @@ class TeacherSeeder extends Seeder
 
         $random = ['0','1','2'];
 
-        Excel::import(new TeacherImport, public_path('upload/teacher/excel_import/dosen.xlsx'));
+        Excel::import(new TeacherImport, public_path('import_seed/dosen_2019.xlsx'));
 
     	// for($i = 0; $i < 50; $i++){
         //     $studyProgram = StudyProgram::all()->random();
