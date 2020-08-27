@@ -101,8 +101,10 @@
                                     <option value="">- Semua -</option>
                                     @endif
                                     @foreach ($studyProgram as $sp)
-                                        @if(Auth::user()->hasRole('kaprodi') && Auth::user()->kd_prodi == $sp->kd_prodi)
-                                        <option value="{{$sp->kd_prodi}}" selected>{{$sp->nama}}</option>
+                                        @if(Auth::user()->hasRole('kaprodi'))
+                                            @if(Auth::user()->kd_prodi == $sp->kd_prodi)
+                                            <option value="{{$sp->kd_prodi}}" selected>{{$sp->nama}}</option>
+                                            @endif
                                         @else
                                         <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
                                         @endif
