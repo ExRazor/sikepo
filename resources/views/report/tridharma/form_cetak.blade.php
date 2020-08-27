@@ -164,7 +164,7 @@
             individu_form.find('input').prop('disabled',true).prop('required',false);
 
             prodi_form.show();
-            prodi_form.find('select').val(null).trigger('change').prop('disabled',false).prop('required',true);
+            prodi_form.find('select').val(null).trigger('change').prop('disabled',false).prop('required',true).prop('selectedIndex',0);
             prodi_form.find('input').prop('disabled',false).prop('required',true);
 
             //Kode Prodi
