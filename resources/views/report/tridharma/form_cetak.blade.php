@@ -99,7 +99,13 @@
                                 <select class="form-control" name="kd_prodi" disabled>
                                     <option value="">- Semua -</option>
                                     @foreach ($studyProgram as $sp)
-                                    <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                        @if(Auth::user()->hasRole('kaprodi'))
+                                            @if(Auth::user()->kd_prodi == $sp->kd_prodi)
+                                            <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                            @endif
+                                        @else
+                                        <option value="{{$sp->kd_prodi}}">{{$sp->nama}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

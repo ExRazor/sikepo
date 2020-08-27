@@ -138,7 +138,6 @@ class ReportController extends Controller
 
     public function tridharma_pdf(ReportTridharmaRequest $request)
     {
-
         /* Ambil kode prodi dari session jika aksesnya Kaprodi */
         if(Auth::user()->hasRole('kaprodi')) {
             $request->kd_prodi   = Auth::user()->kd_prodi;
@@ -329,6 +328,5 @@ class ReportController extends Controller
         }
 
         return $data;
-
     }
 }
