@@ -97,7 +97,9 @@
                             <label class="col-sm-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8">
                                 <select class="form-control" name="kd_prodi" disabled>
+                                    @if(!Auth::user()->hasRole('kaprodi'))
                                     <option value="">- Semua -</option>
+                                    @endif
                                     @foreach ($studyProgram as $sp)
                                         @if(Auth::user()->hasRole('kaprodi'))
                                             @if(Auth::user()->kd_prodi == $sp->kd_prodi)
