@@ -17,7 +17,7 @@ class CreateTeacherOutputActivitiesTable extends Migration
             $table->increments('id');
             $table->string('kegiatan');
             $table->string('nm_kegiatan')->nullable();
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             $table->unsignedInteger('id_kategori');
             $table->string('judul_luaran');
             $table->unsignedInteger('id_ta');

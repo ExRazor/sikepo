@@ -19,7 +19,7 @@ class CreateCurriculumIntegrationsTable extends Migration
             $table->unsignedInteger('id_penelitian')->nullable();
             $table->unsignedInteger('id_pengabdian')->nullable();
             $table->string('kegiatan');
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             $table->string('kd_matkul',12);
             $table->string('bentuk_integrasi');
             $table->timestamps();

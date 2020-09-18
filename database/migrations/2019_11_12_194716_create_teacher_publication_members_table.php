@@ -16,7 +16,7 @@ class CreateTeacherPublicationMembersTable extends Migration
         Schema::create('teacher_publication_members', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_publikasi');
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             $table->string('nama');
             $table->char('kd_prodi',5);
             $table->timestamps();

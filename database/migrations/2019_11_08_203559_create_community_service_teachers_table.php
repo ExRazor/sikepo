@@ -18,7 +18,7 @@ class CreateCommunityServiceTeachersTable extends Migration
             $table->unsignedInteger('id_pengabdian');
             $table->string('status');
             $table->float('sks');
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             // $table->string('nama_lain')->nullable();
             // $table->string('asal_lain')->nullable();
 

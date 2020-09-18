@@ -9,10 +9,9 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use App\Library\NumberFormatExcel as NumberFormat;
 
-class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithColumnFormatting
+class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize
 {
     use Exportable;
 
@@ -91,14 +90,6 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             $teacher->ikatan_kerja,
             $teacher->jabatan_akademik,
             $teacher->sertifikat_pendidik,
-        ];
-    }
-
-    public function columnFormats(): array
-    {
-        return [
-            'B' => NumberFormat::FORMAT_NUMBER,
-            'D' => NumberFormat::FORMAT_NUMBER,
         ];
     }
 }

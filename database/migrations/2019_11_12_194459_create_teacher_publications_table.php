@@ -15,7 +15,7 @@ class CreateTeacherPublicationsTable extends Migration
     {
         Schema::create('teacher_publications', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             $table->unsignedInteger('jenis_publikasi');
             $table->string('judul');
             $table->string('penerbit');

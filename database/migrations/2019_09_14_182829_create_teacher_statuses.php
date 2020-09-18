@@ -16,7 +16,7 @@ class CreateTeacherStatuses extends Migration
         Schema::create('teacher_statuses', function (Blueprint $table) {
             $table->bigIncrements('id');
             // $table->unsignedInteger('id_ta');
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             $table->date('periode');
             $table->string('jabatan');
             $table->char('kd_prodi',5)->nullable();

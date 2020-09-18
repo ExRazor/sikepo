@@ -15,7 +15,7 @@ class CreateTeacherAchievementsTable extends Migration
     {
         Schema::create('teacher_achievements', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('nidn',10);
+            $table->char('nidn',12);
             $table->unsignedInteger('id_ta');
             $table->string('prestasi');
             $table->enum('tingkat_prestasi',['Wilayah','Nasional','Internasional']);
