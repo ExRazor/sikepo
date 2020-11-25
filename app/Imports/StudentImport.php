@@ -16,15 +16,16 @@ class StudentImport implements ToCollection, WithStartRow
 {
     public function collection(Collection $columns)
     {
-        foreach ($columns as $column)
-        {
-            if($column->filter()->isNotEmpty()) {
-                $kd_prodi    = StudyProgram::where('nama',$column[3])->first()->kd_prodi;
-                $thn_masuk   = AcademicYear::where('tahun_akademik',$column[4])->where('semester','Ganjil')->first();
+        foreach ($columns as $column) {
+            if ($column->filter()->isNotEmpty()) {
+                $kd_prodi    = StudyProgram::where('nama', $column[3])->first()->kd_prodi;
+                $thn_masuk   = AcademicYear::where('tahun_akademik', $column[4])->where('semester', 'Ganjil')->first();
 
-                if($column[6] != 0) {
-                    $origDate   = Carbon::instance(Date::excelToDateTimeObject($column[8]));
-                    $tgl_lhr    = date("Y-m-d", strtotime($origDate));
+                if ($column[8] != 0) {
+                    // $tgl_lhr   = Date::excelToDateTimeObject($column[8])->format('Y-m-d');
+                    // $tgl_lhr    = date("Y-m-d", strtotime($column[8]));
+                    // $tgl_lhr    = Carbon::createFromFormat('Y-m-d', $column['8']);
+                    $tgl_lhr    = Carbon::createFromFormat('Y-m-d', $column['8']);
                 } else {
                     $tgl_lhr    = date("Y-m-d");
                 }
@@ -52,8 +53,8 @@ class StudentImport implements ToCollection, WithStartRow
                     ]
                 );
 
-                $cekStatus = StudentStatus::where('nim',$column[1])->count();
-                if($cekStatus == 0) {
+                $cekStatus = StudentStatus::where('nim', $column[1])->count();
+                if ($cekStatus == 0) {
                     StudentStatus::create([
                         'id_ta'     => $thn_masuk->id,
                         'nim'       => $column[1],
@@ -61,9 +62,9 @@ class StudentImport implements ToCollection, WithStartRow
                     ]);
                 }
 
-                if($cekStatus > 0 && $column[17]) {
-                    $ta = explode(' - ',$column[19]);
-                    $thn_status = AcademicYear::where('tahun_akademik',$ta[0])->where('semester',$ta[1])->first();
+                if ($cekStatus > 0 && $column[17]) {
+                    $ta = explode(' - ', $column[19]);
+                    $thn_status = AcademicYear::where('tahun_akademik', $ta[0])->where('semester', $ta[1])->first();
 
                     StudentStatus::create([
                         'id_ta'         => $thn_status->id,
@@ -76,34 +77,33 @@ class StudentImport implements ToCollection, WithStartRow
         }
     }
 
-    public function startRow() : int
+    public function startRow(): int
     {
         return 2;
     }
 
     public function collection_old($rows)
     {
-        foreach ($rows as $index => $row)
-        {
+        foreach ($rows as $index => $row) {
             // $substr_nim  = substr($row[4],0,-5);
-            $kd_prodi    = StudyProgram::where('nama',$row[12])->first()->kd_prodi;
-            $smt_awal    = explode('/',$row[18]);
-            $thn_masuk   = AcademicYear::where('tahun_akademik',$smt_awal[0])->where('semester','Ganjil')->first();
+            $kd_prodi    = StudyProgram::where('nama', $row[12])->first()->kd_prodi;
+            $smt_awal    = explode('/', $row[18]);
+            $thn_masuk   = AcademicYear::where('tahun_akademik', $smt_awal[0])->where('semester', 'Ganjil')->first();
 
-            if($row[6] != 0) {
+            if ($row[6] != 0) {
                 $origDate   = Carbon::instance(Date::excelToDateTimeObject($row[6]));
                 $newDate    = date("Y-m-d", strtotime($origDate));
             } else {
                 $newDate    = date("Y-m-d");
             }
 
-            if($row[7] == 'L') {
+            if ($row[7] == 'L') {
                 $jk = 'Laki-Laki';
             } else if ($row[7] == 'P') {
                 $jk = 'Perempuan';
             }
 
-            if($row[19] == 'Non-Aktif') {
+            if ($row[19] == 'Non-Aktif') {
                 $row[19] = 'Nonaktif';
             }
 
@@ -136,7 +136,7 @@ class StudentImport implements ToCollection, WithStartRow
                 'status'    => 'Aktif'
             ]);
 
-            if($row[19] == 'Nonaktif') {
+            if ($row[19] == 'Nonaktif') {
                 StudentStatus::create([
                     'id_ta'     => $thn_masuk->id,
                     'nim'       => $row[4],

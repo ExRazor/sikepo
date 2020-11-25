@@ -28,11 +28,11 @@ class DatabaseSeeder extends Seeder
         $this->call(CurriculumSeeder::class);
         $this->call(StudentSeeder::class);
 
+        // $this->call(StudentStatusSeeder::class);
         // $this->call(CollaborationSeeder::class);
         // $this->call(TeacherAchievementSeeder::class);
         // $this->call(CurriculumScheduleSeeder::class);
         // $this->call(StudentQuotaSeeder::class);
-        // $this->call(StudentStatusSeeder::class);
         // $this->call(StudentForeignSeeder::class);
         // $this->call(StudentAchievementSeeder::class);
         // $this->call(FundFacultySeeder::class);

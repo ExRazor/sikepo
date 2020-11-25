@@ -15,10 +15,10 @@ class CreateMinithesesTable extends Migration
     {
         Schema::create('minitheses', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('nim',10);
+            $table->char('nim', 10);
             $table->string('judul');
-            $table->char('pembimbing_utama',10);
-            $table->char('pembimbing_pendamping',10)->nullable();
+            $table->char('pembimbing_utama', 12);
+            $table->char('pembimbing_pendamping', 12)->nullable();
             $table->unsignedInteger('id_ta');
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();

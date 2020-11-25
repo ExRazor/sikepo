@@ -33,6 +33,7 @@
                                 @if($status->status != 'Aktif')<option value="Aktif">Aktif</option>@endif
                                 @if($status->status != 'Nonaktif')<option value="Nonaktif">Nonaktif</option>@endif
                                 @if($status->status != 'Lulus')<option value="Lulus">Lulus</option>@endif
+                                @if($status->status != 'Dropout')<option value="Dropout">Dropout</option>@endif
                             </select>
                         </div>
                     </div>

@@ -59,7 +59,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="mahasiswa_baru">Indikator Penilaian</label>
-                                    <select class="form-control" name="indikator_penilaian" data-placeholder="Pilih Prodi">
+                                    <select class="form-control" name="indikator_penilaian" data-placeholder="Pilih Prodi" required>
                                         <option value="">- Pilih Indikator -</option>
                                         <option value="penilaian_dosen">Penilaian Dosen</option>
                                         <option value="kinerja_dosen">Kinerja Dosen</option>
@@ -96,7 +96,7 @@
 @endsection
 
 @section('js')
-<script src="{{asset('assets')}}/simulasi.js"></script>
+{{-- <script src="{{asset('assets')}}/simulasi.js"></script> --}}
 @endsection
 
 @push('custom-js')
@@ -119,18 +119,18 @@ $(function(){
                 penilaian_kecukupan_dosen(kd_prodi);
                 penilaian_persentase_dtps_s3(kd_prodi);
                 penilaian_persentase_dtps_jabatan(kd_prodi);
-                penilaian_persentase_dtps_sertifikat(kd_prodi);
                 penilaian_persentase_dtps_dtt(kd_prodi);
                 penilaian_rasio_mahasiswa_dtps(kd_prodi);
+                penilaian_beban_bimbingan(kd_prodi);
                 break;
             case 'kinerja_dosen':
-                penilaian_beban_bimbingan(kd_prodi);
                 penilaian_waktu_mengajar(kd_prodi);
                 penilaian_prestasi_dtps(kd_prodi);
                 break;
             case 'pkm_dosen':
-                penilaian_publikasi_jurnal(kd_prodi);
-                penilaian_publikasi_seminar(kd_prodi);
+                penilaian_penelitian_dtps(kd_prodi);
+                penilaian_pengabdian_dtps(kd_prodi);
+                penilaian_publikasi_dtps(kd_prodi);
                 penilaian_publikasi_tersitasi(kd_prodi);
                 penilaian_luaran_pkm(kd_prodi);
                 break;
@@ -191,26 +191,29 @@ $(function(){
             success: function (data) {
                 $('#persentase_dtps_jabatan')
                     .find('#dtps').val(data.jumlah['dtps']).end()
-                    .find('#dtps_gubes_lk').val(data.jumlah['dtps_gubes_lk']).end()
+                    .find('#dtps_gb').val(data.jumlah['dtps_gubes']).end()
+                    .find('#dtps_lk').val(data.jumlah['dtps_lk']).end()
+                    .find('#dtps_lektor').val(data.jumlah['dtps_lektor']).end()
                     .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
                     .find('#skor').val(data.skor.toFixed(2));
             }
         });
     }
 
-    function penilaian_persentase_dtps_sertifikat(kd_prodi) {
+    function penilaian_rasio_mahasiswa_dtps(kd_prodi) {
         $.ajax({
-            url: '/assessment/resource/persentase_dtps_sertifikat',
+            url: '/assessment/resource/rasio_mahasiswa_dtps',
             type: 'POST',
             data: {
                 kd_prodi:kd_prodi,
             },
             dataType: 'json',
             success: function (data) {
-                $('#persentase_dtps_sertifikat')
+                $('#rasio_mahasiswa_dtps')
                     .find('#dtps').val(data.jumlah['dtps']).end()
-                    .find('#dtps_sertifikat').val(data.jumlah['dtps_sertifikat']).end()
-                    .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
+                    .find('#mahasiswa').val(data.jumlah['mahasiswa']).end()
+                    .find('#rasio_dtps').val(data.rasio['dtps'].toFixed(0)).end()
+                    .find('#rasio_mahasiswa').val(data.rasio['mahasiswa'].toFixed(0)).end()
                     .find('#skor').val(data.skor.toFixed(2));
             }
         });
@@ -236,50 +239,6 @@ $(function(){
         });
     }
 
-    function penilaian_rasio_mahasiswa_dtps(kd_prodi) {
-        $.ajax({
-            url: '/assessment/resource/rasio_mahasiswa_dtps',
-            type: 'POST',
-            data: {
-                kd_prodi:kd_prodi,
-            },
-            dataType: 'json',
-            success: function (data) {
-                $('#rasio_mahasiswa_dtps')
-                    .find('#dtps').val(data.jumlah['dtps']).end()
-                    .find('#mahasiswa').val(data.jumlah['mahasiswa']).end()
-                    .find('#rasio_dtps').val(data.rasio['dtps'].toFixed(0)).end()
-                    .find('#rasio_mahasiswa').val(data.rasio['mahasiswa'].toFixed(0)).end()
-                    .find('#skor').val(data.skor.toFixed(2));
-            }
-        });
-    }
-
-    function penilaian_kecukupan_dosenss(kd_prodi) {
-        $.ajax({
-            url: '/resource/kecukupan_dosen',
-            type: 'POST',
-            data: {
-                kd_prodi:kd_prodi,
-            },
-            dataType: 'json',
-            success: function (data) {
-
-                $('#penelitian_dtps')
-                    .find('#ni').val(data.jumlah['dtps']).end()
-                    .find('#nn').val(data.jumlah['nn']).end()
-                    .find('#nl').val(data.jumlah['nl']).end()
-                    .find('#dtps').val(data.jumlah['dtps']).end()
-                    .find('#skor_penelitian').val(data.skor.toFixed(2)).end()
-                    .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
-                    .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
-                    .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
-                    .find('span.rumus_penelitian').text(data.rumus);
-            }
-        });
-    }
-
-
     function penilaian_beban_bimbingan(kd_prodi) {
         $.ajax({
             url: '/assessment/resource/beban_bimbingan',
@@ -290,9 +249,7 @@ $(function(){
             dataType: 'json',
             success: function (data) {
                 $('#beban_bimbingan')
-                    .find('#pembimbing_utama').val(data.jumlah['pembimbing_utama']).end()
-                    .find('#pembimbing_10').val(data.jumlah['pembimbing_10']).end()
-                    .find('#persentase').val(data.persentase.toFixed(2)+"%").end()
+                    .find('#rata_bimbingan').val(data.jumlah.toFixed(0)).end()
                     .find('#skor').val(data.skor.toFixed(2));
             }
         });
@@ -309,7 +266,7 @@ $(function(){
             success: function (data) {
                 $('#waktu_mengajar')
                     .find('#dtps').val(data.jumlah['dtps']).end()
-                    .find('#total_rata_sks').val(data.jumlah['rata_sks']).end()
+                    .find('#total_rata_sks').val(data.jumlah['rata_sks'].toFixed(2)).end()
                     .find('#rata_sks').val(data.rata_sks.toFixed(2)).end()
                     .find('#skor').val(data.skor.toFixed(2));
             }
@@ -328,56 +285,87 @@ $(function(){
                 $('#prestasi_dtps')
                     .find('#dtps').val(data.jumlah['dtps']).end()
                     .find('#dtps_berprestasi').val(data.jumlah['dtps_berprestasi']).end()
-                    .find('#dtps_prestasi_inter').val(data.jumlah['dtps_prestasi_inter']).end()
                     .find('#rata').val(data.rata.toFixed(2)).end()
                     .find('#skor').val(data.skor.toFixed(2));
             }
         });
     }
 
-    function penilaian_publikasi_jurnal(kd_prodi) {
+    function penilaian_penelitian_dtps(kd_prodi) {
         $.ajax({
-            url: '/assessment/resource/publikasi_jurnal',
+            url: '/assessment/resource/penelitian',
             type: 'POST',
             data: {
                 kd_prodi:kd_prodi,
             },
             dataType: 'json',
             success: function (data) {
-                $('#publikasi_jurnal')
+
+                $('#penelitian_dtps')
+                    .find('#ni').val(data.jumlah['ni']).end()
+                    .find('#nn').val(data.jumlah['nn']).end()
+                    .find('#nl').val(data.jumlah['nl']).end()
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#skor_penelitian').val(data.skor.toFixed(2)).end()
+                    .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
+                    .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
+                    .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
+                    .find('span.faktor_a').text(data.faktor['a']).end()
+                    .find('span.faktor_b').text(data.faktor['b']).end()
+                    .find('span.faktor_c').text(data.faktor['c']).end()
+                    .find('span.rumus_penelitian').text(data.rumus);
+            }
+        });
+    }
+
+    function penilaian_pengabdian_dtps(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/pengabdian',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+
+                $('#pengabdian_dtps')
+                    .find('#ni').val(data.jumlah['ni']).end()
+                    .find('#nn').val(data.jumlah['nn']).end()
+                    .find('#nl').val(data.jumlah['nl']).end()
+                    .find('#dtps').val(data.jumlah['dtps']).end()
+                    .find('#skor').val(data.skor.toFixed(2)).end()
+                    .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
+                    .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
+                    .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
+                    .find('span.faktor_a').text(data.faktor['a']).end()
+                    .find('span.faktor_b').text(data.faktor['b']).end()
+                    .find('span.faktor_c').text(data.faktor['c']).end()
+                    .find('span.rumus').text(data.rumus);
+            }
+        });
+    }
+
+    function penilaian_publikasi_dtps(kd_prodi) {
+        $.ajax({
+            url: '/assessment/resource/publikasi',
+            type: 'POST',
+            data: {
+                kd_prodi:kd_prodi,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#publikasi_dtps')
                     .find('#dtps').val(data.jumlah['dtps']).end()
                     .find('#na1').val(data.jumlah['na1']).end()
                     .find('#na2').val(data.jumlah['na2']).end()
                     .find('#na3').val(data.jumlah['na3']).end()
                     .find('#na4').val(data.jumlah['na4']).end()
-                    .find('span.faktor_a').text(data.faktor['a']).end()
-                    .find('span.faktor_b').text(data.faktor['b']).end()
-                    .find('span.faktor_c').text(data.faktor['c']).end()
-                    .find('span.rata_rl').text(data.rata['rl'].toFixed(2)).end()
-                    .find('span.rata_rn').text(data.rata['rn'].toFixed(2)).end()
-                    .find('span.rata_ri').text(data.rata['ri'].toFixed(2)).end()
-                    .find('span.rumus').text(data.rumus).end()
-                    .find('#skor').val(data.skor.toFixed(2));
-            }
-        });
-    }
-
-    function penilaian_publikasi_seminar(kd_prodi) {
-        $.ajax({
-            url: '/assessment/resource/publikasi_seminar',
-            type: 'POST',
-            data: {
-                kd_prodi:kd_prodi,
-            },
-            dataType: 'json',
-            success: function (data) {
-                $('#publikasi_seminar')
-                    .find('#dtps').val(data.jumlah['dtps']).end()
                     .find('#nb1').val(data.jumlah['nb1']).end()
                     .find('#nb2').val(data.jumlah['nb2']).end()
                     .find('#nb3').val(data.jumlah['nb3']).end()
                     .find('#nc1').val(data.jumlah['nc1']).end()
                     .find('#nc2').val(data.jumlah['nc2']).end()
+                    .find('#nc3').val(data.jumlah['nc3']).end()
                     .find('span.faktor_a').text(data.faktor['a']).end()
                     .find('span.faktor_b').text(data.faktor['b']).end()
                     .find('span.faktor_c').text(data.faktor['c']).end()

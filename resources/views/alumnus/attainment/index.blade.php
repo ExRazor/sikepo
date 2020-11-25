@@ -48,6 +48,7 @@
                                 <th class="text-center align-middle" rowspan="2">Tahun Lulus</th>
                                 <th class="text-center align-middle" rowspan="2">Jumlah Lulusan</th>
                                 <th class="text-center" colspan="3">Indeks Prestasi Kumulatif (IPK)</th>
+                                <th class="text-center" rowspan="2">Rata-Rata Masa Studi</th>
                             </tr>
                             <tr>
                                 <th class="text-center">Min.</th>
@@ -63,6 +64,7 @@
                                 <td class="text-center">{{$min_ipk[$sp->kd_prodi][$ay->tahun_akademik]}}</td>
                                 <td class="text-center">{{number_format($rata_ipk[$sp->kd_prodi][$ay->tahun_akademik],2)}}</td>
                                 <td class="text-center">{{$max_ipk[$sp->kd_prodi][$ay->tahun_akademik]}}</td>
+                                <td class="text-center">{{number_format($rata_masa_studi[$sp->kd_prodi][$ay->tahun_akademik], 1)}} Tahun</td>
                             </tr>
                             @endforeach
                         </tbody>

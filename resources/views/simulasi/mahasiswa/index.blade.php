@@ -203,13 +203,196 @@
                 </div>
             </div>
         </div>
+        <div id="publikasi_mhs" class="card shadow-base mb-3">
+            <div class="card-header">
+                <div class="card-title">
+                    <h6 class="mg-b-0">
+                        Publikasi Mahasiswa 3 Tahun Terakhir
+                    </h6>
+                </div>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-primary btn-add" data-toggle="modal" data-target="#simulasi-publikasi-mhs"><i class="fa fa-sync mg-r-10"></i> Simulasi</button>
+                </div>
+            </div>
+            <div class="card-body bd-color-gray-lighter">
+                <form class="form-perhitungan">
+                    <div class="row mg-b-20">
+                        <div class="col-md-12">
+                            <img class="w-100" src="{{ asset ('penilaian/img') }}/mahasiswa-3.jpg" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-primary">
+                              <span>
+                                  Faktor a = <span class="faktor_a"></span> || Faktor b = <span class="faktor_b"></span> || Faktor c = <span class="faktor_c"></span>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Jurnal Non Akreditasi<br>(NA1)</label>
+                                        <input type="text" class="form-control" id="na1" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Jurnal Nasional<br>(NA2)</label>
+                                        <input type="text" class="form-control" id="na2" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Jurnal Internasional<br>(NA3)</label>
+                                        <input type="text" class="form-control" id="na3" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Jurnal Internasional Bereputasi<br>(NA4)</label>
+                                        <input type="text" class="form-control" id="na4" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="internasional">Seminar Wilayah/Lokal/PT<br>(NB1)</label>
+                                        <input type="text" class="form-control" id="nb1" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Seminar Penelitian Nasional<br>(NB2)</label>
+                                        <input type="text" class="form-control" id="nb2" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Seminar Penelitian Internasional<br>(NB3)</label>
+                                        <input type="text" class="form-control" id="nb3" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="internasional">Tulisan di Media Massa Lokal<br>(NC1)</label>
+                                        <input type="text" class="form-control" id="nc1" disabled>
+                                        <small class="form-text text-muted">RL = ((NA1+NB1+NC1)/NM) * 100 = <span class="rata_rl">0</span></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="internasional">Tulisan di Media Massa Nasional<br>(NC2)</label>
+                                        <input type="text" class="form-control" id="nc2" disabled>
+                                        <small class="form-text text-muted">RN = ((NA2+NA3+NB2+NC2)/NM) * 100 = <span class="rata_rn">0</span></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Tulisan di Media Massa Internasional<br>(NC3)</label>
+                                        <input type="text" class="form-control" id="nc3" disabled>
+                                        <small class="form-text text-muted">RI = ((NA4+NB3+NC3)/NM) * 100 = <span class="rata_ri">0</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="internasional">Total Mahasiswa<br>(NM)</label>
+                                        <input type="text" class="form-control" id="mhs" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Skor</label>
+                                        <input type="text" class="form-control" id="skor" disabled>
+                                        <small class="form-text text-muted">Skor = <span class="rumus"></span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="luaran_mhs" class="card shadow-base mb-3">
+            <div class="card-header">
+                <div class="card-title">
+                    <h6 class="mg-b-0">
+                        Luaran Mahasiswa 3 Tahun Terakhir
+                    </h6>
+                </div>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-primary btn-add" data-toggle="modal" data-target="#simulasi-luaran-mhs"><i class="fa fa-sync mg-r-10"></i> Simulasi</button>
+                </div>
+            </div>
+            <div class="card-body bd-color-gray-lighter">
+                <form class="form-perhitungan">
+                    <div class="row mg-b-20">
+                        <div class="col-md-12">
+                            <img class="w-100" src="{{ asset ('penilaian/img') }}/mahasiswa-4.jpg" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="internasional">HKI A (Paten/Paten Sederhana)<br>(NA)</label>
+                                <input type="text" class="form-control form-pkm" id="na" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>HKI B (Hak Cipta, Desain Produk Industri, dll)<br>(NB)</label>
+                                <input type="text" class="form-control form-pkm" id="nb" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="internasional">Teknologi Tepat Guna, Produk, dll<br>(NC)</label>
+                                <input type="text" class="form-control form-pkm" id="nc" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Buku ber-ISBN<br>(ND)</label>
+                                <input type="text" class="form-control form-pkm" id="nd" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="internasional">Hasil (NLP)</label>
+                                <input type="text" class="form-control form-isi" id="nlp" disabled>
+                                <small class="form-text text-muted">NLP = <span class="rumus_nlp"></span></small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Skor</label>
+                                <input type="text" class="form-control" id="skor" readonly>
+                                <small class="form-text text-muted">Skor = <span class="rumus"></span></small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 @include('simulasi.mahasiswa.modal')
 @endsection
 
 @section('js')
-<script src="{{asset('assets')}}/simulasi.js"></script>
+{{-- <script src="{{asset('assets')}}/simulasi.js"></script> --}}
 @endsection
 
 @push('custom-js')
@@ -230,6 +413,8 @@ $('#form_penilaian').submit(function(e){
 
     penilaian_mhs_seleksi(kd_prodi);
     penilaian_mhs_asing(kd_prodi);
+    penilaian_publikasi_mhs(kd_prodi);
+    penilaian_luaran_mhs(kd_prodi);
 
     setTimeout(function() {
         button.attr('disabled', false);
@@ -285,6 +470,61 @@ function penilaian_mhs_asing(kd_prodi) {
                 .find('span.persentase_asing_full').text(data.persentase['asing_full']).end()
                 .find('span.persentase_asing_part').text(data.persentase['asing_part'])
                 ;
+        }
+    });
+}
+
+function penilaian_publikasi_mhs(kd_prodi) {
+    $.ajax({
+        url: '/assessment/student/publikasi',
+        type: 'POST',
+        data: {
+            kd_prodi:kd_prodi,
+        },
+        dataType: 'json',
+        success: function (data) {
+            $('#publikasi_mhs')
+                .find('#mhs').val(data.jumlah['mhs']).end()
+                .find('#na1').val(data.jumlah['na1']).end()
+                .find('#na2').val(data.jumlah['na2']).end()
+                .find('#na3').val(data.jumlah['na3']).end()
+                .find('#na4').val(data.jumlah['na4']).end()
+                .find('#nb1').val(data.jumlah['nb1']).end()
+                .find('#nb2').val(data.jumlah['nb2']).end()
+                .find('#nb3').val(data.jumlah['nb3']).end()
+                .find('#nc1').val(data.jumlah['nc1']).end()
+                .find('#nc2').val(data.jumlah['nc2']).end()
+                .find('#nc3').val(data.jumlah['nc3']).end()
+                .find('span.faktor_a').text(data.faktor['a']).end()
+                .find('span.faktor_b').text(data.faktor['b']).end()
+                .find('span.faktor_c').text(data.faktor['c']).end()
+                .find('span.rata_rl').text(data.rata['rl'].toFixed(2)).end()
+                .find('span.rata_rn').text(data.rata['rn'].toFixed(2)).end()
+                .find('span.rata_ri').text(data.rata['ri'].toFixed(2)).end()
+                .find('span.rumus').text(data.rumus).end()
+                .find('#skor').val(data.skor.toFixed(2));
+        }
+    });
+}
+
+function penilaian_luaran_mhs(kd_prodi) {
+    $.ajax({
+        url: '/assessment/student/luaran',
+        type: 'POST',
+        data: {
+            kd_prodi:kd_prodi,
+        },
+        dataType: 'json',
+        success: function (data) {
+            $('#luaran_mhs')
+                .find('#na').val(data.jumlah['na']).end()
+                .find('#nb').val(data.jumlah['nb']).end()
+                .find('#nc').val(data.jumlah['nc']).end()
+                .find('#nd').val(data.jumlah['nd']).end()
+                .find('#nlp').val(data.hasil.toFixed(2)).end()
+                .find('span.rumus_nlp').text(data.rumus['nlp']).end()
+                .find('span.rumus').text(data.rumus['skor']).end()
+                .find('#skor').val(data.skor.toFixed(2));
         }
     });
 }

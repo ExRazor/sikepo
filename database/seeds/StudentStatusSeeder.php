@@ -13,22 +13,19 @@ class StudentStatusSeeder extends Seeder
      */
     public function run()
     {
-        $students = Student::all();
-        $status   = ['Aktif','Nonaktif','Lulus'];
-        foreach($students as $student) {
-            $tahun_masuk = AcademicYear::where('tahun_akademik','<','2014')->inRandomOrder()->first();
+        $students = Student::where('angkatan', '<', '2016')->get();
+        $status   = ['Nonaktif', 'Lulus', 'Dropout'];
+        foreach ($students as $student) {
+            $tahun = AcademicYear::where('tahun_akademik', '>=', '2016')->inRandomOrder()->first();
             $status_mhs  = $status[array_rand($status)];
 
-            if($status_mhs!='Aktif') {
-                DB::table('student_statuses')->insert([
-                    'id_ta'                 => AcademicYear::where('tahun_akademik','>','2014')->inRandomOrder()->first()->id,
-                    'nim'                   => $student->nim,
-                    'status'                => $status_mhs,
-                    'ipk_terakhir'          => rand(200, 400)/100,
-                    'created_at'            => now()
-                ]);
-            }
-
+            DB::table('student_statuses')->insert([
+                'id_ta'                 => $tahun->id,
+                'nim'                   => $student->nim,
+                'status'                => $status_mhs,
+                'ipk_terakhir'          => rand(200, 400) / 100,
+                'created_at'            => now()
+            ]);
         }
     }
 }

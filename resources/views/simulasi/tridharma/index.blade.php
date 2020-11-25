@@ -100,7 +100,7 @@
                 </form>
             </div>
         </div>
-        <div id="penilaian_prestasi_mhs" class="card shadow-base mb-3">
+        <div id="penilaian_prestasi_akademik_mhs" class="card shadow-base mb-3">
             <div class="card-header">
                 <div class="card-title">
                     <h6 class="mg-b-0">
@@ -108,7 +108,7 @@
                     </h6>
                 </div>
                 <div class="ml-auto">
-                    <button class="btn btn-sm btn-primary btn-add" data-toggle="modal" data-target="#simulasi-prestasi-mhs"><i class="fa fa-sync mg-r-10"></i> Simulasi</button>
+                    <button class="btn btn-sm btn-primary btn-add" data-toggle="modal" data-target="#simulasi-prestasi-akademik-mhs"><i class="fa fa-sync mg-r-10"></i> Simulasi</button>
                 </div>
             </div>
             <div class="card-body bd-color-gray-lighter">
@@ -121,7 +121,7 @@
                     <div class="col-md-12">
                         <div class="alert alert-success">
                             <span>
-                                Faktor a = 0.05 || Faktor b = 0.5 || Faktor c = 2
+                                Faktor a = <span class="faktor_a"></span>% || Faktor b = <span class="faktor_b"></span>% || Faktor c = <span class="faktor_c"></span>%
                             </span>
                         </div>
                     </div>
@@ -166,6 +166,106 @@
                 </div>
             </div>
         </div>
+        <div id="penilaian_prestasi_nonakademik_mhs" class="card shadow-base mb-3">
+            <div class="card-header">
+                <div class="card-title">
+                    <h6 class="mg-b-0">
+                        Prestasi Non Akademik Mahasiswa 3 Tahun Terakhir
+                    </h6>
+                </div>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-primary btn-add" data-toggle="modal" data-target="#simulasi-prestasi-nonakademik-mhs"><i class="fa fa-sync mg-r-10"></i> Simulasi</button>
+                </div>
+            </div>
+            <div class="card-body bd-color-gray-lighter">
+                <div class="row mg-b-20">
+                    <div class="col-md-12">
+                        <img class="w-100" src="{{ asset ('penilaian/img') }}/tridharma-3.jpg" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            <span>
+                                Faktor a = <span class="faktor_a"></span>% || Faktor b = <span class="faktor_b"></span>% || Faktor c = <span class="faktor_c"></span>%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="internasional">Prestasi Internasional (NI)</label>
+                            <input type="text" class="form-control" id="inter" disabled>
+                            <small class="form-text text-muted">RI = NI/NM = <span class="rata_inter">0</span></small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Prestasi Nasional (NN)</label>
+                            <input type="text" class="form-control" id="nasional" disabled>
+                            <small class="form-text text-muted">RN = NN/NM = <span class="rata_nasional">0</span></small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Prestasi Wilayah (NW)</label>
+                            <input type="text" class="form-control" id="lokal" disabled>
+                            <small class="form-text text-muted">RW = NW/NM = <span class="rata_lokal">0</span></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Jumlah Mahasiswa Aktif (NM)</label>
+                            <input type="text" class="form-control" id="mahasiswa" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Skor</label>
+                            <input type="text" class="form-control" id="skor_prestasi" disabled>
+                            <small class="form-text text-muted">Skor = <span class="rumus_prestasi"></span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="penilaian_masa_studi_lulusan" class="card shadow-base mb-3">
+            <div class="card-header">
+                <div class="card-title">
+                    <h6 class="mg-b-0">
+                        Masa Studi Lulusan Setahun Terakhir
+                    </h6>
+                </div>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-primary btn-add" data-toggle="modal" data-target="#simulasi-masa-studi-lulusan"><i class="fa fa-sync mg-r-10"></i> Simulasi</button>
+                </div>
+            </div>
+            <div class="card-body bd-color-gray-lighter">
+                <div class="row mg-b-20">
+                    <div class="col-md-12">
+                        <img class="w-100" src="{{ asset ('penilaian/img') }}/tridharma-4.jpg" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="internasional">Rata-Rata Masa Studi Lulusan (MS)</label>
+                            <input type="text" class="form-control" id="ms" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Skor</label>
+                            <input type="text" class="form-control" id="skor" disabled>
+                            <small class="form-text text-muted">Skor = <span class="rumus_skor"></span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="penilaian_tempat_lulusan" class="card shadow-base mb-3">
             <div class="card-header">
                 <div class="card-title">
@@ -188,7 +288,7 @@
                         <div class="col-md-12">
                             <div class="alert alert-success">
                                 <span>
-                                    Faktor a = 5% || Faktor b = 20% || Faktor c = 90%
+                                    Faktor a = <span class="faktor_a"></span>% || Faktor b = <span class="faktor_b"></span>% || Faktor c = <span class="faktor_c"></span>%
                                 </span>
                             </div>
                         </div>
@@ -240,7 +340,7 @@
 @endsection
 
 @section('js')
-<script src="{{asset('assets')}}/simulasi.js"></script>
+{{-- <script src="{{asset('assets')}}/simulasi.js"></script> --}}
 @endsection
 
 @push('custom-js')
@@ -259,7 +359,9 @@ $('form#form_penilaian').submit(function(e){
     button.attr('disabled',true);
 
     penilaian_skor_ipk(kd_prodi);
-    penilaian_prestasi_mhs(kd_prodi);
+    penilaian_prestasi_akademik_mhs(kd_prodi);
+    penilaian_prestasi_nonakademik_mhs(kd_prodi);
+    penilaian_masa_studi_lulusan(kd_prodi);
     penilaian_tempat_lulusan(kd_prodi);
 
     setTimeout(function() {
@@ -288,16 +390,16 @@ function penilaian_skor_ipk(kd_prodi)
     });
 }
 
-function penilaian_prestasi_mhs(kd_prodi)
+function penilaian_prestasi_akademik_mhs(kd_prodi)
 {
     $.ajax({
-        url: '/assessment/tridharma/prestasi',
+        url: '/assessment/tridharma/prestasi_mahasiswa/akademik',
         type: 'POST',
         data: {kd_prodi:kd_prodi},
         dataType: 'json',
         success: function (data) {
 
-            $('#penilaian_prestasi_mhs')
+            $('#penilaian_prestasi_akademik_mhs')
                 .find('#inter').val(data.jumlah['inter']).end()
                 .find('#nasional').val(data.jumlah['nasional']).end()
                 .find('#lokal').val(data.jumlah['lokal']).end()
@@ -306,7 +408,53 @@ function penilaian_prestasi_mhs(kd_prodi)
                 .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
                 .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
                 .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
-                .find('span.rumus_prestasi').text(data.rumus);
+                .find('span.rumus_prestasi').text(data.rumus).end()
+                .find('span.faktor_a').text(data.faktor['a']).end()
+                .find('span.faktor_b').text(data.faktor['b']).end()
+                .find('span.faktor_c').text(data.faktor['c']);
+        }
+    });
+}
+
+function penilaian_prestasi_nonakademik_mhs(kd_prodi)
+{
+    $.ajax({
+        url: '/assessment/tridharma/prestasi_mahasiswa/nonakademik',
+        type: 'POST',
+        data: {kd_prodi:kd_prodi},
+        dataType: 'json',
+        success: function (data) {
+
+            $('#penilaian_prestasi_nonakademik_mhs')
+                .find('#inter').val(data.jumlah['inter']).end()
+                .find('#nasional').val(data.jumlah['nasional']).end()
+                .find('#lokal').val(data.jumlah['lokal']).end()
+                .find('#mahasiswa').val(data.jumlah['mahasiswa']).end()
+                .find('#skor_prestasi').val(data.skor.toFixed(2)).end()
+                .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
+                .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
+                .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
+                .find('span.rumus_prestasi').text(data.rumus).end()
+                .find('span.faktor_a').text(data.faktor['a']).end()
+                .find('span.faktor_b').text(data.faktor['b']).end()
+                .find('span.faktor_c').text(data.faktor['c']);
+        }
+    });
+}
+
+function penilaian_masa_studi_lulusan(kd_prodi)
+{
+    $.ajax({
+        url: '/assessment/tridharma/masa_studi_lulusan',
+        type: 'POST',
+        data: {kd_prodi:kd_prodi},
+        dataType: 'json',
+        success: function (data) {
+
+            $('#penilaian_masa_studi_lulusan')
+                .find('#ms').val(data.masa_studi.toFixed(1)+' tahun').end()
+                .find('#skor').val(data.skor).end()
+                .find('span.rumus_skor').text(data.rumus);
         }
     });
 }
@@ -329,6 +477,9 @@ function penilaian_tempat_lulusan(kd_prodi)
                 .find('span.rata_inter').text(data.rata['inter'].toFixed(2)).end()
                 .find('span.rata_nasional').text(data.rata['nasional'].toFixed(2)).end()
                 .find('span.rata_lokal').text(data.rata['lokal'].toFixed(2)).end()
+                .find('span.faktor_a').text(data.faktor['a']).end()
+                .find('span.faktor_b').text(data.faktor['b']).end()
+                .find('span.faktor_c').text(data.faktor['c']).end()
                 .find('span.rumus_lembaga').text(data.rumus);
         }
     });
