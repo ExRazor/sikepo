@@ -22,7 +22,7 @@
                                     <div class="form-group">
                                         <label>Skor</label>
                                         <input type="text" class="form-control" id="skor" disabled>
-                                        <small class="form-text text-muted">Skor = <span id="rumus"></span></small>
+                                        <small class="form-text text-muted">Skor = <span class="rumus"></span></small>
                                     </div>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                                     <div class="form-group">
                                         <label for="skor_a">&nbsp;<br>Skor A</label>
                                         <input type="text" class="form-control" id="skor_a" disabled>
-                                        <small class="form-text text-muted">A = <span id="rumus_a"></span></small>
+                                        <small class="form-text text-muted">A = <span class="rumus_a"></span></small>
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                                     <div class="form-group">
                                         <label for="skor_b">&nbsp;<br>Skor B</label>
                                         <input type="text" class="form-control" id="skor_b" readonly>
-                                        <small class="form-text text-muted">B = <span id="rumus_b"></span></small>
+                                        <small class="form-text text-muted">B = <span class="rumus_b"></span></small>
                                     </div>
                                 </div>
                             </div>
@@ -128,12 +128,12 @@ $('#form_sim_kerjasama').submit(function(e){
                 .find('#skor_a').val(data.skor['a']).end()
                 .find('#skor_b').val(data.skor['b']).end()
                 .find('#skor').val(data.skor['total']).end()
-                .find('span.rumus').val(data.rumus['total']).end()
-                .find('span.rata_pendidikan').val(data.rata['pendidikan']).end()
-                .find('span.rata_penelitian').val(data.rata['penelitian']).end()
-                .find('span.rata_pkm').val(data.rata['pengabdian']).end()
-                .find('span.rumus_a').val(data.rumus['a']).end()
-                .find('span.rumus_b').val(data.rumus['b']).end();
+                .find('span.rumus').text(data.rumus['total']).end()
+                .find('span.rata_pendidikan').text(data.rata['pendidikan']).end()
+                .find('span.rata_penelitian').text(data.rata['penelitian']).end()
+                .find('span.rata_pkm').text(data.rata['pengabdian']).end()
+                .find('span.rumus_a').text(data.rumus['a']).end()
+                .find('span.rumus_b').text(data.rumus['b']).end();
 
             button.attr('disabled', false);
             button.text('Hitung');

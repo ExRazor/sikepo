@@ -62,7 +62,7 @@
         <form class="form-perhitungan">
             <div class="row mg-b-20">
                 <div class="col-md-12">
-                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-3a.jpg" />
+                    <img class="w-100" src="{{ asset ('penilaian/img') }}/sdm-2b.jpg" />
                 </div>
             </div>
             <div class="row">

@@ -281,7 +281,7 @@
                 <form class="form-perhitungan">
                     <div class="row mg-b-20">
                         <div class="col-md-12">
-                            <img class="w-100" src="{{ asset ('penilaian/img') }}/tridharma-3.jpg" />
+                            <img class="w-100" src="{{ asset ('penilaian/img') }}/tridharma-5.jpg" />
                         </div>
                     </div>
                     <div class="row">

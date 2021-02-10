@@ -185,7 +185,7 @@ class SdmController extends Controller
         if ($persentase >= 70) {
             $skor = 4;
         } else if ($persentase < 70) {
-            $skor = 2 + ((20 * $persentase) / 7);
+            $skor = 2 + ((20 * ($persentase / 100)) / 7);
         } else {
             $skor = 0;
         }

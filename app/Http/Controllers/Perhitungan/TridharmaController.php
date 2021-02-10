@@ -356,7 +356,7 @@ class TridharmaController extends Controller
         } else if ($rata['inter'] < $faktor['a'] && $rata['nasional'] >= $faktor['b']) {
             $skor = 3 + ($rata['inter'] / $faktor['a']);
             $rumus = "3 + (RI / a)";
-        } else if (($rata['inter'] > 0 && $rata['inter'] < $faktor['a']) && ($rata['nasional'] > 0 && $rata['nasional'] < $faktor['b'])) {
+        } else if (($rata['inter'] > 0 && $rata['inter'] < $faktor['a']) || ($rata['nasional'] > 0 && $rata['nasional'] < $faktor['b'])) {
             $skor = 2 + (2 * ($rata['inter'] / $faktor['a'])) + ($rata['nasional'] / $faktor['b']) - (($rata['inter'] * $rata['nasional']) / ($faktor['a'] * $faktor['b']));
             $rumus = "2 + (2 * (RI / a)) + (RN / b) - ((RI * RN) / (a * b))";
         } else if ($rata['inter'] == 0 && $rata['nasional'] == 0 && $rata['lokal'] >= $faktor['c']) {
@@ -364,7 +364,7 @@ class TridharmaController extends Controller
             $rumus = "2";
         } else if ($rata['inter'] == 0 && $rata['nasional'] == 0 && $rata['lokal'] < $faktor['c']) {
             $skor = (2 * $rata['lokal']) / $faktor['c'];
-            $rumus = "( 2 * RW) / c";
+            $rumus = "( 2 * RW ) / c";
         } else {
             $skor = 0;
             $rumus = "Tidak ada skor di bawah 1";
@@ -400,7 +400,7 @@ class TridharmaController extends Controller
         } else if ($rata['inter'] < $faktor['a'] && $rata['nasional'] >= $faktor['b']) {
             $skor = 3 + ($rata['inter'] / $faktor['a']);
             $rumus = "3 + (RI / a)";
-        } else if (($rata['inter'] > 0 && $rata['inter'] < $faktor['a']) && ($rata['nasional'] > 0 && $rata['nasional'] < $faktor['b'])) {
+        } else if (($rata['inter'] > 0 && $rata['inter'] < $faktor['a']) || ($rata['nasional'] > 0 && $rata['nasional'] < $faktor['b'])) {
             $skor = 2 + (2 * ($rata['inter'] / $faktor['a'])) + ($rata['nasional'] / $faktor['b']) - (($rata['inter'] * $rata['nasional']) / ($faktor['a'] * $faktor['b']));
             $rumus = "2 + (2 * (RI / a)) + (RN / b) - ((RI * RN) / (a * b))";
         } else if ($rata['inter'] == 0 && $rata['nasional'] == 0 && $rata['lokal'] >= $faktor['c']) {

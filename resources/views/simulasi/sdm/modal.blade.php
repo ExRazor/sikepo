@@ -322,7 +322,7 @@
 
                 form
                     .find('#rasio_dtps').val(data.rasio['dtps'].toFixed(0)).end()
-                    .find('#rasio_mahasiswa').val(data.rasio['dtps'].toFixed(0)).end()
+                    .find('#rasio_mahasiswa').val(data.rasio['mahasiswa'].toFixed(0)).end()
                     .find('#skor_rasio_dtpm').val(data.skor.toFixed(2));
 
                 button.attr('disabled', false);
