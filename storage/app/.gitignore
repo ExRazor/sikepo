@@ -2,10 +2,10 @@
 *
 
 # exception to the rule
-!upload/collaboration
-!upload/curriculum/excel_import/
-!upload/teacher/excel_import
-!upload/student/excel_import
-!upload/user/administrator.jpg
-!.gitignore
-!.gitkeep
+#!upload/collaboration
+#!upload/curriculum/excel_import/
+#!upload/teacher/excel_import
+#!upload/student/excel_import
+#!upload/user/administrator.jpg
+#!.gitignore
+#!.gitkeep
