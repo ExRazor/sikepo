@@ -99,10 +99,15 @@
                                     <td>{{$data->durasi}}</td>
                                 </tr>
                                 <tr>
+                                    <th>Tindak Lanjut UPPS</th>
+                                    <td>:</td>
+                                    <td>{!!nl2br($data->tindak_lanjut)!!}</td>
+                                </tr>
+                                <tr>
                                     <th>Bukti Kerja Sama</th>
                                     <td>:</td>
                                     <td>
-                                        <a href="{{route('collaboration.download',encode_id($data->bukti_file))}}" target="_blank">
+                                        <a href="{{route('collaboration.download',$data->bukti_file)}}" target="_blank">
                                             <i class="fa fa-download mr-1"></i> {{$data->bukti_nama}}
                                         </a>
                                     </td>

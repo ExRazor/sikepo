@@ -146,6 +146,18 @@
                                 <input class="form-control" type="text" name="judul_kegiatan" value="{{ isset($data) ? $data->judul_kegiatan : Request::old('judul_kegiatan')}}" placeholder="Tuliskan judul kegiatan kerja sama" required>
                             </div>
                         </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label justify-content-start">Waktu Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <input class="form-control datepicker" type="text" name="waktu" value="{{ isset($data) ? $data->waktu : Request::old('waktu')}}" placeholder="Tuliskan waktu pelaksanaan" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label justify-content-start">Durasi Pelaksanaan: <span class="tx-danger">*</span></label>
+                                <input class="form-control" type="text" name="durasi" value="{{ isset($data) ? $data->durasi : Request::old('durasi')}}" placeholder="Tuliskan lama durasi kegiatan" required>
+                            </div>
+                        </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label class="form-control-label justify-content-start">Manfaat Kegiatan: <span class="tx-danger">*</span></label>
@@ -154,14 +166,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="form-control-label justify-content-start">Waktu Pelaksanaan: <span class="tx-danger">*</span></label>
-                                <input class="form-control datepicker" type="text" name="waktu" value="{{ isset($data) ? $data->waktu : Request::old('waktu')}}" placeholder="Tuliskan waktu pelaksanaan" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="form-control-label justify-content-start">Durasi Pelaksanaan: <span class="tx-danger">*</span></label>
-                                <input class="form-control" type="text" name="durasi" value="{{ isset($data) ? $data->durasi : Request::old('durasi')}}" placeholder="Tuliskan lama durasi kegiatan" required>
+                                <label class="form-control-label justify-content-start">Tindak Lanjut UPPS: <span class="tx-danger">*</span></label>
+                                <textarea rows="3" class="form-control" name="tindak_lanjut" placeholder="Tuliskan manfaat kegiatan" required>{{ isset($data) ? $data->tindak_lanjut : Request::old('tindak_lanjut')}}</textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">

@@ -15,15 +15,16 @@ class CreateCollaborationsTable extends Migration
     {
         Schema::create('collaborations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('kd_prodi',5);
+            $table->char('kd_prodi', 5);
             $table->unsignedInteger('id_ta');
             $table->string('jenis');
             $table->string('nama_lembaga');
-            $table->enum('tingkat',['Internasional','Nasional','Lokal']);
+            $table->enum('tingkat', ['Internasional', 'Nasional', 'Lokal']);
             $table->string('judul_kegiatan');
             $table->text('manfaat_kegiatan');
             $table->date('waktu');
             $table->string('durasi');
+            $table->text('tindak_lanjut')->nullable();
             $table->string('bukti_nama');
             $table->string('bukti_file');
             $table->timestamps();
