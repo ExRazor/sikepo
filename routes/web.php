@@ -209,6 +209,10 @@ Route::middleware('auth')->group(function () {
         Route::post('community-service/get_by_filter', 'CommunityServiceController@get_by_filter')->name('community-service.filter');
         Route::post('community-service/datatable', 'CommunityServiceController@datatable')->name('community-service.datatable');
 
+        //Publication
+        Route::post('publication/get_by_filter', 'PublicationController@get_by_filter')->name('publication.filter');
+        Route::post('publication/datatable', 'PublicationController@datatable')->name('publication.datatable');
+
         //Publication - Teacher
         Route::post('publication/teacher/get_by_filter', 'TeacherPublicationController@get_by_filter')->name('publication.teacher.filter');
         Route::post('publication/teacher/datatable', 'TeacherPublicationController@datatable')->name('publication.teacher.datatable');
@@ -353,17 +357,22 @@ Route::middleware('auth')->group(function () {
     Route::get('community-service/delete_student/{id}', 'CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
     //Publication
-    Route::prefix('publication')->name('publication.')->middleware('role:admin,kaprodi,kajur')->group(function () {
-        //Publication - Teacher
-        Route::resource('teacher', 'TeacherPublicationController');
-        Route::get('teacher/delete_member/{id}', 'TeacherPublicationController@destroy_member')->name('teacher.delete.member');
-        Route::get('teacher/delete_student/{id}', 'TeacherPublicationController@destroy_student')->name('teacher.delete.student');
+    // Route::prefix('publication')->name('publication.')->middleware('role:admin,kaprodi,kajur')->group(function () {
+    //     //Publication - Teacher
+    //     Route::resource('teacher', 'TeacherPublicationController');
+    //     Route::get('teacher/delete_member/{id}', 'TeacherPublicationController@destroy_member')->name('teacher.delete.member');
+    //     Route::get('teacher/delete_student/{id}', 'TeacherPublicationController@destroy_student')->name('teacher.delete.student');
 
-        //Publication - Student
-        Route::resource('student', 'StudentPublicationController');
-        Route::get('student/delete_member/{id}', 'StudentPublicationController@destroy_member')->name('student.delete.member');
-    });
+    //     //Publication - Student
+    //     Route::resource('student', 'StudentPublicationController');
+    //     Route::get('student/delete_member/{id}', 'StudentPublicationController@destroy_member')->name('student.delete.member');
+    // });
 
+    //Publication
+    Route::resource('publication', 'PublicationController');
+    Route::get('publication/delete_member/{id}', 'PublicationController@destroy_member')->name('publication.delete.member');
+
+    //Output Activity
     Route::prefix('output-activity')->name('output-activity.')->middleware('role:admin,kaprodi,kajur')->group(function () {
 
         //Output Activity - Teacher
