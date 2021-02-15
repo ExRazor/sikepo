@@ -92,7 +92,7 @@
                         <tr>
                             <th class="text-center" data-priority="1">Nama</th>
                             <th class="text-center" data-priority="3">Program Studi</th>
-                            <th class="text-center">Ikatan Kerja</th>
+                            <th class="text-center">Status Kerja</th>
                             @if(!Auth::user()->hasRole('kajur'))
                             <th class="text-center no-sort" data-priority="2">Aksi</th>
                             @endif
@@ -162,7 +162,7 @@
                     columns: [
                         { data: 'nama', },
                         { data: 'study_program', },
-                        { data: 'ikatan_kerja', },
+                        { data: 'status_kerja', },
                         { data: 'aksi', }
                     ],
                 });

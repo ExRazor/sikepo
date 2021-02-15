@@ -15,8 +15,8 @@ class CreateTeachersTable extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             // $table->bigIncrements('id');
-            $table->char('nidn',12)->primary();
-            $table->char('nip',18)->unique()->nullable();
+            $table->char('nidn', 12)->primary();
+            $table->char('nip', 18)->unique()->nullable();
             $table->string('nama');
             $table->string('jk');
             $table->string('agama')->nullable();
@@ -28,8 +28,8 @@ class CreateTeachersTable extends Migration
             $table->string('pend_terakhir_jenjang')->nullable();
             $table->string('pend_terakhir_jurusan')->nullable();
             $table->text('bidang_ahli')->nullable();
-            $table->enum('sesuai_bidang_ps',['Ya','Tidak'])->nullable();
-            $table->string('ikatan_kerja');
+            $table->enum('sesuai_bidang_ps', ['Ya', 'Tidak'])->nullable();
+            $table->string('status_kerja');
             $table->string('jabatan_akademik');
             $table->string('sertifikat_pendidik')->nullable();
             $table->string('foto')->nullable();

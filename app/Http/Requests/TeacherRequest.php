@@ -26,7 +26,7 @@ class TeacherRequest extends FormRequest
     {
         $id = ($this->_id) ? decrypt($this->_id) : null;
 
-        if(!$id) {
+        if (!$id) {
             $nidn = 'required|numeric|min:8|unique:teachers,nidn';
         } else {
             $nidn = 'nullable';
@@ -45,7 +45,7 @@ class TeacherRequest extends FormRequest
             'pend_terakhir_jurusan' => 'nullable',
             'bidang_ahli'           => 'nullable',
             'sesuai_bidang_ps'      => 'nullable',
-            'ikatan_kerja'          => 'required',
+            'status_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
             'foto'                  => 'mimes:jpeg,jpg,png',
         ];
@@ -66,7 +66,7 @@ class TeacherRequest extends FormRequest
             'pend_terakhir_jurusan' => 'Jurusan Pendidikan Terakhir',
             'bidang_ahli'           => 'Bidang Keahlian',
             'sesuai_bidang_ps'      => 'Kesesuaian Bidang',
-            'ikatan_kerja'          => 'Ikatan Kerja',
+            'status_kerja'          => 'Status Kerja',
             'jabatan_akademik'      => 'Jabatan Akademik',
             'foto'                  => 'Foto',
         ];

@@ -19,21 +19,21 @@ class TeacherSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $jk = ['Laki-Laki','Perempuan'];
-        $agama = ['Islam','Kristen Protestan','Kristen Katholik','Buddha','Hindu','Kong Hu Cu'];
-        $pend = ['D3','S1','S2','S3'];
-        $jurusan = ['Informatika','Ilmu Komputer','Elektro','Industri'];
-        $jabatan = ['Tenaga Pengajar','Asisten Ahli','Lektor','Lektor Kepala','Guru Besar'];
-        $sesuai = ['Ya','Tidak'];
-        $bidang_ahli = ['PHP','Photoshop','Elektronika','OOP','Office'];
-        $ikatan = ['Dosen Tetap PS','Dosen Tidak Tetap','Dosen Tetap PT'];
+        $jk = ['Laki-Laki', 'Perempuan'];
+        $agama = ['Islam', 'Kristen Protestan', 'Kristen Katholik', 'Buddha', 'Hindu', 'Kong Hu Cu'];
+        $pend = ['D3', 'S1', 'S2', 'S3'];
+        $jurusan = ['Informatika', 'Ilmu Komputer', 'Elektro', 'Industri'];
+        $jabatan = ['Tenaga Pengajar', 'Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar'];
+        $sesuai = ['Ya', 'Tidak'];
+        $bidang_ahli = ['PHP', 'Photoshop', 'Elektronika', 'OOP', 'Office'];
+        $ikatan = ['Dosen Tetap PS', 'Dosen Tidak Tetap', 'Dosen Tetap PT'];
 
 
-        $random = ['0','1','2'];
+        $random = ['0', '1', '2'];
 
         Excel::import(new TeacherImport, public_path('import_seed/dosen_2019.xlsx'));
 
-    	// for($i = 0; $i < 50; $i++){
+        // for($i = 0; $i < 50; $i++){
         //     $studyProgram = StudyProgram::all()->random();
         //     $rand_numb    = array_rand($random);
 
@@ -63,7 +63,7 @@ class TeacherSeeder extends Seeder
         //         'pend_terakhir_jenjang' => $pend[array_rand($pend)],
         //         'pend_terakhir_jurusan' => $jurusan[array_rand($jurusan)],
         //         'bidang_ahli'           => json_encode($bidang_ahli),
-        //         'ikatan_kerja'          => $ikatan[array_rand($ikatan)],
+        //         'status_kerja'          => $ikatan[array_rand($ikatan)],
         //         'jabatan_akademik'      => $jabatan[array_rand($jabatan)],
         //         'sertifikat_pendidik'   => $sertifikat,
         //         'sesuai_bidang_ps'      => $sesuai[array_rand($sesuai)],

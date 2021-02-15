@@ -27,14 +27,15 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
         $query = Teacher::query();
 
         $query->whereHas(
-            'latestStatus.studyProgram', function($query) {
-                if(Auth::user()->hasRole('kaprodi')) {
-                    $query->where('kd_prodi',Auth::user()->kd_prodi);
+            'latestStatus.studyProgram',
+            function ($query) {
+                if (Auth::user()->hasRole('kaprodi')) {
+                    $query->where('kd_prodi', Auth::user()->kd_prodi);
                 } else {
-                    if($this->kd_prodi) {
-                        $query->where('kd_prodi',$this->kd_prodi);
+                    if ($this->kd_prodi) {
+                        $query->where('kd_prodi', $this->kd_prodi);
                     } else {
-                        $query->where('kd_jurusan',setting('app_department_id'));
+                        $query->where('kd_jurusan', setting('app_department_id'));
                     }
                 }
             }
@@ -62,7 +63,7 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             'Jurusan Pendidikan',
             'Bidang Keahlian',
             'Sesuai Bidang Prodi',
-            'Ikatan Kerja',
+            'Status Kerja',
             'Jabatan Akademik',
             'No. Sertifikat Pendidik',
         ];
@@ -85,9 +86,9 @@ class TeacherExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             $teacher->email,
             $teacher->pend_terakhir_jenjang,
             $teacher->pend_terakhir_jurusan,
-            implode(', ',json_decode($teacher->bidang_ahli)),
+            implode(', ', json_decode($teacher->bidang_ahli)),
             $teacher->sesuai_bidang_ps,
-            $teacher->ikatan_kerja,
+            $teacher->status_kerja,
             $teacher->jabatan_akademik,
             $teacher->sertifikat_pendidik,
         ];

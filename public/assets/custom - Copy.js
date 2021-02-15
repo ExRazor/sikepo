@@ -690,7 +690,7 @@ $(document).ready(function() {
                         var prodi       = data[i].study_program.nama;
                         var jurusan     = data[i].study_program.department.nama;
                         var fakultas    = data[i].study_program.department.faculty.singkatan;
-                        var ikatan      = data[i].ikatan_kerja;
+                        var ikatan      = data[i].status_kerja;
                         var jabatan     = data[i].jabatan_akademik;
                         var pend        = data[i].pend_terakhir_jenjang;
 

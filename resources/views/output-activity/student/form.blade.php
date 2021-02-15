@@ -137,7 +137,7 @@
                                                 <option {{isset($data) && $data->jenis_luaran=='Buku' || Request::old('jenis_luaran')=='Buku' ? 'selected' : '' }}>Buku</option>
                                                 <option {{isset($data) && $data->jenis_luaran=='Jurnal' || Request::old('jenis_luaran')=='Jurnal' ? 'selected' : '' }}>Jurnal</option>
                                                 <option {{isset($data) && $data->jenis_luaran=='HKI' || Request::old('jenis_luaran')=='HKI' ? 'selected' : '' }}>HKI</option>
-                                                <option {{isset($data) && $data->jenis_luaran=='HKI Paten' || Request::old('jenis_luaran')=='HKI Paten' ? 'selected' : '' }}>HKI Paten</option>
+                                                <option {{isset($data) && $data->jenis_luaran=='Paten' || Request::old('jenis_luaran')=='Paten' ? 'selected' : '' }}>Paten</option>
                                                 <option {{isset($data) && $data->jenis_luaran=='Lainnya' || Request::old('jenis_luaran')=='Lainnya' ? 'selected' : '' }}>Lainnya</option>
                                             </select>
                                         </div>
@@ -149,13 +149,13 @@
                                                 <input class="form-control" type="text" name="nama_karya" value="{{ isset($data) ? $data->nama_karya : Request::old('nama_karya')}}" placeholder="Masukkan nama karya">
                                             </div>
                                         </div>
-                                        <div class="row mb-3 {{isset($data) && ($data->jenis_luaran=='HKI' || $data->jenis_luaran=='HKI Paten') ? '' : 'd-none'}}" id="jenis_karya">
+                                        <div class="row mb-3 {{isset($data) && ($data->jenis_luaran=='HKI' || $data->jenis_luaran=='Paten') ? '' : 'd-none'}}" id="jenis_karya">
                                             <label class="col-md-3 form-control-label">Jenis Karya: <span class="tx-danger">*</span></label>
                                             <div class="col-md-8">
                                                 <input class="form-control" type="text" name="jenis_karya" value="{{ isset($data) ? $data->jenis_karya : Request::old('jenis_karya')}}" placeholder="Masukkan jenis karya yang dipatenkan">
                                             </div>
                                         </div>
-                                        <div class="row mb-3 {{isset($data) && ($data->jenis_luaran=='HKI' || $data->jenis_luaran=='HKI Paten') ? '' : 'd-none'}}" id="pencipta_karya">
+                                        <div class="row mb-3 {{isset($data) && ($data->jenis_luaran=='HKI' || $data->jenis_luaran=='Paten') ? '' : 'd-none'}}" id="pencipta_karya">
                                             <label class="col-md-3 form-control-label">Pencipta Karya:</label>
                                             <div class="col-md-8">
                                                 <input class="form-control" type="text" name="pencipta_karya" value="{{ isset($data) ? $data->pencipta_karya : Request::old('pencipta_karya')}}" placeholder="Masukkan nama pencipta karya">
@@ -167,13 +167,13 @@
                                                 <input class="form-control" type="text" name="issn" value="{{ isset($data) ? $data->issn : Request::old('issn')}}" placeholder="Contoh: 1234-5678">
                                             </div>
                                         </div>
-                                        <div class="row mb-3 {{isset($data) && $data->jenis_luaran=='HKI Paten' ? '' : 'd-none'}}" id="no_paten">
+                                        <div class="row mb-3 {{isset($data) && $data->jenis_luaran=='Paten' ? '' : 'd-none'}}" id="no_paten">
                                             <label class="col-md-3 form-control-label">No. Paten: <span class="tx-danger">*</span></label>
                                             <div class="col-md-8">
                                                 <input class="form-control" type="text" name="no_paten" value="{{ isset($data) ? $data->no_paten : Request::old('no_paten')}}" placeholder="Isikan nomor paten">
                                             </div>
                                         </div>
-                                        <div class="row mb-3 {{isset($data) && $data->jenis_luaran=='HKI Paten' ? '' : 'd-none'}}" id="tgl_sah">
+                                        <div class="row mb-3 {{isset($data) && $data->jenis_luaran=='Paten' ? '' : 'd-none'}}" id="tgl_sah">
                                             <label class="col-md-3 form-control-label">Tanggal Disahkan: <span class="tx-danger">*</span></label>
                                             <div class="col-md-8">
                                                 <input class="form-control" type="date" name="tgl_sah" value="{{ isset($data) ? $data->tgl_sah : Request::old('tgl_sah')}}">

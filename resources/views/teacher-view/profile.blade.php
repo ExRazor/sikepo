@@ -203,13 +203,13 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-3 form-control-label">Ikatan Kerja: <span class="tx-danger">*</span></label>
+                                <label class="col-3 form-control-label">Status Kerja: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
-                                    <select class="form-control" name="ikatan_kerja" required>
-                                        <option value="">- Pilih Ikatan Kerja -</option>
-                                        <option value="Dosen Tetap PS" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PS' || old('ikatan_kerja')=='Dosen Tetap PS') ? 'selected' : ''}}>Dosen Tetap PS</option>
-                                        <option value="Dosen Tetap PT" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tetap PT' || old('ikatan_kerja')=='Dosen Tetap PT') ? 'selected' : ''}}>Dosen Tetap PT</option>
-                                        <option value="Dosen Tidak Tetap" {{ isset($data) && ($data->ikatan_kerja=='Dosen Tidak Tetap' || old('ikatan_kerja')=='Dosen Tidak Tetap') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
+                                    <select class="form-control" name="status_kerja" required>
+                                        <option value="">- Pilih Status Kerja -</option>
+                                        <option value="Dosen Tetap PS" {{ isset($data) && ($data->status_kerja=='Dosen Tetap PS' || old('status_kerja')=='Dosen Tetap PS') ? 'selected' : ''}}>Dosen Tetap PS</option>
+                                        <option value="Dosen Tetap PT" {{ isset($data) && ($data->status_kerja=='Dosen Tetap PT' || old('status_kerja')=='Dosen Tetap PT') ? 'selected' : ''}}>Dosen Tetap PT</option>
+                                        <option value="Dosen Tidak Tetap" {{ isset($data) && ($data->status_kerja=='Dosen Tidak Tetap' || old('status_kerja')=='Dosen Tidak Tetap') ? 'selected' : ''}}>Dosen Tidak Tetap</option>
                                     </select>
                                 </div>
                             </div>

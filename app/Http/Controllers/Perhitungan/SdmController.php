@@ -44,7 +44,7 @@ class SdmController extends Controller
                         $query->where('kd_prodi', $prodi);
                     }
                 )
-                    ->where('ikatan_kerja', 'Dosen Tetap PS')->count(),
+                    ->where('status_kerja', 'Dosen Tetap PS')->count(),
             );
         } else {
             $jumlah = array(
@@ -93,7 +93,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')->get();
+                ->where('status_kerja', 'Dosen Tetap PS')->get();
 
             $jumlah = array(
                 'dtps'      => $dtps->count(),
@@ -149,7 +149,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')->get();
+                ->where('status_kerja', 'Dosen Tetap PS')->get();
 
             $jumlah = array(
                 'dtps'          => $dtps->count(),
@@ -219,7 +219,7 @@ class SdmController extends Controller
                         $query->where('kd_prodi', $prodi);
                     }
                 )
-                    ->where('ikatan_kerja', 'Dosen Tetap PS')->count(),
+                    ->where('status_kerja', 'Dosen Tetap PS')->count(),
             );
         } else {
             $jumlah = array(
@@ -276,8 +276,8 @@ class SdmController extends Controller
                 ->get();
 
             $jumlah = array(
-                'dtps'  => $dosen->where('ikatan_kerja', 'Dosen Tetap PS')->count(),
-                'dtt'   => $dosen->where('ikatan_kerja', 'Dosen Tidak Tetap')->count(),
+                'dtps'  => $dosen->where('status_kerja', 'Dosen Tetap PS')->count(),
+                'dtt'   => $dosen->where('status_kerja', 'Dosen Tidak Tetap')->count(),
             );
         } else {
             $jumlah = array(
@@ -388,7 +388,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')
+                ->where('status_kerja', 'Dosen Tetap PS')
                 ->get();
 
             $total_sks = 0;
@@ -454,7 +454,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')
+                ->where('status_kerja', 'Dosen Tetap PS')
                 ->get();
 
             foreach ($dtps as $dt) {
@@ -523,7 +523,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')->get();
+                ->where('status_kerja', 'Dosen Tetap PS')->get();
 
             $penelitian = Research::whereHas(
                 'academicYear',
@@ -585,7 +585,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')->get();
+                ->where('status_kerja', 'Dosen Tetap PS')->get();
 
             $pengabdian = CommunityService::whereHas(
                 'academicYear',
@@ -685,7 +685,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')
+                ->where('status_kerja', 'Dosen Tetap PS')
                 ->get();
 
             $publikasi = TeacherPublication::whereHas(
@@ -811,7 +811,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')
+                ->where('status_kerja', 'Dosen Tetap PS')
                 ->get();
 
             $jumlah = array(
@@ -889,7 +889,7 @@ class SdmController extends Controller
                     $query->where('kd_prodi', $prodi);
                 }
             )
-                ->where('ikatan_kerja', 'Dosen Tetap PS')
+                ->where('status_kerja', 'Dosen Tetap PS')
                 ->get();
 
             $jumlah = array(

@@ -201,7 +201,7 @@
                                 <label class="col-md-3 form-control-label">Pendidikan Terakhir:</label>
                                 <div class="col-md-8">
                                     <div class="row">
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <select class="form-control {{ $errors->has('pend_terakhir_jenjang') ? 'is-invalid' : ''}}" name="pend_terakhir_jenjang">
                                                 <option value="">- Pilih Pendidikan Terakhir -</option>
                                                 <option value="D3" {{ (isset($data) && ($data->pend_terakhir_jenjang=='D3') || Request::old('pend_terakhir_jenjang')=='D3') ? 'selected' : ''}}>Diploma D3</option>
@@ -211,8 +211,8 @@
                                                 <option value="S3" {{ (isset($data) && ($data->pend_terakhir_jenjang=='S3') || Request::old('pend_terakhir_jenjang')=='S3') ? 'selected' : ''}}>Strata 3 / Doktor</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-8">
-                                            <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan Pendidikan Terakhir">
+                                        <div class="col-md-6">
+                                            <input class="form-control" type="text" name="pend_terakhir_jurusan" value="{{ isset($data) ? $data->pend_terakhir_jurusan : Request::old('pend_terakhir_jurusan')}}" placeholder="Masukkan Jurusan">
                                         </div>
                                     </div>
                                 </div>
@@ -241,13 +241,13 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-md-3 form-control-label">Ikatan Kerja: <span class="tx-danger">*</span></label>
+                                <label class="col-md-3 form-control-label">Status Kerja: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
-                                    <select class="form-control {{ $errors->has('ikatan_kerja') ? 'is-invalid' : ''}}" name="ikatan_kerja" required>
-                                        <option value="">- Pilih Ikatan Kerja -</option>
-                                        <option value="Dosen Tetap PS" {{ (isset($data) && $data->ikatan_kerja=='Dosen Tetap PS') || Request::old('ikatan_kerja')=='Dosen Tetap PS' ? 'selected' : ''}}>Dosen Tetap PS</option>
-                                        <option value="Dosen Tetap PT" {{ (isset($data) && $data->ikatan_kerja=='Dosen Tetap PT') || Request::old('ikatan_kerja')=='Dosen Tetap PT' ? 'selected' : ''}}>Dosen Tetap PT</option>
-                                        <option value="Dosen Tidak Tetap" {{ (isset($data) && $data->ikatan_kerja=='Dosen Tidak Tetap') || Request::old('ikatan_kerja')=='Dosen Tidak Tetap' ? 'selected' : ''}}>Dosen Tidak Tetap</option>
+                                    <select class="form-control {{ $errors->has('status_kerja') ? 'is-invalid' : ''}}" name="status_kerja" required>
+                                        <option value="">- Pilih Status Kerja -</option>
+                                        <option value="Dosen Tetap PS" {{ (isset($data) && $data->status_kerja=='Dosen Tetap PS') || Request::old('status_kerja')=='Dosen Tetap PS' ? 'selected' : ''}}>Dosen Tetap PS</option>
+                                        <option value="Dosen Tetap PT" {{ (isset($data) && $data->status_kerja=='Dosen Tetap PT') || Request::old('status_kerja')=='Dosen Tetap PT' ? 'selected' : ''}}>Dosen Tetap PT</option>
+                                        <option value="Dosen Tidak Tetap" {{ (isset($data) && $data->status_kerja=='Dosen Tidak Tetap') || Request::old('status_kerja')=='Dosen Tidak Tetap' ? 'selected' : ''}}>Dosen Tidak Tetap</option>
                                     </select>
                                 </div>
                             </div>
@@ -315,12 +315,12 @@ $('#teacher_form').on('change','select[name=kd_jurusan]',function(){
 
 });
 
-function cek(value) {
-    if(value!={{setting('app_department_id')}}) {
-        $('.form-opsional').hide();
-    } else {
-        $('.form-opsional').show();
-    }
-}
+// function cek(value) {
+//     if(value!={{setting('app_department_id')}}) {
+//         $('.form-opsional').hide();
+//     } else {
+//         $('.form-opsional').show();
+//     }
+// }
 </script>
 @endpush

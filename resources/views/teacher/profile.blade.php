@@ -24,7 +24,7 @@
             <p class="mg-b-25">NIP. {{$data->nip}}</p>
 
             <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">
-                Ikatan Kerja: <strong>{{ $data->ikatan_kerja}}</strong><br>
+                Status Kerja: <strong>{{ $data->status_kerja}}</strong><br>
                 Jabatan Akademik: <strong>{{ $data->jabatan_akademik }}</strong><br>
                 Fakultas/Jurusan: <strong>{{ $data->latestStatus->studyProgram->department->faculty->singkatan.' - '.$data->latestStatus->studyProgram->department->nama }}</strong><br>
                 Program Studi: <strong>{{ $data->latestStatus->studyProgram->nama }}</strong>
@@ -48,7 +48,7 @@
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#minithesis" role="tab">Bimbingan</a></li>
             <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#achievement" role="tab">Prestasi</a></li>
             @if($data->latestStatus->studyProgram->kd_jurusan == setting('app_department_id'))
-                @if($data->ikatan_kerja=='Dosen Tetap PS')
+                @if($data->status_kerja=='Dosen Tetap PS')
                     <li class="nav-item"><a class="nav-link tab-link" data-toggle="tab" href="#ewmp" role="tab">Ekuivalen Waktu Mengajar</a></li>
                 @endif
             @endif
@@ -73,7 +73,7 @@
                 @include('teacher.tab-minithesis')
                 @include('teacher.tab-achievement')
                 @if($data->latestStatus->studyProgram->kd_jurusan == setting('app_department_id'))
-                    @if($data->ikatan_kerja=='Dosen Tetap PS')
+                    @if($data->status_kerja=='Dosen Tetap PS')
                         @include('teacher.tab-ewmp')
                     @endif
                 @endif

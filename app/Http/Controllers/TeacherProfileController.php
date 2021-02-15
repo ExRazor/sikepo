@@ -22,27 +22,27 @@ class TeacherProfileController extends Controller
     public function biodata()
     {
         $nidn         = Auth::user()->username;
-        $data         = Teacher::where('nidn',$nidn)->first();
+        $data         = Teacher::where('nidn', $nidn)->first();
 
         $bidang       = json_decode($data->bidang_ahli);
-        $data->bidang_ahli   = implode(', ',$bidang);
+        $data->bidang_ahli   = implode(', ', $bidang);
 
-        return view('teacher-view.profile',compact(['data']));
+        return view('teacher-view.profile', compact(['data']));
     }
 
     public function achievement()
     {
         $nidn        = Auth::user()->username;
-        $achievement = TeacherAchievement::where('nidn',$nidn)->orderBy('id_ta','desc')->get();
+        $achievement = TeacherAchievement::where('nidn', $nidn)->orderBy('id_ta', 'desc')->get();
 
-        return view('teacher-view.achievement.index',compact(['achievement']));
+        return view('teacher-view.achievement.index', compact(['achievement']));
     }
 
     public function achievement_edit($id)
     {
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             $id = decode_id($id);
-            $data = TeacherAchievement::where('id',$id)->with('teacher.latestStatus.studyProgram','academicYear')->first();
+            $data = TeacherAchievement::where('id', $id)->with('teacher.latestStatus.studyProgram', 'academicYear')->first();
 
             return response()->json($data);
         } else {
@@ -53,20 +53,22 @@ class TeacherProfileController extends Controller
     public function research()
     {
         $penelitianKetua    = Research::whereHas(
-                                            'researchTeacher', function($q) {
-                                                $q->where('nidn',Auth::user()->username)->where('status','Ketua');
-                                            }
-                                        )
-                                        ->get();
+            'researchTeacher',
+            function ($q) {
+                $q->where('nidn', Auth::user()->username)->where('status', 'Ketua');
+            }
+        )
+            ->get();
 
         $penelitianAnggota   = Research::whereHas(
-                                            'researchTeacher', function($q) {
-                                                $q->where('nidn',Auth::user()->username)->where('status','Anggota');
-                                            }
-                                        )
-                                        ->get();
+            'researchTeacher',
+            function ($q) {
+                $q->where('nidn', Auth::user()->username)->where('status', 'Anggota');
+            }
+        )
+            ->get();
 
-        return view('teacher-view.research.index',compact(['penelitianKetua','penelitianAnggota']));
+        return view('teacher-view.research.index', compact(['penelitianKetua', 'penelitianAnggota']));
     }
 
     public function research_create()
@@ -78,21 +80,21 @@ class TeacherProfileController extends Controller
     {
         $id     = decode_id($id);
         $nidn   = Auth::user()->username;
-        $data   = Research::where('id',$id)->first();
-        $status = ResearchTeacher::where('id_penelitian',$id)->where('nidn',$nidn)->first()->status;
+        $data   = Research::where('id', $id)->first();
+        $status = ResearchTeacher::where('id_penelitian', $id)->where('nidn', $nidn)->first()->status;
 
-        return view('teacher-view.research.show',compact(['data','status']));
+        return view('teacher-view.research.show', compact(['data', 'status']));
     }
 
     public function research_edit($id)
     {
         $id     = decode_id($id);
         $nidn   = Auth::user()->username;
-        $data   = Research::where('id',$id)->first();
-        $status = ResearchTeacher::where('id_penelitian',$id)->where('nidn',$nidn)->first()->status;
+        $data   = Research::where('id', $id)->first();
+        $status = ResearchTeacher::where('id_penelitian', $id)->where('nidn', $nidn)->first()->status;
 
-        if($status=='Ketua') {
-            return view('teacher-view.research.form',compact(['data']));
+        if ($status == 'Ketua') {
+            return view('teacher-view.research.form', compact(['data']));
         } else {
             return abort(404);
         }
@@ -101,32 +103,34 @@ class TeacherProfileController extends Controller
     public function commuService()
     {
         $pengabdianKetua     = CommunityService::whereHas(
-                                                    'serviceTeacher', function($q) {
-                                                        $q->where('nidn',Auth::user()->username)->where('status','Ketua');
-                                                    }
-                                                )
-                                                ->get();
+            'serviceTeacher',
+            function ($q) {
+                $q->where('nidn', Auth::user()->username)->where('status', 'Ketua');
+            }
+        )
+            ->get();
 
         $pengabdianAnggota   = CommunityService::whereHas(
-                                                    'serviceTeacher', function($q) {
-                                                        $q->where('nidn',Auth::user()->username)->where('status','Anggota');
-                                                    }
-                                                )
-                                                ->get();
+            'serviceTeacher',
+            function ($q) {
+                $q->where('nidn', Auth::user()->username)->where('status', 'Anggota');
+            }
+        )
+            ->get();
 
         // return response()->json($pengabdian);die;
 
-        return view('teacher-view.community-service.index',compact(['pengabdianKetua','pengabdianAnggota']));
+        return view('teacher-view.community-service.index', compact(['pengabdianKetua', 'pengabdianAnggota']));
     }
 
     public function commuService_show($id)
     {
         $id     = decode_id($id);
         $nidn   = Auth::user()->username;
-        $data   = CommunityService::where('id',$id)->first();
-        $status = CommunityServiceTeacher::where('id_pengabdian',$id)->where('nidn',$nidn)->first()->status;
+        $data   = CommunityService::where('id', $id)->first();
+        $status = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first()->status;
 
-        return view('teacher-view.community-service.show',compact(['data','status']));
+        return view('teacher-view.community-service.show', compact(['data', 'status']));
     }
 
     public function commuService_create()
@@ -138,11 +142,11 @@ class TeacherProfileController extends Controller
     {
         $id     = decode_id($id);
         $nidn   = Auth::user()->username;
-        $data   = CommunityService::where('id',$id)->first();
-        $status = CommunityServiceTeacher::where('id_pengabdian',$id)->where('nidn',$nidn)->first()->status;
+        $data   = CommunityService::where('id', $id)->first();
+        $status = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first()->status;
 
-        if($status=='Ketua') {
-            return view('teacher-view.community-service.form',compact(['data']));
+        if ($status == 'Ketua') {
+            return view('teacher-view.community-service.form', compact(['data']));
         } else {
             return abort(404);
         }
@@ -150,24 +154,25 @@ class TeacherProfileController extends Controller
 
     public function publication()
     {
-        $publikasiKetua    = TeacherPublication::where('nidn',Auth::user()->username)->get();
+        $publikasiKetua    = TeacherPublication::where('nidn', Auth::user()->username)->get();
 
         $publikasiAnggota  = TeacherPublication::whereHas(
-                                                    'publicationMembers', function($query) {
-                                                        $query->where('nidn',Auth::user()->username);
-                                                    }
-                                                )
-                                                ->get();
+            'publicationMembers',
+            function ($query) {
+                $query->where('nidn', Auth::user()->username);
+            }
+        )
+            ->get();
 
-        return view('teacher-view.publication.index',compact(['publikasiKetua','publikasiAnggota']));
+        return view('teacher-view.publication.index', compact(['publikasiKetua', 'publikasiAnggota']));
     }
 
     public function publication_create()
     {
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $studyProgram = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
         $jenis        = PublicationCategory::all();
 
-        return view('teacher-view.publication.form',compact(['studyProgram','jenis']));
+        return view('teacher-view.publication.form', compact(['studyProgram', 'jenis']));
     }
 
     public function publication_show($id)
@@ -175,19 +180,19 @@ class TeacherProfileController extends Controller
         $id   = decode_id($id);
         $data = TeacherPublication::find($id);
 
-        return view('teacher-view.publication.show',compact(['data']));
+        return view('teacher-view.publication.show', compact(['data']));
     }
 
     public function publication_edit($id)
     {
         $id   = decode_id($id);
 
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $studyProgram = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
         $jenis        = PublicationCategory::all();
-        $data         = TeacherPublication::with('teacher','publicationStudents')->where('id',$id)->first();
-        $teacher      = Teacher::where('kd_prodi',$data->teacher->kd_prodi)->get();
+        $data         = TeacherPublication::with('teacher', 'publicationStudents')->where('id', $id)->first();
+        $teacher      = Teacher::where('kd_prodi', $data->teacher->kd_prodi)->get();
 
-        return view('publication.teacher.form',compact(['jenis','data','studyProgram','teacher']));
+        return view('publication.teacher.form', compact(['jenis', 'data', 'studyProgram', 'teacher']));
     }
 
     public function update_biodata(Request $request)
@@ -205,12 +210,12 @@ class TeacherProfileController extends Controller
             'pend_terakhir_jurusan' => 'nullable',
             'bidang_ahli'           => 'nullable',
             'sesuai_bidang_ps'      => 'nullable',
-            'ikatan_kerja'          => 'required',
+            'status_kerja'          => 'required',
             'jabatan_akademik'      => 'required',
             'foto'                  => 'mimes:jpeg,jpg,png',
         ]);
 
-        $bidang_ahli = explode(", ",$request->bidang_ahli);
+        $bidang_ahli = explode(", ", $request->bidang_ahli);
 
         $Teacher                            = Teacher::find($id);
         $Teacher->nip                       = $request->nip;
@@ -225,36 +230,35 @@ class TeacherProfileController extends Controller
         $Teacher->pend_terakhir_jenjang     = $request->pend_terakhir_jenjang;
         $Teacher->pend_terakhir_jurusan     = $request->pend_terakhir_jurusan;
         $Teacher->bidang_ahli               = json_encode($bidang_ahli);
-        $Teacher->ikatan_kerja              = $request->ikatan_kerja;
+        $Teacher->status_kerja              = $request->status_kerja;
         $Teacher->jabatan_akademik          = $request->jabatan_akademik;
         $Teacher->sertifikat_pendidik       = $request->sertifikat_pendidik;
         $Teacher->sesuai_bidang_ps          = $request->sesuai_bidang_ps;
 
-        $storagePath = public_path('upload/teacher/'.$Teacher->foto);
-        if($request->file('foto')) {
-            if(File::exists($storagePath)) {
+        $storagePath = storage_path('app/upload/teacher/' . $Teacher->foto);
+        if ($request->file('foto')) {
+            if (File::exists($storagePath)) {
                 File::delete($storagePath);
             }
 
             $file = $request->file('foto');
-            $tujuan_upload = public_path('upload/teacher');
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
+            $tujuan_upload = storage_path('app/upload/teacher');
+            $filename = $request->nidn . '_' . str_replace(' ', '', $request->nama) . '.' . $file->getClientOriginalExtension();
+            $file->move($tujuan_upload, $filename);
             $Teacher->foto = $filename;
         }
 
-        if(isset($Teacher->foto) && File::exists($storagePath))
-        {
+        if (isset($Teacher->foto) && File::exists($storagePath)) {
             $ekstensi = File::extension($storagePath);
-            $filename = $request->nidn.'_'.str_replace(' ', '', $request->nama).'.'.$ekstensi;
-            File::move($storagePath,public_path('upload/teacher/'.$filename));
+            $filename = $request->nidn . '_' . str_replace(' ', '', $request->nama) . '.' . $ekstensi;
+            File::move($storagePath, storage_path('app/upload/teacher/' . $filename));
             $Teacher->foto = $filename;
         }
 
         $Teacher->save();
 
         //Update User Dosen
-        $user          = User::where('username',$id)->first();
+        $user          = User::where('username', $id)->first();
         $user->name    = $request->nama;
         $user->save();
 
@@ -264,7 +268,7 @@ class TeacherProfileController extends Controller
     public function store_achievement(Request $request)
     {
         $nidn = Auth::user()->username;
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             $request->validate([
                 'id_ta'             => 'required',
                 'prestasi'          => 'required',
@@ -281,18 +285,18 @@ class TeacherProfileController extends Controller
             $acv->tingkat_prestasi  = $request->tingkat_prestasi;
             $acv->bukti_nama        = $request->bukti_nama;
 
-            $storagePath = public_path('upload/teacher/achievement'.$acv->bukti_file);
-            if($file = $request->file('bukti_file')) {
+            $storagePath = storage_path('app/upload/teacher/achievement' . $acv->bukti_file);
+            if ($file = $request->file('bukti_file')) {
                 $tgl_skrg = date('Y_m_d_H_i_s');
-                $tujuan_upload = public_path('upload/teacher/achievement');
-                $filename = $acv->nidn.'_'.str_replace(' ', '', $request->bukti_nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
-                $file->move($tujuan_upload,$filename);
+                $tujuan_upload = storage_path('app/upload/teacher/achievement');
+                $filename = $acv->nidn . '_' . str_replace(' ', '', $request->bukti_nama) . '_' . $tgl_skrg . '.' . $file->getClientOriginalExtension();
+                $file->move($tujuan_upload, $filename);
                 $acv->bukti_file = $filename;
             }
 
             $q = $acv->save();
 
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan',
@@ -310,7 +314,7 @@ class TeacherProfileController extends Controller
 
     public function update_achievement(Request $request)
     {
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             $id  = decode_id($request->_id);
 
             $request->validate([
@@ -328,31 +332,30 @@ class TeacherProfileController extends Controller
             $acv->bukti_nama        = $request->bukti_nama;
 
             //Bukti File
-            $storagePath = public_path('upload/teacher/achievement/'.$acv->bukti_file);
+            $storagePath = storage_path('app/upload/teacher/achievement/' . $acv->bukti_file);
             $tgl_skrg = date('Y_m_d_H_i_s');
-            if($file = $request->file('bukti_file')) {
-                if(File::exists($storagePath)) {
+            if ($file = $request->file('bukti_file')) {
+                if (File::exists($storagePath)) {
                     File::delete($storagePath);
                 }
 
-                $tujuan_upload = public_path('upload/teacher/achievement');
-                $filename = $acv->nidn.'_'.str_replace(' ', '', $acv->bukti_nama).'_'.$tgl_skrg.'.'.$file->getClientOriginalExtension();
-                $file->move($tujuan_upload,$filename);
+                $tujuan_upload = storage_path('app/upload/teacher/achievement');
+                $filename = $acv->nidn . '_' . str_replace(' ', '', $acv->bukti_nama) . '_' . $tgl_skrg . '.' . $file->getClientOriginalExtension();
+                $file->move($tujuan_upload, $filename);
                 $acv->bukti_file = $filename;
             }
 
-            if(isset($acv->bukti_file) && File::exists($storagePath))
-            {
+            if (isset($acv->bukti_file) && File::exists($storagePath)) {
                 $ekstensi = File::extension($storagePath);
-                $filename = $acv->nidn.'_'.str_replace(' ', '', $acv->bukti_nama).'_'.$tgl_skrg.'.'.$ekstensi;
-                File::move($storagePath,public_path('upload/teacher/achievement/'.$filename));
+                $filename = $acv->nidn . '_' . str_replace(' ', '', $acv->bukti_nama) . '_' . $tgl_skrg . '.' . $ekstensi;
+                File::move($storagePath, storage_path('app/upload/teacher/achievement/' . $filename));
                 $acv->bukti_file = $filename;
             }
 
             //Simpan
             $q = $acv->save();
 
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan',
@@ -370,12 +373,12 @@ class TeacherProfileController extends Controller
 
     public function destroy_achievement(Request $request)
     {
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             $id     = decode_id($request->_id);
             $data   = TeacherAchievement::find($id);
             $q      = $data->delete();
 
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -396,9 +399,9 @@ class TeacherProfileController extends Controller
 
     public function delete_file_achievement($file)
     {
-        $storagePath = public_path('upload/teacher/achievement/'.$file);
+        $storagePath = storage_path('app/upload/teacher/achievement/' . $file);
 
-        if(File::exists($storagePath)) {
+        if (File::exists($storagePath)) {
             File::delete($storagePath);
         }
     }
@@ -430,8 +433,8 @@ class TeacherProfileController extends Controller
         $research->save();
 
         //Jumlah SKS
-        $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
-        $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
+        $sks_ketua      = floatval($request->sks_penelitian) * setting('research_ratio_chief') / 100;
+        $sks_anggota    = floatval($request->sks_penelitian) * setting('research_ratio_members') / 100;
 
         //Tambah Ketua
         $ketua                  = new ResearchTeacher;
@@ -442,9 +445,9 @@ class TeacherProfileController extends Controller
         $ketua->save();
 
         //Tambah Anggota Dosen
-        if($request->anggota_nidn) {
+        if ($request->anggota_nidn) {
             $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
+            for ($i = 0; $i < $hitungDsn; $i++) {
                 ResearchTeacher::updateOrCreate(
                     [
                         'id_penelitian' => $research->id,
@@ -460,9 +463,9 @@ class TeacherProfileController extends Controller
 
 
         //Tambah Mahasiswa
-        if($request->mahasiswa_nim) {
+        if ($request->mahasiswa_nim) {
             $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
+            for ($i = 0; $i < $hitungMhs; $i++) {
                 ResearchStudent::updateOrCreate(
                     [
                         'id_penelitian' => $research->id,
@@ -506,12 +509,12 @@ class TeacherProfileController extends Controller
         $research->save();
 
         //Jumlah SKS
-        $sks_ketua      = floatval($request->sks_penelitian)*setting('research_ratio_chief')/100;
-        $sks_anggota    = floatval($request->sks_penelitian)*setting('research_ratio_members')/100;
+        $sks_ketua      = floatval($request->sks_penelitian) * setting('research_ratio_chief') / 100;
+        $sks_anggota    = floatval($request->sks_penelitian) * setting('research_ratio_members') / 100;
 
         //Update Ketua
-        $ketua = ResearchTeacher::where('id_penelitian',$id)->where('status','Ketua');
-        if($ketua != $request->ketua_nidn) {
+        $ketua = ResearchTeacher::where('id_penelitian', $id)->where('status', 'Ketua');
+        if ($ketua != $request->ketua_nidn) {
             $ketua->delete();
 
             $new_ketua                  = new ResearchTeacher;
@@ -529,9 +532,9 @@ class TeacherProfileController extends Controller
         }
 
         //Update Anggota
-        if($request->anggota_nidn) {
+        if ($request->anggota_nidn) {
             $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
+            for ($i = 0; $i < $hitungDsn; $i++) {
 
                 ResearchTeacher::updateOrCreate(
                     [
@@ -547,9 +550,9 @@ class TeacherProfileController extends Controller
         }
 
         //Update Mahasiswa
-        if($request->mahasiswa_nim) {
+        if ($request->mahasiswa_nim) {
             $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
+            for ($i = 0; $i < $hitungMhs; $i++) {
 
                 ResearchStudent::updateOrCreate(
                     [
@@ -560,15 +563,15 @@ class TeacherProfileController extends Controller
             }
         }
 
-        return redirect()->route('profile.research.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('profile.research.show', encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function research_destroy(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decode_id($request->id);
             $q  = Research::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -586,10 +589,10 @@ class TeacherProfileController extends Controller
 
     public function research_destroy_teacher(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decrypt($request->id);
             $q  = ResearchTeacher::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -607,10 +610,10 @@ class TeacherProfileController extends Controller
 
     public function research_destroy_students(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decrypt($request->id);
             $q  = ResearchStudent::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -653,8 +656,8 @@ class TeacherProfileController extends Controller
         $community->save();
 
         //Jumlah SKS
-        $sks_ketua      = floatval($request->sks_pengabdian)*setting('service_ratio_chief')/100;
-        $sks_anggota    = floatval($request->sks_pengabdian)*setting('service_ratio_members')/100;
+        $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
+        $sks_anggota    = floatval($request->sks_pengabdian) * setting('service_ratio_members') / 100;
 
         //Tambah Ketua
         $ketua                  = new CommunityServiceTeacher;
@@ -665,9 +668,9 @@ class TeacherProfileController extends Controller
         $ketua->save();
 
         //Tambah Anggota Dosen
-        if($request->anggota_nidn) {
+        if ($request->anggota_nidn) {
             $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
+            for ($i = 0; $i < $hitungDsn; $i++) {
                 CommunityServiceTeacher::updateOrCreate(
                     [
                         'id_penelitian' => $community->id,
@@ -682,9 +685,9 @@ class TeacherProfileController extends Controller
         }
 
         //Tambah Mahasiswa
-        if($request->mahasiswa_nim) {
+        if ($request->mahasiswa_nim) {
             $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
+            for ($i = 0; $i < $hitungMhs; $i++) {
                 CommunityServiceStudent::updateOrCreate(
                     [
                         'id_pengabdian' => $community->id,
@@ -726,12 +729,12 @@ class TeacherProfileController extends Controller
         $community->save();
 
         //Jumlah SKS
-        $sks_ketua      = floatval($request->sks_pengabdian)*setting('service_ratio_chief')/100;
-        $sks_anggota    = floatval($request->sks_pengabdian)*setting('service_ratio_members')/100;
+        $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
+        $sks_anggota    = floatval($request->sks_pengabdian) * setting('service_ratio_members') / 100;
 
         //Update Ketua
-        $ketua = CommunityServiceTeacher::where('id_pengabdian',$id)->where('status','Ketua');
-        if($ketua != $request->ketua_nidn) {
+        $ketua = CommunityServiceTeacher::where('id_pengabdian', $id)->where('status', 'Ketua');
+        if ($ketua != $request->ketua_nidn) {
             $ketua->delete();
 
             $new_ketua                  = new CommunityServiceTeacher;
@@ -748,9 +751,9 @@ class TeacherProfileController extends Controller
         }
 
         //Update Anggota
-        if($request->anggota_nidn) {
+        if ($request->anggota_nidn) {
             $hitungDsn = count($request->anggota_nidn);
-            for($i=0;$i<$hitungDsn;$i++) {
+            for ($i = 0; $i < $hitungDsn; $i++) {
 
                 CommunityServiceTeacher::updateOrCreate(
                     [
@@ -766,9 +769,9 @@ class TeacherProfileController extends Controller
         }
 
         //Update Anggota Mahasiswa
-        if($request->mahasiswa_nim) {
+        if ($request->mahasiswa_nim) {
             $hitungMhs = count($request->mahasiswa_nim);
-            for($i=0;$i<$hitungMhs;$i++) {
+            for ($i = 0; $i < $hitungMhs; $i++) {
 
                 CommunityServiceStudent::updateOrCreate(
                     [
@@ -779,15 +782,15 @@ class TeacherProfileController extends Controller
             }
         }
 
-        return redirect()->route('profile.community-service.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        return redirect()->route('profile.community-service.show', encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
     }
 
     public function commuService_destroy(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decode_id($request->id);
             $q  = CommunityService::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -805,10 +808,10 @@ class TeacherProfileController extends Controller
 
     public function commuService_destroy_teacher(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decrypt($request->id);
             $q  = CommunityServiceTeacher::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -826,10 +829,10 @@ class TeacherProfileController extends Controller
 
     public function commuService_destroy_students(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decrypt($request->id);
             $q  = CommunityServiceStudent::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',

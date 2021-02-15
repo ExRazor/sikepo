@@ -57,7 +57,7 @@ class TeacherImport implements ToCollection, WithStartRow
                         'pend_terakhir_jurusan' => $column[13],
                         'bidang_ahli'       => json_encode(explode(', ', $column[14])),
                         'sesuai_bidang_ps'  => $column[15],
-                        'ikatan_kerja'      => $column[16],
+                        'status_kerja'      => $column[16],
                         'jabatan_akademik'  => $column[17],
                         'sertifikat_pendidik' => $column[18],
                     ]
@@ -78,13 +78,13 @@ class TeacherImport implements ToCollection, WithStartRow
                 $cekUserDosen = User::where('username', $column[1])->where('role', 'dosen')->count();
                 if ($cekUserDosen == 0) {
                     User::create([
-                        'username'   => $column[1],
-                        'password'   => Hash::make($column[1]),
-                        'role'       => 'dosen',
-                        'name'       => ucwords(strtolower($column[2])),
+                        'username'    => $column[1],
+                        'password'    => Hash::make($column[1]),
+                        'role'        => 'dosen',
+                        'name'        => ucwords(strtolower($column[2])),
                         'defaultPass' => true,
-                        'is_active'  => true,
-                        'created_at' => now()
+                        'is_active'   => true,
+                        'created_at'  => now()
                     ]);
                 }
             }
