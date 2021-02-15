@@ -18,40 +18,41 @@ class Research extends BaseModel
         'sumber_biaya',
         'sumber_nama',
         'jumlah_biaya',
+        'bukti_fisik'
     ];
 
     public function academicYear()
     {
-        return $this->belongsTo('App\Models\AcademicYear','id_ta');
+        return $this->belongsTo('App\Models\AcademicYear', 'id_ta');
     }
 
     public function researchTeacher()
     {
-        return $this->hasMany('App\Models\ResearchTeacher','id_penelitian');
+        return $this->hasMany('App\Models\ResearchTeacher', 'id_penelitian');
     }
 
     public function researchKetua()
     {
-        return $this->hasOne('App\Models\ResearchTeacher','id_penelitian')->where('status','Ketua');
+        return $this->hasOne('App\Models\ResearchTeacher', 'id_penelitian')->where('status', 'Ketua');
     }
 
     public function researchStatus($nidn)
     {
-        return $this->hasOne('App\Models\ResearchTeacher','id_penelitian')->where('nidn',$nidn);
+        return $this->hasOne('App\Models\ResearchTeacher', 'id_penelitian')->where('nidn', $nidn);
     }
 
     public function researchAnggota()
     {
-        return $this->hasMany('App\Models\ResearchTeacher','id_penelitian')->where('status','Anggota');
+        return $this->hasMany('App\Models\ResearchTeacher', 'id_penelitian')->where('status', 'Anggota');
     }
 
     public function researchStudent()
     {
-        return $this->hasMany('App\Models\ResearchStudent','id_penelitian');
+        return $this->hasMany('App\Models\ResearchStudent', 'id_penelitian');
     }
 
     public function curriculumIntegration()
     {
-        return $this->hasMany('App\Models\CurriculumIntegration','id_penelitian');
+        return $this->hasMany('App\Models\CurriculumIntegration', 'id_penelitian');
     }
 }

@@ -19,10 +19,11 @@ class CreateCommunityServicesTable extends Migration
             $table->string('tema_pengabdian');
             $table->string('judul_pengabdian');
             $table->string('sks_pengabdian');
-            $table->char('sesuai_prodi',1)->nullable();
+            $table->char('sesuai_prodi', 1)->nullable();
             $table->string('sumber_biaya');
             $table->string('sumber_biaya_nama')->nullable();
             $table->integer('jumlah_biaya');
+            $table->string('bukti_fisik')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
