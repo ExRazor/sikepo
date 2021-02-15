@@ -2620,7 +2620,7 @@ $('#outputActivity_form').on('change','select#jenis',function(){
         $('#file').find('input').prop('disabled',false);
 
     }
-    else if(jenis == 'HKI Paten')
+    else if(jenis == 'Paten')
     {
         $('#nama_karya').removeClass('d-none');
         $('#nama_karya').find('label').html('Nama Karya: <span class="tx-danger">*</span>');
