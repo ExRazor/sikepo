@@ -16,13 +16,13 @@ Breadcrumbs::for('teacher-create', function ($trail) {
     $trail->push('Tambah Data Dosen', route('teacher.list.create'));
 });
 
-Breadcrumbs::for('teacher-profile', function ($trail,$data) {
+Breadcrumbs::for('teacher-profile', function ($trail, $data) {
     $trail->parent('teacher');
-    $trail->push($data->nama,route('teacher.list.show',encode_id($data->nidn)));
+    $trail->push($data->nama, route('teacher.list.show', $data->nidn));
 });
 
-Breadcrumbs::for('teacher-edit', function ($trail,$data) {
-    $trail->parent('teacher-profile',$data);
+Breadcrumbs::for('teacher-edit', function ($trail, $data) {
+    $trail->parent('teacher-profile', $data);
     $trail->push('Sunting Data Dosen');
 });
 
@@ -49,13 +49,13 @@ Breadcrumbs::for('student-add', function ($trail) {
     $trail->push('Tambah Data Mahasiswa', route('student.list.create'));
 });
 
-Breadcrumbs::for('student-profile', function ($trail,$data) {
+Breadcrumbs::for('student-profile', function ($trail, $data) {
     $trail->parent('student');
-    $trail->push($data->nim.' : '.$data->nama,route('student.list.show',encode_id($data->nim)));
+    $trail->push($data->nim . ' : ' . $data->nama, route('student.list.show', encode_id($data->nim)));
 });
 
-Breadcrumbs::for('student-edit', function ($trail,$data) {
-    $trail->parent('student-profile',$data);
+Breadcrumbs::for('student-edit', function ($trail, $data) {
+    $trail->parent('student-profile', $data);
     $trail->push('Sunting Data Mahasiswa');
 });
 
@@ -89,9 +89,9 @@ Breadcrumbs::for('academic-curriculum', function ($trail) {
     $trail->push('Data Kurikulum', route('academic.curriculum.index'));
 });
 
-Breadcrumbs::for('academic-curriculum-show', function ($trail,$data) {
+Breadcrumbs::for('academic-curriculum-show', function ($trail, $data) {
     $trail->parent('academic-curriculum');
-    $trail->push($data->nama, route('academic.curriculum.show',$data->id));
+    $trail->push($data->nama, route('academic.curriculum.show', $data->id));
 });
 
 Breadcrumbs::for('academic-curriculum-create', function ($trail) {
@@ -99,7 +99,7 @@ Breadcrumbs::for('academic-curriculum-create', function ($trail) {
     $trail->push('Tambah Mata Kuliah', route('academic.curriculum.create'));
 });
 
-Breadcrumbs::for('academic-curriculum-edit', function ($trail,$data) {
+Breadcrumbs::for('academic-curriculum-edit', function ($trail, $data) {
     $trail->parent('academic-curriculum');
     $trail->push('Sunting Mata Kuliah');
 });
@@ -115,7 +115,7 @@ Breadcrumbs::for('academic-schedule-create', function ($trail) {
     $trail->push('Tambah Jadwal Kurikulum', route('academic.schedule.create'));
 });
 
-Breadcrumbs::for('academic-schedule-edit', function ($trail,$data) {
+Breadcrumbs::for('academic-schedule-edit', function ($trail, $data) {
     $trail->parent('academic-curriculum');
     $trail->push('Sunting Jadwal Kurikulum');
 });
@@ -131,7 +131,7 @@ Breadcrumbs::for('academic-integration-create', function ($trail) {
     $trail->push('Tambah Integrasi Kurikulum', route('academic.integration.create'));
 });
 
-Breadcrumbs::for('academic-integration-edit', function ($trail,$data) {
+Breadcrumbs::for('academic-integration-edit', function ($trail, $data) {
     $trail->parent('academic-curriculum');
     $trail->push('Sunting Integrasi Kurikulum');
 });
@@ -147,7 +147,7 @@ Breadcrumbs::for('academic-minithesis-create', function ($trail) {
     $trail->push('Tambah Tugas Akhir', route('academic.minithesis.create'));
 });
 
-Breadcrumbs::for('academic-minithesis-edit', function ($trail,$data) {
+Breadcrumbs::for('academic-minithesis-edit', function ($trail, $data) {
     $trail->parent('academic-curriculum');
     $trail->push('Sunting Tugas Akhir');
 });
@@ -163,16 +163,16 @@ Breadcrumbs::for('academic-satisfaction-create', function ($trail) {
     $trail->push('Tambah', route('academic.satisfaction.create'));
 });
 
-Breadcrumbs::for('academic-satisfaction-show', function ($trail,$data) {
+Breadcrumbs::for('academic-satisfaction-show', function ($trail, $data) {
     $trail->parent('academic-satisfaction');
     $trail->push(
-        'Kepuasan Akademik: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
-        route('academic.satisfaction.show',encrypt($data->id))
+        'Kepuasan Akademik: ' . $data->studyProgram->singkatan . ' - ' . $data->academicYear->tahun_akademik,
+        route('academic.satisfaction.show', encrypt($data->id))
     );
 });
 
-Breadcrumbs::for('academic-satisfaction-edit', function ($trail,$data) {
-    $trail->parent('academic-satisfaction-show',$data);
+Breadcrumbs::for('academic-satisfaction-edit', function ($trail, $data) {
+    $trail->parent('academic-satisfaction-show', $data);
     $trail->push('Sunting');
 });
 
@@ -187,9 +187,9 @@ Breadcrumbs::for('collaboration-create', function ($trail) {
     $trail->push('Tambah Kerja Sama', route('collaboration.create'));
 });
 
-Breadcrumbs::for('collaboration-show', function ($trail,$data) {
+Breadcrumbs::for('collaboration-show', function ($trail, $data) {
     $trail->parent('collaboration');
-    $trail->push('Rincian Kerja Sama', route('collaboration.show',$data->id));
+    $trail->push('Rincian Kerja Sama', route('collaboration.show', $data->id));
 });
 
 Breadcrumbs::for('collaboration-edit', function ($trail) {
@@ -208,13 +208,13 @@ Breadcrumbs::for('research-create', function ($trail) {
     $trail->push('Tambah Data Penelitian', route('research.create'));
 });
 
-Breadcrumbs::for('research-show', function ($trail,$data) {
+Breadcrumbs::for('research-show', function ($trail, $data) {
     $trail->parent('research');
-    $trail->push($data->judul_penelitian, route('research.show',encode_id($data->id)));
+    $trail->push($data->judul_penelitian, route('research.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('research-edit', function ($trail,$data) {
-    $trail->parent('research-show',$data);
+Breadcrumbs::for('research-edit', function ($trail, $data) {
+    $trail->parent('research-show', $data);
     $trail->push('Sunting Data Penelitian');
 });
 
@@ -229,13 +229,13 @@ Breadcrumbs::for('community-service-create', function ($trail) {
     $trail->push('Tambah Data Pengabdian', route('community-service.create'));
 });
 
-Breadcrumbs::for('community-service-show', function ($trail,$data) {
+Breadcrumbs::for('community-service-show', function ($trail, $data) {
     $trail->parent('community-service');
-    $trail->push($data->judul_pengabdian, route('community-service.show',encode_id($data->id)));
+    $trail->push($data->judul_pengabdian, route('community-service.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('community-service-edit', function ($trail,$data) {
-    $trail->parent('community-service-show',$data);
+Breadcrumbs::for('community-service-edit', function ($trail, $data) {
+    $trail->parent('community-service-show', $data);
     $trail->push('Sunting Data Pengabdian');
 });
 
@@ -256,12 +256,12 @@ Breadcrumbs::for('publication-teacher-create', function ($trail) {
     $trail->push('Tambah Publikasi Dosen', route('publication.teacher.create'));
 });
 
-Breadcrumbs::for('publication-teacher-show', function ($trail,$data) {
+Breadcrumbs::for('publication-teacher-show', function ($trail, $data) {
     $trail->parent('publication-teacher');
-    $trail->push($data->judul, route('publication.teacher.show',encode_id($data->id)));
+    $trail->push($data->judul, route('publication.teacher.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('publication-teacher-edit', function ($trail,$data) {
+Breadcrumbs::for('publication-teacher-edit', function ($trail, $data) {
     $trail->parent('publication-teacher');
     $trail->push('Sunting Publikasi Dosen');
 });
@@ -277,12 +277,12 @@ Breadcrumbs::for('publication-student-create', function ($trail) {
     $trail->push('Tambah Publikasi Mahasiswa', route('publication.student.create'));
 });
 
-Breadcrumbs::for('publication-student-show', function ($trail,$data) {
+Breadcrumbs::for('publication-student-show', function ($trail, $data) {
     $trail->parent('publication-student');
-    $trail->push($data->judul, route('publication.student.show',encode_id($data->id)));
+    $trail->push($data->judul, route('publication.student.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('publication-student-edit', function ($trail,$data) {
+Breadcrumbs::for('publication-student-edit', function ($trail, $data) {
     $trail->parent('publication-student');
     $trail->push('Sunting Publikasi Mahasiswa');
 });
@@ -303,13 +303,13 @@ Breadcrumbs::for('output-activity-teacher-create', function ($trail) {
     $trail->push('Tambah Data Luaran', route('output-activity.teacher.create'));
 });
 
-Breadcrumbs::for('output-activity-teacher-show', function ($trail,$data) {
+Breadcrumbs::for('output-activity-teacher-show', function ($trail, $data) {
     $trail->parent('output-activity-teacher');
-    $trail->push($data->judul_luaran, route('output-activity.teacher.show',encode_id($data->id)));
+    $trail->push($data->judul_luaran, route('output-activity.teacher.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('output-activity-teacher-edit', function ($trail,$data) {
-    $trail->parent('output-activity-teacher-show',$data);
+Breadcrumbs::for('output-activity-teacher-edit', function ($trail, $data) {
+    $trail->parent('output-activity-teacher-show', $data);
     $trail->push('Sunting Data Luaran');
 });
 
@@ -324,13 +324,13 @@ Breadcrumbs::for('output-activity-student-create', function ($trail) {
     $trail->push('Tambah Data Luaran', route('output-activity.student.create'));
 });
 
-Breadcrumbs::for('output-activity-student-show', function ($trail,$data) {
+Breadcrumbs::for('output-activity-student-show', function ($trail, $data) {
     $trail->parent('output-activity-student');
-    $trail->push($data->judul_luaran, route('output-activity.student.show',encode_id($data->id)));
+    $trail->push($data->judul_luaran, route('output-activity.student.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('output-activity-student-edit', function ($trail,$data) {
-    $trail->parent('output-activity-student-show',$data);
+Breadcrumbs::for('output-activity-student-edit', function ($trail, $data) {
+    $trail->parent('output-activity-student-show', $data);
     $trail->push('Sunting Data Luaran');
 });
 
@@ -351,16 +351,16 @@ Breadcrumbs::for('funding-faculty-add', function ($trail) {
     $trail->push('Tambah Keuangan Fakultas', route('funding.faculty.add'));
 });
 
-Breadcrumbs::for('funding-faculty-show', function ($trail,$data) {
+Breadcrumbs::for('funding-faculty-show', function ($trail, $data) {
     $trail->parent('funding-faculty');
     $trail->push(
-        'Rincian Keuangan: '.$data->faculty->singkatan.' - '.$data->academicYear->tahun_akademik,
-        route('funding.faculty.show',encrypt($data->kd_dana))
+        'Rincian Keuangan: ' . $data->faculty->singkatan . ' - ' . $data->academicYear->tahun_akademik,
+        route('funding.faculty.show', encrypt($data->kd_dana))
     );
 });
 
-Breadcrumbs::for('funding-faculty-edit', function ($trail,$data) {
-    $trail->parent('funding-faculty-show',$data);
+Breadcrumbs::for('funding-faculty-edit', function ($trail, $data) {
+    $trail->parent('funding-faculty-show', $data);
     $trail->push('Sunting Keuangan Fakultas');
 });
 
@@ -375,16 +375,16 @@ Breadcrumbs::for('funding-studyProgram-add', function ($trail) {
     $trail->push('Tambah Keuangan Program Studi', route('funding.study-program.add'));
 });
 
-Breadcrumbs::for('funding-studyProgram-show', function ($trail,$data) {
+Breadcrumbs::for('funding-studyProgram-show', function ($trail, $data) {
     $trail->parent('funding-studyProgram');
     $trail->push(
-        'Rincian Keuangan: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
-        route('funding.study-program.show',encrypt($data->kd_dana))
+        'Rincian Keuangan: ' . $data->studyProgram->singkatan . ' - ' . $data->academicYear->tahun_akademik,
+        route('funding.study-program.show', encrypt($data->kd_dana))
     );
 });
 
-Breadcrumbs::for('funding-studyProgram-edit', function ($trail,$data) {
-    $trail->parent('funding-studyProgram-show',$data);
+Breadcrumbs::for('funding-studyProgram-edit', function ($trail, $data) {
+    $trail->parent('funding-studyProgram-show', $data);
     $trail->push('Sunting Keuangan Program Studi');
 });
 
@@ -406,9 +406,9 @@ Breadcrumbs::for('alumnus-idle', function ($trail) {
     $trail->push('Waktu Tunggu Lulusan', route('alumnus.idle'));
 });
 
-Breadcrumbs::for('alumnus-idle-show', function ($trail,$data) {
+Breadcrumbs::for('alumnus-idle-show', function ($trail, $data) {
     $trail->parent('alumnus-idle');
-    $trail->push($data->nama, route('alumnus.idle.show',encrypt($data->kd_prodi)));
+    $trail->push($data->nama, route('alumnus.idle.show', encrypt($data->kd_prodi)));
 });
 
 // Alumnus > Kesesuaian Bidang Kerja
@@ -417,9 +417,9 @@ Breadcrumbs::for('alumnus-suitable', function ($trail) {
     $trail->push('Bidang Kerja Lulusan', route('alumnus.suitable'));
 });
 
-Breadcrumbs::for('alumnus-suitable-show', function ($trail,$data) {
+Breadcrumbs::for('alumnus-suitable-show', function ($trail, $data) {
     $trail->parent('alumnus-suitable');
-    $trail->push($data->nama, route('alumnus.suitable.show',encrypt($data->kd_prodi)));
+    $trail->push($data->nama, route('alumnus.suitable.show', encrypt($data->kd_prodi)));
 });
 
 // Alumnus > Kinerja Lulusan
@@ -428,9 +428,9 @@ Breadcrumbs::for('alumnus-workplace', function ($trail) {
     $trail->push('Kinerja Lulusan', route('alumnus.workplace'));
 });
 
-Breadcrumbs::for('alumnus-workplace-show', function ($trail,$data) {
+Breadcrumbs::for('alumnus-workplace-show', function ($trail, $data) {
     $trail->parent('alumnus-workplace');
-    $trail->push($data->nama, route('alumnus.workplace.show',encrypt($data->kd_prodi)));
+    $trail->push($data->nama, route('alumnus.workplace.show', encrypt($data->kd_prodi)));
 });
 
 // Alumnus > Kepuasan
@@ -444,16 +444,16 @@ Breadcrumbs::for('alumnus-satisfaction-add', function ($trail) {
     $trail->push('Tambah', route('alumnus.satisfaction.add'));
 });
 
-Breadcrumbs::for('alumnus-satisfaction-show', function ($trail,$data) {
+Breadcrumbs::for('alumnus-satisfaction-show', function ($trail, $data) {
     $trail->parent('alumnus-satisfaction');
     $trail->push(
-        'Kepuasan Pengguna Lulusan: '.$data->studyProgram->singkatan.' - '.$data->academicYear->tahun_akademik,
-        route('alumnus.satisfaction.show',encrypt($data->id))
+        'Kepuasan Pengguna Lulusan: ' . $data->studyProgram->singkatan . ' - ' . $data->academicYear->tahun_akademik,
+        route('alumnus.satisfaction.show', encrypt($data->id))
     );
 });
 
-Breadcrumbs::for('alumnus-satisfaction-edit', function ($trail,$data) {
-    $trail->parent('alumnus-satisfaction-show',$data);
+Breadcrumbs::for('alumnus-satisfaction-edit', function ($trail, $data) {
+    $trail->parent('alumnus-satisfaction-show', $data);
     $trail->push('Sunting');
 });
 
@@ -552,19 +552,19 @@ Breadcrumbs::for('setting', function ($trail) {
 // Setelan > Umum
 Breadcrumbs::for('setting-general', function ($trail) {
     $trail->parent('setting');
-    $trail->push('Setelan Umum',route('setting.general'));
+    $trail->push('Setelan Umum', route('setting.general'));
 });
 
 // Setelan > Struktural
 Breadcrumbs::for('setting-structural', function ($trail) {
     $trail->parent('setting');
-    $trail->push('Manajemen Struktural',route('setting.structural.index'));
+    $trail->push('Manajemen Struktural', route('setting.structural.index'));
 });
 
 // Setelan > User
 Breadcrumbs::for('setting-user', function ($trail) {
     $trail->parent('setting');
-    $trail->push('Manajemen User',route('setting.user.index'));
+    $trail->push('Manajemen User', route('setting.user.index'));
 });
 
 // Profile
@@ -602,13 +602,13 @@ Breadcrumbs::for('profile-research-create', function ($trail) {
     $trail->push('Tambah Data Penelitian', route('profile.research.create'));
 });
 
-Breadcrumbs::for('profile-research-show', function ($trail,$data) {
+Breadcrumbs::for('profile-research-show', function ($trail, $data) {
     $trail->parent('profile');
-    $trail->push('Data Penelitian: '.$data->judul_penelitian, route('profile.research.show',encode_id($data->id)));
+    $trail->push('Data Penelitian: ' . $data->judul_penelitian, route('profile.research.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('profile-research-edit', function ($trail,$data) {
-    $trail->parent('profile-research-show',$data);
+Breadcrumbs::for('profile-research-edit', function ($trail, $data) {
+    $trail->parent('profile-research-show', $data);
     $trail->push('Sunting Data Penelitian');
 });
 
@@ -623,13 +623,13 @@ Breadcrumbs::for('profile-community-service-add', function ($trail) {
     $trail->push('Tambah Data Pengabdian', route('profile.community-service.add'));
 });
 
-Breadcrumbs::for('profile-community-service-show', function ($trail,$data) {
+Breadcrumbs::for('profile-community-service-show', function ($trail, $data) {
     $trail->parent('profile-community-service');
-    $trail->push($data->judul_pengabdian, route('profile.community-service.show',encode_id($data->id)));
+    $trail->push($data->judul_pengabdian, route('profile.community-service.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('profile-community-service-edit', function ($trail,$data) {
-    $trail->parent('profile-community-service-show',$data);
+Breadcrumbs::for('profile-community-service-edit', function ($trail, $data) {
+    $trail->parent('profile-community-service-show', $data);
     $trail->push('Sunting Data Pengabdian');
 });
 
@@ -644,12 +644,12 @@ Breadcrumbs::for('profile-publication-add', function ($trail) {
     $trail->push('Tambah Publikasi', route('profile.publication.add'));
 });
 
-Breadcrumbs::for('profile-publication-show', function ($trail,$data) {
+Breadcrumbs::for('profile-publication-show', function ($trail, $data) {
     $trail->parent('profile-publication');
-    $trail->push('Data Publikasi: '.$data->judul, route('profile.publication.show',encode_id($data->id)));
+    $trail->push('Data Publikasi: ' . $data->judul, route('profile.publication.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('profile-publication-edit', function ($trail,$data) {
+Breadcrumbs::for('profile-publication-edit', function ($trail, $data) {
     $trail->parent('profile-publication');
     $trail->push('Sunting Publikasi');
 });
@@ -663,13 +663,13 @@ Breadcrumbs::for('account', function ($trail) {
 // Akun > Ganti Profil
 Breadcrumbs::for('account-editprofile', function ($trail) {
     $trail->parent('account');
-    $trail->push('Ubah Profil',route('account.editprofile'));
+    $trail->push('Ubah Profil', route('account.editprofile'));
 });
 
 // Akun > Ganti Kata Sandi
 Breadcrumbs::for('account-editpassword', function ($trail) {
     $trail->parent('account');
-    $trail->push('Ubah Kata Sandi',route('account.editpassword'));
+    $trail->push('Ubah Kata Sandi', route('account.editpassword'));
 });
 
 

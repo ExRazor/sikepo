@@ -22,7 +22,7 @@
                             @foreach ($research as $rs)
                             <tr>
                                 <td>
-                                    <a href="{{route('research.show',encode_id($rs->id))}}">
+                                    <a href="{{route('research.show',encrypt($rs->id))}}">
                                         {{ $rs->judul_penelitian }}
                                     </a>
                                 </td>

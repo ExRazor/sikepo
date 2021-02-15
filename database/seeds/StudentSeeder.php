@@ -17,24 +17,24 @@ class StudentSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $jk = ['Laki-Laki','Perempuan'];
-        $agama = ['Islam','Kristen Protestan','Kristen Katholik','Buddha','Hindu','Kong Hu Cu'];
-        $kewarganegaraan = ['WNI','WNA'];
-        $kelas = ['Reguler','Non-Reguler'];
-        $tipe = ['Reguler','Non-Reguler','Alih Status','Beasiswa'];
-        $program = ['Reguler','Asing'];
-        $seleksi_jenis = ['Nasional','Lokal'];
-        $seleksi_jalur= [
-            'Nasional' => array('SBMPTN','SNMPTN'),
+        $jk = ['Laki-Laki', 'Perempuan'];
+        $agama = ['Islam', 'Kristen Protestan', 'Kristen Katholik', 'Buddha', 'Hindu', 'Kong Hu Cu'];
+        $kewarganegaraan = ['WNI', 'WNA'];
+        $kelas = ['Reguler', 'Non-Reguler'];
+        $tipe = ['Reguler', 'Non-Reguler', 'Alih Status', 'Beasiswa'];
+        $program = ['Reguler', 'Asing'];
+        $seleksi_jenis = ['Nasional', 'Lokal'];
+        $seleksi_jalur = [
+            'Nasional' => array('SBMPTN', 'SNMPTN'),
             'Lokal'    => array('Mandiri')
         ];
-        $masuk_status = ['Baru','Pindahan'];
-        $status       = ['Aktif','Nonaktif','Lulus'];
+        $masuk_status = ['Baru', 'Pindahan'];
+        $status       = ['Aktif', 'Nonaktif', 'Lulus'];
 
-        // Excel::import(new StudentImport, public_path('upload/student/excel_import/DATA MAHASISWA JURUSAN TEKNIK INFORMATIKA - GANJIL 2019-2020.xls'));
+        // Excel::import(new StudentImport, storage_path('app/upload/student/excel_import/DATA MAHASISWA JURUSAN TEKNIK INFORMATIKA - GANJIL 2019-2020.xls'));
         Excel::import(new StudentImport, public_path('import_seed/mahasiswa_2019.xlsx'));
 
-    	// for($i = 0; $i < 200; $i++){
+        // for($i = 0; $i < 200; $i++){
         //     $nim            = rand(000000000, 999999999);
         //     $tahun          = AcademicYear::where('tahun_akademik','<','2015')->inRandomOrder()->first();
         //     $jenis_seleksi  = $seleksi_jenis[array_rand($seleksi_jenis)];

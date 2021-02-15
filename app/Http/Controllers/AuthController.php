@@ -29,7 +29,7 @@ class AuthController extends Controller
             'role'     => $request->role,
             'username' => $request->username,
             'password' => $request->password,
-            'is_active'=> true
+            'is_active' => true
         ];
 
         //Proses Login
@@ -44,7 +44,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        if(Auth::check()) {
+        if (Auth::check()) {
             Auth::logout();
         }
 
@@ -67,12 +67,12 @@ class AuthController extends Controller
 
         if (!(Hash::check($request->get('password_lama'), Auth::user()->password))) {
             // Jika password lama cocok
-            return redirect()->back()->with("error","Kata sandi lama Anda tidak sesuai. Mohon periksa kembali.");
+            return redirect()->back()->with("error", "Kata sandi lama Anda tidak sesuai. Mohon periksa kembali.");
         }
 
-        if(strcmp($request->get('password_lama'), $request->get('password_baru')) == 0){
+        if (strcmp($request->get('password_lama'), $request->get('password_baru')) == 0) {
             //Jika password lama sama dengan password baru
-            return redirect()->back()->with("error","Kata sandi baru Anda sama dengan kata sandi lama. Mohon diganti dengan yang lain.");
+            return redirect()->back()->with("error", "Kata sandi baru Anda sama dengan kata sandi lama. Mohon diganti dengan yang lain.");
         }
 
         //Change Password
@@ -80,32 +80,32 @@ class AuthController extends Controller
         $user->password = Hash::make($request->get('password_baru'));
         $user->save();
 
-        return redirect()->back()->with("success","Kata sandi berhasil diganti!");
+        return redirect()->back()->with("success", "Kata sandi berhasil diganti!");
     }
 
     public function editprofile_form()
     {
-        if(Auth::user()->hasRole('dosen')) {
+        if (Auth::user()->hasRole('dosen')) {
             return abort(404);
         }
         $data = Auth::user();
 
-        switch($data->role) {
+        switch ($data->role) {
             case 'admin':
                 $data->badge = 'primary';
-            break;
+                break;
             case 'kajur':
                 $data->badge = 'success';
-            break;
+                break;
             case 'kaprodi':
                 $data->badge = 'danger';
-            break;
+                break;
             default:
                 $data->badge = 'secondary';
-            break;
+                break;
         }
 
-        return view('auth.editprofile',compact(['data']));
+        return view('auth.editprofile', compact(['data']));
     }
 
     public function editprofile_post(Request $request)
@@ -119,15 +119,15 @@ class AuthController extends Controller
         ]);
 
         //Edit Foto
-        $storagePath = public_path('upload/user/'.$request->foto);
-        if($file = $request->file('foto')) {
-            if(File::exists($storagePath)) {
+        $storagePath = storage_path('app/upload/user/' . $request->foto);
+        if ($file = $request->file('foto')) {
+            if (File::exists($storagePath)) {
                 File::delete($storagePath);
             }
 
-            $tujuan_upload = public_path('upload/user');
-            $filename = str_replace(' ', '', Auth::user()->username).'.'.$file->getClientOriginalExtension();
-            $file->move($tujuan_upload,$filename);
+            $tujuan_upload = storage_path('app/upload/user');
+            $filename = str_replace(' ', '', Auth::user()->username) . '.' . $file->getClientOriginalExtension();
+            $file->move($tujuan_upload, $filename);
             $user->foto = $filename;
         }
 
@@ -135,7 +135,6 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->save();
 
-        return redirect()->back()->with("success","Profil berhasil diubah!");
+        return redirect()->back()->with("success", "Profil berhasil diubah!");
     }
-
 }

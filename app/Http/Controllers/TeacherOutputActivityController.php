@@ -31,27 +31,27 @@ class TeacherOutputActivityController extends Controller
 
     public function index()
     {
-        $studyProgram   = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
+        $studyProgram   = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
         $outputActivity = TeacherOutputActivity::all();
         $category       = OutputActivityCategory::all();
 
-        return view('output-activity.teacher.index',compact(['outputActivity','category','studyProgram']));
+        return view('output-activity.teacher.index', compact(['outputActivity', 'category', 'studyProgram']));
     }
 
     public function show($id)
     {
         $id         = decode_id($id);
-        $data       = TeacherOutputActivity::where('id',$id)->first();
+        $data       = TeacherOutputActivity::where('id', $id)->first();
         $category   = OutputActivityCategory::all();
 
-        return view('output-activity.teacher.show',compact(['data','category']));
+        return view('output-activity.teacher.show', compact(['data', 'category']));
     }
 
     public function create()
     {
         $category   = OutputActivityCategory::all();
 
-        return view('output-activity.teacher.form',compact(['category']));
+        return view('output-activity.teacher.form', compact(['category']));
     }
 
     public function edit($id)
@@ -60,7 +60,7 @@ class TeacherOutputActivityController extends Controller
 
         $category   = OutputActivityCategory::all();
         $data       = TeacherOutputActivity::find($id);
-        return view('output-activity.teacher.form',compact(['category','data']));
+        return view('output-activity.teacher.form', compact(['category', 'data']));
     }
 
     public function store(TeacherOutputActivityRequest $request)
@@ -91,26 +91,26 @@ class TeacherOutputActivityController extends Controller
             $data->save();
 
             //Upload berkas jika ada
-            if($file = $request->file('file_karya')) {
-                $tujuan_upload = public_path('upload/output-activity/teacher');
-                $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
-                $file->move($tujuan_upload,$filename);
+            if ($file = $request->file('file_karya')) {
+                $tujuan_upload = storage_path('app/upload/output-activity/teacher');
+                $filename = str_replace(' ', '', $request->jenis_luaran) . '_' . $request->nidn . '_' . $request->id_kategori . '_' . str_replace(' ', '', $request->kegiatan) . '_' . $request->thn_luaran . '_' . $data->id . '.' . $file->getClientOriginalExtension();
+                $file->move($tujuan_upload, $filename);
                 $data->update([
-                        'file_karya' => $filename
-                    ]);
+                    'file_karya' => $filename
+                ]);
             }
 
             //Activity Log
             $property = [
                 'id'    => $data->id,
-                'name'  => $data->judul_luaran.' ('.$data->teacher->nama.')',
-                'url'   => route('output-activity.teacher.show',encode_id($data->id)),
+                'name'  => $data->judul_luaran . ' (' . $data->teacher->nama . ')',
+                'url'   => route('output-activity.teacher.show', encode_id($data->id)),
             ];
-            $this->log('created','Luaran Dosen',$property);
+            $this->log('created', 'Luaran Dosen', $property);
 
             DB::commit();
-            return redirect()->route('output-activity.teacher.show',encode_id($data->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
-        } catch(\Exception $e) {
+            return redirect()->route('output-activity.teacher.show', encode_id($data->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
@@ -147,25 +147,24 @@ class TeacherOutputActivityController extends Controller
             $data->save();
 
             //Berkas
-            $storagePath = public_path('upload/output-activity/teacher'.$data->file_karya);
-            if($file = $request->file('file_karya')) {
-                if(File::exists($storagePath)) {
+            $storagePath = storage_path('app/upload/output-activity/teacher' . $data->file_karya);
+            if ($file = $request->file('file_karya')) {
+                if (File::exists($storagePath)) {
                     File::delete($storagePath);
                 }
 
-                $tujuan_upload = public_path('upload/output-activity/teacher');
-                $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$file->getClientOriginalExtension();
-                $file->move($tujuan_upload,$filename);
+                $tujuan_upload = storage_path('app/upload/output-activity/teacher');
+                $filename = str_replace(' ', '', $request->jenis_luaran) . '_' . $request->nidn . '_' . $request->id_kategori . '_' . str_replace(' ', '', $request->kegiatan) . '_' . $request->thn_luaran . '_' . $data->id . '.' . $file->getClientOriginalExtension();
+                $file->move($tujuan_upload, $filename);
                 $data->update([
                     'file_karya' => $filename
                 ]);
             }
 
-            if(isset($data->file_karya) && File::exists($storagePath))
-            {
+            if (isset($data->file_karya) && File::exists($storagePath)) {
                 $ekstensi = File::extension($storagePath);
-                $filename = str_replace(' ', '', $request->jenis_luaran).'_'.$request->nidn.'_'.$request->id_kategori.'_'.str_replace(' ', '', $request->kegiatan).'_'.$request->thn_luaran.'_'.$data->id.'.'.$ekstensi;
-                File::move($storagePath,public_path('upload/output-activity/teacher/'.$filename));
+                $filename = str_replace(' ', '', $request->jenis_luaran) . '_' . $request->nidn . '_' . $request->id_kategori . '_' . str_replace(' ', '', $request->kegiatan) . '_' . $request->thn_luaran . '_' . $data->id . '.' . $ekstensi;
+                File::move($storagePath, storage_path('app/upload/output-activity/teacher/' . $filename));
                 $data->update([
                     'file_karya' => $filename
                 ]);
@@ -174,14 +173,14 @@ class TeacherOutputActivityController extends Controller
             //Activity Log
             $property = [
                 'id'    => $data->id,
-                'name'  => $data->judul_luaran.' ('.$data->teacher->nama.')',
-                'url'   => route('output-activity.teacher.show',encode_id($data->id)),
+                'name'  => $data->judul_luaran . ' (' . $data->teacher->nama . ')',
+                'url'   => route('output-activity.teacher.show', encode_id($data->id)),
             ];
-            $this->log('updated','Luaran Dosen',$property);
+            $this->log('updated', 'Luaran Dosen', $property);
 
             DB::commit();
-            return redirect()->route('output-activity.teacher.show',encode_id($data->id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
-        } catch(\Exception $e) {
+            return redirect()->route('output-activity.teacher.show', encode_id($data->id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
@@ -189,7 +188,7 @@ class TeacherOutputActivityController extends Controller
 
     public function destroy(Request $request)
     {
-        if(!$request->ajax()) {
+        if (!$request->ajax()) {
             abort(404);
         }
 
@@ -208,9 +207,9 @@ class TeacherOutputActivityController extends Controller
             //Activity Log
             $property = [
                 'id'    => $data->id,
-                'name'  => $data->judul_luaran.' ('.$data->teacher->nama.')',
+                'name'  => $data->judul_luaran . ' (' . $data->teacher->nama . ')',
             ];
-            $this->log('deleted','Luaran Dosen',$property);
+            $this->log('deleted', 'Luaran Dosen', $property);
 
             DB::commit();
             return response()->json([
@@ -218,11 +217,11 @@ class TeacherOutputActivityController extends Controller
                 'message' => 'Data berhasil dihapus',
                 'type'    => 'success'
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
                 'message' => $e->getMessage(),
-            ],400);
+            ], 400);
         }
     }
 
@@ -232,14 +231,14 @@ class TeacherOutputActivityController extends Controller
 
         $data = TeacherOutputActivity::find($id);
 
-        $storagePath = public_path('upload/output-activity/teacher/'.$data->file_karya);
-        if( ! File::exists($storagePath)) {
+        $storagePath = storage_path('app/upload/output-activity/teacher/' . $data->file_karya);
+        if (!File::exists($storagePath)) {
             abort(404);
         } else {
             $mimeType = File::mimeType($storagePath);
             $headers = array(
                 'Content-Type' => $mimeType,
-                'Content-Disposition' => 'inline; filename="'.$data->file_karya.'"'
+                'Content-Disposition' => 'inline; filename="' . $data->file_karya . '"'
             );
 
             return response(file_get_contents($storagePath), 200, $headers);
@@ -251,19 +250,19 @@ class TeacherOutputActivityController extends Controller
         $id   = decrypt($request->id);
         $data = TeacherOutputActivity::find($id);
 
-        if(request()->ajax()) {
+        if (request()->ajax()) {
 
-            $storagePath = public_path('upload/output-activity/teacher/'.$data->file_karya);
-            if(File::exists($storagePath)) {
+            $storagePath = storage_path('app/upload/output-activity/teacher/' . $data->file_karya);
+            if (File::exists($storagePath)) {
                 $delete = File::delete($storagePath);
 
-                if($delete) {
+                if ($delete) {
                     $data->file_karya = null;
                     $q = $data->save();
                 }
             }
 
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus fail',
@@ -276,68 +275,69 @@ class TeacherOutputActivityController extends Controller
                     'type'    => 'success'
                 ]);
             }
-
         } else {
-            return redirect()->route('output-activity.teacher.show',encode_id($data->id));
+            return redirect()->route('output-activity.teacher.show', encode_id($data->id));
         }
     }
 
     public function delete_all_file($file)
     {
-        $storage = public_path('upload/output-activity/teacher/'.$file);
-        if(File::exists($storage)) {
+        $storage = storage_path('app/upload/output-activity/teacher/' . $file);
+        if (File::exists($storage)) {
             File::delete($storage);
         }
     }
 
     public function datatable(Request $request)
     {
-        if(!$request->ajax()) {
+        if (!$request->ajax()) {
             abort(404);
         }
 
         $data = TeacherOutputActivity::whereHas(
-                'teacher.latestStatus.studyProgram', function($query) {
-                    if(Auth::user()->hasRole('kaprodi')) {
-                        $query->where('kd_prodi',Auth::user()->kd_prodi);
-                    } else {
-                        $query->where('kd_jurusan',setting('app_department_id'));
-                    }
+            'teacher.latestStatus.studyProgram',
+            function ($query) {
+                if (Auth::user()->hasRole('kaprodi')) {
+                    $query->where('kd_prodi', Auth::user()->kd_prodi);
+                } else {
+                    $query->where('kd_jurusan', setting('app_department_id'));
                 }
-            );
+            }
+        );
 
-        if($request->kd_prodi_filter) {
+        if ($request->kd_prodi_filter) {
             $data->whereHas(
-                'teacher.latestStatus.studyProgram', function($q) use($request) {
-                    $q->where('kd_prodi',$request->kd_prodi_filter);
+                'teacher.latestStatus.studyProgram',
+                function ($q) use ($request) {
+                    $q->where('kd_prodi', $request->kd_prodi_filter);
                 }
             );
         }
 
         return DataTables::of($data->get())
-                            ->addColumn('judul', function($d) {
-                                return  '<a href="'.route('output-activity.student.show',encode_id($d->id)).'" target="_blank">'
-                                            .$d->judul_luaran.
-                                        '</a>';
-                            })
-                            ->addColumn('milik', function($d) {
-                                return  '<a href="'.route('teacher.list.show',$d->teacher->nidn).'#publication">'
-                                            .$d->teacher->nama.
-                                            '<br><small>NIDN.'.$d->teacher->nidn.' / '.$d->teacher->latestStatus->studyProgram->singkatan.'</small>
+            ->addColumn('judul', function ($d) {
+                return  '<a href="' . route('output-activity.student.show', encode_id($d->id)) . '" target="_blank">'
+                    . $d->judul_luaran .
+                    '</a>';
+            })
+            ->addColumn('milik', function ($d) {
+                return  '<a href="' . route('teacher.list.show', $d->teacher->nidn) . '#publication">'
+                    . $d->teacher->nama .
+                    '<br><small>NIDN.' . $d->teacher->nidn . ' / ' . $d->teacher->latestStatus->studyProgram->singkatan . '</small>
                                         </a>';
-                            })
-                            ->addColumn('kategori', function($d) {
-                                return  $d->outputActivityCategory->nama;
-                            })
-                            ->addColumn('thn_luaran', function($d) {
-                                return  $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
-                            })
-                            ->addColumn('aksi', function($d) {
-                                if(!Auth::user()->hasRole('kajur')) {
-                                    return view('output-activity.teacher.table-button', compact('d'))->render();
-                                }
-                            })
-                            ->rawColumns(['judul','milik','aksi'])
-                            ->make();
+            })
+            ->addColumn('kategori', function ($d) {
+                return  $d->outputActivityCategory->nama;
+            })
+            ->addColumn('thn_luaran', function ($d) {
+                return  $d->academicYear->tahun_akademik . ' - ' . $d->academicYear->semester;
+            })
+            ->addColumn('aksi', function ($d) {
+                if (!Auth::user()->hasRole('kajur')) {
+                    return view('output-activity.teacher.table-button', compact('d'))->render();
+                }
+            })
+            ->rawColumns(['judul', 'milik', 'aksi'])
+            ->make();
     }
 }
