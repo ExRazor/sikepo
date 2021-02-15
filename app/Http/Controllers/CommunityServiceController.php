@@ -34,58 +34,60 @@ class CommunityServiceController extends Controller
     public function index()
     {
         $faculty = Faculty::all();
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik','desc')->select('tahun_akademik')->get();
+        $studyProgram = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
+        $periodeTahun = AcademicYear::groupBy('tahun_akademik')->orderBy('tahun_akademik', 'desc')->select('tahun_akademik')->get();
 
         // return response()->json($pengabdian);die;
 
-        return view('community-service.index',compact(['studyProgram','faculty','periodeTahun']));
+        return view('community-service.index', compact(['studyProgram', 'faculty', 'periodeTahun']));
     }
 
     public function index_teacher()
     {
         $pengabdianKetua     = CommunityService::whereHas(
-                                                    'serviceTeacher', function($q) {
-                                                        $q->where('nidn',Auth::user()->username)->where('status','Ketua');
-                                                    }
-                                                )
-                                                ->get();
+            'serviceTeacher',
+            function ($q) {
+                $q->where('nidn', Auth::user()->username)->where('status', 'Ketua');
+            }
+        )
+            ->get();
 
         $pengabdianAnggota   = CommunityService::whereHas(
-                                                    'serviceTeacher', function($q) {
-                                                        $q->where('nidn',Auth::user()->username)->where('status','Anggota');
-                                                    }
-                                                )
-                                                ->get();
+            'serviceTeacher',
+            function ($q) {
+                $q->where('nidn', Auth::user()->username)->where('status', 'Anggota');
+            }
+        )
+            ->get();
 
         // return response()->json($pengabdian);die;
 
-        return view('teacher-view.community-service.index',compact(['pengabdianKetua','pengabdianAnggota']));
+        return view('teacher-view.community-service.index', compact(['pengabdianKetua', 'pengabdianAnggota']));
     }
 
     public function show($id)
     {
         $id   = decrypt($id);
-        $data = CommunityService::where('id',$id)->first();
+        $data = CommunityService::where('id', $id)->first();
 
-        return view('community-service.show',compact(['data']));
+        return view('community-service.show', compact(['data']));
     }
 
     public function show_teacher($id)
     {
         $id     = decode_id($id);
         $nidn   = Auth::user()->username;
-        $data   = CommunityService::where('id',$id)->first();
-        $status = CommunityServiceTeacher::where('id_pengabdian',$id)->where('nidn',$nidn)->first()->status;
+        $data   = CommunityService::where('id', $id)->first();
+        $status = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first()->status;
 
-        return view('teacher-view.community-service.show',compact(['data','status']));
+        return view('teacher-view.community-service.show', compact(['data', 'status']));
     }
 
     public function create()
     {
         $faculty      = Faculty::all();
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        return view('community-service.form',compact(['studyProgram','faculty']));
+        $studyProgram = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
+        return view('community-service.form', compact(['studyProgram', 'faculty']));
     }
 
     public function create_teacher()
@@ -97,21 +99,21 @@ class CommunityServiceController extends Controller
     {
         $id   = decrypt($id);
 
-        $studyProgram = StudyProgram::where('kd_jurusan',setting('app_department_id'))->get();
-        $data         = CommunityService::where('id',$id)->first();
+        $studyProgram = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
+        $data         = CommunityService::where('id', $id)->first();
 
-        return view('community-service.form',compact(['data','studyProgram']));
+        return view('community-service.form', compact(['data', 'studyProgram']));
     }
 
     public function edit_teacher($id)
     {
         $id     = decrypt($id);
         $nidn   = Auth::user()->username;
-        $data   = CommunityService::where('id',$id)->first();
-        $status = CommunityServiceTeacher::where('id_pengabdian',$id)->where('nidn',$nidn)->first()->status;
+        $data   = CommunityService::where('id', $id)->first();
+        $status = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first()->status;
 
-        if($status=='Ketua') {
-            return view('teacher-view.community-service.form',compact(['data']));
+        if ($status == 'Ketua') {
+            return view('teacher-view.community-service.form', compact(['data']));
         } else {
             return abort(404);
         }
@@ -120,7 +122,7 @@ class CommunityServiceController extends Controller
     public function store(CommunityServiceRequest $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             //Simpan Data Pengabdian
             $community                    = new CommunityService;
             $community->id_ta             = $request->id_ta;
@@ -134,8 +136,7 @@ class CommunityServiceController extends Controller
             $community->save();
 
             //Jumlah SKS
-            $sks_ketua      = floatval($request->sks_pengabdian)*setting('service_ratio_chief')/100;
-            $sks_anggota    = floatval($request->sks_pengabdian)*setting('service_ratio_members')/100;
+            $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
 
             //Tambah Ketua
             $ketua                  = new CommunityServiceTeacher;
@@ -146,9 +147,14 @@ class CommunityServiceController extends Controller
             $ketua->save();
 
             //Tambah Anggota Dosen
-            if($request->anggota_nidn) {
+            if ($request->anggota_nidn) {
                 $hitungDsn = count($request->anggota_nidn);
-                for($i=0;$i<$hitungDsn;$i++) {
+
+                //Rasio SKS Anggota
+                $rasio_anggota = (setting('service_ratio_members') / $hitungDsn) / 100;
+                $sks_anggota   = floatval($request->sks_pengabdian) * $rasio_anggota;
+
+                for ($i = 0; $i < $hitungDsn; $i++) {
                     CommunityServiceTeacher::updateOrCreate(
                         [
                             'id_penelitian' => $community->id,
@@ -163,9 +169,9 @@ class CommunityServiceController extends Controller
             }
 
             //Tambah Mahasiswa
-            if($request->mahasiswa_nim) {
+            if ($request->mahasiswa_nim) {
                 $hitungMhs = count($request->mahasiswa_nim);
-                for($i=0;$i<$hitungMhs;$i++) {
+                for ($i = 0; $i < $hitungMhs; $i++) {
                     CommunityServiceStudent::updateOrCreate(
                         [
                             'id_pengabdian' => $community->id,
@@ -179,17 +185,17 @@ class CommunityServiceController extends Controller
             $property = [
                 'id'    => $community->id,
                 'name'  => $community->judul_pengabdian,
-                'url'   => route('community-service.show',encrypt($community->id))
+                'url'   => route('community-service.show', encrypt($community->id))
             ];
-            $this->log('created','Pengabdian',$property);
+            $this->log('created', 'Pengabdian', $property);
 
             DB::commit();
-            if(Auth::user()->hasRole('dosen')) {
+            if (Auth::user()->hasRole('dosen')) {
                 return redirect()->route('profile.community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             } else {
                 return redirect()->route('community-service.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
@@ -215,12 +221,11 @@ class CommunityServiceController extends Controller
             $community->save();
 
             //Jumlah SKS
-            $sks_ketua      = floatval($request->sks_pengabdian)*setting('service_ratio_chief')/100;
-            $sks_anggota    = floatval($request->sks_pengabdian)*setting('service_ratio_members')/100;
+            $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
 
             //Update Ketua
-            $ketua = CommunityServiceTeacher::where('id_pengabdian',$id)->where('status','Ketua');
-            if($ketua != $request->ketua_nidn) {
+            $ketua = CommunityServiceTeacher::where('id_pengabdian', $id)->where('status', 'Ketua');
+            if ($ketua != $request->ketua_nidn) {
                 $ketua->delete();
 
                 $new_ketua                  = new CommunityServiceTeacher;
@@ -237,9 +242,14 @@ class CommunityServiceController extends Controller
             }
 
             //Update Anggota
-            if($request->anggota_nidn) {
+            if ($request->anggota_nidn) {
                 $hitungDsn = count($request->anggota_nidn);
-                for($i=0;$i<$hitungDsn;$i++) {
+
+                //Rasio SKS Anggota
+                $rasio_anggota = (setting('service_ratio_members') / $hitungDsn) / 100;
+                $sks_anggota   = floatval($request->sks_pengabdian) * $rasio_anggota;
+
+                for ($i = 0; $i < $hitungDsn; $i++) {
 
                     CommunityServiceTeacher::updateOrCreate(
                         [
@@ -255,9 +265,9 @@ class CommunityServiceController extends Controller
             }
 
             //Update Anggota Mahasiswa
-            if($request->mahasiswa_nim) {
+            if ($request->mahasiswa_nim) {
                 $hitungMhs = count($request->mahasiswa_nim);
-                for($i=0;$i<$hitungMhs;$i++) {
+                for ($i = 0; $i < $hitungMhs; $i++) {
 
                     CommunityServiceStudent::updateOrCreate(
                         [
@@ -272,18 +282,18 @@ class CommunityServiceController extends Controller
             $property = [
                 'id'    => $community->id,
                 'name'  => $community->judul_pengabdian,
-                'url'   => route('community-service.show',encrypt($community->id))
+                'url'   => route('community-service.show', encrypt($community->id))
             ];
-            $this->log('updated','Pengabdian',$property);
+            $this->log('updated', 'Pengabdian', $property);
 
             DB::commit();
 
-            if(Auth::user()->hasRole('dosen')) {
-                return redirect()->route('profile.community-service.show',encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+            if (Auth::user()->hasRole('dosen')) {
+                return redirect()->route('profile.community-service.show', encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
             } else {
-                return redirect()->route('community-service.show',encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+                return redirect()->route('community-service.show', encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('flash.message', $e->getMessage())->with('flash.class', 'danger')->withInput($request->input());
         }
@@ -291,7 +301,7 @@ class CommunityServiceController extends Controller
 
     public function destroy(Request $request)
     {
-        if(!$request->ajax()) {
+        if (!$request->ajax()) {
             abort(404);
         }
 
@@ -309,7 +319,7 @@ class CommunityServiceController extends Controller
                 'id'    => $data->id,
                 'name'  => $data->judul_pengabdian,
             ];
-            $this->log('deleted','Pengabdian',$property);
+            $this->log('deleted', 'Pengabdian', $property);
 
             DB::commit();
             return response()->json([
@@ -317,22 +327,20 @@ class CommunityServiceController extends Controller
                 'message' => 'Data berhasil dihapus',
                 'type'    => 'success'
             ]);
-
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
                 'message' => $e->getMessage(),
-            ],400);
+            ], 400);
         }
-
     }
 
     public function destroy_teacher(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decrypt($request->id);
             $q  = CommunityServiceTeacher::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -350,10 +358,10 @@ class CommunityServiceController extends Controller
 
     public function destroy_students(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $id = decrypt($request->id);
             $q  = CommunityServiceStudent::find($id)->delete();
-            if(!$q) {
+            if (!$q) {
                 return response()->json([
                     'title'   => 'Gagal',
                     'message' => 'Terjadi kesalahan saat menghapus',
@@ -370,116 +378,122 @@ class CommunityServiceController extends Controller
     }
 
     public function export(Request $request)
-	{
-		// Request
+    {
+        // Request
         $tgl         = date('dmYhis');
-        if($request->tipe == 'prodi') {
-            $idn       = ($request->kd_prodi ? $request->kd_prodi.'_' : null);
+        if ($request->tipe == 'prodi') {
+            $idn       = ($request->kd_prodi ? $request->kd_prodi . '_' : null);
         } else {
-            $idn       = ($request->nidn ? $request->nidn.'_' : null);
+            $idn       = ($request->nidn ? $request->nidn . '_' : null);
         }
 
-        if(empty($request->periode_akhir)) {
-            $periode = $request->periode_awal.'_';
+        if (empty($request->periode_akhir)) {
+            $periode = $request->periode_awal . '_';
         } else {
-            $periode = $request->periode_awal.'-'.$request->periode_akhir.'_';
+            $periode = $request->periode_awal . '-' . $request->periode_akhir . '_';
         }
 
-        $nama_file   = 'Data_Pengabdian_'.$idn.$periode.$tgl.'.xlsx';
-        $lokasi_file = storage_path('app/upload/temp/'.$nama_file);
+        $nama_file   = 'Data_Pengabdian_' . $idn . $periode . $tgl . '.xlsx';
+        $lokasi_file = storage_path('app/upload/temp/' . $nama_file);
 
-		// Ekspor data
+        // Ekspor data
         return (new CommunityServiceExport($request))->download($nama_file);
     }
 
     public function datatable(Request $request)
     {
-        if(!$request->ajax()) {
+        if (!$request->ajax()) {
             abort(404);
         }
 
-        if(Auth::user()->hasRole('kaprodi')) {
+        if (Auth::user()->hasRole('kaprodi')) {
             $data   = CommunityService::whereHas(
-                                            'serviceTeacher', function($q) {
-                                                $q->prodiKetua(Auth::user()->kd_prodi);
-                                            }
-                                        );
+                'serviceTeacher',
+                function ($q) {
+                    $q->prodiKetua(Auth::user()->kd_prodi);
+                }
+            );
         } else {
             $data   = CommunityService::whereHas(
-                                            'serviceTeacher', function($q) {
-                                                $q->jurusanKetua(setting('app_department_id'));
-                                            }
-                                        );
+                'serviceTeacher',
+                function ($q) {
+                    $q->jurusanKetua(setting('app_department_id'));
+                }
+            );
         }
 
-        if($request->kd_prodi_filter) {
+        if ($request->kd_prodi_filter) {
             $data->whereHas(
-                'serviceTeacher', function($q) use($request) {
+                'serviceTeacher',
+                function ($q) use ($request) {
                     $q->prodiKetua($request->kd_prodi_filter);
                 }
             );
         }
 
         return DataTables::of($data->get())
-                            ->addColumn('pengabdian', function($d) {
-                                return  '<a href="'.route('community-service.show',encrypt($d->id)).'" target="_blank">'
-                                            .$d->judul_pengabdian.
-                                        '</a>';
-                            })
-                            ->addColumn('tahun', function($d) {
-                                return $d->academicYear->tahun_akademik.' - '.$d->academicYear->semester;
-                            })
-                            ->addColumn('pelaksana', function($d) {
-                                return  '<a href="'.route('teacher.list.show',$d->serviceKetua->teacher->nidn).'#community-service">'
-                                            .$d->serviceKetua->teacher->nama.
-                                            '<br><small>NIDN.'.$d->serviceKetua->teacher->nidn.' / '.$d->serviceKetua->teacher->latestStatus->studyProgram->singkatan.'</small>
+            ->addColumn('pengabdian', function ($d) {
+                return  '<a href="' . route('community-service.show', encrypt($d->id)) . '" target="_blank">'
+                    . $d->judul_pengabdian .
+                    '</a>';
+            })
+            ->addColumn('tahun', function ($d) {
+                return $d->academicYear->tahun_akademik . ' - ' . $d->academicYear->semester;
+            })
+            ->addColumn('pelaksana', function ($d) {
+                return  '<a href="' . route('teacher.list.show', $d->serviceKetua->teacher->nidn) . '#community-service">'
+                    . $d->serviceKetua->teacher->nama .
+                    '<br><small>NIDN.' . $d->serviceKetua->teacher->nidn . ' / ' . $d->serviceKetua->teacher->latestStatus->studyProgram->singkatan . '</small>
                                         </a>';
-                            })
-                            ->addColumn('aksi', function($d) {
-                                if(!Auth::user()->hasRole('kajur')) {
-                                    return view('community-service.table-button', compact('d'))->render();
-                                }
-                            })
-                            ->rawColumns(['pengabdian','pelaksana','aksi'])
-                            ->make();
+            })
+            ->addColumn('aksi', function ($d) {
+                if (!Auth::user()->hasRole('kajur')) {
+                    return view('community-service.table-button', compact('d'))->render();
+                }
+            })
+            ->rawColumns(['pengabdian', 'pelaksana', 'aksi'])
+            ->make();
     }
 
     public function get_by_filter(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
 
             $q   = CommunityService::with([
-                                    'academicYear',
-                                    'serviceKetua.teacher.latestStatus.studyProgram',
-                                    'serviceAnggota.teacher.latestStatus.studyProgram.department',
-                                    'serviceStudent.student.studyProgram.department'
-                                ]);
+                'academicYear',
+                'serviceKetua.teacher.latestStatus.studyProgram',
+                'serviceAnggota.teacher.latestStatus.studyProgram.department',
+                'serviceStudent.student.studyProgram.department'
+            ]);
 
-            if($request->kd_jurusan){
+            if ($request->kd_jurusan) {
                 $q->whereHas(
-                    'serviceTeacher', function($q) use($request) {
+                    'serviceTeacher',
+                    function ($q) use ($request) {
                         $q->jurusanKetua($request->kd_jurusan);
                     }
                 );
             }
 
-            if(Auth::user()->hasRole('kaprodi')) {
+            if (Auth::user()->hasRole('kaprodi')) {
                 $q->whereHas(
-                    'serviceTeacher', function($q) use ($request) {
+                    'serviceTeacher',
+                    function ($q) use ($request) {
                         $q->prodiKetua(Auth::user()->kd_prodi);
                     }
                 );
             }
 
-            if($request->kd_prodi){
+            if ($request->kd_prodi) {
                 $q->whereHas(
-                    'serviceTeacher', function($q) use ($request) {
+                    'serviceTeacher',
+                    function ($q) use ($request) {
                         $q->prodiKetua($request->kd_prodi);
                     }
                 );
             }
 
-            $data = $q->orderBy('id_ta','desc')->get();
+            $data = $q->orderBy('id_ta', 'desc')->get();
 
             return response()->json($data);
         } else {
@@ -489,22 +503,23 @@ class CommunityServiceController extends Controller
 
     public function get_by_department(Request $request)
     {
-        if($request->has('cari')){
+        if ($request->has('cari')) {
             $cari = $request->cari;
             $data = CommunityService::whereHas(
-                                        'serviceTeacher', function($q) {
-                                            $q->jurusanKetua(setting('app_department_id'));
-                                        }
-                                    )
-                                    ->where('judul_pengabdian', 'LIKE', '%'.$cari.'%')
-                                    ->orWhere('id','LIKE','%'.$cari.'%')
-                                    ->get();
+                'serviceTeacher',
+                function ($q) {
+                    $q->jurusanKetua(setting('app_department_id'));
+                }
+            )
+                ->where('judul_pengabdian', 'LIKE', '%' . $cari . '%')
+                ->orWhere('id', 'LIKE', '%' . $cari . '%')
+                ->get();
 
             $response = array();
-            foreach($data as $d){
+            foreach ($data as $d) {
                 $response[] = array(
                     "id"    => $d->id,
-                    "text"  => $d->judul_pengabdian.' ('.$d->academicYear->tahun_akademik.')'
+                    "text"  => $d->judul_pengabdian . ' (' . $d->academicYear->tahun_akademik . ')'
                 );
             }
             return response()->json($response);
