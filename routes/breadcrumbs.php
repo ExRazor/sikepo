@@ -107,17 +107,17 @@ Breadcrumbs::for('academic-curriculum-edit', function ($trail, $data) {
 // Akademik > Jadwal
 Breadcrumbs::for('academic-schedule', function ($trail) {
     $trail->parent('academic');
-    $trail->push('Jadwal Kurikulum', route('academic.schedule.index'));
+    $trail->push('Pengampu Mata Kuliah', route('academic.schedule.index'));
 });
 
 Breadcrumbs::for('academic-schedule-create', function ($trail) {
     $trail->parent('academic-schedule');
-    $trail->push('Tambah Jadwal Kurikulum', route('academic.schedule.create'));
+    $trail->push('Tambah Pengampu Mata Kuliah', route('academic.schedule.create'));
 });
 
 Breadcrumbs::for('academic-schedule-edit', function ($trail, $data) {
-    $trail->parent('academic-curriculum');
-    $trail->push('Sunting Jadwal Kurikulum');
+    $trail->parent('academic-schedule');
+    $trail->push('Sunting Pengampu Mata Kuliah');
 });
 
 // Akademik > Integrasi Kurikulum

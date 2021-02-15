@@ -36,7 +36,7 @@
         </a><!-- br-menu-link -->
         <ul class="br-menu-sub">
             <li class="sub-item"><a href="{{ route('academic.curriculum.index') }}" class="sub-link {{ (request()->is('academic/curriculum*')) ? 'active' : '' }}">Kurikulum</a></li>
-            <li class="sub-item"><a href="{{ route('academic.schedule.index') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Jadwal Kurikulum</a></li>
+            <li class="sub-item"><a href="{{ route('academic.schedule.index') }}" class="sub-link {{ (request()->is('academic/schedule*')) ? 'active' : '' }}">Pengampu Matkul</a></li>
             <li class="sub-item"><a href="{{ route('academic.integration.index') }}" class="sub-link {{ (request()->is('academic/integration*')) ? 'active' : '' }}">Integrasi Kurikulum</a></li>
             <li class="sub-item"><a href="{{ route('academic.minithesis.index') }}" class="sub-link {{ (request()->is('academic/minithesis*')) ? 'active' : '' }}">Tugas Akhir</a></li>
             <li class="sub-item"><a href="{{ route('academic.satisfaction.index') }}" class="sub-link {{ (request()->is('academic/satisfaction*')) ? 'active' : '' }}">Kepuasan</a></li>
@@ -61,6 +61,12 @@
         </a><!-- br-menu-link -->
     </li>
     <li class="br-menu-item">
+        <a href="{{ route('publication.index') }}" class="br-menu-link {{ (request()->segment(1) == 'publication') ? 'active' : '' }}">
+          <i class="menu-item-icon fa fa-newspaper"></i>
+          <span class="menu-item-label">Publikasi</span>
+        </a><!-- br-menu-link -->
+    </li>
+    {{-- <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'publication') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-newspaper"></i>
             <span class="menu-item-label">Publikasi</span>
@@ -69,7 +75,7 @@
             <li class="sub-item"><a href="{{ route('publication.teacher.index') }}" class="sub-link {{ (request()->is('publication/teacher*')) ? 'active' : '' }}">Publikasi Dosen</a></li>
             <li class="sub-item"><a href="{{ route('publication.student.index') }}" class="sub-link {{ (request()->is('publication/student*')) ? 'active' : '' }}">Publikasi Mahasiswa</a></li>
         </ul>
-    </li>
+    </li> --}}
     <li class="br-menu-item">
         <a href="#" class="br-menu-link with-sub {{ (request()->segment(1) == 'output-activity') ? 'active' : '' }}">
             <i class="menu-item-icon fa fa-boxes"></i>

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Jadwal Kurikulum')
+@section('title', 'Pengampu Mata Kuliah')
 
 @section('content')
 <div class="br-pageheader">
@@ -18,13 +18,13 @@
     <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-chalkboard-teacher"></i>
         <div>
-            <h4>Jadwal Kurikulum</h4>
-            <p class="mg-b-0">Olah Data Jadwal Kurikulum</p>
+            <h4>Pengampu Mata Kuliah</h4>
+            <p class="mg-b-0">Olah Data Pengampu Mata Kuliah</p>
         </div>
     </div>
     @if (!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
-        <a href="{{ route('academic.schedule.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Jadwal Matkul</a>
+        <a href="{{ route('academic.schedule.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Tambah</a>
     </div>
     @endif
 </div>
