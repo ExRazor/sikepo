@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($research as $rs)
+                            @forelse ($research as $rs)
                             <tr>
                                 <td>
                                     <a href="{{route('research.show',encrypt($rs->id))}}">
@@ -41,7 +41,11 @@
                                     @endforeach
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="5" class="text-center align-middle">BELUM ADA DATA</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

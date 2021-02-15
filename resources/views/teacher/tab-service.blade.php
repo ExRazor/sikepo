@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($service as $s)
+                            @forelse ($service as $s)
                             <tr>
                                 <td>
                                     <a href="{{route('community-service.show',encode_id($s->id))}}">
@@ -41,7 +41,11 @@
                                     @endforeach
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan=5 class="text-center align-middle">BELUM ADA DATA</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

@@ -16,7 +16,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($publication as $pb)
+                            @forelse ($publication as $pb)
                             <tr>
                                 <td>
                                     <a href="{{route('publication.teacher.show',encode_id($pb->id))}}">
@@ -27,7 +27,11 @@
                                     {{ $pb->academicYear->tahun_akademik.' - '.$pb->academicYear->semester }}
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="2" class="text-center align-middle">BELUM ADA DATA</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

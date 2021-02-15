@@ -18,7 +18,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($minithesis as $m)
+                                @forelse ($minithesis as $m)
                                 <tr>
                                     <td>{{ $m->judul }}</td>
                                     <td class="text-center">{{ $m->academicYear->tahun_akademik.' - '.$m->academicYear->semester }}</td>
@@ -35,7 +35,11 @@
                                         @endif
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center align-middle">BELUM ADA DATA</td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

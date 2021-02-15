@@ -248,6 +248,7 @@
                                         <option value="Dosen Tetap PS" {{ (isset($data) && $data->status_kerja=='Dosen Tetap PS') || Request::old('status_kerja')=='Dosen Tetap PS' ? 'selected' : ''}}>Dosen Tetap PS</option>
                                         <option value="Dosen Tetap PT" {{ (isset($data) && $data->status_kerja=='Dosen Tetap PT') || Request::old('status_kerja')=='Dosen Tetap PT' ? 'selected' : ''}}>Dosen Tetap PT</option>
                                         <option value="Dosen Tidak Tetap" {{ (isset($data) && $data->status_kerja=='Dosen Tidak Tetap') || Request::old('status_kerja')=='Dosen Tidak Tetap' ? 'selected' : ''}}>Dosen Tidak Tetap</option>
+                                        <option value="Dosen Honorer" {{ (isset($data) && $data->status_kerja=='Dosen Honorer') || Request::old('status_kerja')=='Dosen Honorer' ? 'selected' : ''}}>Dosen Honorer</option>
                                     </select>
                                 </div>
                             </div>

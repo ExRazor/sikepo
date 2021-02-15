@@ -20,6 +20,11 @@ class TeacherImport implements ToCollection, WithStartRow
     {
         foreach ($columns as $column) {
             if ($column->filter()->isNotEmpty()) {
+
+                if (empty($column[1]) || $column[1] == "") {
+                    continue;
+                }
+
                 //Program Studi
                 $prodi = ucwords(strtolower($column[4]));
                 $kd_prodi    = StudyProgram::where('nama', $prodi)->first()->kd_prodi;

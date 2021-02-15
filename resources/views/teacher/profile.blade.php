@@ -21,9 +21,10 @@
             <div class="card-profile-img" style="background-image: url('{{isset($data->foto) ? route('download.avatar','type=teacher&id='.encrypt($data->foto)): route('download.avatar','type=avatar&id='.encrypt('teacher_avatar.png'))}}')"></div>
             <h4 class="tx-bold tx-roboto tx-white">{{$data->nama}}</h4>
             <p class="mg-b-1">NIDN. {{$data->nidn}}</p>
-            <p class="mg-b-25">NIP. {{$data->nip}}</p>
 
-            <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-b-25">
+            @if($data->nip) <p>NIP. {{$data->nip}}</p> @endif
+
+            <p class="wd-md-500 mg-md-l-auto mg-md-r-auto mg-t-25 mg-b-25">
                 Status Kerja: <strong>{{ $data->status_kerja}}</strong><br>
                 Jabatan Akademik: <strong>{{ $data->jabatan_akademik }}</strong><br>
                 Fakultas/Jurusan: <strong>{{ $data->latestStatus->studyProgram->department->faculty->singkatan.' - '.$data->latestStatus->studyProgram->department->nama }}</strong><br>
@@ -98,30 +99,32 @@
                 <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-25">Informasi Kontak</h6>
 
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">No. Telp</label>
-                <p class="tx-info mg-b-25">{{$data->no_telp}}</p>
+                <p class="tx-info mg-b-25">{{$data->no_telp ?? '-'}}</p>
 
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Alamat Email</label>
-                <p class="tx-inverse mg-b-25">{{$data->email}}</p>
+                <p class="tx-inverse mg-b-25">{{$data->email ?? '-'}}</p>
 
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Alamat Rumah</label>
-                <p class="tx-inverse mg-b-50">{{$data->alamat}}</p>
+                <p class="tx-inverse mg-b-50">{{$data->alamat ?? '-'}}</p>
 
                 <h6 class="tx-gray-800 tx-uppercase tx-semibold tx-13 mg-b-25">Pendidikan</h6>
 
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">No. Sertifikat Pendidik</label>
-                <p class="tx-inverse mg-b-25">{{$data->sertifikat_pendidik}}</p>
+                <p class="tx-inverse mg-b-25">{{$data->sertifikat_pendidik ?? '-'}}</p>
 
-                @if($data->latestStatus->studyProgram->kd_jurusan == setting('app_department_id'))
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-2">Lulusan</label>
-                <p class="tx-inverse mg-b-25">{{$data->pend_terakhir_jenjang}} - {{$data->pend_terakhir_jurusan}}</p>
+                <p class="tx-inverse mg-b-25">{{$data->pend_terakhir_jenjang}} {{'- '.$data->pend_terakhir_jurusan ?? ''}}</p>
 
                 <label class="tx-10 tx-uppercase tx-mont tx-medium tx-spacing-1 mg-b-5">Bidang Keahlian</label>
                 <ul class="list-unstyled profile-skills">
                     @foreach($data->bidang_ahli as $ahli)
-                    <li><span>{{$ahli}}</span></li>
+                        @if($ahli != '')
+                            <li><span>{{$ahli}}</span></li>
+                        @else
+                            -
+                        @endif
                     @endforeach
                 </ul>
-                @endif
             </div>
         </div>
     </div>
