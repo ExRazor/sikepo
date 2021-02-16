@@ -32,19 +32,19 @@ class ResearchTeacherSeeder extends Seeder
                 } elseif ($status == 'Ketua' && $anggota > 1) {
                     $sks = $r->sks_penelitian * (setting('research_ratio_chief') / 100);
                 } else {
-                    $sks = $r->sks_penelitian * ((setting('research_ratio_members') / $anggota) / 100);
+                    $sks = $r->sks_penelitian * ((setting('research_ratio_members') / ($anggota - 1)) / 100);
                 }
 
                 $asal       = ['dalam', 'luar'];
                 $rand_asal  = $asal[array_rand($asal)];
                 $nidn       = Teacher::all()->random()->nidn;
 
-                if ($rand_asal == 'dalam' || $status == 'Ketua') {
+                if ($rand_asal == 'dalam') {
                     $nidn       = Teacher::all()->random()->nidn;
                     $nama_lain  = null;
                     $asal_lain  = null;
                 } else {
-                    $nidn       = rand(111111111, 999999999);
+                    $nidn       = null;
                     $nama_lain  = $faker->name;
                     $asal_lain  = 'Luar program studi';
                 }
@@ -52,8 +52,8 @@ class ResearchTeacherSeeder extends Seeder
                 DB::table('research_teachers')->insert([
                     'id_penelitian' => $r->id,
                     'nidn'          => $nidn,
-                    'nama_lain'     => $nama_lain,
-                    'asal_lain'     => $asal_lain,
+                    'nama'     => $nama_lain,
+                    'asal'     => $asal_lain,
                     'status'        => $status,
                     'sks'           => $sks
                 ]);

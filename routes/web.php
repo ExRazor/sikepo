@@ -347,8 +347,10 @@ Route::middleware('auth')->group(function () {
     //Research
     Route::resource('research', 'ResearchController');
     Route::post('research/export', 'ResearchController@export')->name('research.export');
-    Route::get('research/delete_teacher/{id}', 'ResearchController@destroy_teacher')->name('research.teacher.delete');
-    Route::get('research/delete_student/{id}', 'ResearchController@destroy_students')->name('research.students.delete');
+    Route::post('research/teacher', 'ResearchController@store_teacher')->name('research.teacher.store');
+    Route::delete('research/teacher/{id}', 'ResearchController@destroy_teacher')->name('research.teacher.destroy');
+    Route::post('research/student', 'ResearchController@store_student')->name('research.student.store');
+    Route::delete('research/student/{id}', 'ResearchController@destroy_students')->name('research.student.destroy');
 
     //Community Service
     Route::resource('community-service', 'CommunityServiceController');
@@ -512,6 +514,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/download/collab/{filename}', 'CollaborationController@download')->name('collaboration.download');
     Route::get('/download/teacher/{filename}', 'TeacherController@download')->name('teacher.download');
     Route::get('/download/teacher/achievement/{filename}', 'TeacherAchievementController@download')->name('teacher.achievement.download');
+    Route::get('/download/research/{filename}', 'DownloadController@research')->name('download.research');
     Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');
 
     //Penilaian

@@ -59,54 +59,63 @@
                             <tbody>
                                 <tr>
                                     <th>Judul Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->judul_penelitian}}</td>
                                 </tr>
                                 <tr>
                                     <th>Tema Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->tema_penelitian}}</td>
                                 </tr>
                                 <tr>
                                     <th>Tingkat Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->tingkat_penelitian}}</td>
                                 </tr>
                                 <tr>
                                     <th>Bidang Program Studi</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
                                 </tr>
                                 <tr>
                                     <th>Jumlah SKS Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->sks_penelitian}}</td>
                                 </tr>
                                 <tr>
                                     <th>Tahun Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
                                 </tr>
                                 <tr>
                                     <th>Sumber Biaya Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->sumber_biaya}}</td>
                                 </tr>
-                                @isset($data->sumber_biaya_nama)
+                                @if($data->sumber_biaya_nama)
                                 <tr>
                                     <th>Nama Lembaga Penunjang Biaya</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->sumber_biaya_nama}}</td>
                                 </tr>
-                                @endisset
+                                @endif
                                 <tr>
                                     <th>Jumlah Biaya Penelitian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{rupiah($data->jumlah_biaya)}}</td>
                                 </tr>
                                 <tr>
+                                    <th>Bukti Fisik</th>
+                                    <th>:</th>
+                                    <td>
+                                        <a href="{{route('download.research',$data->bukti_fisik)}}" target="_blank">
+                                            <i class="fa fa-download mr-1"></i> {{$data->bukti_fisik}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>Dosen yang Terlibat</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>
                                         <table class="table table-bordered table-colored table-info">
                                             <thead class="text-center">
@@ -114,12 +123,13 @@
                                                     <td>Nama Dosen</td>
                                                     <td>Status Anggota</td>
                                                     <td>SKS</td>
+                                                    <td></td>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse($data->researchTeacher as $rt)
                                                 <tr>
-                                                    @if(!$rt->nama_lain)
+                                                    @if($rt->nidn)
                                                     <td>
                                                         <a href="{{route('teacher.list.show',$rt->teacher->nidn)}}">
                                                             {{$rt->teacher->nama}}<br>
@@ -128,8 +138,8 @@
                                                     </td>
                                                     @else
                                                     <td>
-                                                        {{$rt->nama_lain}}<br>
-                                                        <small>NIDN. {{$rt->nidn}} / {{$rt->asal_lain}}</small>
+                                                        {{$rt->nama}}<br>
+                                                        <small>{{$rt->asal}}</small>
                                                     </td>
                                                     @endif
                                                     <td class="text-center">
@@ -137,6 +147,13 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{$rt->sks}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if($rt->status!='Ketua')
+                                                        <a href="javascript:void(0)" class="btn-delete" data-dest="{{ route('research.teacher.destroy',encrypt($rt->id)) }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @empty
@@ -148,23 +165,27 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-primary mg-b-10 text-white" data-toggle="modal" data-target="#modal-member-teacher">Tambah Dosen</button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Mahasiswa yang Terlibat</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>
                                         <table class="table table-bordered table-colored table-danger">
                                             <thead class="text-center">
                                                 <tr>
                                                     <td>Nama Mahasiswa</td>
                                                     <td>Asal/Program Studi</td>
+                                                    <td></td>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse($data->researchStudent as $rs)
                                                 <tr>
-                                                    @if(!$rs->nama_lain)
+                                                    @if($rs->nim)
                                                     <td>
                                                         <a href="{{route('student.list.show',encode_id($rs->student->nim))}}">
                                                             {{$rs->student->nama}}<br>
@@ -177,21 +198,28 @@
                                                     </td>
                                                     @else
                                                     <td>
-                                                        {{$rs->nama_lain}}<br>
-                                                        <small>NIM. {{$rs->nim}}</small>
+                                                        {{$rs->nama}}<br>
                                                     </td>
                                                     <td>
-                                                        {{$rs->asal_lain}}<br>
+                                                        {{$rs->asal}}<br>
                                                     </td>
                                                     @endif
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)" class="btn-delete" data-dest="{{ route('research.student.destroy',encrypt($rs->id)) }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 @empty
                                                 <tr>
-                                                    <td class="text-center" colspan="2">BELUM ADA DATA</td>
+                                                    <td class="text-center" colspan="3">BELUM ADA DATA</td>
                                                 </tr>
                                                 @endforelse
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-danger mg-b-10 text-white" data-toggle="modal" data-target="#modal-member-student">Tambah Mahasiswa</button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -202,6 +230,8 @@
         </div>
     </div>
 </div>
+@include('research.form-member-teacher')
+@include('research.form-member-student')
 @endsection
 
 @section('js')

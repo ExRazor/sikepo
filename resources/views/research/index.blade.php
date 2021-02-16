@@ -76,7 +76,7 @@
                         <tr>
                             <th class="text-center" width="100">Tahun Penelitian</th>
                             <th class="text-center">Judul Penelitian</th>
-                            <th class="text-center" width="250">Ketua Peneliti</th>
+                            {{-- <th class="text-center" width="250">Ketua Peneliti</th> --}}
                             <th class="text-center" width="50">Aksi</th>
                         </tr>
                     </thead>
@@ -126,7 +126,7 @@
             columns: [
                 { data: 'tahun', className: "text-center min-mobile-p"},
                 { data: 'penelitian', className: "min-mobile-p"},
-                { data: 'peneliti', className: "desktop"},
+                // { data: 'peneliti', className: "desktop"},
                 { data: 'aksi', className: "desktop text-center", orderable: false}
             ],
             hideEmptyCols: [ 3 ],

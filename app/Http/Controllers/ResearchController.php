@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exports\ResearchExport;
 use App\Http\Requests\ResearchRequest;
+use App\Http\Requests\ResearchTeacherRequest;
+use App\Http\Requests\ResearchStudentRequest;
 use App\Models\AcademicYear;
 use App\Models\Research;
 use App\Models\StudyProgram;
@@ -11,12 +13,14 @@ use App\Models\Faculty;
 use App\Models\Teacher;
 use App\Models\ResearchStudent;
 use App\Models\ResearchTeacher;
+use App\Models\Student;
 use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
+use File;
 
 
 class ResearchController extends Controller
@@ -133,51 +137,59 @@ class ResearchController extends Controller
             $research->sumber_biaya      = $request->sumber_biaya;
             $research->sumber_biaya_nama = $request->sumber_biaya_nama;
             $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
+
+            //Upload File
+            if ($request->file('bukti_fisik')) {
+                //Init file
+                $file = $request->file('bukti_fisik');
+
+                //Ambil tanggal upload
+                $tgl_skrg = date('Y_m_d_H_i_s');
+
+                //Tujuan Upload
+                $tujuan_upload = storage_path('app/upload/research');
+
+                //Buat nama file
+                $tahun = AcademicYear::find($request->id_ta)->tahun_akademik;
+                $filename = $tahun . '_' . $request->judul_penelitian . '_' . $request->tingkat_penelitian . '_' . $tgl_skrg . '.' . $file->getClientOriginalExtension();
+                $newname = str_replace(' ', '_', $filename); //hilangkan spasi
+
+                //Pindahkan file ke folder tujuan
+                $file->move($tujuan_upload, $newname);
+
+                //Simpan nama file ke db
+                $research->bukti_fisik = $newname;
+            }
+
+            //Save Query
             $research->save();
 
             //Jumlah SKS
             $sks_ketua      = floatval($request->sks_penelitian) * setting('research_ratio_chief') / 100;
 
             //Tambah Ketua
-            $ketua                  = new ResearchTeacher;
-            $ketua->id_penelitian   = $research->id;
-            $ketua->nidn            = $request->ketua_nidn;
-            $ketua->status          = 'Ketua';
-            $ketua->sks             = $sks_ketua;
-            $ketua->save();
+            if ($request->asal_ketua_peneliti == 'Luar') {
+                $ketua                  = new ResearchTeacher;
+                $ketua->id_penelitian   = $research->id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = $sks_ketua;
+                $ketua->nidn            = null;
+                $ketua->nama            = $request->ketua_nama;
+                $ketua->asal            = $request->ketua_asal;
+                $ketua->save();
+            } else {
 
-            //Tambah Anggota Dosen
-            if ($request->anggota_nidn) {
-                $hitungDsn     = count($request->anggota_nidn);
+                if (!Teacher::find($request->ketua_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
 
-                //Jumlah SKS Anggota
-                $rasio_anggota = (setting('research_ratio_members') / $hitungDsn) / 100;
-                $sks_anggota   = floatval($request->sks_penelitian) * $rasio_anggota;
-                for ($i = 0; $i < $hitungDsn; $i++) {
-                    ResearchTeacher::updateOrCreate(
-                        [
-                            'id_penelitian' => $research->id,
-                            'nidn'          => $request->anggota_nidn[$i],
-                        ],
-                        [
-                            'status'     => 'Anggota',
-                            'sks'        => $sks_anggota,
-                        ]
-                    );
-                }
-            }
-
-            //Tambah Mahasiswa
-            if ($request->mahasiswa_nim) {
-                $hitungMhs = count($request->mahasiswa_nim);
-                for ($i = 0; $i < $hitungMhs; $i++) {
-                    ResearchStudent::updateOrCreate(
-                        [
-                            'id_penelitian' => $research->id,
-                            'nim'           => $request->mahasiswa_nim[$i],
-                        ]
-                    );
-                }
+                $ketua                  = new ResearchTeacher;
+                $ketua->id_penelitian   = $research->id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = $sks_ketua;
+                $ketua->nidn            = $request->ketua_nidn;
+                $ketua->nama            = null;
+                $ketua->asal            = null;
+                $ketua->save();
             }
 
             //Activity Log
@@ -193,7 +205,7 @@ class ResearchController extends Controller
             if (Auth::user()->hasRole('dosen')) {
                 return redirect()->route('profile.research')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             } else {
-                return redirect()->route('research.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+                return redirect()->route('research.show', encrypt($research->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -219,66 +231,84 @@ class ResearchController extends Controller
             $research->sumber_biaya      = $request->sumber_biaya;
             $research->sumber_biaya_nama = $request->sumber_biaya_nama;
             $research->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
+
+            //Upload File
+            $storagePath = storage_path('app/upload/research/' . $research->bukti_fisik);
+            $tgl_skrg = date('Y_m_d_H_i_s');
+            $tahun = AcademicYear::find($request->id_ta)->tahun_akademik;
+
+            if ($request->file('bukti_fisik')) {
+                //Jika sudah ada file, hapus
+                if (File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
+
+                //Init file
+                $file = $request->file('bukti_fisik');
+
+                //Folder tujuan upload
+                $tujuan_upload = storage_path('app/upload/research');
+
+                //Buat nama file
+                $filename = $tahun . '_' . $request->judul_penelitian . '_' . $request->tingkat_penelitian . '_' . $tgl_skrg . '.' . $file->getClientOriginalExtension();
+                $newname = str_replace(' ', '_', $filename); //hilangkan spasi
+
+                //Pindahkan file ke folder tujuan
+                $file->move($tujuan_upload, $newname);
+
+                //Simpan nama file ke db
+                $research->bukti_fisik = $newname;
+            }
+            // } else {
+            //     //Init file yang sudah ada
+            //     $ekstensi = File::extension($storagePath);
+
+            //     //Ubah nama baru
+            //     $filename = $tahun . '_' . $request->judul_penelitian . '_' . $request->tingkat_penelitian . '_' . $tgl_skrg . '.' . $ekstensi;
+            //     $newname = str_replace(' ', '_', $filename); //hilangkan spasi
+
+            //     //Update nama baru
+            //     File::move($storagePath, storage_path('app/upload/research/' . $newname));
+
+            //     //Simpan nama file baru ke db
+            //     $research->bukti_fisik = $newname;
+            // }
+
+            //Save Query
             $research->save();
 
-            //Jumlah SKS
-            $sks_ketua      = floatval($request->sks_penelitian) * setting('research_ratio_chief') / 100;
-
             //Update Ketua
-            $ketua = ResearchTeacher::where('id_penelitian', $id)->where('status', 'Ketua');
-            if ($ketua != $request->ketua_nidn) {
-                $ketua->delete();
-
-                $new_ketua                  = new ResearchTeacher;
-                $new_ketua->id_penelitian   = $id;
-                $new_ketua->nidn            = $request->ketua_nidn;
-                $new_ketua->status          = 'Ketua';
-                $new_ketua->sks             = $sks_ketua;
-                $new_ketua->save();
+            ResearchTeacher::where('id_penelitian', $research->id)->where('status', 'Ketua')->delete();
+            if ($request->asal_ketua_peneliti == 'Luar') {
+                $ketua                  = new ResearchTeacher;
+                $ketua->id_penelitian   = $id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = 0;
+                $ketua->nidn            = null;
+                $ketua->nama            = $request->ketua_nama;
+                $ketua->asal            = $request->ketua_asal;
+                $ketua->save();
             } else {
 
-                $ketua->id_penelitian = $id;
-                $ketua->nidn          = $request->ketua_nidn;
-                $ketua->sks           = $sks_ketua;
+                if (!Teacher::find($request->ketua_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+
+                if (ResearchTeacher::where('id_penelitian', $research->id)->where('nidn', $request->ketua_nidn)->first()) {
+                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
+                }
+
+                $ketua                  = new ResearchTeacher;
+                $ketua->id_penelitian   = $id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = 0;
+                $ketua->nidn            = $request->ketua_nidn;
+                $ketua->nama            = null;
+                $ketua->asal            = null;
                 $ketua->save();
             }
 
-            //Update Anggota
-            if ($request->anggota_nidn) {
-                $hitungDsn = count($request->anggota_nidn);
-
-                //Jumlah SKS Anggota
-                $rasio_anggota = (setting('research_ratio_members') / $hitungDsn) / 100;
-                $sks_anggota   = floatval($request->sks_penelitian) * $rasio_anggota;
-
-                for ($i = 0; $i < $hitungDsn; $i++) {
-
-                    ResearchTeacher::updateOrCreate(
-                        [
-                            'id_penelitian' => $id,
-                            'nidn'          => $request->anggota_nidn[$i],
-                        ],
-                        [
-                            'status'     => 'Anggota',
-                            'sks'        => $sks_anggota,
-                        ]
-                    );
-                }
-            }
-
-            //Update Mahasiswa
-            if ($request->mahasiswa_nim) {
-                $hitungMhs = count($request->mahasiswa_nim);
-                for ($i = 0; $i < $hitungMhs; $i++) {
-
-                    ResearchStudent::updateOrCreate(
-                        [
-                            'id_penelitian' => $id,
-                            'nim'           => $request->mahasiswa_nim[$i],
-                        ]
-                    );
-                }
-            }
+            //Update SKS Penelitian Ketua & Anggota
+            $this->update_sks($research->id);
 
             //Activity Log
             $property = [
@@ -336,45 +366,213 @@ class ResearchController extends Controller
         }
     }
 
-    public function destroy_teacher(Request $request)
+    public function store_teacher(ResearchTeacherRequest $request)
     {
-        if ($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = ResearchTeacher::find($id)->delete();
-            if (!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            //Publikasi
+            $id_penelitian = $request->_id;
+            $penelitian = Research::find($id_penelitian);
+
+            //Start Query
+            if ($request->asal_dosen == 'Luar') {
+                $anggota                = new ResearchTeacher;
+                $anggota->id_penelitian = $id_penelitian;
+                $anggota->status        = 'Anggota';
+                $anggota->sks           = 0;
+                $anggota->nidn          = null;
+                $anggota->nama          = $request->anggota_nama;
+                $anggota->asal          = $request->anggota_asal;
+                $anggota->save();
             } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
+                if (!Teacher::find($request->anggota_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+
+                if (ResearchTeacher::where('id_penelitian', $penelitian->id)->where('nidn', $request->anggota_nidn)->first()) {
+                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
+                }
+
+                $anggota                = new ResearchTeacher;
+                $anggota->id_penelitian = $id_penelitian;
+                $anggota->status        = 'Anggota';
+                $anggota->sks           = 0;
+                $anggota->nidn          = $request->anggota_nidn;
+                $anggota->nama          = null;
+                $anggota->asal          = null;
+                $anggota->save();
             }
+
+            //Update SKS Penelitian Ketua & Anggota
+            $this->update_sks($id_penelitian);
+
+            //Activity Log
+            $property = [
+                'id'    => $anggota->id,
+                'name'  => $penelitian->judul,
+                'url'   => route('research.show', encrypt($id_penelitian))
+            ];
+            $this->log('created', 'anggota dosen penelitian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
         }
     }
 
-    public function destroy_students(Request $request)
+    public function destroy_teacher($id)
     {
-        if ($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = ResearchStudent::find($id)->delete();
-            if (!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($id);
+
+            //Query
+            $data       = ResearchTeacher::find($id);
+            $data_id    = $data->id;
+            $penelitian = Research::find($data->id_penelitian);
+
+            //Hapus
+            $data->delete();
+
+            //Update SKS Penelitian Ketua & Anggota
+            $this->update_sks($penelitian->id);
+
+            //Activity Log
+            $property = [
+                'id'    => $data_id,
+                'name'  => $penelitian->judul,
+                'url'   => route('research.show', encrypt($penelitian->id))
+            ];
+            $this->log('deleted', 'anggota dosen penelitian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function store_student(ResearchStudentRequest $request)
+    {
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            //Publikasi
+            $id_penelitian = $request->_id;
+            $penelitian = Research::find($id_penelitian);
+
+            //Start Query
+            if ($request->asal_mahasiswa == 'Luar') {
+                $anggota                = new ResearchStudent;
+                $anggota->id_penelitian = $id_penelitian;
+                $anggota->nim           = null;
+                $anggota->nama          = $request->anggota_nama;
+                $anggota->asal          = $request->anggota_asal;
+                $anggota->save();
             } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
+                if (!Student::find($request->anggota_nim))
+                    throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+
+                if (ResearchStudent::where('id_penelitian', $penelitian->id)->where('nim', $request->anggota_nim)->first()) {
+                    throw new \Exception('NIM sudah ada. Periksa kembali.');
+                }
+
+                $anggota                = new ResearchStudent;
+                $anggota->id_penelitian = $id_penelitian;
+                $anggota->nim           = $request->anggota_nim;
+                $anggota->nama          = null;
+                $anggota->asal          = null;
+                $anggota->save();
             }
+
+            //Activity Log
+            $property = [
+                'id'    => $anggota->id,
+                'name'  => $penelitian->judul,
+                'url'   => route('research.show', encrypt($id_penelitian))
+            ];
+            $this->log('created', 'anggota mahasiswa penelitian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function destroy_students($id)
+    {
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($id);
+
+            //Query
+            $data       = ResearchStudent::find($id);
+            $data_id    = $data->id;
+            $penelitian = Research::find($data->id_penelitian);
+
+            //Hapus
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data_id,
+                'name'  => $penelitian->judul,
+                'url'   => route('research.show', encrypt($penelitian->id))
+            ];
+            $this->log('deleted', 'anggota mahasiswa penelitian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
         }
     }
 
@@ -402,6 +600,27 @@ class ResearchController extends Controller
         return (new ResearchExport($request))->download($nama_file);
     }
 
+    public function update_sks($id_penelitian)
+    {
+        $penelitian = Research::find($id_penelitian);
+
+        //Query
+        $query_ketua   = ResearchTeacher::where('id_penelitian', $id_penelitian)->where('status', 'Ketua');
+        $query_anggota = ResearchTeacher::where('id_penelitian', $id_penelitian)->where('status', 'Anggota');
+
+        //Hitung total anggota
+        $count_anggota = $query_anggota->count();
+
+        //Hitung SKS Anggota & Ketua
+        $rasio_anggota = (setting('research_ratio_members') / $count_anggota) / 100;
+        $sks_anggota   = floatval($penelitian->sks_penelitian) * $rasio_anggota;
+        $sks_ketua     = (floatval($penelitian->sks_penelitian) * setting('research_ratio_chief')) / 100;
+
+        //Update SKS
+        $query_ketua->update(['sks' => $sks_ketua]);
+        $query_anggota->update(['sks' => $sks_anggota]);
+    }
+
     public function datatable(Request $request)
     {
         if (!$request->ajax()) {
@@ -412,14 +631,14 @@ class ResearchController extends Controller
             $data   = Research::whereHas(
                 'researchTeacher',
                 function ($q) {
-                    $q->prodiKetua(Auth::user()->kd_prodi);
+                    $q->prodi(Auth::user()->kd_prodi);
                 }
             );
         } else {
             $data   = Research::whereHas(
                 'researchTeacher',
                 function ($q) {
-                    $q->jurusanKetua(setting('app_department_id'));
+                    $q->jurusan(setting('app_department_id'));
                 }
             );
         }
@@ -442,12 +661,12 @@ class ResearchController extends Controller
             ->addColumn('tahun', function ($d) {
                 return $d->academicYear->tahun_akademik . ' - ' . $d->academicYear->semester;
             })
-            ->addColumn('peneliti', function ($d) {
-                return  '<a href="' . route('teacher.list.show', $d->researchKetua->teacher->nidn) . '#research">'
-                    . $d->researchKetua->teacher->nama .
-                    '<br><small>NIDN.' . $d->researchKetua->teacher->nidn . ' / ' . $d->researchKetua->teacher->latestStatus->studyProgram->singkatan . '</small>
-                                        </a>';
-            })
+            // ->addColumn('peneliti', function ($d) {
+            //     return  '<a href="' . route('teacher.list.show', $d->researchKetua->teacher->nidn) . '#research">'
+            //         . $d->researchKetua->teacher->nama .
+            //         '<br><small>NIDN.' . $d->researchKetua->teacher->nidn . ' / ' . $d->researchKetua->teacher->latestStatus->studyProgram->singkatan . '</small>
+            //                             </a>';
+            // })
             ->addColumn('aksi', function ($d) {
                 if (!Auth::user()->hasRole('kajur')) {
                     return view('research.table-button', compact('d'))->render();

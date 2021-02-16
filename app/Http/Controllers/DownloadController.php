@@ -30,4 +30,20 @@ class DownloadController extends Controller
             return response(file_get_contents($storagePath), 200, $headers);
         }
     }
+
+    public function research($file)
+    {
+        $storagePath = storage_path('app/upload/research/' . $file);
+        if (!File::exists($storagePath)) {
+            abort(404);
+        } else {
+            $mimeType = File::mimeType($storagePath);
+            $headers = array(
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . $file . '"'
+            );
+
+            return response(file_get_contents($storagePath), 200, $headers);
+        }
+    }
 }

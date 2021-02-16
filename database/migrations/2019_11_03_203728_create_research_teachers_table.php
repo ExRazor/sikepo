@@ -18,12 +18,14 @@ class CreateResearchTeachersTable extends Migration
             $table->unsignedInteger('id_penelitian');
             $table->string('status');
             $table->float('sks');
-            $table->char('nidn',12);
-            // $table->string('nama_lain')->nullable();
-            // $table->string('asal_lain')->nullable();
+            $table->char('nidn', 12)->nullable();
+            $table->string('nama')->nullable();
+            $table->string('asal')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

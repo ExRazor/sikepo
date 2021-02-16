@@ -16,12 +16,14 @@ class CreateResearchStudentsTable extends Migration
         Schema::create('research_students', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_penelitian');
-            $table->char('nim',10);
-            // $table->string('nama_lain')->nullable();
-            // $table->string('asal_lain')->nullable();
+            $table->char('nim', 10)->nullable();
+            $table->string('nama')->nullable();
+            $table->string('asal')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

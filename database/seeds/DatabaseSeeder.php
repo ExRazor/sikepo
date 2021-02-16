@@ -37,9 +37,9 @@ class DatabaseSeeder extends Seeder
         // $this->call(StudentAchievementSeeder::class);
         // $this->call(FundFacultySeeder::class);
         // $this->call(FundStudyProgramSeeder::class);
-        // $this->call(ResearchSeeder::class);
-        // $this->call(ResearchTeacherSeeder::class);
-        // $this->call(ResearchStudentsSeeder::class);
+        $this->call(ResearchSeeder::class);
+        $this->call(ResearchTeacherSeeder::class);
+        $this->call(ResearchStudentsSeeder::class);
         // $this->call(CommunityServiceSeeder::class);
         // $this->call(CommunityServiceTeacherSeeder::class);
         // $this->call(CommunityServiceStudentsSeeder::class);
