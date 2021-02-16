@@ -264,16 +264,16 @@ class PublicationController extends Controller
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        if (!$request->ajax()) {
+        if (!request()->ajax()) {
             abort(404);
         }
 
         DB::beginTransaction();
         try {
             //Decrypt ID
-            $id = decrypt($request->id);
+            $id = decrypt($id);
 
             //Query
             $data = Publication::find($id);

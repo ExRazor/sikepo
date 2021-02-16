@@ -31,8 +31,7 @@
     <div class="row ml-sm-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
-                <input type="hidden" value="{{encrypt($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.destroy',encode_id($data->id)) }}" data-redir="{{ route('publication.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.destroy',encrypt($data->id)) }}" data-redir="{{ route('publication.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
