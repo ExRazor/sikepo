@@ -25,16 +25,6 @@ class Publication extends BaseModel
     //     return $this->belongsTo('App\Models\Teacher', 'nidn');
     // }
 
-    public function penulisUtama()
-    {
-        return $this->hasOne('App\Models\TeacherPublicationMember', 'id_publikasi')->where('penulis_utama', true);
-    }
-
-    public function penulisAnggota()
-    {
-        return $this->hasOne('App\Models\TeacherPublicationMember', 'id_publikasi')->where('penulis_utama', false);
-    }
-
     public function academicYear()
     {
         return $this->belongsTo('App\Models\AcademicYear', 'id_ta');
@@ -47,11 +37,36 @@ class Publication extends BaseModel
 
     public function publicationMembers()
     {
-        return $this->hasMany('App\Models\TeacherPublicationMember', 'id_publikasi');
+        return $this->hasMany('App\Models\PublicationMember', 'id_publikasi');
     }
 
-    public function publicationStudents()
+    public function penulisUtama()
     {
-        return $this->hasMany('App\Models\TeacherPublicationStudent', 'id_publikasi');
+        return $this->hasOne('App\Models\PublicationMember', 'id_publikasi')->where('penulis_utama', true);
+    }
+
+    public function penulisAnggota()
+    {
+        return $this->hasMany('App\Models\PublicationMember', 'id_publikasi')->where('penulis_utama', false);
+    }
+
+    public function publikasiDosen()
+    {
+        return $this->hasMany('App\Models\PublicationMember', 'id_publikasi')->where('status', 'Dosen');
+    }
+
+    public function publikasiMahasiswa()
+    {
+        return $this->hasMany('App\Models\PublicationMember', 'id_publikasi')->where('status', 'Mahasiswa');
+    }
+
+    public function publikasiLainnya()
+    {
+        return $this->hasMany('App\Models\PublicationMember', 'id_publikasi')->where('status', 'Lainnya');
+    }
+
+    public function publikasiNotLainnya()
+    {
+        return $this->hasMany('App\Models\PublicationMember', 'id_publikasi')->where('status', '!=', 'Lainnya');
     }
 }

@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('publication-teacher') as $breadcrumb)
+        @foreach (Breadcrumbs::generate('publication') as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -24,7 +24,7 @@
     </div>
     @if(!Auth::user()->hasRole('kajur'))
     <div class="ml-auto">
-        <a href="{{ route('publication.teacher.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
+        <a href="{{ route('publication.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Publikasi</a>
     </div>
     @endif
 </div>
@@ -40,6 +40,12 @@
     @endif
     @if(!Auth::user()->hasRole('kaprodi'))
     <div class="row">
+        <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
+            <select id="type_filter" class="form-control filter-box">
+                <option value="Dosen">Dosen</option>
+                <option value="Mahasiswa">Mahasiswa</option>
+            </select>
+        </div>
         <div class="col-sm-3 col-md-5 col-lg-3 mb-2">
             <select id="kd_prodi_filter" class="form-control filter-box">
                 <option value="">- Pilih Program Studi -</option>
@@ -65,11 +71,11 @@
                 </h6>
             </div>
             <div class="card-body bd-color-gray-lighter">
-                <table id="table_publication_teacher" class="table display responsive" data-order='[[ 3, "desc" ]]' data-page-length="25" url-target="{{route('ajax.publication.teacher.datatable')}}">
+                <table id="table_publication_teacher" class="table display responsive" data-order='[[ 3, "desc" ]]' data-page-length="25" url-target="{{route('ajax.publication.datatable')}}">
                     <thead>
                         <tr>
                             <th class="text-center" width="450">Judul Publikasi</th>
-                            <th class="text-center">Nama Dosen</th>
+                            {{-- <th class="text-center">Pemilik</th> --}}
                             <th class="text-center">Kategori</th>
                             <th class="text-center">Tahun Terbit</th>
                             <th class="text-center" width="50">Aksi</th>
@@ -113,13 +119,14 @@
                 url: table_ehm.attr('url-target'),
                 type: "post",
                 data: function(d){
+                    d.type_filter      = $('#type_filter').val();
                     d.kd_prodi_filter  = $('#kd_prodi_filter').val();
                     d._token           = $('meta[name="csrf-token"]').attr('content')
                 }
             },
             columns: [
                 { data: 'publikasi', className: "min-mobile-p"},
-                { data: 'milik', className: "min-mobile-p"},
+                // { data: 'milik', className: "min-mobile-p"},
                 { data: 'kategori', className: "desktop"},
                 { data: 'tahun', className: 'desktop text-center'},
                 { data: 'aksi', className: 'desktop text-center', orderable: false}

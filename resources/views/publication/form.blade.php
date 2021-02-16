@@ -5,7 +5,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-teacher-edit' : 'publication-teacher-create', isset($data) ? $data : '' ) as $breadcrumb)
+        @foreach (Breadcrumbs::generate( isset($data) ? 'publication-edit' : 'publication-create', isset($data) ? $data : '' ) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -54,7 +54,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="publication_form" action="@isset($data) {{route('publication.teacher.update',encode_id($data->id))}} @else {{route('publication.teacher.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="publication_form" action="@isset($data) {{route('publication.update',encrypt($data->id))}} @else {{route('publication.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">
@@ -65,18 +65,8 @@
                             @else
                                 @method('post')
                             @endif
+
                             {{-- <div class="row mb-3">
-                                <label class="col-md-3 form-control-label">Program Studi: <span class="tx-danger">*</span></label>
-                                <div class="col-md-8">
-                                    <select id="prodi_dosen" class="form-control" name="kd_prodi" required>
-                                        <option value="">- Pilih Prodi -</option>
-                                        @foreach($studyProgram as $sp)
-                                        <option value="{{$sp->kd_prodi}}" {{ (isset($data) && ($sp->kd_prodi==$data->teacher->kd_prodi) || Request::old('kd_prodi')==$sp->kd_prodi) ? 'selected' : ''}}>{{$sp->nama}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
-                            <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Dosen: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
                                     <select id="select-dosen" class="form-control select2-dosen" name="nidn" @if(Auth::user()->hasRole('kaprodi')) data-prodi={{Auth::user()->kd_prodi}} @endif required>
@@ -88,7 +78,7 @@
                                         @endisset
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row mb-3">
                                 <label class="col-md-3 form-control-label">Jenis Publikasi: <span class="tx-danger">*</span></label>
                                 <div class="col-md-8">
@@ -104,7 +94,7 @@
                                             </div>
                                             @if(Auth::user()->hasRole('admin'))
                                             <div class="col-sm-3">
-                                                <a href="{{ route('master.publication-category') }}" class="btn btn-teal btn-block mg-b-10" style="color:white">Tambah Kategori</a>
+                                                <a href="{{ route('master.publication-category') }}" class="btn btn-teal btn-block mg-b-10" style="color:white">Tambah</a>
                                             </div>
                                             @endif
                                         </div>
@@ -169,72 +159,29 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
+                    <hr />
                     <div class="row">
-                        <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Daftar Dosen</h3>
-                            @isset($data)
-                            <div id="daftarDosen">
-                                @foreach ($data->publicationMembers as $i => $pm)
+                        <div class="col-md-9 mx-auto">
+                            <h3 class="text-center mb-3">Penulis Utama</h3>
+                            <div id="penulisUtama">
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.member',encode_id($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-2">
-                                        <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ $pm->nidn }}" placeholder="NIDN" maxlength="9" readonly>
+                                    <div class="col-md-3 mb-3">
+                                        <select class="form-control mb-2" name="status_penulis_utama" id="status_penulis_utama" required>
+                                            <option value="">- Pilih Data Penulis -</option>
+                                            <option value="Dosen" {{ isset($data) && $data->penulisUtama->status=='Dosen' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Mahasiswa" {{ isset($data) && $data->penulisUtama->status=='Mahasiswa' ? 'selected' : '' }}>Mahasiswa Jurusan</option>
+                                            <option value="Lainnya" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'selected' : '' }}>Luar Jurusan</option>
+                                        </select>
                                     </div>
-                                    <div class="col-5">
-                                        <input class="form-control" type="text" name="anggota_nama[]" value="{{ $pm->nama }}" placeholder="Nama Dosen" required>
+                                    <div class="col-md-3 mb-3 tipe-non-lainnya" style="{{ isset($data) && $data->penulisUtama->status!='Lainnya' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="utama_idunik" value="{{ isset($data) ? $data->penulisUtama->id_unik : Request::old('utama_idunik')}}" placeholder="NIDN/NIM" {{ isset($data) && ($data->penulisUtama->status=='Dosen' || $data->penulisUtama->status=='Mahasiswa' ) ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-4">
-                                        <div id="prodiDsn{{$i}}" class="parsley-select">
-                                            <select class="form-control select-prodi" data-parsley-class-handler="#prodiDsn{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_prodi[]" required>
-                                                <option value="{{$pm->kd_prodi}}">{{$pm->studyProgram->nama}}</option>
-                                            </select>
-                                        </div>
-                                        <div id="errorsProdiDsn{{$i}}"></div>
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ isset($data) && $data->penulisUtama->status=='Lainnya' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="utama_nama" value="{{ isset($data) ? $data->penulisUtama->nama : Request::old('utama_nama')}}" placeholder="Nama Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
                                     </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endisset
-                            <div id="panelDosen" data-jumlah="0"></div>
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                <button class="add-dosen btn btn-primary" data-jenis="publikasi"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Daftar Mahasiswa</h3>
-                            @isset($data)
-                            <div id="daftarMahasiswa">
-                                @foreach ($data->publicationStudents as $i => $ps)
-                                <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.student',encode_id($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-2">
-                                        <input class="form-control number" type="text" name="mahasiswa_nim[]" value="{{ $ps->nim }}" placeholder="NIM" maxlength="9" readonly>
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ isset($data) && $data->penulisUtama->status=='Lainnya' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="utama_asal" value="{{ isset($data) ? $data->penulisUtama->asal : Request::old('utama_asal')}}" placeholder="Asal Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-5">
-                                        <input class="form-control" type="text" name="mahasiswa_nama[]" value="{{ $ps->nama }}" placeholder="Nama Mahasiswa" required>
-                                    </div>
-                                    <div class="col-4">
-                                        <div id="prodiMhs{{$i}}" class="parsley-select">
-                                            <select class="form-control select-prodi" data-parsley-class-handler="#prodiMhs{{$i}}" data-parsley-errors-container="#errorsProdiMhs{{$i}}" name="mahasiswa_prodi[]" required>
-                                                <option value="{{$ps->kd_prodi}}">{{$ps->studyProgram->nama}}</option>
-                                            </select>
-                                        </div>
-                                        <div id="errorsProdiMhs{{$i}}"></div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endisset
-                            <div id="panelMahasiswa" data-jumlah="0"></div>
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                <button class="add-mahasiswa btn btn-primary" data-jenis="publikasi"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
                                 </div>
                             </div>
                         </div>
@@ -258,8 +205,36 @@
 
 @push('custom-js')
 <script>
-    var cont  = $('.select2-dosen');
-    var prodi = cont.attr('data-prodi');
-    select2_dosen(cont,prodi);
+    $('#status_penulis_utama').on('change', function() {
+        var val = $(this).val();
+
+        var lainnya     = $('.tipe-lainnya');
+        var nonlainnya  = $('.tipe-non-lainnya');
+
+        if(val=='Lainnya') {
+            nonlainnya.hide();
+            nonlainnya.find('input').prop('disabled',true);
+            nonlainnya.find('input').prop('required',false);
+
+            lainnya.show();
+            lainnya.find('input').prop('disabled',false);
+            lainnya.find('input').prop('required',true);
+        } else if (val=='') {
+            nonlainnya.hide();
+            lainnya.hide();
+            nonlainnya.find('input').prop('disabled',true);
+            nonlainnya.find('input').prop('required',false);
+            lainnya.find('input').prop('disabled',true);
+            lainnya.find('input').prop('required',false);
+        } else {
+            lainnya.hide();
+            lainnya.find('input').prop('disabled',true);
+            lainnya.find('input').prop('required',false);
+
+            nonlainnya.show();
+            nonlainnya.find('input').prop('disabled',false);
+            nonlainnya.find('input').prop('required',true);
+        }
+    });
 </script>
 @endpush

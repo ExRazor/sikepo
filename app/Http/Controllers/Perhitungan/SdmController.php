@@ -13,6 +13,7 @@ use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\TeacherAchievement;
 use App\Models\TeacherPublication;
+use App\Models\Publication;
 use App\Models\TeacherOutputActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -688,10 +689,10 @@ class SdmController extends Controller
                 ->where('status_kerja', 'Dosen Tetap PS')
                 ->get();
 
-            $publikasi = TeacherPublication::whereHas(
-                'teacher.latestStatus',
-                function ($q) use ($prodi) {
-                    $q->where('kd_prodi', $prodi);
+            $publikasi = Publication::whereHas(
+                'publikasiNotLainnya',
+                function ($query) use ($prodi) {
+                    $query->prodi($prodi, 'Dosen');
                 }
             )
                 ->whereHas(
@@ -791,10 +792,10 @@ class SdmController extends Controller
         //Cek apakah simulasi
         if (!$request->post('simulasi')) {
             $thn_akademik = AcademicYear::where('status', true)->first();
-            $publikasi = TeacherPublication::whereHas(
-                'teacher.latestStatus',
-                function ($q) use ($prodi) {
-                    $q->where('kd_prodi', $prodi);
+            $publikasi = Publication::whereHas(
+                'publikasiNotLainnya',
+                function ($query) use ($prodi) {
+                    $query->prodi($prodi, 'Dosen');
                 }
             )
                 ->whereHas(

@@ -19,7 +19,7 @@
                             @forelse ($publication as $pb)
                             <tr>
                                 <td>
-                                    <a href="{{route('publication.teacher.show',encode_id($pb->id))}}">
+                                    <a href="{{route('publication.show',encrypt($pb->id))}}">
                                         {{ $pb->judul }}
                                     </a>
                                 </td>

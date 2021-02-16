@@ -239,53 +239,68 @@ Breadcrumbs::for('community-service-edit', function ($trail, $data) {
     $trail->push('Sunting Data Pengabdian');
 });
 
-//Publikasi > Dosen
+//Publikasi
 Breadcrumbs::for('publication', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push('Data Publikasi');
+    $trail->push('Data Publikasi', route('publication.index'));
 });
 
-//Publikasi > Dosen
-Breadcrumbs::for('publication-teacher', function ($trail) {
+Breadcrumbs::for('publication-create', function ($trail) {
     $trail->parent('publication');
-    $trail->push('Publikasi Dosen', route('publication.teacher.index'));
+    $trail->push('Tambah Publikasi Dosen', route('publication.create'));
 });
 
-Breadcrumbs::for('publication-teacher-create', function ($trail) {
-    $trail->parent('publication-teacher');
-    $trail->push('Tambah Publikasi Dosen', route('publication.teacher.create'));
+Breadcrumbs::for('publication-show', function ($trail, $data) {
+    $trail->parent('publication');
+    $trail->push($data->judul, route('publication.show', encode_id($data->id)));
 });
 
-Breadcrumbs::for('publication-teacher-show', function ($trail, $data) {
-    $trail->parent('publication-teacher');
-    $trail->push($data->judul, route('publication.teacher.show', encode_id($data->id)));
-});
-
-Breadcrumbs::for('publication-teacher-edit', function ($trail, $data) {
-    $trail->parent('publication-teacher');
+Breadcrumbs::for('publication-edit', function ($trail, $data) {
+    $trail->parent('publication');
     $trail->push('Sunting Publikasi Dosen');
 });
 
+//Publikasi > Dosen
+// Breadcrumbs::for('publication-teacher', function ($trail) {
+//     $trail->parent('publication');
+//     $trail->push('Publikasi Dosen', route('publication.teacher.index'));
+// });
+
+// Breadcrumbs::for('publication-teacher-create', function ($trail) {
+//     $trail->parent('publication-teacher');
+//     $trail->push('Tambah Publikasi Dosen', route('publication.teacher.create'));
+// });
+
+// Breadcrumbs::for('publication-teacher-show', function ($trail, $data) {
+//     $trail->parent('publication-teacher');
+//     $trail->push($data->judul, route('publication.teacher.show', encode_id($data->id)));
+// });
+
+// Breadcrumbs::for('publication-teacher-edit', function ($trail, $data) {
+//     $trail->parent('publication-teacher');
+//     $trail->push('Sunting Publikasi Dosen');
+// });
+
 //Publikasi > Mahasiswa
-Breadcrumbs::for('publication-student', function ($trail) {
-    $trail->parent('publication');
-    $trail->push('Publikasi Mahasiswa', route('publication.student.index'));
-});
+// Breadcrumbs::for('publication-student', function ($trail) {
+//     $trail->parent('publication');
+//     $trail->push('Publikasi Mahasiswa', route('publication.student.index'));
+// });
 
-Breadcrumbs::for('publication-student-create', function ($trail) {
-    $trail->parent('publication-student');
-    $trail->push('Tambah Publikasi Mahasiswa', route('publication.student.create'));
-});
+// Breadcrumbs::for('publication-student-create', function ($trail) {
+//     $trail->parent('publication-student');
+//     $trail->push('Tambah Publikasi Mahasiswa', route('publication.student.create'));
+// });
 
-Breadcrumbs::for('publication-student-show', function ($trail, $data) {
-    $trail->parent('publication-student');
-    $trail->push($data->judul, route('publication.student.show', encode_id($data->id)));
-});
+// Breadcrumbs::for('publication-student-show', function ($trail, $data) {
+//     $trail->parent('publication-student');
+//     $trail->push($data->judul, route('publication.student.show', encode_id($data->id)));
+// });
 
-Breadcrumbs::for('publication-student-edit', function ($trail, $data) {
-    $trail->parent('publication-student');
-    $trail->push('Sunting Publikasi Mahasiswa');
-});
+// Breadcrumbs::for('publication-student-edit', function ($trail, $data) {
+//     $trail->parent('publication-student');
+//     $trail->push('Sunting Publikasi Mahasiswa');
+// });
 
 // Luaran - Dosen
 Breadcrumbs::for('output-activity', function ($trail) {

@@ -18,6 +18,7 @@ use App\Imports\TeacherImport;
 use App\Exports\TeacherExport;
 use App\Http\Requests\TeacherRequest;
 use App\Models\TeacherPublication;
+use App\Models\Publication;
 use App\Models\TeacherStatus;
 use App\Traits\LogActivity;
 use Illuminate\Support\Facades\File;
@@ -129,10 +130,10 @@ class TeacherController extends Controller
             ->orderBy('id_ta', 'desc')
             ->get();
 
-        $publication    = TeacherPublication::whereHas(
-            'teacher',
+        $publication    = Publication::whereHas(
+            'publicationMembers',
             function ($q1) use ($data) {
-                $q1->where('nidn', $data->nidn);
+                $q1->dosen($data->nidn);
             }
         )
             ->orderBy('id_ta', 'desc')

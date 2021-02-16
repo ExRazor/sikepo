@@ -34,4 +34,46 @@ class PublicationMember extends Model
     {
         return $this->belongsTo('App\Models\Student', 'id_unik');
     }
+
+    public function scopeDosen($query, $nidn)
+    {
+        return $query->where('id_unik', $nidn);
+    }
+
+    public function scopeMahasiswa($query, $nim)
+    {
+        return $query->where('id_unik', $nim);
+    }
+
+    public function scopeJurusan($query, $kd_jurusan, $type)
+    {
+        if ($type == 'Dosen') {
+            $queryRelation = 'teacher.latestStatus.studyProgram';
+        } else {
+            $queryRelation = 'student.studyProgram';
+        }
+
+        return $query->whereHas(
+            $queryRelation,
+            function ($q1) use ($kd_jurusan) {
+                $q1->where('kd_jurusan', $kd_jurusan);
+            }
+        );
+    }
+
+    public function scopeProdi($query, $kd_prodi, $type, $status = null)
+    {
+        if ($type == 'Dosen') {
+            $queryRelation = 'teacher.latestStatus.studyProgram';
+        } else {
+            $queryRelation = 'student.studyProgram';
+        }
+
+        return $query->whereHas(
+            $queryRelation,
+            function ($q1) use ($kd_prodi) {
+                $q1->where('kd_prodi', $kd_prodi);
+            }
+        );
+    }
 }

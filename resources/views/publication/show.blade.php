@@ -10,7 +10,7 @@
 @section('content')
 <div class="br-pageheader">
     <nav class="breadcrumb pd-0 mg-0 tx-12">
-        @foreach (Breadcrumbs::generate('publication-teacher-show',$data) as $breadcrumb)
+        @foreach (Breadcrumbs::generate('publication-show',$data) as $breadcrumb)
             @if($breadcrumb->url && !$loop->last)
                 <a class="breadcrumb-item" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
             @else
@@ -31,12 +31,12 @@
     <div class="row ml-sm-auto" style="width:300px">
         <div class="col-6 pr-1">
             <form method="POST">
-                <input type="hidden" value="{{encode_id($data->id)}}" name="id">
-                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.teacher.destroy',encode_id($data->id)) }}" data-redir="{{ route('publication.teacher.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
+                <input type="hidden" value="{{encrypt($data->id)}}" name="id">
+                <button class="btn btn-danger btn-block btn-delete" data-dest="{{ route('publication.destroy',encode_id($data->id)) }}" data-redir="{{ route('publication.index') }}"><i class="fa fa-trash mg-r-10"></i> Hapus</button>
             </form>
         </div>
         <div class="col-6">
-            <a href="{{ route('publication.teacher.edit',encode_id($data->id)) }}" class="btn btn-warning btn-block" ><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
+            <a href="{{ route('publication.edit',encrypt($data->id)) }}" class="btn btn-warning btn-block" ><i class="fa fa-pencil-alt mg-r-10"></i>Sunting</a>
         </div>
     </div>
     @endif
@@ -68,68 +68,48 @@
                                 <td>{{$data->publicationCategory->nama}}</td>
                             </tr>
                             <tr>
-                                <th>Penulis Utama</th>
+                                <th>Penulis</th>
                                 <td>:</td>
                                 <td>
-                                    <a href="{{route('teacher.list.show',$data->nidn)}}" target="_blank">
-                                        {{$data->teacher->nama}} / NIDN. {{$data->nidn}}
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Penulis Lain</th>
-                                <td>:</td>
-                                <td>
-                                    <table class="table table-bordered table-colored table-info">
-                                        <thead class="text-center">
-                                            <tr>
-                                                <td>Nama</td>
-                                                <td>Status</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if($data->publicationMembers->count() || $data->publicationStudents->count() )
-                                                @foreach($data->publicationMembers as $pm)
-                                                    @if($pm->status=='Dosen' || $pm->status=='Mahasiswa')
-                                                    <tr>
-                                                        <td>
-                                                            {{$pm->status=='Dosen' ? $pm->teacher->nama : $pm->student->nama}}<br>
-                                                            {{-- <small>{{$pm->status=='Dosen' ? 'NIDN.'.$pm->teacher->nidn : 'NIM.'.$pm->student->nim }} / {{ $pm->status=='Dosen' ? $pm->teacher->studyProgram->nama : $pm->student->studyProgram->nama }}</small> --}}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{$pm->status}}
-                                                        </td>
-                                                    </tr>
-                                                    @else
-                                                    <tr>
-                                                        <td>
-                                                            {{$pm->nama}}<br>
-                                                            <small>{{$pm->asal}}</small>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{$pm->status}}
-                                                        </td>
-                                                    </tr>
-                                                    @endif
-                                                @endforeach
-                                                @foreach($data->publicationStudents as $ps)
-                                                <tr>
-                                                    <td>
-                                                        {{$ps->nama}}<br>
-                                                        <small>NIM. {{$ps->nim}} / {{$ps->studyProgram ?? $ps->asal}}</small>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        Mahasiswa
-                                                    </td>
-                                                </tr>
-                                                @endforeach
+                                    <ul style="padding-left:15px;margin-bottom:10px">
+                                        <li>
+                                            <strong>
+                                            @if($data->penulisUtama->nama)
+                                                {{$data->penulisUtama->nama.' ('.$data->penulisUtama->asal.')'}}
                                             @else
-                                                <tr>
-                                                    <td colspan="2" class="text-center">BELUM ADA DATA</td>
-                                                </tr>
+                                                @if($data->penulisUtama->teacher)
+                                                    <a href={{route('teacher.list.show',$data->penulisUtama->id_unik)}}>{{$data->penulisUtama->teacher->nama.' ('.$data->penulisUtama->status.' - '.$data->penulisUtama->teacher->latestStatus->studyProgram->singkatan.')'}}</a>
+                                                @else
+                                                <a href={{route('student.list.show',encode_id($data->penulisUtama->id_unik))}}>{{$data->penulisUtama->student->nama.' ('.$data->penulisUtama->status.' - '.$data->penulisUtama->student->studyProgram->singkatan.')'}}</a>
+                                                @endif
                                             @endif
-                                        </tbody>
-                                    </table>
+                                            </strong>
+                                        </li>
+                                        @foreach($data->penulisAnggota as $pa)
+                                        <li>
+                                            <div class="d-flex justify-content-between">
+                                            <div style="max-width: 350px;">
+                                                @if($pa->nama)
+                                                    {{$pa->nama.' ('.$pa->asal.')'}}
+                                                @else
+                                                    @if($pa->teacher)
+                                                        <a href={{route('teacher.list.show',$pa->id_unik)}}>{{$pa->teacher->nama.' ('.$pa->status.' - '.$pa->teacher->latestStatus->studyProgram->singkatan.')'}}</a>
+                                                    @else
+                                                        <a href={{route('student.list.show',encode_id($pa->id_unik))}}>{{$pa->student->nama.' ('.$pa->status.' - '.$pa->student->studyProgram->singkatan.')'}}</a>
+                                                    @endif
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <a href="javascript:void(0)" class="btn-delget" data-dest="{{ route('publication.member.destroy',encrypt($pa->id)) }}" data-id="{{encrypt($pa->id)}}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-sm btn-teal mg-b-10 text-white" data-toggle="modal" data-target="#modal-publication-author">Tambah Penulis</button>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -173,8 +153,8 @@
             </div>
         </div>
     </div>
-
 </div>
+@include('publication.form-author')
 @endsection
 
 @section('js')

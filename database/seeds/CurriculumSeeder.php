@@ -13,6 +13,6 @@ class CurriculumSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new CurriculumImport, storage_path('app/upload/curriculum/excel_import/matakuliah.xlsx'));
+        Excel::import(new CurriculumImport, public_path('import_seed/matakuliah_2020.xlsx'));
     }
 }

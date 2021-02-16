@@ -75,13 +75,6 @@ class Teacher extends BaseModel
         return $this->hasMany('App\Models\ResearchTeacher', 'nidn');
     }
 
-    public function scopeJurusan($query, $jurusan)
-    {
-        return $query->whereHas('studyProgram', function ($q) use ($jurusan) {
-            $q->where('kd_jurusan', $jurusan);
-        });
-    }
-
     public function minithesis_utama()
     {
         return $this->hasMany('App\Models\Minithesis', 'pembimbing_utama');
@@ -100,5 +93,12 @@ class Teacher extends BaseModel
     public function outputActivity()
     {
         return $this->hasMany('App\Models\TeacherOutputActivity', 'nidn');
+    }
+
+    public function scopeJurusan($query, $jurusan)
+    {
+        return $query->whereHas('studyProgram', function ($q) use ($jurusan) {
+            $q->where('kd_jurusan', $jurusan);
+        });
     }
 }

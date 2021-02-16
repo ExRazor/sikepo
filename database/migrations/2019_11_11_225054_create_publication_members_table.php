@@ -25,7 +25,7 @@ class CreatePublicationMembersTable extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
 
-            $table->foreign('id_publikasi')->references('id')->on('teacher_publications')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_publikasi')->references('id')->on('publications')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
