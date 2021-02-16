@@ -179,9 +179,14 @@ $(document).on('click','.btn-save',function(e) {
             alert_cont.hide();
 
             //Clear exist message and error
-            alert_cont.find('span.error').html(json.message);
+            alert_cont.find('span.error').html('');
             alert_cont.find('ul').html(null)
             $('.is-invalid').removeClass('is-invalid');
+
+            //Repopulate message
+            if(!json.errors) {
+                alert_cont.find('span.error').html(json.message);
+            }
 
             //Repopulate error
             $.each(json.errors, function(key, value){

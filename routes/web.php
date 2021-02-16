@@ -370,7 +370,8 @@ Route::middleware('auth')->group(function () {
 
     //Publication
     Route::resource('publication', 'PublicationController');
-    Route::get('publication/delete_member/{id}', 'PublicationController@destroy_member')->name('publication.delete.member');
+    Route::post('publication/member', 'PublicationController@store_member')->name('publication.member.store');
+    Route::get('publication/member/{id}/destroy', 'PublicationController@destroy_member')->name('publication.member.destroy');
 
     //Output Activity
     Route::prefix('output-activity')->name('output-activity.')->middleware('role:admin,kaprodi,kajur')->group(function () {

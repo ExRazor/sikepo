@@ -42,13 +42,13 @@ class PublicationMemberSeeder extends Seeder
                     $asal    = null;
                     $status  = 'Mahasiswa';
                 } else if ($cek == 2) {
-                    $id_unik = rand(111111111, 666666666);
+                    $id_unik = null;
                     $nama    = $faker->name;
                     $asal    = $faker->address;
                     $status  = 'Lainnya';
                 }
 
-                DB::table('teacher_publication_members')->insert([
+                DB::table('publication_members')->insert([
                     'id_publikasi'      => $d->id,
                     'id_unik'           => $id_unik,
                     'nama'              => $nama,

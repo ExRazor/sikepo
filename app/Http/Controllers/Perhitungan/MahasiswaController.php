@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\StudentQuota;
 use App\Models\StudyProgram;
 use App\Models\StudentForeign;
+use App\Models\Publication;
 use App\Models\StudentPublication;
 use App\Models\StudentOutputActivity;
 use Illuminate\Support\Facades\Auth;
@@ -188,18 +189,21 @@ class MahasiswaController extends Controller
                 ->where('kd_prodi', $prodi)
                 ->get();
 
-            $publikasi = StudentPublication::whereHas(
-                'student.studyProgram',
+            $publikasi = Publication::whereHas(
+                'publikasiMahasiswa.student',
                 function ($q) use ($prodi) {
-                    $q->where('kd_prodi', $prodi);
+                    $q->where('kd_prodi', $prodi)
+                        ->whereHas('latestStatus', function ($q) {
+                            $q->where('status', 'Aktif');
+                        });;
                 }
             )
-                ->whereHas(
-                    'student.latestStatus',
-                    function ($q) {
-                        $q->where('status', 'Aktif');
-                    }
-                )
+                // ->whereHas(
+                //     'publikasiMahasiswa.student.latestStatus',
+                //     function ($q) {
+                //         $q->where('status', 'Aktif');
+                //     }
+                // )
                 ->whereHas(
                     'academicYear',
                     function ($q) use ($thn_akademik) {

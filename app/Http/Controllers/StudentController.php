@@ -15,6 +15,7 @@ use App\Models\StudentAchievement;
 use App\Models\Minithesis;
 use App\Imports\StudentImport;
 use App\Models\StudentPublication;
+use App\Models\Publication;
 use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -99,10 +100,10 @@ class StudentController extends Controller
             ->orderBy('id_ta', 'desc')
             ->get();
 
-        $publication    = StudentPublication::whereHas(
-            'student',
+        $publication    = Publication::whereHas(
+            'publicationMembers',
             function ($q1) use ($data) {
-                $q1->where('nim', $data->nim);
+                $q1->mahasiswa($data->nim);
             }
         )
             ->orderBy('id_ta', 'desc')
