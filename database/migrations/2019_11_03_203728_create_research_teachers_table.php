@@ -25,7 +25,7 @@ class CreateResearchTeachersTable extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

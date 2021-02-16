@@ -23,7 +23,7 @@ class CreateResearchStudentsTable extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_penelitian')->references('id')->on('researches')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -22,7 +22,7 @@ class ResearchSeeder extends Seeder
             'Lembaga Luar Negeri'
         ];
 
-        $judul_penelitian =[
+        $judul_penelitian = [
             'Perbandingan Atmosfir Pendidikan Dengan Nilai Modul Awal Pada Mahasiswa Semester Dua Fakultas Kedokteran',
             'Analisa Dan Pembuatan Aplikasi Perangkat Lunak Perhitungan Percepatan Titik Sendi Penghubung Mekanisme Engkol Peluncur Pada Sepeda Motor Suzuki Smash 110 Cc',
             'Analisis Faktor-Faktor Yang Mempengaruhi Kepuasan Pelanggan Bengkel Otomotif Roda Dua Dengan Metode Important Performance Analysis',
@@ -47,15 +47,15 @@ class ResearchSeeder extends Seeder
             'Lokal',
         ];
 
-        $sks_penelitian = [3,4,5,6];
+        $sks_penelitian = [3, 4, 5, 6];
 
-        $sesuai = [0,1];
+        $sesuai = [0, 1];
 
-        foreach($teacher as $t) {
-            for($i=0;$i<5;$i++) {
+        foreach ($teacher as $t) {
+            for ($i = 0; $i < 5; $i++) {
                 $random_sumber = $sumber_biaya[array_rand($sumber_biaya)];
 
-                if($random_sumber === 'Lembaga Dalam Negeri' || $random_sumber === 'Lembaga Luar Negeri') {
+                if ($random_sumber === 'Lembaga Dalam Negeri' || $random_sumber === 'Lembaga Luar Negeri') {
                     $nama_lembaga = 'Bank Indonesia';
                 } else {
                     $nama_lembaga = '';
@@ -63,17 +63,18 @@ class ResearchSeeder extends Seeder
 
                 $rand_sesuai = $sesuai[array_rand($sesuai)];
 
-                $nominal = rand(1000, 50000).'000';
+                $nominal = rand(1000, 50000) . '000';
                 DB::table('researches')->insert([
                     'id_ta'             => AcademicYear::all()->random()->id,
                     'judul_penelitian'  => $judul_penelitian[array_rand($judul_penelitian)],
                     'tema_penelitian'   => 'Analisis dan Perancangan',
-                    'tingkat_penelitian'=> $tingkat[array_rand($tingkat)],
-                    'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
+                    'tingkat_penelitian' => $tingkat[array_rand($tingkat)],
+                    'sesuai_prodi'      => $rand_sesuai == '1' ? $rand_sesuai : null,
                     'sks_penelitian'    => $sks_penelitian[array_rand($sks_penelitian)],
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
                     'jumlah_biaya'      => $nominal,
+                    'bukti_fisik'       => 'bukti1.pdf',
                     'created_at'        => now()
                 ]);
             }

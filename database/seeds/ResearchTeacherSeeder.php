@@ -52,8 +52,8 @@ class ResearchTeacherSeeder extends Seeder
                 DB::table('research_teachers')->insert([
                     'id_penelitian' => $r->id,
                     'nidn'          => $nidn,
-                    'nama'     => $nama_lain,
-                    'asal'     => $asal_lain,
+                    'nama'          => $nama_lain,
+                    'asal'          => $asal_lain,
                     'status'        => $status,
                     'sks'           => $sks
                 ]);
