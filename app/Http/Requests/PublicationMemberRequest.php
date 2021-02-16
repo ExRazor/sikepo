@@ -39,7 +39,7 @@ class PublicationMemberRequest extends FormRequest
 
         return [
             'status_penulis' => 'required',
-            'penulis_idunik' => $penulis_idunik,
+            'penulis_idunik' => $penulis_idunik . '|numeric',
             'penulis_nama'   => $penulis_nama,
             'penulis_asal'   => $penulis_asal,
         ];
