@@ -51,8 +51,8 @@ class ResearchStudentRequest extends FormRequest
         return [
             'asal_mahasiswa' => 'Asal Mahasiswa',
             'anggota_nim'    => 'NIM',
-            'anggota_nama'   => 'Nama penulis',
-            'anggota_asal'   => 'Asal penulis',
+            'anggota_nama'   => 'Nama Mahasiswa',
+            'anggota_asal'   => 'Asal Lokasi Mahasiswa',
         ];
     }
 

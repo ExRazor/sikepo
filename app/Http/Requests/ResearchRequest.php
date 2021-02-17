@@ -25,10 +25,9 @@ class ResearchRequest extends FormRequest
     {
         return [
             'id_ta'             => 'required',
-            'ketua_nidn'        => 'required',
             'judul_penelitian'  => 'required',
             'tema_penelitian'   => 'required',
-            'tingkat_penelitian'=> 'required',
+            'tingkat_penelitian' => 'required',
             'sks_penelitian'    => 'required|numeric',
             'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
@@ -41,10 +40,9 @@ class ResearchRequest extends FormRequest
     {
         return [
             'id_ta'             => 'Tahun Akademik',
-            'ketua_nidn'        => 'Ketua Peneliti',
             'judul_penelitian'  => 'Judul Penelitian',
             'tema_penelitian'   => 'Tema Penelitian',
-            'tingkat_penelitian'=> 'Tingkat Penelitian',
+            'tingkat_penelitian' => 'Tingkat Penelitian',
             'sks_penelitian'    => 'SKS Penelitian',
             'sesuai_prodi'      => 'Kesesuaian Prodi',
             'sumber_biaya'      => 'Sumber Biaya',

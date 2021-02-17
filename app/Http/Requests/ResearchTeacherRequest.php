@@ -51,8 +51,8 @@ class ResearchTeacherRequest extends FormRequest
         return [
             'asal_dosen'     => 'Asal Dosen',
             'anggota_nidn'   => 'NIDN',
-            'anggota_nama'   => 'Nama penulis',
-            'anggota_asal'   => 'Asal penulis',
+            'anggota_nama'   => 'Nama Dosen',
+            'anggota_asal'   => 'Asal Lokasi Dosen',
         ];
     }
 
