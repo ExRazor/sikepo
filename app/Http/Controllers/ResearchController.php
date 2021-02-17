@@ -259,20 +259,6 @@ class ResearchController extends Controller
                 //Simpan nama file ke db
                 $research->bukti_fisik = $newname;
             }
-            // } else {
-            //     //Init file yang sudah ada
-            //     $ekstensi = File::extension($storagePath);
-
-            //     //Ubah nama baru
-            //     $filename = $tahun . '_' . $request->judul_penelitian . '_' . $request->tingkat_penelitian . '_' . $tgl_skrg . '.' . $ekstensi;
-            //     $newname = str_replace(' ', '_', $filename); //hilangkan spasi
-
-            //     //Update nama baru
-            //     File::move($storagePath, storage_path('app/upload/research/' . $newname));
-
-            //     //Simpan nama file baru ke db
-            //     $research->bukti_fisik = $newname;
-            // }
 
             //Save Query
             $research->save();
@@ -413,7 +399,7 @@ class ResearchController extends Controller
             //Activity Log
             $property = [
                 'id'    => $anggota->id,
-                'name'  => $penelitian->judul,
+                'name'  => $penelitian->judul_penelitian,
                 'url'   => route('research.show', encrypt($id_penelitian))
             ];
             $this->log('created', 'anggota dosen penelitian', $property);
@@ -457,7 +443,7 @@ class ResearchController extends Controller
             //Activity Log
             $property = [
                 'id'    => $data_id,
-                'name'  => $penelitian->judul,
+                'name'  => $penelitian->judul_penelitian,
                 'url'   => route('research.show', encrypt($penelitian->id))
             ];
             $this->log('deleted', 'anggota dosen penelitian', $property);
@@ -516,7 +502,7 @@ class ResearchController extends Controller
             //Activity Log
             $property = [
                 'id'    => $anggota->id,
-                'name'  => $penelitian->judul,
+                'name'  => $penelitian->judul_penelitian,
                 'url'   => route('research.show', encrypt($id_penelitian))
             ];
             $this->log('created', 'anggota mahasiswa penelitian', $property);
@@ -557,7 +543,7 @@ class ResearchController extends Controller
             //Activity Log
             $property = [
                 'id'    => $data_id,
-                'name'  => $penelitian->judul,
+                'name'  => $penelitian->judul_penelitian,
                 'url'   => route('research.show', encrypt($penelitian->id))
             ];
             $this->log('deleted', 'anggota mahasiswa penelitian', $property);
