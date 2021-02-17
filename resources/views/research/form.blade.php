@@ -179,6 +179,7 @@
                         <div class="col-md-9 mx-auto">
                             <h3 class="text-center mb-3">Ketua Peneliti</h3>
                             <div id="researchKetua">
+                                @if($data->researchKetua)
                                 <div class="row mb-3 justify-content-center align-items-center">
                                     <div class="col-md-3 mb-3">
                                         <select class="form-control mb-2" name="asal_ketua_peneliti" id="asal_ketua_peneliti" required>
@@ -197,6 +198,26 @@
                                         <input class="form-control" type="text" name="ketua_asal" value="{{ isset($data) ? $data->researchKetua->asal : Request::old('ketua_asal')}}" placeholder="Asal Dosen" {{ isset($data) && !$data->researchKetua->nidn ? 'required' : '' }}>
                                     </div>
                                 </div>
+                                @else
+                                <div class="row mb-3 justify-content-center align-items-center">
+                                    <div class="col-md-3 mb-3">
+                                        <select class="form-control mb-2" name="asal_ketua_peneliti" id="asal_ketua_peneliti" required>
+                                            <option value="">- Pilih Asal Dosen -</option>
+                                            <option value="Jurusan" {{ Request::old('asal_ketua_peneliti') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Luar" {{ Request::old('asal_ketua_peneliti') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3 tipe-non-lainnya" style="{{ Request::old('asal_ketua_peneliti') == 'Jurusan' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="ketua_nidn" value="{{ Request::old('ketua_nidn')}}" placeholder="NIDN">
+                                    </div>
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ Request::old('asal_ketua_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="ketua_nama" value="{{ Request::old('ketua_nama')}}" placeholder="Nama Dosen">
+                                    </div>
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ Request::old('asal_ketua_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="ketua_asal" value="{{ Request::old('ketua_asal')}}" placeholder="Asal Dosen">
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
