@@ -22,9 +22,9 @@ class CommunityServiceSeeder extends Seeder
             'Lembaga Luar Negeri'
         ];
 
-        $lembaga = ['Bank Indonesia','Bank MEGA','BPJS','Facebook','Google','Cisco'];
+        $lembaga = ['Bank Indonesia', 'Bank MEGA', 'BPJS', 'Facebook', 'Google', 'Cisco'];
 
-        $judul =[
+        $judul = [
             'Pengembangan Usaha Makanan Kecil di Kota Payakumbuh',
             'Pelatihan Pembelajaran Bahasa Inggris Berbasis Pariwisata Bagi Kelompok Sadar
             Wisata(Pokdarwis)Carocok Langkisau dan Koperasi Pedagang Kaki Lima Painan',
@@ -42,32 +42,40 @@ class CommunityServiceSeeder extends Seeder
             'Pendampingan ASI ekslusif dan makanan pendamping ASI'
         ];
 
-        $sks = [3,4,5,6];
+        $sks = [3, 4, 5, 6];
 
-        $sesuai = [0,1];
+        $sesuai = [0, 1];
 
-        foreach($teacher as $t) {
-            for($i=0;$i<5;$i++) {
+        $tingkat = [
+            'Internasional',
+            'Nasional',
+            'Lokal',
+        ];
+
+        foreach ($teacher as $t) {
+            for ($i = 0; $i < 5; $i++) {
                 $random_sumber = $sumber_biaya[array_rand($sumber_biaya)];
 
-                if($random_sumber === 'Lembaga Dalam Negeri' || $random_sumber === 'Lembaga Luar Negeri') {
+                if ($random_sumber === 'Lembaga Dalam Negeri' || $random_sumber === 'Lembaga Luar Negeri') {
                     $nama_lembaga = $lembaga[array_rand($lembaga)];
                 } else {
                     $nama_lembaga = '';
                 }
 
-                $nominal = rand(1000, 50000).'000';
+                $nominal = rand(1000, 50000) . '000';
                 $rand_sesuai = $sesuai[array_rand($sesuai)];
 
                 DB::table('community_services')->insert([
                     'id_ta'             => AcademicYear::all()->random()->id,
-                    'tema_pengabdian'   => 'Analisis dan Perancangan',
                     'judul_pengabdian'  => $judul[array_rand($judul)],
+                    'tema_pengabdian'   => 'Analisis dan Perancangan',
+                    'tingkat_pengabdian' => $tingkat[array_rand($tingkat)],
                     'sks_pengabdian'    => $sks[array_rand($sks)],
-                    'sesuai_prodi'      => $rand_sesuai=='1' ? $rand_sesuai : null,
+                    'sesuai_prodi'      => $rand_sesuai == '1' ? $rand_sesuai : null,
                     'sumber_biaya'      => $sumber_biaya[array_rand($sumber_biaya)],
                     'sumber_biaya_nama' => $nama_lembaga,
                     'jumlah_biaya'      => $nominal,
+                    'bukti_fisik'       => 'bukti1.pdf',
                     'created_at'        => now()
                 ]);
             }

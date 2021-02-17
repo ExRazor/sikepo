@@ -77,7 +77,7 @@
                         <tr>
                             <th class="text-center" width="100">Tahun Pengabdian</th>
                             <th class="text-center">Judul Pengabdian</th>
-                            <th class="text-center" width="250">Ketua Pelaksana</th>
+                            {{-- <th class="text-center" width="250">Ketua Pelaksana</th> --}}
                             <th class="text-center" width="50">Aksi</th>
                         </tr>
                     </thead>
@@ -127,7 +127,7 @@
             columns: [
                 { data: 'tahun', className: "text-center min-mobile-p" },
                 { data: 'pengabdian', className: "min-mobile-p" },
-                { data: 'pelaksana', className: "desktop" },
+                // { data: 'pelaksana', className: "desktop" },
                 { data: 'aksi', className: "desktop text-center", orderable: false }
             ],
             hideEmptyCols: [ 3 ],

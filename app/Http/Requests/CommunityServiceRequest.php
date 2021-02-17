@@ -25,9 +25,9 @@ class CommunityServiceRequest extends FormRequest
     {
         return [
             'id_ta'             => 'required',
-            'ketua_nidn'        => 'required',
             'judul_pengabdian'  => 'required',
             'tema_pengabdian'   => 'required',
+            'tingkat_pengabdian' => 'required',
             'sks_pengabdian'    => 'required|numeric',
             'sesuai_prodi'      => 'nullable',
             'sumber_biaya'      => 'required',
@@ -40,9 +40,9 @@ class CommunityServiceRequest extends FormRequest
     {
         return [
             'id_ta'             => 'Tahun Akademik',
-            'ketua_nidn'        => 'Ketua Pelaksana',
             'judul_pengabdian'  => 'Judul Pengabdian',
             'tema_pengabdian'   => 'Tema Pengabdian',
+            'tingkat_pengabdian'   => 'Tingkat Pengabdian',
             'sks_pengabdian'    => 'SKS Pengabdian',
             'sesuai_prodi'      => 'Kesesuaian Prodi',
             'sumber_biaya'      => 'Sumber Biaya',

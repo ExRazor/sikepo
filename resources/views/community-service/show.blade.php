@@ -60,49 +60,63 @@
                             <tbody>
                                 <tr>
                                     <th>Judul Pengabdian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->judul_pengabdian}}</td>
                                 </tr>
                                 <tr>
                                     <th>Tema Pengabdian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->tema_pengabdian}}</td>
                                 </tr>
                                 <tr>
+                                    <th>Tingkat Pengabdian</th>
+                                    <th>:</th>
+                                    <td>{{$data->tingkat_pengabdian}}</td>
+                                </tr>
+                                <tr>
                                     <th>Bidang Program Studi</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{isset($data->sesuai_prodi) ? 'Sesuai' : 'Tidak Sesuai'}}</td>
                                 </tr>
                                 <tr>
                                     <th>Jumlah SKS Pengabdian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->sks_pengabdian}}</td>
                                 </tr>
                                 <tr>
                                     <th>Tahun Pengabdian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</td>
                                 </tr>
                                 <tr>
                                     <th>Sumber Biaya Pengabdian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->sumber_biaya}}</td>
                                 </tr>
-                                @isset($data->sumber_biaya_nama)
+                                @if($data->sumber_biaya_nama)
                                 <tr>
                                     <th>Nama Lembaga Penunjang Biaya</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{$data->sumber_biaya_nama}}</td>
                                 </tr>
-                                @endisset
+                                @endif
                                 <tr>
                                     <th>Jumlah Biaya Pengabdian</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>{{rupiah($data->jumlah_biaya)}}</td>
                                 </tr>
                                 <tr>
+                                    <th>Bukti Fisik</th>
+                                    <th>:</th>
+                                    <td>
+                                        <a href="{{route('download.community-service',$data->bukti_fisik)}}" target="_blank">
+                                            <i class="fa fa-download mr-1"></i> {{$data->bukti_fisik}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>Dosen yang Terlibat</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>
                                         <table class="table table-bordered table-colored table-purple">
                                             <thead class="text-center">
@@ -110,12 +124,13 @@
                                                     <td>Nama Dosen</td>
                                                     <td>Status Anggota</td>
                                                     <td>SKS</td>
+                                                    <td></td>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse($data->serviceTeacher as $st)
                                                 <tr>
-                                                    @if(!$st->nama_lain)
+                                                    @if($st->nidn)
                                                     <td>
                                                         <a href="{{route('teacher.list.show',$st->teacher->nidn)}}">
                                                             {{$st->teacher->nama}}<br>
@@ -124,8 +139,8 @@
                                                     </td>
                                                     @else
                                                     <td>
-                                                        {{$st->nama_lain}}<br>
-                                                        <small>NIDN. {{$st->nidn}} / {{$st->asal_lain}}</small>
+                                                        {{$st->nama}}<br>
+                                                        <small>{{$st->asal}}</small>
                                                     </td>
                                                     @endif
                                                     <td class="text-center">
@@ -133,6 +148,13 @@
                                                     </td>
                                                     <td class="text-center">
                                                         {{$st->sks}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if($st->status!='Ketua')
+                                                        <a href="javascript:void(0)" class="btn-delete" data-dest="{{ route('community-service.teacher.destroy',encrypt($st->id)) }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @empty
@@ -144,27 +166,31 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-primary mg-b-10 text-white" data-toggle="modal" data-target="#modal-member-teacher">Tambah Dosen</button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Mahasiswa yang Terlibat</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>
                                         <table class="table table-bordered table-colored table-pink">
                                             <thead class="text-center">
                                                 <tr>
                                                     <td>Nama Mahasiswa</td>
                                                     <td>Asal/Program Studi</td>
+                                                    <td></td>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse($data->serviceStudent as $ss)
                                                 <tr>
-                                                    @if(!$ss->nama_lain)
+                                                    @if($ss->nim)
                                                     <td>
                                                         <a href="{{route('student.list.show',encode_id($ss->student->nim))}}">
                                                             {{$ss->student->nama}}<br>
-                                                            <small>NIDN. {{$ss->nim}}</small>
+                                                            <small>NIM. {{$ss->nim}}</small>
                                                         </a>
                                                     </td>
                                                     <td>
@@ -173,13 +199,17 @@
                                                     </td>
                                                     @else
                                                     <td>
-                                                        {{$ss->nama_lain}}<br>
-                                                        <small>NIM. {{$ss->nim}}</small>
+                                                        {{$ss->nama}}<br>
                                                     </td>
                                                     <td>
-                                                        {{$ss->asal_lain}}<br>
+                                                        {{$ss->asal}}<br>
                                                     </td>
                                                     @endif
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)" class="btn-delete" data-dest="{{ route('community-service.student.destroy',encrypt($ss->id)) }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 @empty
                                                 <tr>
@@ -190,6 +220,9 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-danger mg-b-10 text-white" data-toggle="modal" data-target="#modal-member-student">Tambah Mahasiswa</button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -200,6 +233,8 @@
         </div>
     </div>
 </div>
+@include('community-service.form-member-teacher')
+@include('community-service.form-member-student')
 @endsection
 
 @section('js')

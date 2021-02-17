@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exports\CommunityServiceExport;
 use App\Http\Requests\CommunityServiceRequest;
+use App\Http\Requests\CommunityServiceStudentRequest;
+use App\Http\Requests\CommunityServiceTeacherRequest;
 use App\Models\AcademicYear;
 use App\Models\CommunityService;
 use App\Models\CommunityServiceTeacher;
@@ -128,57 +130,65 @@ class CommunityServiceController extends Controller
             $community->id_ta             = $request->id_ta;
             $community->judul_pengabdian  = $request->judul_pengabdian;
             $community->tema_pengabdian   = $request->tema_pengabdian;
+            $community->tingkat_pengabdian = $request->tingkat_pengabdian;
             $community->sks_pengabdian    = $request->sks_pengabdian;
             $community->sesuai_prodi      = $request->sesuai_prodi;
             $community->sumber_biaya      = $request->sumber_biaya;
             $community->sumber_biaya_nama = $request->sumber_biaya_nama;
             $community->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
+
+            //Upload File
+            if ($request->file('bukti_fisik')) {
+                //Init file
+                $file = $request->file('bukti_fisik');
+
+                //Ambil tanggal upload
+                $tgl_skrg = date('Y_m_d_H_i_s');
+
+                //Tujuan Upload
+                $tujuan_upload = storage_path('app/upload/community-service');
+
+                //Buat nama file
+                $tahun = AcademicYear::find($request->id_ta)->tahun_akademik;
+                $filename = $tahun . '_' . $request->judul_pengabdian . '_' . $request->tingkat_pengabdian . '_' . $tgl_skrg . '.' . $file->getClientOriginalExtension();
+                $newname = str_replace(' ', '_', $filename); //hilangkan spasi
+
+                //Pindahkan file ke folder tujuan
+                $file->move($tujuan_upload, $newname);
+
+                //Simpan nama file ke db
+                $community->bukti_fisik = $newname;
+            }
+
+            //Save Query
             $community->save();
 
             //Jumlah SKS
             $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
 
             //Tambah Ketua
-            $ketua                  = new CommunityServiceTeacher;
-            $ketua->id_pengabdian   = $community->id;
-            $ketua->nidn            = $request->ketua_nidn;
-            $ketua->status          = 'Ketua';
-            $ketua->sks             = $sks_ketua;
-            $ketua->save();
+            if ($request->asal_ketua_penyelenggara == 'Luar') {
+                $ketua                  = new CommunityServiceTeacher;
+                $ketua->id_pengabdian   = $community->id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = $sks_ketua;
+                $ketua->nidn            = null;
+                $ketua->nama            = $request->ketua_nama;
+                $ketua->asal            = $request->ketua_asal;
+                $ketua->save();
+            } else {
 
-            //Tambah Anggota Dosen
-            if ($request->anggota_nidn) {
-                $hitungDsn = count($request->anggota_nidn);
+                if (!Teacher::find($request->ketua_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
 
-                //Rasio SKS Anggota
-                $rasio_anggota = (setting('service_ratio_members') / $hitungDsn) / 100;
-                $sks_anggota   = floatval($request->sks_pengabdian) * $rasio_anggota;
-
-                for ($i = 0; $i < $hitungDsn; $i++) {
-                    CommunityServiceTeacher::updateOrCreate(
-                        [
-                            'id_penelitian' => $community->id,
-                            'nidn'          => $request->anggota_nidn[$i],
-                        ],
-                        [
-                            'status'     => 'Anggota',
-                            'sks'        => $sks_anggota,
-                        ]
-                    );
-                }
-            }
-
-            //Tambah Mahasiswa
-            if ($request->mahasiswa_nim) {
-                $hitungMhs = count($request->mahasiswa_nim);
-                for ($i = 0; $i < $hitungMhs; $i++) {
-                    CommunityServiceStudent::updateOrCreate(
-                        [
-                            'id_pengabdian' => $community->id,
-                            'nim'           => $request->mahasiswa_nim[$i],
-                        ]
-                    );
-                }
+                $ketua                  = new CommunityServiceTeacher;
+                $ketua->id_pengabdian   = $community->id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = $sks_ketua;
+                $ketua->nidn            = $request->ketua_nidn;
+                $ketua->nama            = null;
+                $ketua->asal            = null;
+                $ketua->save();
             }
 
             //Activity Log
@@ -193,7 +203,7 @@ class CommunityServiceController extends Controller
             if (Auth::user()->hasRole('dosen')) {
                 return redirect()->route('profile.community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             } else {
-                return redirect()->route('community-service.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+                return redirect()->route('community-service.show', encrypt($community->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -213,70 +223,76 @@ class CommunityServiceController extends Controller
             $community->id_ta             = $request->id_ta;
             $community->judul_pengabdian  = $request->judul_pengabdian;
             $community->tema_pengabdian   = $request->tema_pengabdian;
+            $community->tingkat_pengabdian = $request->tingkat_pengabdian;
             $community->sks_pengabdian    = $request->sks_pengabdian;
             $community->sesuai_prodi      = $request->sesuai_prodi;
             $community->sumber_biaya      = $request->sumber_biaya;
             $community->sumber_biaya_nama = $request->sumber_biaya_nama;
             $community->jumlah_biaya      = str_replace(".", "", $request->jumlah_biaya);
+
+            //Upload File
+            $storagePath = storage_path('app/upload/community-service/' . $community->bukti_fisik);
+            $tgl_skrg = date('Y_m_d_H_i_s');
+            $tahun = AcademicYear::find($request->id_ta)->tahun_akademik;
+
+            if ($request->file('bukti_fisik')) {
+                //Jika sudah ada file, hapus
+                if (File::exists($storagePath)) {
+                    File::delete($storagePath);
+                }
+
+                //Init file
+                $file = $request->file('bukti_fisik');
+
+                //Folder tujuan upload
+                $tujuan_upload = storage_path('app/upload/community-service');
+
+                //Buat nama file
+                $filename = $tahun . '_' . $request->judul_pengabdian . '_' . $request->tingkat_pengabdian . '_' . $tgl_skrg . '.' . $file->getClientOriginalExtension();
+                $newname = str_replace(' ', '_', $filename); //hilangkan spasi
+
+                //Pindahkan file ke folder tujuan
+                $file->move($tujuan_upload, $newname);
+
+                //Simpan nama file ke db
+                $community->bukti_fisik = $newname;
+            }
+
+            //Save Query
             $community->save();
 
-            //Jumlah SKS
-            $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
-
             //Update Ketua
-            $ketua = CommunityServiceTeacher::where('id_pengabdian', $id)->where('status', 'Ketua');
-            if ($ketua != $request->ketua_nidn) {
-                $ketua->delete();
-
-                $new_ketua                  = new CommunityServiceTeacher;
-                $new_ketua->id_pengabdian   = $id;
-                $new_ketua->nidn            = $request->ketua_nidn;
-                $new_ketua->status          = 'Ketua';
-                $new_ketua->sks             = $sks_ketua;
-                $new_ketua->save();
+            CommunityServiceTeacher::where('id_pengabdian', $community->id)->where('status', 'Ketua')->delete();
+            if ($request->asal_ketua_penyelenggara == 'Luar') {
+                $ketua                  = new CommunityServiceTeacher;
+                $ketua->id_pengabdian   = $id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = 0;
+                $ketua->nidn            = null;
+                $ketua->nama            = $request->ketua_nama;
+                $ketua->asal            = $request->ketua_asal;
+                $ketua->save();
             } else {
-                $ketua->id_pengabdian = $id;
-                $ketua->nidn          = $request->ketua_nidn;
-                $ketua->sks           = $sks_ketua;
+
+                if (!Teacher::find($request->ketua_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+
+                if (CommunityServiceTeacher::where('id_pengabdian', $community->id)->where('nidn', $request->ketua_nidn)->first()) {
+                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
+                }
+
+                $ketua                  = new CommunityServiceTeacher;
+                $ketua->id_pengabdian   = $id;
+                $ketua->status          = 'Ketua';
+                $ketua->sks             = 0;
+                $ketua->nidn            = $request->ketua_nidn;
+                $ketua->nama            = null;
+                $ketua->asal            = null;
                 $ketua->save();
             }
 
-            //Update Anggota
-            if ($request->anggota_nidn) {
-                $hitungDsn = count($request->anggota_nidn);
-
-                //Rasio SKS Anggota
-                $rasio_anggota = (setting('service_ratio_members') / $hitungDsn) / 100;
-                $sks_anggota   = floatval($request->sks_pengabdian) * $rasio_anggota;
-
-                for ($i = 0; $i < $hitungDsn; $i++) {
-
-                    CommunityServiceTeacher::updateOrCreate(
-                        [
-                            'id_pengabdian' => $id,
-                            'nidn'          => $request->anggota_nidn[$i],
-                        ],
-                        [
-                            'status'     => 'Anggota',
-                            'sks'        => $sks_anggota,
-                        ]
-                    );
-                }
-            }
-
-            //Update Anggota Mahasiswa
-            if ($request->mahasiswa_nim) {
-                $hitungMhs = count($request->mahasiswa_nim);
-                for ($i = 0; $i < $hitungMhs; $i++) {
-
-                    CommunityServiceStudent::updateOrCreate(
-                        [
-                            'id_pengabdian' => $id,
-                            'nim'           => $request->mahasiswa_nim[$i],
-                        ]
-                    );
-                }
-            }
+            //Update SKS Pengabdian Ketua & Anggota
+            $this->update_sks($community->id);
 
             //Activity Log
             $property = [
@@ -335,45 +351,213 @@ class CommunityServiceController extends Controller
         }
     }
 
-    public function destroy_teacher(Request $request)
+    public function store_teacher(CommunityServiceTeacherRequest $request)
     {
-        if ($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = CommunityServiceTeacher::find($id)->delete();
-            if (!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            //Pengabdian
+            $id_pengabdian = $request->_id;
+            $pengabdian = CommunityService::find($id_pengabdian);
+
+            //Start Query
+            if ($request->asal_dosen == 'Luar') {
+                $anggota                = new CommunityServiceTeacher;
+                $anggota->id_pengabdian = $id_pengabdian;
+                $anggota->status        = 'Anggota';
+                $anggota->sks           = 0;
+                $anggota->nidn          = null;
+                $anggota->nama          = $request->anggota_nama;
+                $anggota->asal          = $request->anggota_asal;
+                $anggota->save();
             } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
+                if (!Teacher::find($request->anggota_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+
+                if (CommunityServiceTeacher::where('id_pengabdian', $pengabdian->id)->where('nidn', $request->anggota_nidn)->first()) {
+                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
+                }
+
+                $anggota                = new CommunityServiceTeacher;
+                $anggota->id_pengabdian = $id_pengabdian;
+                $anggota->status        = 'Anggota';
+                $anggota->sks           = 0;
+                $anggota->nidn          = $request->anggota_nidn;
+                $anggota->nama          = null;
+                $anggota->asal          = null;
+                $anggota->save();
             }
+
+            //Update SKS Penelitian Ketua & Anggota
+            $this->update_sks($id_pengabdian);
+
+            //Activity Log
+            $property = [
+                'id'    => $anggota->id,
+                'name'  => $pengabdian->judul_pengabdian,
+                'url'   => route('community-service.show', encrypt($id_pengabdian))
+            ];
+            $this->log('created', 'anggota dosen pengabdian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
         }
     }
 
-    public function destroy_students(Request $request)
+    public function destroy_teacher($id)
     {
-        if ($request->ajax()) {
-            $id = decrypt($request->id);
-            $q  = CommunityServiceStudent::find($id)->delete();
-            if (!$q) {
-                return response()->json([
-                    'title'   => 'Gagal',
-                    'message' => 'Terjadi kesalahan saat menghapus',
-                    'type'    => 'error'
-                ]);
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($id);
+
+            //Query
+            $data       = CommunityServiceTeacher::find($id);
+            $data_id    = $data->id;
+            $pengabdian = CommunityService::find($data->id_pengabdian);
+
+            //Hapus
+            $data->delete();
+
+            //Update SKS Penelitian Ketua & Anggota
+            $this->update_sks($pengabdian->id);
+
+            //Activity Log
+            $property = [
+                'id'    => $data_id,
+                'name'  => $pengabdian->judul_pengabdian,
+                'url'   => route('community-service.show', encrypt($pengabdian->id))
+            ];
+            $this->log('deleted', 'anggota dosen pengabdian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function store_student(CommunityServiceStudentRequest $request)
+    {
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            //Publikasi
+            $id_pengabdian = $request->_id;
+            $pengabdian = CommunityService::find($id_pengabdian);
+
+            //Start Query
+            if ($request->asal_mahasiswa == 'Luar') {
+                $anggota                = new CommunityServiceStudent;
+                $anggota->id_pengabdian = $id_pengabdian;
+                $anggota->nim           = null;
+                $anggota->nama          = $request->anggota_nama;
+                $anggota->asal          = $request->anggota_asal;
+                $anggota->save();
             } else {
-                return response()->json([
-                    'title'   => 'Berhasil',
-                    'message' => 'Data berhasil dihapus',
-                    'type'    => 'success'
-                ]);
+                if (!Student::find($request->anggota_nim))
+                    throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+
+                if (CommunityServiceStudent::where('id_pengabdian', $pengabdian->id)->where('nim', $request->anggota_nim)->first()) {
+                    throw new \Exception('NIM sudah ada. Periksa kembali.');
+                }
+
+                $anggota                = new CommunityServiceStudent;
+                $anggota->id_pengabdian = $id_pengabdian;
+                $anggota->nim           = $request->anggota_nim;
+                $anggota->nama          = null;
+                $anggota->asal          = null;
+                $anggota->save();
             }
+
+            //Activity Log
+            $property = [
+                'id'    => $anggota->id,
+                'name'  => $pengabdian->judul_pengabdian,
+                'url'   => route('community-service.show', encrypt($id_pengabdian))
+            ];
+            $this->log('created', 'anggota mahasiswa pengabdian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil disimpan',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function destroy_students($id)
+    {
+        if (!request()->ajax()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            //Decrypt ID
+            $id = decrypt($id);
+
+            //Query
+            $data       = CommunityServiceStudent::find($id);
+            $data_id    = $data->id;
+            $pengabdian = CommunityService::find($data->id_pengabdian);
+
+            //Hapus
+            $data->delete();
+
+            //Activity Log
+            $property = [
+                'id'    => $data_id,
+                'name'  => $pengabdian->judul_pengabdian,
+                'url'   => route('community-service.show', encrypt($pengabdian->id))
+            ];
+            $this->log('deleted', 'anggota mahasiswa pengabdian', $property);
+
+            DB::commit();
+            return response()->json([
+                'title'   => 'Berhasil',
+                'message' => 'Data berhasil dihapus',
+                'type'    => 'success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
         }
     }
 
@@ -400,6 +584,29 @@ class CommunityServiceController extends Controller
         return (new CommunityServiceExport($request))->download($nama_file);
     }
 
+    public function update_sks($id_pengabdian)
+    {
+        $pengabdian = CommunityService::find($id_pengabdian);
+
+        //Query
+        $query_ketua   = CommunityServiceTeacher::where('id_pengabdian', $id_pengabdian)->where('status', 'Ketua');
+        $query_anggota = CommunityServiceTeacher::where('id_pengabdian', $id_pengabdian)->where('status', 'Anggota');
+
+        //Hitung total anggota
+        $count_anggota = $query_anggota->count();
+
+        //Hitung dan Update SKS Ketua
+        $sks_ketua     = (floatval($pengabdian->sks_pengabdian) * setting('service_ratio_chief')) / 100;
+        $query_ketua->update(['sks' => $sks_ketua]);
+
+        //Hitung dan Update SKS Anggota
+        if ($count_anggota > 0) {
+            $rasio_anggota = (setting('service_ratio_members') / $count_anggota) / 100;
+            $sks_anggota   = floatval($pengabdian->sks_pengabdian) * $rasio_anggota;
+            $query_anggota->update(['sks' => $sks_anggota]);
+        }
+    }
+
     public function datatable(Request $request)
     {
         if (!$request->ajax()) {
@@ -410,14 +617,14 @@ class CommunityServiceController extends Controller
             $data   = CommunityService::whereHas(
                 'serviceTeacher',
                 function ($q) {
-                    $q->prodiKetua(Auth::user()->kd_prodi);
+                    $q->prodi(Auth::user()->kd_prodi);
                 }
             );
         } else {
             $data   = CommunityService::whereHas(
                 'serviceTeacher',
                 function ($q) {
-                    $q->jurusanKetua(setting('app_department_id'));
+                    $q->jurusan(setting('app_department_id'));
                 }
             );
         }
@@ -426,7 +633,7 @@ class CommunityServiceController extends Controller
             $data->whereHas(
                 'serviceTeacher',
                 function ($q) use ($request) {
-                    $q->prodiKetua($request->kd_prodi_filter);
+                    $q->prodi($request->kd_prodi_filter);
                 }
             );
         }
@@ -440,12 +647,12 @@ class CommunityServiceController extends Controller
             ->addColumn('tahun', function ($d) {
                 return $d->academicYear->tahun_akademik . ' - ' . $d->academicYear->semester;
             })
-            ->addColumn('pelaksana', function ($d) {
-                return  '<a href="' . route('teacher.list.show', $d->serviceKetua->teacher->nidn) . '#community-service">'
-                    . $d->serviceKetua->teacher->nama .
-                    '<br><small>NIDN.' . $d->serviceKetua->teacher->nidn . ' / ' . $d->serviceKetua->teacher->latestStatus->studyProgram->singkatan . '</small>
-                                        </a>';
-            })
+            // ->addColumn('pelaksana', function ($d) {
+            //     return  '<a href="' . route('teacher.list.show', $d->serviceKetua->teacher->nidn) . '#community-service">'
+            //         . $d->serviceKetua->teacher->nama .
+            //         '<br><small>NIDN.' . $d->serviceKetua->teacher->nidn . ' / ' . $d->serviceKetua->teacher->latestStatus->studyProgram->singkatan . '</small>
+            //                             </a>';
+            // })
             ->addColumn('aksi', function ($d) {
                 if (!Auth::user()->hasRole('kajur')) {
                     return view('community-service.table-button', compact('d'))->render();

@@ -6,7 +6,7 @@
         <a class="dropdown-item" href="{{ route('community-service.edit',encrypt($d->id)) }}">Sunting</a>
         <form method="POST">
             <input type="hidden" value="{{encrypt($d->id)}}" name="id">
-            <button class="dropdown-item btn-delete" data-dest="{{ route('community-service.destroy',$d->id) }}">Hapus</button>
+            <button class="dropdown-item btn-delete" data-dest="{{ route('community-service.destroy',encrypt($d->id)) }}">Hapus</button>
         </form>
     </div>
 </div>

@@ -32,28 +32,28 @@ class CommunityServiceTeacherSeeder extends Seeder
                 } elseif ($status == 'Ketua' && $anggota > 1) {
                     $sks = $cs->sks_pengabdian * (setting('service_ratio_chief') / 100);
                 } else {
-                    $sks = $cs->sks_pengabdian * ((setting('service_ratio_members') / $anggota) / 100);
+                    $sks = $cs->sks_pengabdian * ((setting('service_ratio_members') / ($anggota - 1)) / 100);
                 }
 
                 $asal       = ['dalam', 'luar'];
                 $rand_asal  = $asal[array_rand($asal)];
                 $nidn       = Teacher::all()->random()->nidn;
 
-                if ($rand_asal == 'dalam' || $status == 'Ketua') {
-                    // $nidn       = Teacher::all()->random()->nidn;
+                if ($rand_asal == 'dalam') {
+                    $nidn       = Teacher::all()->random()->nidn;
                     $nama_lain  = null;
                     $asal_lain  = null;
                 } else {
-                    // $nidn       = rand(111111111,999999999);
+                    $nidn       = null;
                     $nama_lain  = $faker->name;
-                    $asal_lain  = 'Luar kampus';
+                    $asal_lain  = 'Luar program studi';
                 }
 
                 DB::table('community_service_teachers')->insert([
                     'id_pengabdian' => $cs->id,
                     'nidn'          => $nidn,
-                    // 'nama_lain'     => $nama_lain,
-                    // 'asal_lain'     => $asal_lain,
+                    'nama'          => $nama_lain,
+                    'asal'          => $asal_lain,
                     'status'        => $status,
                     'sks'           => $sks
                 ]);

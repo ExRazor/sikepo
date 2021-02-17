@@ -16,8 +16,9 @@ class CreateCommunityServicesTable extends Migration
         Schema::create('community_services', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_ta');
-            $table->string('tema_pengabdian');
             $table->string('judul_pengabdian');
+            $table->string('tema_pengabdian');
+            $table->string('tingkat_pengabdian');
             $table->string('sks_pengabdian');
             $table->char('sesuai_prodi', 1)->nullable();
             $table->string('sumber_biaya');

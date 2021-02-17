@@ -40,12 +40,12 @@ class DatabaseSeeder extends Seeder
         $this->call(ResearchSeeder::class);
         $this->call(ResearchTeacherSeeder::class);
         $this->call(ResearchStudentsSeeder::class);
-        // $this->call(CommunityServiceSeeder::class);
-        // $this->call(CommunityServiceTeacherSeeder::class);
-        // $this->call(CommunityServiceStudentsSeeder::class);
+        $this->call(CommunityServiceSeeder::class);
+        $this->call(CommunityServiceTeacherSeeder::class);
+        $this->call(CommunityServiceStudentsSeeder::class);
         // $this->call(EwmpSeeder::class);
-        $this->call(PublicationSeeder::class);
-        $this->call(PublicationMemberSeeder::class);
+        // $this->call(PublicationSeeder::class);
+        // $this->call(PublicationMemberSeeder::class);
         // $this->call(TeacherPublicationSeeder::class);
         // $this->call(TeacherPublicationMemberSeeder::class);
         // $this->call(TeacherPublicationStudentSeeder::class);

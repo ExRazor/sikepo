@@ -355,8 +355,10 @@ Route::middleware('auth')->group(function () {
     //Community Service
     Route::resource('community-service', 'CommunityServiceController');
     Route::post('community-service/export', 'CommunityServiceController@export')->name('community-service.export');
-    Route::get('community-service/delete_teacher/{id}', 'CommunityServiceController@destroy_teacher')->name('community-service.teacher.delete');
-    Route::get('community-service/delete_student/{id}', 'CommunityServiceController@destroy_students')->name('community-service.students.delete');
+    Route::post('community-service/teacher', 'CommunityServiceController@store_teacher')->name('community-service.teacher.store');
+    Route::delete('community-service/teacher/{id}', 'CommunityServiceController@destroy_teacher')->name('community-service.teacher.destroy');
+    Route::post('community-service/student', 'CommunityServiceController@store_student')->name('community-service.student.store');
+    Route::delete('community-service/student/{id}', 'CommunityServiceController@destroy_students')->name('community-service.student.destroy');
 
     //Publication
     // Route::prefix('publication')->name('publication.')->middleware('role:admin,kaprodi,kajur')->group(function () {
@@ -515,6 +517,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/download/teacher/{filename}', 'TeacherController@download')->name('teacher.download');
     Route::get('/download/teacher/achievement/{filename}', 'TeacherAchievementController@download')->name('teacher.achievement.download');
     Route::get('/download/research/{filename}', 'DownloadController@research')->name('download.research');
+    Route::get('/download/community-service/{filename}', 'DownloadController@communityService')->name('download.community-service');
     Route::get('/download/avatar', 'DownloadController@avatar')->name('download.avatar');
 
     //Penilaian
