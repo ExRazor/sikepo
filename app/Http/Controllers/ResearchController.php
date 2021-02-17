@@ -597,14 +597,16 @@ class ResearchController extends Controller
         //Hitung total anggota
         $count_anggota = $query_anggota->count();
 
-        //Hitung SKS Anggota & Ketua
-        $rasio_anggota = (setting('research_ratio_members') / $count_anggota) / 100;
-        $sks_anggota   = floatval($penelitian->sks_penelitian) * $rasio_anggota;
+        //Hitung dan update SKS Ketua
         $sks_ketua     = (floatval($penelitian->sks_penelitian) * setting('research_ratio_chief')) / 100;
-
-        //Update SKS
         $query_ketua->update(['sks' => $sks_ketua]);
-        $query_anggota->update(['sks' => $sks_anggota]);
+
+        //Hitung dan update SKS Anggota
+        if ($count_anggota > 0) {
+            $rasio_anggota = (setting('research_ratio_members') / $count_anggota) / 100;
+            $sks_anggota   = floatval($penelitian->sks_penelitian) * $rasio_anggota;
+            $query_anggota->update(['sks' => $sks_anggota]);
+        }
     }
 
     public function datatable(Request $request)
