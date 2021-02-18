@@ -390,21 +390,23 @@ class PublicationController extends Controller
             $status = $request->status_penulis;
         }
 
-        if (auth()->user()->hasRole('dosen') && $request->status_penulis != 'Sendiri') {
-            PublicationMember::updateOrCreate(
-                [
-                    'id_publikasi' => $id_publikasi,
-                    'nidn'         => auth()->user()->username,
-                ],
-                [
-                    'nim'           => null,
-                    'nama'          => null,
-                    'asal'          => null,
-                    'status'        => 'Dosen',
-                ]
-            );
-        } else {
-            PublicationMember::where('id_publikasi', $id_publikasi)->where('nidn', auth()->user()->username)->delete();
+        if (auth()->user()->hasRole('dosen')) {
+            if ($request->status_penulis != 'Sendiri') {
+                PublicationMember::updateOrCreate(
+                    [
+                        'id_publikasi' => $id_publikasi,
+                        'nidn'         => auth()->user()->username,
+                    ],
+                    [
+                        'nim'           => null,
+                        'nama'          => null,
+                        'asal'          => null,
+                        'status'        => 'Dosen',
+                    ]
+                );
+            } else {
+                PublicationMember::where('id_publikasi', $id_publikasi)->where('nidn', auth()->user()->username)->delete();
+            }
         }
 
         return [
