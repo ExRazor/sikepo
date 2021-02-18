@@ -16,13 +16,25 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             [
                 // 'id'         => Str::uuid()->toString(),
+                'username'   => 'dikadikkun',
+                'password'   => Hash::make('admin123'),
+                'role'       => 'admin',
+                'kd_prodi'   => null,
+                'name'       => 'Siddik Hatala',
+                'foto'       => 'administrator.jpg',
+                'defaultpass' => false,
+                'is_active'  => true,
+                'created_at' => now()
+            ],
+            [
+                // 'id'         => Str::uuid()->toString(),
                 'username'   => 'admin',
                 'password'   => Hash::make('admin123'),
                 'role'       => 'admin',
                 'kd_prodi'   => null,
                 'name'       => 'Administrator',
-                'foto'       => 'administrator.jpg',
-                'defaultpass'=> false,
+                'foto'       => null,
+                'defaultpass' => false,
                 'is_active'  => true,
                 'created_at' => now()
             ],
