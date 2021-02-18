@@ -63,7 +63,7 @@
                         @foreach ($publikasiKetua as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.publication.show',encode_id($p->id))}}">{{ $p->judul }}</a>
+                                <a href="{{route('profile.publication.show',encrypt($p->id))}}">{{ $p->judul }}</a>
                             </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
                             <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>
@@ -80,8 +80,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
                                         <a class="dropdown-item" href="{{ route('profile.publication.edit',encode_id($p->id)) }}">Sunting</a>
                                         <form method="POST">
-                                            <input type="hidden" value="{{encode_id($p->id)}}" name="id">
-                                            <button class="dropdown-item btn-delete" data-dest="{{ route('profile.publication.delete') }}">Hapus</button>
+                                            <button class="dropdown-item btn-delete" data-dest="{{ route('publication.destroy',encrypt($p->id)) }}">Hapus</button>
                                         </form>
                                     </div>
                                 </div>
@@ -114,7 +113,7 @@
                         @foreach ($publikasiAnggota as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.publication.show',encode_id($p->id))}}">{{ $p->judul }}</a>
+                                <a href="{{route('profile.publication.show',encrypt($p->id))}}">{{ $p->judul }}</a>
                             </td>
                             <td>{{ $p->publicationCategory->nama }}</td>
                             <td class="text-center">{{ $p->academicYear->tahun_akademik.' - '.$p->academicYear->semester }}</td>

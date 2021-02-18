@@ -32,17 +32,20 @@ class PublicationMemberSeeder extends Seeder
                 $cek = rand(0, 2); // 0 = dosen || 1 = mahasiswa || 2 = lainnya
 
                 if ($cek == 0) {
-                    $id_unik = Teacher::all()->random()->nidn;
+                    $nidn    = Teacher::all()->random()->nidn;
+                    $nim     = null;
                     $nama    = null;
                     $asal    = null;
                     $status  = 'Dosen';
                 } else if ($cek == 1) {
-                    $id_unik = Student::all()->random()->nim;
-                    $nama    = null;
-                    $asal    = null;
-                    $status  = 'Mahasiswa';
+                    $nidn     = null;
+                    $nim      = Student::all()->random()->nim;
+                    $nama     = null;
+                    $asal     = null;
+                    $status   = 'Mahasiswa';
                 } else if ($cek == 2) {
-                    $id_unik = null;
+                    $nidn    = null;
+                    $nim     = null;
                     $nama    = $faker->name;
                     $asal    = $faker->address;
                     $status  = 'Lainnya';
@@ -50,7 +53,8 @@ class PublicationMemberSeeder extends Seeder
 
                 DB::table('publication_members')->insert([
                     'id_publikasi'      => $d->id,
-                    'id_unik'           => $id_unik,
+                    'nidn'              => $nidn,
+                    'nim'               => $nim,
                     'nama'              => $nama,
                     'asal'              => $asal,
                     'status'            => $status,

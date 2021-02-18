@@ -16,9 +16,10 @@ class CreatePublicationMembersTable extends Migration
         Schema::create('publication_members', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_publikasi');
-            $table->char('id_unik', 12)->nullable();
-            $table->string('nama')->nullable();
-            $table->string('asal')->nullable();
+            $table->char('nidn', 12)->nullable()->default(null);
+            $table->char('nim', 10)->nullable()->default(null);
+            $table->string('nama')->nullable()->default(null);
+            $table->string('asal')->nullable()->default(null);
             $table->string('status');
             $table->boolean('penulis_utama')->nullable()->default(false);
             $table->timestamps();
@@ -26,6 +27,8 @@ class CreatePublicationMembersTable extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('id_publikasi')->references('id')->on('publications')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nidn')->references('nidn')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nim')->references('nim')->on('students')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

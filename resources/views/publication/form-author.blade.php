@@ -36,10 +36,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row mg-t-20 tipe-non-lainnya" style="display:none;">
-                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> <span class="idunik_teks"></span>:</label>
+                    <div class="form-group row mg-t-20 tipe-dosen" style="display:none;">
+                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> NIDN:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="penulis_idunik">
+                            <input type="text" class="form-control" name="penulis_nidn">
+                        </div>
+                    </div>
+                    <div class="form-group row mg-t-20 tipe-mahasiswa" style="display:none;">
+                        <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> NIM:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="penulis_nim">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20 tipe-lainnya" style="display:none;">
@@ -69,45 +75,54 @@
 <script>
     $('#modal-publication-author').on('change', 'input[name=status_penulis]', function() {
         var val = $(this).val();
-
-        var lainnya     = $('.tipe-lainnya');
-        var nonlainnya  = $('.tipe-non-lainnya');
-
-        if(val=='Lainnya') {
-            nonlainnya.hide();
-            nonlainnya.find('input').prop('disabled',true);
-            nonlainnya.find('input').prop('required',false);
-
-            lainnya.show();
-            lainnya.find('input').prop('disabled',false);
-            lainnya.find('input').prop('required',true);
-        } else if (val=='') {
-            nonlainnya.hide();
-            lainnya.hide();
-            nonlainnya.find('input').prop('disabled',true);
-            nonlainnya.find('input').prop('required',false);
-            lainnya.find('input').prop('disabled',true);
-            lainnya.find('input').prop('required',false);
-        } else {
-            lainnya.hide();
-            lainnya.find('input').prop('disabled',true);
-            lainnya.find('input').prop('required',false);
-
-            nonlainnya.show();
-            nonlainnya.find('input').prop('disabled',false);
-            nonlainnya.find('input').prop('required',true);
-
-            if(val=='Dosen') {
-                nonlainnya.find('span.idunik_teks').text('NIDN');
-                nonlainnya.find('input[name=penulis_idunik]').attr('placeholder','Tuliskan NIDN');
-            }
-
-            if(val=='Mahasiswa') {
-                nonlainnya.find('span.idunik_teks').text('NIM');
-                nonlainnya.find('input[name=penulis_idunik]').attr('placeholder','Tuliskan NIM');
-            }
-        }
+        form_penulis(val);
     });
+
+    function form_penulis(val) {
+
+        var cont             = $('#modal-publication-author');
+        var dosen_form       = cont.find('.tipe-dosen');
+        var mahasiswa_form   = cont.find('.tipe-mahasiswa');
+        var lainnya_form     = cont.find('.tipe-lainnya');
+
+        switch(val) {
+            case 'Dosen':
+                dosen_form.show();
+                dosen_form.find('input').prop('disabled',false).prop('required',true);
+
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            case 'Mahasiswa':
+                mahasiswa_form.show();
+                mahasiswa_form.find('input').prop('disabled',false).prop('required',true);
+
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            case 'Lainnya':
+                lainnya_form.show();
+                lainnya_form.find('input').prop('disabled',false).prop('required',true);
+
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            default:
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+        }
+    }
 
     $('#modal-publication-author').on('hidden.bs.modal', function () {
         $(this).find('form').trigger('reset');

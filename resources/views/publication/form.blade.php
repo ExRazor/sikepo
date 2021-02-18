@@ -166,21 +166,24 @@
                             <div id="penulisUtama">
                                 <div class="row mb-3 justify-content-center align-items-center">
                                     <div class="col-md-3 mb-3">
-                                        <select class="form-control mb-2" name="status_penulis_utama" id="status_penulis_utama" required>
+                                        <select class="form-control mb-2" name="status_penulis" id="status_penulis" onchange="form_penulis()" required>
                                             <option value="">- Pilih Data Penulis -</option>
-                                            <option value="Dosen" {{ isset($data) && $data->penulisUtama->status=='Dosen' ? 'selected' : '' }}>Dosen Jurusan</option>
-                                            <option value="Mahasiswa" {{ isset($data) && $data->penulisUtama->status=='Mahasiswa' ? 'selected' : '' }}>Mahasiswa Jurusan</option>
-                                            <option value="Lainnya" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'selected' : '' }}>Luar Jurusan</option>
+                                            <option value="Dosen" {{ (isset($data) && $data->penulisUtama->status=='Dosen') || old('status_penulis') == 'Dosen' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Mahasiswa" {{ (isset($data) && $data->penulisUtama->status=='Mahasiswa') || old('status_penulis') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa Jurusan</option>
+                                            <option value="Lainnya" {{ (isset($data) && $data->penulisUtama->status=='Lainnya') || old('status_penulis') == 'Lainnya' ? 'selected' : '' }}>Luar Jurusan</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 mb-3 tipe-non-lainnya" style="{{ isset($data) && $data->penulisUtama->status!='Lainnya' ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="utama_idunik" value="{{ isset($data) ? $data->penulisUtama->id_unik : Request::old('utama_idunik')}}" placeholder="NIDN/NIM" {{ isset($data) && ($data->penulisUtama->status=='Dosen' || $data->penulisUtama->status=='Mahasiswa' ) ? 'required' : '' }}>
+                                    <div class="col-md-3 mb-3 tipe-dosen" style="{{ isset($data) && $data->penulisUtama->status=='Dosen' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="penulis_nidn" value="{{ isset($data) ? $data->penulisUtama->nidn : Request::old('penulis_nidn')}}" placeholder="NIDN" {{ isset($data) && $data->penulisUtama->status=='Dosen' ? 'required' : '' }}>
+                                    </div>
+                                    <div class="col-md-3 mb-3 tipe-mahasiswa" style="{{ isset($data) && $data->penulisUtama->status=='Mahasiswa' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="penulis_nim" value="{{ isset($data) ? $data->penulisUtama->nim : Request::old('penulis_nim')}}" placeholder="NIM" {{ isset($data) && $data->penulisUtama->status=='Mahasiswa' ? 'required' : '' }}>
                                     </div>
                                     <div class="col-md-5 mb-3 tipe-lainnya" style="{{ isset($data) && $data->penulisUtama->status=='Lainnya' ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="utama_nama" value="{{ isset($data) ? $data->penulisUtama->nama : Request::old('utama_nama')}}" placeholder="Nama Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
+                                        <input class="form-control" type="text" name="penulis_nama" value="{{ isset($data) ? $data->penulisUtama->nama : Request::old('penulis_nama')}}" placeholder="Nama Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
                                     </div>
                                     <div class="col-md-4 mb-3 tipe-lainnya" style="{{ isset($data) && $data->penulisUtama->status=='Lainnya' ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="utama_asal" value="{{ isset($data) ? $data->penulisUtama->asal : Request::old('utama_asal')}}" placeholder="Asal Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
+                                        <input class="form-control" type="text" name="penulis_asal" value="{{ isset($data) ? $data->penulisUtama->asal : Request::old('penulis_asal')}}" placeholder="Asal Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
                                     </div>
                                 </div>
                             </div>
@@ -205,36 +208,51 @@
 
 @push('custom-js')
 <script>
-    $('#status_penulis_utama').on('change', function() {
-        var val = $(this).val();
+    form_penulis();
+    function form_penulis() {
 
-        var lainnya     = $('.tipe-lainnya');
-        var nonlainnya  = $('.tipe-non-lainnya');
+        var val = $('#status_penulis').val();
+        var dosen_form       = $('.tipe-dosen');
+        var mahasiswa_form   = $('.tipe-mahasiswa');
+        var lainnya_form     = $('.tipe-lainnya');
 
-        if(val=='Lainnya') {
-            nonlainnya.hide();
-            nonlainnya.find('input').prop('disabled',true);
-            nonlainnya.find('input').prop('required',false);
+        switch(val) {
+            case 'Dosen':
+                dosen_form.show();
+                dosen_form.find('input').prop('disabled',false).prop('required',true);
 
-            lainnya.show();
-            lainnya.find('input').prop('disabled',false);
-            lainnya.find('input').prop('required',true);
-        } else if (val=='') {
-            nonlainnya.hide();
-            lainnya.hide();
-            nonlainnya.find('input').prop('disabled',true);
-            nonlainnya.find('input').prop('required',false);
-            lainnya.find('input').prop('disabled',true);
-            lainnya.find('input').prop('required',false);
-        } else {
-            lainnya.hide();
-            lainnya.find('input').prop('disabled',true);
-            lainnya.find('input').prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            case 'Mahasiswa':
+                mahasiswa_form.show();
+                mahasiswa_form.find('input').prop('disabled',false).prop('required',true);
 
-            nonlainnya.show();
-            nonlainnya.find('input').prop('disabled',false);
-            nonlainnya.find('input').prop('required',true);
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            case 'Lainnya':
+                lainnya_form.show();
+                lainnya_form.find('input').prop('disabled',false).prop('required',true);
+
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            default:
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
         }
-    });
+    }
 </script>
 @endpush

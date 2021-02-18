@@ -23,6 +23,7 @@ class PublicationController extends Controller
     public function __construct()
     {
         $method = [
+            'index',
             'create',
             'edit',
         ];
@@ -34,29 +35,24 @@ class PublicationController extends Controller
     {
         $studyProgram = StudyProgram::where('kd_jurusan', setting('app_department_id'))->get();
 
-        // $data = Publication::whereHas(
-        //     'publikasiNotLainnya',
-        //     function ($q) {
-        //         $q->jurusan(setting('app_department_id'), 'Dosen');
-        //     }
-        // )->count();
-
-        // dd($data);
-
         return view('publication.index', compact(['studyProgram']));
     }
 
     public function index_teacher()
     {
-        $publikasiKetua    = Publication::where('nidn', Auth::user()->username)->get();
+        $publikasiKetua    = Publication::whereHas(
+            'publicationMembers',
+            function ($query) {
+                $query->dosen(Auth::user()->username)->where('penulis_utama', true);
+            }
+        )->get();
 
         $publikasiAnggota  = Publication::whereHas(
             'publicationMembers',
             function ($query) {
-                $query->where('nidn', Auth::user()->username);
+                $query->dosen(Auth::user()->username)->where('penulis_utama', false);
             }
-        )
-            ->get();
+        )->get();
 
         return view('teacher-view.publication.index', compact(['publikasiKetua', 'publikasiAnggota']));
     }
@@ -79,7 +75,6 @@ class PublicationController extends Controller
 
     public function show($id)
     {
-
         $id   = decrypt($id);
         $data = Publication::find($id);
 
@@ -113,12 +108,13 @@ class PublicationController extends Controller
         $id   = decrypt($id);
 
         $jenis        = PublicationCategory::all();
-        $data         = Publication::with('teacher', 'publicationStudents')->where('id', $id)->first();
-        $teacher      = Teacher::whereHas('latestStatus.studyProgram', function ($q) use ($data) {
-            $q->where('kd_prodi', $data->teacher->latestStatus->studyProgram->kd_prodi);
-        })->get();
+        $data         = Publication::where('id', $id)->first();
 
-        return view('teacher-view.publication.form', compact(['jenis', 'data', 'teacher']));
+        if (auth()->user()->username != $data->penulisUtama->nidn) {
+            abort(404);
+        }
+
+        return view('teacher-view.publication.form', compact(['jenis', 'data']));
     }
 
     public function store(PublicationRequest $request)
@@ -140,33 +136,17 @@ class PublicationController extends Controller
             $data->save();
 
             //Penulis Utama
-            if ($request->status_penulis_utama == 'Lainnya') {
-                $utama                = new PublicationMember;
-                $utama->id_publikasi  = $data->id;
-                $utama->id_unik       = null;
-                $utama->nama          = $request->utama_nama;
-                $utama->asal          = $request->utama_asal;
-                $utama->status        = $request->status_penulis_utama;
-                $utama->penulis_utama = true;
-                $utama->save();
-            } else {
-                if ($request->status_penulis_utama == 'Dosen') {
-                    if (!Teacher::find($request->utama_idunik))
-                        throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-                } else if ($request->status_penulis_utama == 'Mahasiswa') {
-                    if (!Student::find($request->utama_idunik))
-                        throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
-                }
+            $validated_member = $this->validate_member($data->id, $request);
 
-                $utama                = new PublicationMember;
-                $utama->id_publikasi  = $data->id;
-                $utama->id_unik       = $request->utama_idunik;
-                $utama->nama          = null;
-                $utama->asal          = null;
-                $utama->status        = $request->status_penulis_utama;
-                $utama->penulis_utama = true;
-                $utama->save();
-            }
+            $utama                = new PublicationMember;
+            $utama->id_publikasi  = $data->id;
+            $utama->nidn          = $validated_member['nidn'];
+            $utama->nim           = $validated_member['nim'];
+            $utama->nama          = $validated_member['nama'];
+            $utama->asal          = $validated_member['asal'];
+            $utama->status        = $validated_member['status'];
+            $utama->penulis_utama = true;
+            $utama->save();
 
             //Activity Log
             $property = [
@@ -178,9 +158,9 @@ class PublicationController extends Controller
 
             DB::commit();
             if (Auth::user()->hasRole('dosen')) {
-                return redirect()->route('profile.publication')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+                return redirect()->route('profile.publication.show', encrypt($data->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             } else {
-                return redirect()->route('publication.index')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+                return redirect()->route('publication.show', encrypt($data->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -208,40 +188,19 @@ class PublicationController extends Controller
             $data->tautan           = $request->tautan;
             $data->save();
 
-            //Penulis Utama
+            //Update Penulis Utama
             PublicationMember::where('id_publikasi', $data->id)->where('penulis_utama', true)->delete();
-            if ($request->status_penulis_utama == 'Lainnya') {
-                $utama                = new PublicationMember;
-                $utama->id_publikasi  = $id;
-                $utama->id_unik       = null;
-                $utama->nama          = $request->utama_nama;
-                $utama->asal          = $request->utama_asal;
-                $utama->status        = $request->status_penulis_utama;
-                $utama->penulis_utama = true;
-                $utama->save();
-            } else {
-                if ($request->status_penulis_utama == 'Dosen') {
-                    if (!Teacher::find($request->utama_idunik))
-                        throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-                } else if ($request->status_penulis_utama == 'Mahasiswa') {
-                    if (!Student::find($request->utama_idunik))
-                        throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
-                }
+            $validated_member = $this->validate_member($data->id, $request);
 
-                $cekPenulisLain = PublicationMember::where('id_publikasi', $data->id)->where('id_unik', $request->utama_idunik)->exists();
-                if ($cekPenulisLain) {
-                    throw new \Exception('NIDN/NIM pada penulis utama sudah ada. Periksa kembali.');
-                }
-
-                $utama                = new PublicationMember;
-                $utama->id_publikasi  = $id;
-                $utama->id_unik       = $request->utama_idunik;
-                $utama->nama          = null;
-                $utama->asal          = null;
-                $utama->status        = $request->status_penulis_utama;
-                $utama->penulis_utama = true;
-                $utama->save();
-            }
+            $utama                = new PublicationMember;
+            $utama->id_publikasi  = $data->id;
+            $utama->nidn          = $validated_member['nidn'];
+            $utama->nim           = $validated_member['nim'];
+            $utama->nama          = $validated_member['nama'];
+            $utama->asal          = $validated_member['asal'];
+            $utama->status        = $validated_member['status'];
+            $utama->penulis_utama = true;
+            $utama->save();
 
             //Activity Log
             $property = [
@@ -314,38 +273,17 @@ class PublicationController extends Controller
             $publikasi = Publication::find($id_publikasi);
 
             //Start Query
-            if ($request->status_penulis == 'Lainnya') {
-                $penulis                = new PublicationMember;
-                $penulis->id_publikasi  = $id_publikasi;
-                $penulis->id_unik       = null;
-                $penulis->nama          = $request->penulis_nama;
-                $penulis->asal          = $request->penulis_asal;
-                $penulis->status        = $request->status_penulis;
-                $penulis->penulis_utama = false;
-                $penulis->save();
-            } else {
-                if ($request->status_penulis == 'Dosen') {
-                    if (!Teacher::find($request->penulis_idunik))
-                        throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-                } else if ($request->status_penulis == 'Mahasiswa') {
-                    if (!Student::find($request->penulis_idunik))
-                        throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
-                }
+            $validated_member = $this->validate_member($publikasi->id, $request);
 
-                $cekPenulisLain = PublicationMember::where('id_publikasi', $id_publikasi)->where('id_unik', $request->penulis_idunik)->first();
-                if ($cekPenulisLain) {
-                    throw new \Exception('NIDN/NIM sudah ada. Periksa kembali.');
-                }
-
-                $penulis                = new PublicationMember;
-                $penulis->id_publikasi  = $id_publikasi;
-                $penulis->id_unik       = $request->penulis_idunik;
-                $penulis->nama          = null;
-                $penulis->asal          = null;
-                $penulis->status        = $request->status_penulis;
-                $penulis->penulis_utama = false;
-                $penulis->save();
-            }
+            $penulis                = new PublicationMember;
+            $penulis->id_publikasi  = $publikasi->id;
+            $penulis->nidn          = $validated_member['nidn'];
+            $penulis->nim           = $validated_member['nim'];
+            $penulis->nama          = $validated_member['nama'];
+            $penulis->asal          = $validated_member['asal'];
+            $penulis->status        = $validated_member['status'];
+            $penulis->penulis_utama = false;
+            $penulis->save();
 
             //Activity Log
             $property = [
@@ -408,6 +346,74 @@ class PublicationController extends Controller
                 'message' => $e->getMessage(),
             ], 400);
         }
+    }
+
+    public function validate_member($id_publikasi, $request)
+    {
+        if ($request->status_penulis == 'Sendiri') {
+            $nidn = auth()->user()->username;
+            $nim  = null;
+            $nama = null;
+            $asal = null;
+            $status = 'Dosen';
+        } else if ($request->status_penulis == 'Dosen') {
+            if (!Teacher::find($request->penulis_nidn))
+                throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+
+            $cekPenulisLain = PublicationMember::where('id_publikasi', $id_publikasi)->where('nim', $request->penulis_nidn)->exists();
+            if ($cekPenulisLain)
+                throw new \Exception('NIDN sudah ada. Periksa kembali.');
+
+            $nidn = $request->penulis_nidn;
+            $nim  = null;
+            $nama = null;
+            $asal = null;
+            $status = $request->status_penulis;
+        } else if ($request->status_penulis == 'Mahasiswa') {
+            if (!Student::find($request->penulis_nim))
+                throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+
+            $cekPenulisLain = PublicationMember::where('id_publikasi', $id_publikasi)->where('nim', $request->penulis_nim)->exists();
+            if ($cekPenulisLain)
+                throw new \Exception('NIM sudah ada. Periksa kembali.');
+
+            $nidn  = null;
+            $nim   = $request->penulis_nim;
+            $nama  = null;
+            $asal  = null;
+            $status = $request->status_penulis;
+        } else {
+            $nidn   = null;
+            $nim    = null;
+            $nama   = $request->penulis_nama;
+            $asal   = $request->penulis_asal;
+            $status = $request->status_penulis;
+        }
+
+        if (auth()->user()->hasRole('dosen') && $request->status_penulis != 'Sendiri') {
+            PublicationMember::updateOrCreate(
+                [
+                    'id_publikasi' => $id_publikasi,
+                    'nidn'         => auth()->user()->username,
+                ],
+                [
+                    'nim'           => null,
+                    'nama'          => null,
+                    'asal'          => null,
+                    'status'        => 'Dosen',
+                ]
+            );
+        } else {
+            PublicationMember::where('id_publikasi', $id_publikasi)->where('nidn', auth()->user()->username)->delete();
+        }
+
+        return [
+            'nidn' => $nidn,
+            'nim'  => $nim,
+            'nama' => $nama,
+            'asal' => $asal,
+            'status' => $status,
+        ];
     }
 
     public function datatable(Request $request)

@@ -8,7 +8,8 @@ class PublicationMember extends Model
 {
     protected $fillable = [
         'id_publikasi',
-        'id_unik',
+        'nidn',
+        'nim',
         'nama',
         'asal',
         'status',
@@ -27,22 +28,22 @@ class PublicationMember extends Model
 
     public function teacher()
     {
-        return $this->belongsTo('App\Models\Teacher', 'id_unik');
+        return $this->belongsTo('App\Models\Teacher', 'nidn');
     }
 
     public function student()
     {
-        return $this->belongsTo('App\Models\Student', 'id_unik');
+        return $this->belongsTo('App\Models\Student', 'nim');
     }
 
     public function scopeDosen($query, $nidn)
     {
-        return $query->where('id_unik', $nidn);
+        return $query->where('nidn', $nidn);
     }
 
     public function scopeMahasiswa($query, $nim)
     {
-        return $query->where('id_unik', $nim);
+        return $query->where('nim', $nim);
     }
 
     public function scopeJurusan($query, $kd_jurusan, $type)
@@ -61,7 +62,7 @@ class PublicationMember extends Model
         );
     }
 
-    public function scopeProdi($query, $kd_prodi, $type, $status = null)
+    public function scopeProdi($query, $kd_prodi, $type)
     {
         if ($type == 'Dosen') {
             $queryRelation = 'teacher.latestStatus.studyProgram';

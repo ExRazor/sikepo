@@ -47,7 +47,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="publication_form" action="{{route('profile.publication.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="publication_form" action="@isset($data) {{route('publication.update',encrypt($data->id))}} @else {{route('publication.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-9 mx-auto">
@@ -58,7 +58,7 @@
                             @else
                                 @method('post')
                             @endif
-                            <input type="hidden" name="nidn" value="{{Auth::user()->username}}">
+                            {{-- <input type="hidden" name="nidn" value="{{Auth::user()->username}}"> --}}
                             <div class="row mb-3">
                                 <label class="col-3 form-control-label">Jenis Publikasi: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
@@ -139,70 +139,31 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Daftar Dosen</h3>
-                            @isset($data)
-                            <div id="daftarDosen">
-                                @foreach ($data->publicationMembers as $i => $pm)
+                        <div class="col-md-9 mx-auto">
+                            <h3 class="text-center mb-3">Penulis Utama</h3>
+                            <div id="penulisUtama">
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('publication.teacher.delete.member',encrypt($data->id)) }}" data-id="{{encrypt($pm->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-2">
-                                        <input class="form-control number" type="text" name="anggota_nidn[]" value="{{ $pm->nidn }}" placeholder="NIDN" maxlength="9" readonly>
+                                    <div class="col-md-3 mb-3">
+                                        <select class="form-control mb-2" name="status_penulis" id="status_penulis" onchange="form_penulis()" required>
+                                            <option value="">- Pilih Data Penulis -</option>
+                                            <option value="Sendiri" {{ (isset($data) && $data->penulisUtama->nidn==auth()->user()->username) || old('status_penulis') == 'Sendiri' ? 'selected' : '' }}>Sendiri</option>
+                                            <option value="Dosen" {{ (isset($data) && $data->penulisUtama->status=='Dosen' && $data->penulisUtama->nidn!=auth()->user()->username) || old('status_penulis') == 'Dosen' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Mahasiswa" {{ (isset($data) && $data->penulisUtama->status=='Mahasiswa') || old('status_penulis') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa Jurusan</option>
+                                            <option value="Lainnya" {{ (isset($data) && $data->penulisUtama->status=='Lainnya') || old('status_penulis') == 'Lainnya' ? 'selected' : '' }}>Luar Jurusan</option>
+                                        </select>
                                     </div>
-                                    <div class="col-5">
-                                        <input class="form-control" type="text" name="anggota_nama[]" value="{{ $pm->nama }}" placeholder="Nama Dosen" required>
+                                    <div class="col-md-3 mb-3 tipe-dosen" style="{{ isset($data) && $data->penulisUtama->status=='Dosen' && $data->penulisUtama->nidn != auth()->user()->username ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="penulis_nidn" value="{{ isset($data) && $data->penulisUtama->nidn!=auth()->user()->username ? $data->penulisUtama->nidn : Request::old('penulis_nidn')}}" placeholder="NIDN" {{ isset($data) && $data->penulisUtama->status=='Dosen' ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-4">
-                                        <div id="prodiDsn{{$i}}" class="parsley-select">
-                                            <select class="form-control select-prodi" data-parsley-class-handler="#prodiDsn{{$i}}" data-parsley-errors-container="#errorsProdiDsn{{$i}}" name="anggota_prodi[]" required>
-                                                <option value="{{$pm->kd_prodi}}">{{$pm->studyProgram->nama}}</option>
-                                            </select>
-                                        </div>
-                                        <div id="errorsProdiDsn{{$i}}"></div>
+                                    <div class="col-md-3 mb-3 tipe-mahasiswa" style="{{ isset($data) && $data->penulisUtama->status=='Mahasiswa' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="penulis_nim" value="{{ isset($data) ? $data->penulisUtama->nim : Request::old('penulis_nim')}}" placeholder="NIM" {{ isset($data) && $data->penulisUtama->status=='Mahasiswa' ? 'required' : '' }}>
                                     </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endisset
-                            <div id="panelDosen" data-jumlah="0"></div>
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                <button class="add-dosen btn btn-primary" data-jenis="publikasi"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Daftar Mahasiswa</h3>
-                            @isset($data)
-                            <div id="daftarMahasiswa">
-                                @foreach ($data->publicationStudents as $i => $ps)
-                                <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.publication.delete.student',encrypt($data->id)) }}" data-id="{{encrypt($ps->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-2">
-                                        <input class="form-control number" type="text" name="mahasiswa_nim[]" value="{{ $ps->nim }}" placeholder="NIM" maxlength="9" readonly>
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ isset($data) && $data->penulisUtama->status=='Lainnya' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="penulis_nama" value="{{ isset($data) ? $data->penulisUtama->nama : Request::old('penulis_nama')}}" placeholder="Nama Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-5">
-                                        <input class="form-control" type="text" name="mahasiswa_nama[]" value="{{ $ps->nama }}" placeholder="Nama Mahasiswa" required>
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ isset($data) && $data->penulisUtama->status=='Lainnya' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="penulis_asal" value="{{ isset($data) ? $data->penulisUtama->asal : Request::old('penulis_asal')}}" placeholder="Asal Penulis" {{ isset($data) && $data->penulisUtama->status=='Lainnya' ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-4">
-                                        <div id="prodiMhs{{$i}}" class="parsley-select">
-                                            <select class="form-control select-prodi" data-parsley-class-handler="#prodiMhs{{$i}}" data-parsley-errors-container="#errorsProdiMhs{{$i}}" name="mahasiswa_prodi[]" required>
-                                                <option value="{{$ps->kd_prodi}}">{{$ps->studyProgram->nama}}</option>
-                                            </select>
-                                        </div>
-                                        <div id="errorsProdiMhs{{$i}}"></div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endisset
-                            <div id="panelMahasiswa" data-jumlah="0"></div>
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                <button class="add-mahasiswa btn btn-primary" data-jenis="publikasi"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
                                 </div>
                             </div>
                         </div>
@@ -226,8 +187,51 @@
 
 @push('custom-js')
 <script>
-    var cont  = $('.select2-dosen');
-    var prodi = cont.attr('data-prodi');
-    select2_dosen(cont,prodi);
+    form_penulis();
+    function form_penulis() {
+
+        var val = $('#status_penulis').val();
+        var dosen_form       = $('.tipe-dosen');
+        var mahasiswa_form   = $('.tipe-mahasiswa');
+        var lainnya_form     = $('.tipe-lainnya');
+
+        switch(val) {
+            case 'Dosen':
+                dosen_form.show();
+                dosen_form.find('input').prop('disabled',false).prop('required',true);
+
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            case 'Mahasiswa':
+                mahasiswa_form.show();
+                mahasiswa_form.find('input').prop('disabled',false).prop('required',true);
+
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            case 'Lainnya':
+                lainnya_form.show();
+                lainnya_form.find('input').prop('disabled',false).prop('required',true);
+
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+            default:
+                dosen_form.hide();
+                dosen_form.find('input').prop('disabled',true).prop('required',false);
+                mahasiswa_form.hide();
+                mahasiswa_form.find('input').prop('disabled',true).prop('required',false);
+                lainnya_form.hide();
+                lainnya_form.find('input').prop('disabled',true).prop('required',false);
+            break;
+        }
+    }
 </script>
 @endpush

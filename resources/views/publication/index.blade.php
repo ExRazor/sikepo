@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Publikasi Dosen')
+@section('title', 'Publikasi')
 
 @section('content')
 <div class="br-pageheader">
@@ -18,8 +18,8 @@
     <div class="d-flex pl-0 mb-3">
         <i class="icon fa fa-newspaper"></i>
         <div>
-            <h4>Data Publikasi Dosen</h4>
-            <p class="mg-b-0">Olah data publikasi dosen</p>
+            <h4>Data Publikasi</h4>
+            <p class="mg-b-0">Olah data publikasi</p>
         </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))

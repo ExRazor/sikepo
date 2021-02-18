@@ -501,15 +501,10 @@ Route::middleware('auth')->group(function () {
         Route::get('community-service/delete_student/{id}', 'CommunityServiceController@destroy_students')->name('community-service.students.delete');
 
         //Publication
-        Route::get('publication', 'TeacherPublicationController@index_teacher')->name('publication');
-        Route::get('publication/add', 'TeacherPublicationController@create_teacher')->name('publication.add');
-        Route::get('publication/{id}', 'TeacherPublicationController@show_teacher')->name('publication.show');
-        Route::get('publication/{id}/edit', 'TeacherPublicationController@edit_teacher')->name('publication.edit');
-        Route::post('publication', 'TeacherPublicationController@store')->name('publication.store');
-        Route::put('publication', 'TeacherPublicationController@update')->name('publication.update');
-        Route::delete('publication', 'TeacherPublicationController@destroy')->name('publication.delete');
-        Route::get('publication/delete_member/{id}', 'TeacherPublicationController@destroy_member')->name('publication.delete.member');
-        Route::get('publication/delete_student/{id}', 'TeacherPublicationController@destroy_student')->name('publication.delete.student');
+        Route::get('publication', 'PublicationController@index_teacher')->name('publication');
+        Route::get('publication/add', 'PublicationController@create_teacher')->name('publication.add');
+        Route::get('publication/{id}', 'PublicationController@show_teacher')->name('publication.show');
+        Route::get('publication/{id}/edit', 'PublicationController@edit_teacher')->name('publication.edit');
     });
 
     //Download

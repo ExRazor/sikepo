@@ -24,7 +24,7 @@
         <i class="icon fa fa-newspaper"></i>
         <div>
             <h4>Rincian Publikasi</h4>
-            <p class="mg-b-0">Rincian data publikasi dosen</p>
+            <p class="mg-b-0">Rincian data publikasi</p>
         </div>
     </div>
     @if(!Auth::user()->hasRole('kajur'))
@@ -77,9 +77,9 @@
                                                 {{$data->penulisUtama->nama.' ('.$data->penulisUtama->asal.')'}}
                                             @else
                                                 @if($data->penulisUtama->teacher)
-                                                    <a href={{route('teacher.list.show',$data->penulisUtama->id_unik)}}>{{$data->penulisUtama->teacher->nama.' ('.$data->penulisUtama->status.' - '.$data->penulisUtama->teacher->latestStatus->studyProgram->singkatan.')'}}</a>
+                                                    <a href={{route('teacher.list.show',$data->penulisUtama->nidn)}}>{{$data->penulisUtama->teacher->nama.' ('.$data->penulisUtama->status.' - '.$data->penulisUtama->teacher->latestStatus->studyProgram->singkatan.')'}}</a>
                                                 @else
-                                                <a href={{route('student.list.show',encode_id($data->penulisUtama->id_unik))}}>{{$data->penulisUtama->student->nama.' ('.$data->penulisUtama->status.' - '.$data->penulisUtama->student->studyProgram->singkatan.')'}}</a>
+                                                <a href={{route('student.list.show',encode_id($data->penulisUtama->nim))}}>{{$data->penulisUtama->student->nama.' ('.$data->penulisUtama->status.' - '.$data->penulisUtama->student->studyProgram->singkatan.')'}}</a>
                                                 @endif
                                             @endif
                                             </strong>
@@ -92,9 +92,9 @@
                                                     {{$pa->nama.' ('.$pa->asal.')'}}
                                                 @else
                                                     @if($pa->teacher)
-                                                        <a href={{route('teacher.list.show',$pa->id_unik)}}>{{$pa->teacher->nama.' ('.$pa->status.' - '.$pa->teacher->latestStatus->studyProgram->singkatan.')'}}</a>
+                                                        <a href={{route('teacher.list.show',$pa->nidn)}}>{{$pa->teacher->nama.' ('.$pa->status.' - '.$pa->teacher->latestStatus->studyProgram->singkatan.')'}}</a>
                                                     @else
-                                                        <a href={{route('student.list.show',encode_id($pa->id_unik))}}>{{$pa->student->nama.' ('.$pa->status.' - '.$pa->student->studyProgram->singkatan.')'}}</a>
+                                                        <a href={{route('student.list.show',encode_id($pa->nim))}}>{{$pa->student->nama.' ('.$pa->status.' - '.$pa->student->studyProgram->singkatan.')'}}</a>
                                                     @endif
                                                 @endif
                                             </div>

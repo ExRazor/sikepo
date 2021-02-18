@@ -23,23 +23,32 @@ class PublicationMemberRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->status_penulis == 'Lainnya') {
-            $penulis_idunik = 'nullable';
-            $penulis_nama   = 'required';
-            $penulis_asal   = 'required';
-        } else if ($this->status_penulis == '') {
-            $penulis_idunik = 'nullable';
+        if ($this->status_penulis == 'Dosen') {
+            $penulis_nidn   = 'required';
+            $penulis_nim    = 'nullable';
             $penulis_nama   = 'nullable';
             $penulis_asal   = 'nullable';
+        } else if ($this->status_penulis == 'Mahasiswa') {
+            $penulis_nidn   = 'nullable';
+            $penulis_nim    = 'required';
+            $penulis_nama   = 'nullable';
+            $penulis_asal   = 'nullable';
+        } else if ($this->status_penulis == 'Lainnya') {
+            $penulis_nidn   = 'nullable';
+            $penulis_nim    = 'nullable';
+            $penulis_nama   = 'required';
+            $penulis_asal   = 'required';
         } else {
-            $penulis_idunik = 'required';
+            $penulis_nidn   = 'nullable';
+            $penulis_nim    = 'nullable';
             $penulis_nama   = 'nullable';
             $penulis_asal   = 'nullable';
         }
 
         return [
             'status_penulis' => 'required',
-            'penulis_idunik' => $penulis_idunik . '|numeric',
+            'penulis_nidn'   => $penulis_nidn . '|numeric',
+            'penulis_nim'    => $penulis_nim . '|numeric',
             'penulis_nama'   => $penulis_nama,
             'penulis_asal'   => $penulis_asal,
         ];
@@ -47,15 +56,10 @@ class PublicationMemberRequest extends FormRequest
 
     public function attributes()
     {
-        if ($this->status_penulis == 'Dosen') {
-            $nidn_nim = 'NIDN';
-        } else {
-            $nidn_nim = 'NIM';
-        }
-
         return [
             'status_penulis' => 'Status Penulis',
-            'penulis_idunik' => $nidn_nim,
+            'penulis_nidn'   => 'NIDN',
+            'penulis_nim'    => 'NIM',
             'penulis_nama'   => 'Nama penulis',
             'penulis_asal'   => 'Asal penulis',
         ];
