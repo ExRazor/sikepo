@@ -62,7 +62,7 @@
                         @foreach ($pengabdianKetua as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.community-service.show',encode_id($p->id))}}">
+                                <a href="{{route('profile.community-service.show',encrypt($p->id))}}">
                                     {{ $p->judul_pengabdian }}
                                 </a>
                             </td>
@@ -114,7 +114,7 @@
                         @foreach ($pengabdianAnggota as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.community-service.show',encode_id($p->id))}}">
+                                <a href="{{route('profile.community-service.show',encrypt($p->id))}}">
                                     {{ $p->judul_pengabdian }}
                                 </a>
                             </td>

@@ -14,16 +14,16 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Asal Dosen:</label>
                         <div class="col-sm-8">
                             <div class="row radio">
-                                <input type="hidden" name="_id" value={{$data->id}}>
+                                <input type="hidden" name="pengabdian_id" value={{encrypt($data->id)}}>
                                 <div class="col-lg-5 mg-t-5">
                                     <label class="rdiobox">
-                                        <input name="asal_dosen" type="radio" value="Jurusan" required>
+                                        <input name="asal_penyelenggara" type="radio" value="Jurusan" required>
                                         <span>Dosen Jurusan</span>
                                     </label>
                                 </div>
                                 <div class="col-lg-5 mg-t-5">
                                     <label class="rdiobox">
-                                        <input name="asal_dosen" type="radio" value="Luar" required>
+                                        <input name="asal_penyelenggara" type="radio" value="Luar" required>
                                         <span>Dosen Luar</span>
                                     </label>
                                 </div>
@@ -61,7 +61,7 @@
 </div><!-- modal -->
 @push('custom-js')
 <script>
-    $('#modal-member-teacher').on('change', 'input[name=asal_dosen]', function() {
+    $('#modal-member-teacher').on('change', 'input[name=asal_penyelenggara]', function() {
         var val = $(this).val();
 
         var cont = $('#modal-member-teacher');

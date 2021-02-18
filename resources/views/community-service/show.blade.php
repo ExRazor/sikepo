@@ -105,6 +105,7 @@
                                     <th>:</th>
                                     <td>{{rupiah($data->jumlah_biaya)}}</td>
                                 </tr>
+                                @if($data->bukti_fisik)
                                 <tr>
                                     <th>Bukti Fisik</th>
                                     <th>:</th>
@@ -114,6 +115,7 @@
                                         </a>
                                     </td>
                                 </tr>
+                                @endif
                                 <tr>
                                     <th>Dosen yang Terlibat</th>
                                     <th>:</th>

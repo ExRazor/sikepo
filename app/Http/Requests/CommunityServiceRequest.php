@@ -23,9 +23,14 @@ class CommunityServiceRequest extends FormRequest
      */
     public function rules()
     {
+        $id = null;
+        if ($this->id) {
+            $id = decrypt($this->id);
+        }
+
         return [
             'id_ta'             => 'required',
-            'judul_pengabdian'  => 'required',
+            'judul_pengabdian'  => 'required|unique:community_services,judul_pengabdian,' . $id,
             'tema_pengabdian'   => 'required',
             'tingkat_pengabdian' => 'required',
             'sks_pengabdian'    => 'required|numeric',
@@ -33,6 +38,7 @@ class CommunityServiceRequest extends FormRequest
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
+            'bukti_fisik'       => 'nullable',
         ];
     }
 
@@ -48,6 +54,7 @@ class CommunityServiceRequest extends FormRequest
             'sumber_biaya'      => 'Sumber Biaya',
             'sumber_biaya_nama' => 'Lembaga Sumber Biaya',
             'jumlah_biaya'      => 'Jumlah Biaya',
+            'bukti_fisik'       => 'Bukti Fisik',
         ];
     }
 }

@@ -13,6 +13,7 @@ use App\Models\CommunityServiceStudent;
 use App\Models\StudyProgram;
 use App\Models\Faculty;
 use App\Models\Teacher;
+use App\Models\Student;
 use App\Traits\LogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,10 +78,21 @@ class CommunityServiceController extends Controller
 
     public function show_teacher($id)
     {
-        $id     = decode_id($id);
+        $id     = decrypt($id);
         $nidn   = Auth::user()->username;
         $data   = CommunityService::where('id', $id)->first();
-        $status = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first()->status;
+
+        if (!$data) {
+            abort(404);
+        }
+
+        $status = null;
+        $cek_dosen = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first();
+        if ($cek_dosen) {
+            $status = $cek_dosen->status;
+        } else {
+            abort(404);
+        }
 
         return view('teacher-view.community-service.show', compact(['data', 'status']));
     }
@@ -114,11 +126,11 @@ class CommunityServiceController extends Controller
         $data   = CommunityService::where('id', $id)->first();
         $status = CommunityServiceTeacher::where('id_pengabdian', $id)->where('nidn', $nidn)->first()->status;
 
-        if ($status == 'Ketua') {
-            return view('teacher-view.community-service.form', compact(['data']));
-        } else {
+        if ($status != 'Ketua') {
             return abort(404);
         }
+
+        return view('teacher-view.community-service.form', compact(['data']));
     }
 
     public function store(CommunityServiceRequest $request)
@@ -167,29 +179,16 @@ class CommunityServiceController extends Controller
             $sks_ketua      = floatval($request->sks_pengabdian) * setting('service_ratio_chief') / 100;
 
             //Tambah Ketua
-            if ($request->asal_ketua_penyelenggara == 'Luar') {
-                $ketua                  = new CommunityServiceTeacher;
-                $ketua->id_pengabdian   = $community->id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = $sks_ketua;
-                $ketua->nidn            = null;
-                $ketua->nama            = $request->ketua_nama;
-                $ketua->asal            = $request->ketua_asal;
-                $ketua->save();
-            } else {
+            $validated_teacher      = $this->validate_teacher($community->id, $request);
 
-                if (!Teacher::find($request->ketua_nidn))
-                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-
-                $ketua                  = new CommunityServiceTeacher;
-                $ketua->id_pengabdian   = $community->id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = $sks_ketua;
-                $ketua->nidn            = $request->ketua_nidn;
-                $ketua->nama            = null;
-                $ketua->asal            = null;
-                $ketua->save();
-            }
+            $ketua                  = new CommunityServiceTeacher;
+            $ketua->id_pengabdian   = $community->id;
+            $ketua->status          = 'Ketua';
+            $ketua->sks             = $sks_ketua;
+            $ketua->nidn            = $validated_teacher['nidn'];
+            $ketua->nama            = $validated_teacher['nama'];
+            $ketua->asal            = $validated_teacher['asal'];
+            $ketua->save();
 
             //Activity Log
             $property = [
@@ -201,7 +200,7 @@ class CommunityServiceController extends Controller
 
             DB::commit();
             if (Auth::user()->hasRole('dosen')) {
-                return redirect()->route('profile.community-service')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+                return redirect()->route('profile.community-service.show', encrypt($community->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             } else {
                 return redirect()->route('community-service.show', encrypt($community->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             }
@@ -263,33 +262,16 @@ class CommunityServiceController extends Controller
 
             //Update Ketua
             CommunityServiceTeacher::where('id_pengabdian', $community->id)->where('status', 'Ketua')->delete();
-            if ($request->asal_ketua_penyelenggara == 'Luar') {
-                $ketua                  = new CommunityServiceTeacher;
-                $ketua->id_pengabdian   = $id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = 0;
-                $ketua->nidn            = null;
-                $ketua->nama            = $request->ketua_nama;
-                $ketua->asal            = $request->ketua_asal;
-                $ketua->save();
-            } else {
+            $validated_teacher      = $this->validate_teacher($community->id, $request);
 
-                if (!Teacher::find($request->ketua_nidn))
-                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-
-                if (CommunityServiceTeacher::where('id_pengabdian', $community->id)->where('nidn', $request->ketua_nidn)->first()) {
-                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
-                }
-
-                $ketua                  = new CommunityServiceTeacher;
-                $ketua->id_pengabdian   = $id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = 0;
-                $ketua->nidn            = $request->ketua_nidn;
-                $ketua->nama            = null;
-                $ketua->asal            = null;
-                $ketua->save();
-            }
+            $ketua                  = new CommunityServiceTeacher;
+            $ketua->id_pengabdian   = $id;
+            $ketua->status          = 'Ketua';
+            $ketua->sks             = 0;
+            $ketua->nidn            = $validated_teacher['nidn'];
+            $ketua->nama            = $validated_teacher['nama'];
+            $ketua->asal            = $validated_teacher['asal'];
+            $ketua->save();
 
             //Update SKS Pengabdian Ketua & Anggota
             $this->update_sks($community->id);
@@ -305,7 +287,7 @@ class CommunityServiceController extends Controller
             DB::commit();
 
             if (Auth::user()->hasRole('dosen')) {
-                return redirect()->route('profile.community-service.show', encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+                return redirect()->route('profile.community-service.show', encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
             } else {
                 return redirect()->route('community-service.show', encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
             }
@@ -361,36 +343,20 @@ class CommunityServiceController extends Controller
         try {
 
             //Pengabdian
-            $id_pengabdian = $request->_id;
+            $id_pengabdian = decrypt($request->pengabdian_id);
             $pengabdian = CommunityService::find($id_pengabdian);
 
             //Start Query
-            if ($request->asal_dosen == 'Luar') {
-                $anggota                = new CommunityServiceTeacher;
-                $anggota->id_pengabdian = $id_pengabdian;
-                $anggota->status        = 'Anggota';
-                $anggota->sks           = 0;
-                $anggota->nidn          = null;
-                $anggota->nama          = $request->anggota_nama;
-                $anggota->asal          = $request->anggota_asal;
-                $anggota->save();
-            } else {
-                if (!Teacher::find($request->anggota_nidn))
-                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+            $validated_teacher      = $this->validate_teacher($pengabdian->id, $request);
 
-                if (CommunityServiceTeacher::where('id_pengabdian', $pengabdian->id)->where('nidn', $request->anggota_nidn)->first()) {
-                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
-                }
-
-                $anggota                = new CommunityServiceTeacher;
-                $anggota->id_pengabdian = $id_pengabdian;
-                $anggota->status        = 'Anggota';
-                $anggota->sks           = 0;
-                $anggota->nidn          = $request->anggota_nidn;
-                $anggota->nama          = null;
-                $anggota->asal          = null;
-                $anggota->save();
-            }
+            $anggota                = new CommunityServiceTeacher;
+            $anggota->id_pengabdian = $id_pengabdian;
+            $anggota->status        = 'Anggota';
+            $anggota->sks           = 0;
+            $anggota->nidn          = $validated_teacher['nidn'];
+            $anggota->nama          = $validated_teacher['nama'];
+            $anggota->asal          = $validated_teacher['asal'];
+            $anggota->save();
 
             //Update SKS Penelitian Ketua & Anggota
             $this->update_sks($id_pengabdian);
@@ -471,32 +437,18 @@ class CommunityServiceController extends Controller
         try {
 
             //Publikasi
-            $id_pengabdian = $request->_id;
+            $id_pengabdian = decrypt($request->pengabdian_id);
             $pengabdian = CommunityService::find($id_pengabdian);
 
             //Start Query
-            if ($request->asal_mahasiswa == 'Luar') {
-                $anggota                = new CommunityServiceStudent;
-                $anggota->id_pengabdian = $id_pengabdian;
-                $anggota->nim           = null;
-                $anggota->nama          = $request->anggota_nama;
-                $anggota->asal          = $request->anggota_asal;
-                $anggota->save();
-            } else {
-                if (!Student::find($request->anggota_nim))
-                    throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+            $validated_student = $this->validate_student($pengabdian->id, $request);
 
-                if (CommunityServiceStudent::where('id_pengabdian', $pengabdian->id)->where('nim', $request->anggota_nim)->first()) {
-                    throw new \Exception('NIM sudah ada. Periksa kembali.');
-                }
-
-                $anggota                = new CommunityServiceStudent;
-                $anggota->id_pengabdian = $id_pengabdian;
-                $anggota->nim           = $request->anggota_nim;
-                $anggota->nama          = null;
-                $anggota->asal          = null;
-                $anggota->save();
-            }
+            $anggota                = new CommunityServiceStudent;
+            $anggota->id_pengabdian = $id_pengabdian;
+            $anggota->nim           = $validated_student['nim'];
+            $anggota->nama          = $validated_student['nama'];
+            $anggota->asal          = $validated_student['asal'];
+            $anggota->save();
 
             //Activity Log
             $property = [
@@ -582,6 +534,84 @@ class CommunityServiceController extends Controller
 
         // Ekspor data
         return (new CommunityServiceExport($request))->download($nama_file);
+    }
+
+    public function validate_teacher($id_parent, $request)
+    {
+        if ($request->asal_penyelenggara == 'Sendiri') {
+            $nidn = auth()->user()->username;
+            $nama = null;
+            $asal = null;
+        } else if ($request->asal_penyelenggara == 'Jurusan') {
+            if (!Teacher::find($request->anggota_nidn))
+                throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.', 404);
+
+            if (CommunityServiceTeacher::where('id_pengabdian', $id_parent)->where('nidn', $request->anggota_nidn)->first())
+                throw new \Exception('NIDN sudah ada. Periksa kembali.', 404);
+
+            $nidn = $request->anggota_nidn;
+            $nama = null;
+            $asal = null;
+        } else {
+            $nidn   = null;
+            $nama   = $request->anggota_nama;
+            $asal   = $request->anggota_asal;
+        }
+
+        if (auth()->user()->hasRole('dosen')) {
+            if ($request->asal_penyelenggara == 'Sendiri') {
+                CommunityServiceTeacher::where('id_pengabdian', $id_parent)->where('nidn', auth()->user()->username)->delete();
+            }
+
+            if ($request->asal_penyelenggara != 'Sendiri' && $request->is_ketua && $request->anggota_nidn != auth()->user()->username) {
+                CommunityServiceTeacher::updateOrCreate(
+                    [
+                        'id_pengabdian' => $id_parent,
+                        'nidn'          => auth()->user()->username,
+                    ],
+                    [
+                        'status'        => 'Anggota',
+                        'sks'           => 0,
+                        'nama'          => null,
+                        'asal'          => null,
+                    ]
+                );
+
+                //Update SKS Penelitian Ketua & Anggota
+                $this->update_sks($id_parent);
+            }
+        }
+        return [
+            'nidn' => $nidn,
+            'nama' => $nama,
+            'asal' => $asal,
+        ];
+    }
+
+    public function validate_student($id_parent, $request)
+    {
+        if ($request->asal_mahasiswa == 'Luar') {
+            $nim  = null;
+            $nama = $request->mahasiswa_nama;
+            $asal = $request->mahasiswa_asal;
+        } else {
+            if (!Student::find($request->mahasiswa_nim))
+                throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+
+            if (CommunityServiceStudent::where('id_pengabdian', $id_parent)->where('nim', $request->mahasiswa_nim)->first()) {
+                throw new \Exception('NIM sudah ada. Periksa kembali.');
+            }
+
+            $nim = $request->mahasiswa_nim;
+            $nama = null;
+            $asal = null;
+        }
+
+        return [
+            'nim' => $nim,
+            'nama' => $nama,
+            'asal' => $asal,
+        ];
     }
 
     public function update_sks($id_pengabdian)

@@ -45,6 +45,14 @@
         </ul>
     </div>
     @endif
+    @if (session()->has('flash.message'))
+        <div class="alert alert-{{ session('flash.class') }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ session('flash.message') }}
+        </div>
+    @endif
     <div class="widget-2">
         <div class="card mb-3">
             <form id="communityService_form" action="{{route('profile.community-service.store')}}" method="POST" enctype="multipart/form-data" data-parsley-validate>
@@ -55,6 +63,7 @@
                             @if(isset($data))
                                 @method('put')
                                 <input type="hidden" name="id" value="{{encrypt($data->id)}}">
+                                <input type="hidden" name="is_ketua" value="1">
                             @else
                                 @method('post')
                             @endif
@@ -66,7 +75,6 @@
                                         <option value="{{$data->id_ta}}">{{$data->academicYear->tahun_akademik.' - '.$data->academicYear->semester}}</option>
                                         @endisset
                                     </select>
-                                    <input type="hidden" name="ketua_nidn" value="{{Auth::user()->username}}">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -79,6 +87,31 @@
                                 <label class="col-3 form-control-label">Tema Pengabdian: <span class="tx-danger">*</span></label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" name="tema_pengabdian" value="{{ isset($data) ? $data->tema_pengabdian : Request::old('tema_pengabdian')}}" placeholder="Masukkan tema pengabdian sesuai roadmap" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 form-control-label">Tingkat Pengabdian: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-sm-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_pengabdian" type="radio" value="Internasional" {{ (isset($data) && $data->tingkat_pengabdian=='Internasional') || Request::old('tingkat_pengabdian')=='Internasional' ? 'checked' : ''}} required>
+                                                <span>Internasional</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_pengabdian" type="radio" value="Nasional" {{ (isset($data) && $data->tingkat_pengabdian=='Nasional') || Request::old('tingkat_pengabdian')=='Nasional' ? 'checked' : ''}} required>
+                                                <span>Nasional</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4 mg-t-15">
+                                            <label class="rdiobox">
+                                                <input name="tingkat_pengabdian" type="radio" value="Lokal" {{ (isset($data) && $data->tingkat_pengabdian=='Lokal') || Request::old('tingkat_pengabdian')=='Lokal' ? 'checked' : ''}} required>
+                                                <span>Lokal/Wilayah</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -103,10 +136,10 @@
                                         <div class="col-6">
                                             <select id="sumber_biaya_select" class="form-control" name="sumber_biaya" required>
                                                 <option value="">- Pilih Sumber Biaya -</option>
-                                                <option value="Perguruan Tinggi" {{ (isset($data) && $data->sumber_biaya == 'Perguruan Tinggi') ? 'selected' : '' }}>Perguruan Tinggi</option>
-                                                <option value="Mandiri" {{ (isset($data) && $data->sumber_biaya == 'Mandiri') ? 'selected' : '' }}>Mandiri</option>
-                                                <option value="Lembaga Dalam Negeri" {{ (isset($data) && $data->sumber_biaya == 'Lembaga Dalam Negeri') ? 'selected' : '' }}>Lembaga Dalam Negeri</option>
-                                                <option value="Lembaga Luar Negeri" {{ (isset($data) && $data->sumber_biaya == 'Lembaga Luar Negeri') ? 'selected' : '' }}>Lembaga Luar Negeri</option>
+                                                <option value="Perguruan Tinggi" {{ (isset($data) && $data->sumber_biaya == 'Perguruan Tinggi') || Request::old('sumber_biaya') == 'Perguruan Tinggi' ? 'selected' : '' }}>Perguruan Tinggi</option>
+                                                <option value="Mandiri" {{ (isset($data) && $data->sumber_biaya == 'Mandiri') || Request::old('sumber_biaya') == 'Mandiri' ? 'selected' : '' }}>Mandiri</option>
+                                                <option value="Lembaga Dalam Negeri" {{ (isset($data) && $data->sumber_biaya == 'Lembaga Dalam Negeri') || Request::old('sumber_biaya') == 'Lembaga Dalam Negeri' ? 'selected' : '' }}>Lembaga Dalam Negeri</option>
+                                                <option value="Lembaga Luar Negeri" {{ (isset($data) && $data->sumber_biaya == 'Lembaga Luar Negeri') || Request::old('sumber_biaya') == 'Lembaga Luar Negeri' ? 'selected' : '' }}>Lembaga Luar Negeri</option>
                                             </select>
                                         </div>
                                         <div class="col-6">
@@ -132,59 +165,50 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Anggota Dosen</h3>
-                            @isset($data)
-                            <div id="daftarDosen">
-                                @foreach ($data->serviceAnggota as $i => $rt)
+                        <div class="col-md-9 mx-auto">
+                            <h3 class="text-center mb-3">Ketua Penyelenggara</h3>
+                            <div id="serviceKetua">
+                                @if(isset($data) && $data->serviceKetua)
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.community-service.teacher.delete',encode_id($data->id)) }}" data-id="{{encrypt($rt->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-7">
-                                        <div id="pilihDosen{{$i}}" class="parsley-select">
-                                            <select class="form-control select2-dosen" data-parsley-class-handler="#pilihDosen{{$i}}" data-parsley-errors-container="#errorsPilihDosen{{$i}}" name="anggota_nidn[]" required>
-                                                <option value="{{$rt->nidn}}">{{$rt->teacher->nama.' ('.$rt->teacher->nidn.')'}}</option>
-                                            </select>
-                                        </div>
-                                        <div id="errorsPilihDosen{{$i}}"></div>
+                                    <div class="col-md-3 mb-3">
+                                        <select class="form-control mb-2" name="asal_penyelenggara" id="asal_penyelenggara" required>
+                                            <option value="">- Pilih Asal Dosen -</option>
+                                            <option value="Sendiri" {{ (isset($data) && $data->serviceKetua->nidn==auth()->user()->username) || Request::old('asal_penyelenggara') == 'Sendiri' ? 'selected' : '' }}>Sendiri</option>
+                                            <option value="Jurusan" {{ (isset($data) && $data->serviceKetua->nidn!=auth()->user()->username) || Request::old('asal_penyelenggara') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Luar" {{ (isset($data) && !$data->serviceKetua->nidn) || Request::old('asal_penyelenggara') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3 tipe-dosen" style="{{ (isset($data) && $data->serviceKetua->nidn!=auth()->user()->username) || Request::old('asal_penyelenggara') == 'Jurusan' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="anggota_nidn" value="{{ isset($data) && $data->serviceKetua->nidn!=auth()->user()->username ? $data->serviceKetua->nidn : Request::old('anggota_nidn')}}" placeholder="NIDN" {{ isset($data) && $data->serviceKetua->nidn!=auth()->user()->username ? 'required' : '' }}>
+                                    </div>
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ (isset($data) && !$data->serviceKetua->nidn) || Request::old('asal_penyelenggara') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="anggota_nama" value="{{ isset($data) ? $data->serviceKetua->nama : Request::old('anggota_nama')}}" placeholder="Nama Dosen" {{ isset($data) && !$data->serviceKetua->nidn ? 'required' : '' }}>
+                                    </div>
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ (isset($data) && !$data->serviceKetua->nidn) || Request::old('asal_penyelenggara') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="anggota_asal" value="{{ isset($data) ? $data->serviceKetua->asal : Request::old('anggota_asal')}}" placeholder="Asal Dosen" {{ isset($data) && !$data->serviceKetua->nidn ? 'required' : '' }}>
                                     </div>
                                 </div>
-                                @endforeach
-                            </div>
-                            @endisset
-                            <div id="panelDosen" data-jumlah="0"></div>
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                <button class="add-dosen btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-9 mx-auto">
-                            <h3 class="text-center mb-3">Daftar Mahasiswa</h3>
-                            @isset($data)
-                            <div id="daftarMahasiswa">
-                                @foreach ($data->serviceStudent as $i => $cs)
+                                @else
                                 <div class="row mb-3 justify-content-center align-items-center">
-                                    <button class="btn btn-danger btn-sm btn-delget" data-dest="{{ route('profile.community-service.students.delete',encode_id($data->id)) }}" data-id="{{encrypt($cs->id)}}"><i class="fa fa-times"></i></button>
-                                    <div class="col-7">
-                                        <div id="pilihMhs{{$i}}" class="parsley-select">
-                                            <select class="form-control select-mhs" data-parsley-class-handler="#pilihMhs{{$i}}" data-parsley-errors-container="#errorsPilihMhs{{$i}}" name="mahasiswa_nim[]" required>
-                                                <option value="{{$cs->nim}}">{{$cs->student->nama.' ('.$cs->student->nim.')'}}</option>
-                                            </select>
-                                        </div>
-                                        <div id="errorsPilihMhs{{$i}}"></div>
+                                    <div class="col-md-3 mb-3">
+                                        <select class="form-control mb-2" name="asal_penyelenggara" id="asal_penyelenggara" required>
+                                            <option value="">- Pilih Asal Dosen -</option>
+                                            <option value="Sendiri" {{ Request::old('asal_penyelenggara') == 'Sendiri' ? 'selected' : '' }}>Sendiri</option>
+                                            <option value="Jurusan" {{ Request::old('asal_penyelenggara') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Luar" {{ Request::old('asal_penyelenggara') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3 tipe-dosen" style="{{ Request::old('asal_penyelenggara') == 'Jurusan' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="anggota_nidn" value="{{ Request::old('anggota_nidn')}}" placeholder="NIDN">
+                                    </div>
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ Request::old('asal_penyelenggara') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="anggota_nama" value="{{ Request::old('anggota_nama')}}" placeholder="Nama Dosen">
+                                    </div>
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ Request::old('asal_penyelenggara') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="anggota_asal" value="{{ Request::old('anggota_asal')}}" placeholder="Asal Dosen">
                                     </div>
                                 </div>
-                                @endforeach
-                            </div>
-                            @endisset
-                            <div id="panelMahasiswa" data-jumlah="0"></div>
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                <button class="add-mahasiswa btn btn-primary" href="javascript:void(0)"><i class="fa fa-plus pd-r-10"></i> Tambah</button>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -206,4 +230,36 @@
 @endsection
 
 @section('js')
+<script>
+    $('#asal_penyelenggara').on('change', function() {
+        var val = $(this).val();
+
+        var cont    = $('#communityService_form');
+        var dosen   = cont.find('.tipe-dosen');
+        var lainnya = cont.find('.tipe-lainnya');
+
+        switch(val) {
+            case 'Jurusan':
+                lainnya.hide();
+                lainnya.find('input').prop('disabled',true).prop('required',false);
+
+                dosen.show();
+                dosen.find('input').prop('disabled',false).prop('required',true);
+            break;
+            case 'Luar':
+                dosen.hide();
+                dosen.find('input').prop('disabled',true).prop('required',false);
+
+                lainnya.show();
+                lainnya.find('input').prop('disabled',false).prop('required',true);
+            break;
+            default:
+                dosen.hide();
+                lainnya.hide();
+                dosen.find('input').prop('disabled',true).prop('required',false);
+                lainnya.find('input').prop('disabled',true).prop('required',false);
+            break;
+        }
+    });
+</script>
 @endsection

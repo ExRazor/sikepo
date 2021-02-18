@@ -23,11 +23,11 @@ class CommunityServiceTeacherRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->asal_dosen == 'Luar') {
+        if ($this->asal_penyelenggara == 'Luar') {
             $anggota_nidn   = 'nullable';
             $anggota_nama   = 'required';
             $anggota_asal   = 'required';
-        } else if ($this->asal_dosen == '') {
+        } else if ($this->asal_penyelenggara == '') {
             $anggota_nidn   = 'nullable';
             $anggota_nama   = 'nullable';
             $anggota_asal   = 'nullable';
@@ -38,7 +38,7 @@ class CommunityServiceTeacherRequest extends FormRequest
         }
 
         return [
-            'asal_dosen'     => 'required',
+            'asal_penyelenggara'     => 'required',
             'anggota_nidn'   => $anggota_nidn . '|numeric',
             'anggota_nama'   => $anggota_nama,
             'anggota_asal'   => $anggota_asal,
@@ -49,10 +49,10 @@ class CommunityServiceTeacherRequest extends FormRequest
     {
 
         return [
-            'asal_dosen'     => 'Asal Dosen',
-            'anggota_nidn'   => 'NIDN',
-            'anggota_nama'   => 'Nama Dosen',
-            'anggota_asal'   => 'Asal Lokasi Dosen',
+            'asal_penyelenggara'    => 'Asal Dosen',
+            'anggota_nidn'          => 'NIDN',
+            'anggota_nama'          => 'Nama Dosen',
+            'anggota_asal'          => 'Asal Lokasi Dosen',
         ];
     }
 

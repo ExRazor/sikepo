@@ -102,36 +102,33 @@
                                 </tr>
                                 <tr>
                                     <th>Dosen yang Terlibat</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>
                                         <table class="table table-bordered table-colored table-purple">
                                             <thead class="text-center">
                                                 <tr>
                                                     <td>Nama Dosen</td>
-                                                    <td>Asal/Program Studi</td>
                                                     <td>Status Anggota</td>
                                                     <td>SKS</td>
+                                                    @if($status=='Ketua')
+                                                    <td></td>
+                                                    @endif
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse($data->serviceTeacher as $st)
                                                 <tr>
-                                                    @if(!$st->nama_lain)
+                                                    @if($st->nidn)
                                                     <td>
-                                                        {{$st->teacher->nama}}<br>
-                                                        <small>NIDN. {{$st->nidn}}</small>
-                                                    </td>
-                                                    <td>
-                                                        {{$st->teacher->latestStatus->studyProgram->nama}}<br>
-                                                        <small>{{$st->teacher->latestStatus->studyProgram->department->nama.' / '.$st->teacher->latestStatus->studyProgram->department->faculty->singkatan}}</small>
+                                                        <a href="{{route('teacher.list.show',$st->teacher->nidn)}}">
+                                                            {{$st->teacher->nama}}<br>
+                                                            <small>NIDN. {{$st->nidn}} / {{$st->teacher->latestStatus->studyProgram->singkatan}}</small>
+                                                        </a>
                                                     </td>
                                                     @else
                                                     <td>
-                                                        {{$st->nama_lain}}<br>
-                                                        <small>NIDN. {{$st->nidn}}</small>
-                                                    </td>
-                                                    <td>
-                                                        {{$st->asal_lain}}<br>
+                                                        {{$st->nama}}<br>
+                                                        <small>{{$st->asal}}</small>
                                                     </td>
                                                     @endif
                                                     <td class="text-center">
@@ -140,6 +137,15 @@
                                                     <td class="text-center">
                                                         {{$st->sks}}
                                                     </td>
+                                                    @if($status=='Ketua')
+                                                    <td class="text-center">
+                                                        @if($st->status!='Ketua')
+                                                        <a href="javascript:void(0)" class="btn-delete" data-dest="{{ route('community-service.teacher.destroy',encrypt($st->id)) }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                        @endif
+                                                    </td>
+                                                    @endif
                                                 </tr>
                                                 @empty
                                                 <tr>
@@ -150,26 +156,36 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
+                                        @if($status=='Ketua')
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-primary mg-b-10 text-white" data-toggle="modal" data-target="#modal-member-teacher">Tambah Dosen</button>
+                                        </div>
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Mahasiswa yang Terlibat</th>
-                                    <td>:</td>
+                                    <th>:</th>
                                     <td>
                                         <table class="table table-bordered table-colored table-pink">
                                             <thead class="text-center">
                                                 <tr>
                                                     <td>Nama Mahasiswa</td>
                                                     <td>Asal/Program Studi</td>
+                                                    @if($status=='Ketua')
+                                                    <td></td>
+                                                    @endif
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse($data->serviceStudent as $ss)
                                                 <tr>
-                                                    @if(!$ss->nama_lain)
+                                                    @if($ss->nim)
                                                     <td>
-                                                        {{$ss->student->nama}}<br>
-                                                        <small>NIDN. {{$ss->nim}}</small>
+                                                        <a href="{{route('student.list.show',encode_id($ss->student->nim))}}">
+                                                            {{$ss->student->nama}}<br>
+                                                            <small>NIM. {{$ss->nim}}</small>
+                                                        </a>
                                                     </td>
                                                     <td>
                                                         {{$ss->student->studyProgram->nama}}<br>
@@ -177,11 +193,17 @@
                                                     </td>
                                                     @else
                                                     <td>
-                                                        {{$ss->nama_lain}}<br>
-                                                        <small>NIM. {{$ss->nim}}</small>
+                                                        {{$ss->nama}}<br>
                                                     </td>
                                                     <td>
-                                                        {{$ss->asal_lain}}<br>
+                                                        {{$ss->asal}}<br>
+                                                    </td>
+                                                    @endif
+                                                    @if($status=='Ketua')
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)" class="btn-delete" data-dest="{{ route('community-service.student.destroy',encrypt($ss->id)) }}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
                                                     </td>
                                                     @endif
                                                 </tr>
@@ -194,6 +216,11 @@
                                                 @endforelse
                                             </tbody>
                                         </table>
+                                        @if($status=='Ketua')
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-danger mg-b-10 text-white" data-toggle="modal" data-target="#modal-member-student">Tambah Mahasiswa</button>
+                                        </div>
+                                        @endif
                                     </td>
                                 </tr>
                             </tbody>
@@ -204,6 +231,8 @@
         </div>
     </div>
 </div>
+@include('community-service.form-member-teacher')
+@include('community-service.form-member-student')
 @endsection
 
 @section('js')
