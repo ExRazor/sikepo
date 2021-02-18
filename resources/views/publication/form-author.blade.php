@@ -14,7 +14,7 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Status Penulis:</label>
                         <div class="col-sm-8">
                             <div class="row radio">
-                                <input type="hidden" name="_id" value={{$data->id}}>
+                                <input type="hidden" name="publikasi_id" value={{encrypt($data->id)}}>
                                 <div class="col-lg-4 mg-t-5">
                                     <label class="rdiobox">
                                         <input name="status_penulis" type="radio" value="Dosen" required>
