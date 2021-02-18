@@ -78,7 +78,7 @@
                                         <div><span class="fa fa-caret-down"></span></div>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-action">
-                                        <a class="dropdown-item" href="{{ route('profile.publication.edit',encode_id($p->id)) }}">Sunting</a>
+                                        <a class="dropdown-item" href="{{ route('profile.publication.edit',encrypt($p->id)) }}">Sunting</a>
                                         <form method="POST">
                                             <button class="dropdown-item btn-delete" data-dest="{{ route('publication.destroy',encrypt($p->id)) }}">Hapus</button>
                                         </form>
