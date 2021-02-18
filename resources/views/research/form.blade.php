@@ -55,7 +55,7 @@
     @endif
     <div class="widget-2">
         <div class="card mb-3">
-            <form id="research_form" action="@isset($data) {{route('research.update',$data->id)}} @else {{route('research.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
+            <form id="research_form" action="@isset($data) {{route('research.update',encrypt($data->id))}} @else {{route('research.store')}} @endisset" method="POST" enctype="multipart/form-data" data-parsley-validate>
                 <div class="card-body bd bd-y-0 bd-color-gray-lighter">
                     <div class="row">
                         <div class="col-md-9 mx-auto">
@@ -179,42 +179,42 @@
                         <div class="col-md-9 mx-auto">
                             <h3 class="text-center mb-3">Ketua Peneliti</h3>
                             <div id="researchKetua">
-                                @if($data->researchKetua)
+                                @if(isset($data) && $data->researchKetua)
                                 <div class="row mb-3 justify-content-center align-items-center">
                                     <div class="col-md-3 mb-3">
-                                        <select class="form-control mb-2" name="asal_ketua_peneliti" id="asal_ketua_peneliti" required>
+                                        <select class="form-control mb-2" name="asal_peneliti" id="asal_peneliti" required>
                                             <option value="">- Pilih Asal Dosen -</option>
-                                            <option value="Jurusan" {{ (isset($data) && $data->researchKetua->nidn) || Request::old('asal_ketua_peneliti') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
-                                            <option value="Luar" {{ (isset($data) && !$data->researchKetua->nidn) || Request::old('asal_ketua_peneliti') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
+                                            <option value="Jurusan" {{ (isset($data) && $data->researchKetua->nidn) || Request::old('asal_peneliti') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Luar" {{ (isset($data) && !$data->researchKetua->nidn) || Request::old('asal_peneliti') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 mb-3 tipe-non-lainnya" style="{{ (isset($data) && $data->researchKetua->nidn) || Request::old('asal_ketua_peneliti') == 'Jurusan' ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="ketua_nidn" value="{{ isset($data) ? $data->researchKetua->nidn : Request::old('ketua_nidn')}}" placeholder="NIDN" {{ isset($data) && $data->researchKetua->nidn ? 'required' : '' }}>
+                                    <div class="col-md-3 mb-3 tipe-dosen" style="{{ (isset($data) && $data->researchKetua->nidn) || Request::old('asal_peneliti') == 'Jurusan' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="peneliti_nidn" value="{{ isset($data) ? $data->researchKetua->nidn : Request::old('peneliti_nidn')}}" placeholder="NIDN" {{ isset($data) && $data->researchKetua->nidn ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ (isset($data) && !$data->researchKetua->nidn) || Request::old('asal_ketua_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="ketua_nama" value="{{ isset($data) ? $data->researchKetua->nama : Request::old('ketua_nama')}}" placeholder="Nama Dosen" {{ isset($data) && !$data->researchKetua->nidn ? 'required' : '' }}>
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ (isset($data) && !$data->researchKetua->nidn) || Request::old('asal_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="peneliti_nama" value="{{ isset($data) ? $data->researchKetua->nama : Request::old('peneliti_nama')}}" placeholder="Nama Dosen" {{ isset($data) && !$data->researchKetua->nidn ? 'required' : '' }}>
                                     </div>
-                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ (isset($data) && !$data->researchKetua->nidn) || Request::old('asal_ketua_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="ketua_asal" value="{{ isset($data) ? $data->researchKetua->asal : Request::old('ketua_asal')}}" placeholder="Asal Dosen" {{ isset($data) && !$data->researchKetua->nidn ? 'required' : '' }}>
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ (isset($data) && !$data->researchKetua->nidn) || Request::old('asal_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="peneliti_asal" value="{{ isset($data) ? $data->researchKetua->asal : Request::old('peneliti_asal')}}" placeholder="Asal Dosen" {{ isset($data) && !$data->researchKetua->nidn ? 'required' : '' }}>
                                     </div>
                                 </div>
                                 @else
                                 <div class="row mb-3 justify-content-center align-items-center">
                                     <div class="col-md-3 mb-3">
-                                        <select class="form-control mb-2" name="asal_ketua_peneliti" id="asal_ketua_peneliti" required>
+                                        <select class="form-control mb-2" name="asal_peneliti" id="asal_peneliti" required>
                                             <option value="">- Pilih Asal Dosen -</option>
-                                            <option value="Jurusan" {{ Request::old('asal_ketua_peneliti') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
-                                            <option value="Luar" {{ Request::old('asal_ketua_peneliti') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
+                                            <option value="Jurusan" {{ Request::old('asal_peneliti') == 'Jurusan' ? 'selected' : '' }}>Dosen Jurusan</option>
+                                            <option value="Luar" {{ Request::old('asal_peneliti') == 'Luar' ? 'selected' : '' }}>Dosen Luar</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 mb-3 tipe-non-lainnya" style="{{ Request::old('asal_ketua_peneliti') == 'Jurusan' ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="ketua_nidn" value="{{ Request::old('ketua_nidn')}}" placeholder="NIDN">
+                                    <div class="col-md-3 mb-3 tipe-dosen" style="{{ Request::old('asal_peneliti') == 'Jurusan' ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="peneliti_nidn" value="{{ Request::old('peneliti_nidn')}}" placeholder="NIDN">
                                     </div>
-                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ Request::old('asal_ketua_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="ketua_nama" value="{{ Request::old('ketua_nama')}}" placeholder="Nama Dosen">
+                                    <div class="col-md-5 mb-3 tipe-lainnya" style="{{ Request::old('asal_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="peneliti_nama" value="{{ Request::old('peneliti_nama')}}" placeholder="Nama Dosen">
                                     </div>
-                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ Request::old('asal_ketua_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
-                                        <input class="form-control" type="text" name="ketua_asal" value="{{ Request::old('ketua_asal')}}" placeholder="Asal Dosen">
+                                    <div class="col-md-4 mb-3 tipe-lainnya" style="{{ Request::old('asal_peneliti') == 'Luar'  ? '' : 'display:none;' }}">
+                                        <input class="form-control" type="text" name="peneliti_asal" value="{{ Request::old('peneliti_asal')}}" placeholder="Asal Dosen">
                                     </div>
                                 </div>
                                 @endif
@@ -245,35 +245,34 @@
     select2_dosen(cont,prodi);
 </script> --}}
 <script>
-    $('#asal_ketua_peneliti').on('change', function() {
+    $('#asal_peneliti').on('change', function() {
         var val = $(this).val();
 
-        var lainnya     = $('.tipe-lainnya');
-        var nonlainnya  = $('.tipe-non-lainnya');
+        var cont    = $('#research_form');
+        var dosen   = cont.find('.tipe-dosen');
+        var lainnya = cont.find('.tipe-lainnya');
 
-        if(val=='Luar') {
-            nonlainnya.hide();
-            nonlainnya.find('input').prop('disabled',true);
-            nonlainnya.find('input').prop('required',false);
+        switch(val) {
+            case 'Jurusan':
+                lainnya.hide();
+                lainnya.find('input').prop('disabled',true).prop('required',false);
 
-            lainnya.show();
-            lainnya.find('input').prop('disabled',false);
-            lainnya.find('input').prop('required',true);
-        } else if (val=='') {
-            nonlainnya.hide();
-            lainnya.hide();
-            nonlainnya.find('input').prop('disabled',true);
-            nonlainnya.find('input').prop('required',false);
-            lainnya.find('input').prop('disabled',true);
-            lainnya.find('input').prop('required',false);
-        } else {
-            lainnya.hide();
-            lainnya.find('input').prop('disabled',true);
-            lainnya.find('input').prop('required',false);
+                dosen.show();
+                dosen.find('input').prop('disabled',false).prop('required',true);
+            break;
+            case 'Luar':
+                dosen.hide();
+                dosen.find('input').prop('disabled',true).prop('required',false);
 
-            nonlainnya.show();
-            nonlainnya.find('input').prop('disabled',false);
-            nonlainnya.find('input').prop('required',true);
+                lainnya.show();
+                lainnya.find('input').prop('disabled',false).prop('required',true);
+            break;
+            default:
+                dosen.hide();
+                lainnya.hide();
+                dosen.find('input').prop('disabled',true).prop('required',false);
+                lainnya.find('input').prop('disabled',true).prop('required',false);
+            break;
         }
     });
 </script>

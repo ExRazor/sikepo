@@ -77,10 +77,21 @@ class ResearchController extends Controller
 
     public function show_teacher($id)
     {
-        $id     = decode_id($id);
+        $id     = decrypt($id);
         $nidn   = Auth::user()->username;
         $data   = Research::where('id', $id)->first();
-        $status = ResearchTeacher::where('id_penelitian', $id)->where('nidn', $nidn)->first()->status;
+
+        if (!$data) {
+            abort(404);
+        }
+
+        $status = null;
+        $cek_dosen = ResearchTeacher::where('id_penelitian', $id)->where('nidn', $nidn)->first();
+        if ($cek_dosen) {
+            $status = $cek_dosen->status;
+        } else {
+            abort(404);
+        }
 
         return view('teacher-view.research.show', compact(['data', 'status']));
     }
@@ -115,11 +126,11 @@ class ResearchController extends Controller
         $data   = Research::where('id', $id)->first();
         $status = ResearchTeacher::where('id_penelitian', $id)->where('nidn', $nidn)->first()->status;
 
-        if ($status == 'Ketua') {
-            return view('teacher-view.research.form', compact(['data']));
-        } else {
+        if ($status != 'Ketua') {
             return abort(404);
         }
+
+        return view('teacher-view.research.form', compact(['data']));
     }
 
     public function store(ResearchRequest $request)
@@ -168,29 +179,16 @@ class ResearchController extends Controller
             $sks_ketua      = floatval($request->sks_penelitian) * setting('research_ratio_chief') / 100;
 
             //Tambah Ketua
-            if ($request->asal_ketua_peneliti == 'Luar') {
-                $ketua                  = new ResearchTeacher;
-                $ketua->id_penelitian   = $research->id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = $sks_ketua;
-                $ketua->nidn            = null;
-                $ketua->nama            = $request->ketua_nama;
-                $ketua->asal            = $request->ketua_asal;
-                $ketua->save();
-            } else {
+            $validated_teacher      = $this->validate_teacher($research->id, $request);
 
-                if (!Teacher::find($request->ketua_nidn))
-                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-
-                $ketua                  = new ResearchTeacher;
-                $ketua->id_penelitian   = $research->id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = $sks_ketua;
-                $ketua->nidn            = $request->ketua_nidn;
-                $ketua->nama            = null;
-                $ketua->asal            = null;
-                $ketua->save();
-            }
+            $ketua                  = new ResearchTeacher;
+            $ketua->id_penelitian   = $research->id;
+            $ketua->status          = 'Ketua';
+            $ketua->sks             = $sks_ketua;
+            $ketua->nidn            = $validated_teacher['nidn'];
+            $ketua->nama            = $validated_teacher['nama'];
+            $ketua->asal            = $validated_teacher['asal'];
+            $ketua->save();
 
             //Activity Log
             $property = [
@@ -203,7 +201,7 @@ class ResearchController extends Controller
             DB::commit();
 
             if (Auth::user()->hasRole('dosen')) {
-                return redirect()->route('profile.research')->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
+                return redirect()->route('profile.research.show', encrypt($research->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             } else {
                 return redirect()->route('research.show', encrypt($research->id))->with('flash.message', 'Data berhasil ditambahkan!')->with('flash.class', 'success');
             }
@@ -265,33 +263,16 @@ class ResearchController extends Controller
 
             //Update Ketua
             ResearchTeacher::where('id_penelitian', $research->id)->where('status', 'Ketua')->delete();
-            if ($request->asal_ketua_peneliti == 'Luar') {
-                $ketua                  = new ResearchTeacher;
-                $ketua->id_penelitian   = $id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = 0;
-                $ketua->nidn            = null;
-                $ketua->nama            = $request->ketua_nama;
-                $ketua->asal            = $request->ketua_asal;
-                $ketua->save();
-            } else {
+            $validated_teacher      = $this->validate_teacher($research->id, $request);
 
-                if (!Teacher::find($request->ketua_nidn))
-                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
-
-                if (ResearchTeacher::where('id_penelitian', $research->id)->where('nidn', $request->ketua_nidn)->first()) {
-                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
-                }
-
-                $ketua                  = new ResearchTeacher;
-                $ketua->id_penelitian   = $id;
-                $ketua->status          = 'Ketua';
-                $ketua->sks             = 0;
-                $ketua->nidn            = $request->ketua_nidn;
-                $ketua->nama            = null;
-                $ketua->asal            = null;
-                $ketua->save();
-            }
+            $ketua                  = new ResearchTeacher;
+            $ketua->id_penelitian   = $id;
+            $ketua->status          = 'Ketua';
+            $ketua->sks             = 0;
+            $ketua->nidn            = $validated_teacher['nidn'];
+            $ketua->nama            = $validated_teacher['nama'];
+            $ketua->asal            = $validated_teacher['asal'];
+            $ketua->save();
 
             //Update SKS Penelitian Ketua & Anggota
             $this->update_sks($research->id);
@@ -306,7 +287,7 @@ class ResearchController extends Controller
 
             DB::commit();
             if (Auth::user()->hasRole('dosen')) {
-                return redirect()->route('profile.research.show', encode_id($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
+                return redirect()->route('profile.research.show', encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
             } else {
                 return redirect()->route('research.show', encrypt($id))->with('flash.message', 'Data berhasil disunting!')->with('flash.class', 'success');
             }
@@ -362,36 +343,20 @@ class ResearchController extends Controller
         try {
 
             //Publikasi
-            $id_penelitian = $request->_id;
+            $id_penelitian = decrypt($request->penelitian_id);
             $penelitian = Research::find($id_penelitian);
 
             //Start Query
-            if ($request->asal_dosen == 'Luar') {
-                $anggota                = new ResearchTeacher;
-                $anggota->id_penelitian = $id_penelitian;
-                $anggota->status        = 'Anggota';
-                $anggota->sks           = 0;
-                $anggota->nidn          = null;
-                $anggota->nama          = $request->anggota_nama;
-                $anggota->asal          = $request->anggota_asal;
-                $anggota->save();
-            } else {
-                if (!Teacher::find($request->anggota_nidn))
-                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.');
+            $validated_teacher = $this->validate_teacher($penelitian->id, $request);
 
-                if (ResearchTeacher::where('id_penelitian', $penelitian->id)->where('nidn', $request->anggota_nidn)->first()) {
-                    throw new \Exception('NIDN sudah ada. Periksa kembali.');
-                }
-
-                $anggota                = new ResearchTeacher;
-                $anggota->id_penelitian = $id_penelitian;
-                $anggota->status        = 'Anggota';
-                $anggota->sks           = 0;
-                $anggota->nidn          = $request->anggota_nidn;
-                $anggota->nama          = null;
-                $anggota->asal          = null;
-                $anggota->save();
-            }
+            $anggota                = new ResearchTeacher;
+            $anggota->id_penelitian = $id_penelitian;
+            $anggota->status        = 'Anggota';
+            $anggota->sks           = 0;
+            $anggota->nidn          = $validated_teacher['nidn'];
+            $anggota->nama          = $validated_teacher['nama'];
+            $anggota->asal          = $validated_teacher['asal'];
+            $anggota->save();
 
             //Update SKS Penelitian Ketua & Anggota
             $this->update_sks($id_penelitian);
@@ -472,32 +437,18 @@ class ResearchController extends Controller
         try {
 
             //Publikasi
-            $id_penelitian = $request->_id;
+            $id_penelitian = decrypt($request->penelitian_id);
             $penelitian = Research::find($id_penelitian);
 
             //Start Query
-            if ($request->asal_mahasiswa == 'Luar') {
-                $anggota                = new ResearchStudent;
-                $anggota->id_penelitian = $id_penelitian;
-                $anggota->nim           = null;
-                $anggota->nama          = $request->anggota_nama;
-                $anggota->asal          = $request->anggota_asal;
-                $anggota->save();
-            } else {
-                if (!Student::find($request->anggota_nim))
-                    throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+            $validated_student = $this->validate_student($penelitian->id, $request);
 
-                if (ResearchStudent::where('id_penelitian', $penelitian->id)->where('nim', $request->anggota_nim)->first()) {
-                    throw new \Exception('NIM sudah ada. Periksa kembali.');
-                }
-
-                $anggota                = new ResearchStudent;
-                $anggota->id_penelitian = $id_penelitian;
-                $anggota->nim           = $request->anggota_nim;
-                $anggota->nama          = null;
-                $anggota->asal          = null;
-                $anggota->save();
-            }
+            $anggota                = new ResearchStudent;
+            $anggota->id_penelitian = $id_penelitian;
+            $anggota->nim           = $validated_student['nim'];
+            $anggota->nama          = $validated_student['nama'];
+            $anggota->asal          = $validated_student['asal'];
+            $anggota->save();
 
             //Activity Log
             $property = [
@@ -584,6 +535,85 @@ class ResearchController extends Controller
 
         // Ekspor data
         return (new ResearchExport($request))->download($nama_file);
+    }
+
+    public function validate_teacher($id_parent, $request)
+    {
+        if ($request->asal_peneliti == 'Sendiri') {
+            $nidn = auth()->user()->username;
+            $nama = null;
+            $asal = null;
+        } else if ($request->asal_peneliti == 'Jurusan') {
+            if (!Teacher::find($request->peneliti_nidn))
+                throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.', 404);
+
+            if (ResearchTeacher::where('id_penelitian', $id_parent)->where('nidn', $request->peneliti_nidn)->first())
+                throw new \Exception('NIDN sudah ada. Periksa kembali.', 404);
+
+            $nidn = $request->peneliti_nidn;
+            $nama = null;
+            $asal = null;
+        } else {
+            $nidn   = null;
+            $nama   = $request->peneliti_nama;
+            $asal   = $request->peneliti_asal;
+        }
+
+        if (auth()->user()->hasRole('dosen')) {
+            if ($request->asal_peneliti == 'Sendiri') {
+                ResearchTeacher::where('id_penelitian', $id_parent)->where('nidn', auth()->user()->username)->delete();
+            }
+
+            if ($request->asal_peneliti != 'Sendiri' && $request->is_ketua && $request->peneliti_nidn != auth()->user()->username) {
+                ResearchTeacher::updateOrCreate(
+                    [
+                        'id_penelitian' => $id_parent,
+                        'nidn'          => auth()->user()->username,
+                    ],
+                    [
+                        'status'        => 'Anggota',
+                        'sks'           => 0,
+                        'nama'          => null,
+                        'asal'          => null,
+                    ]
+                );
+
+                //Update SKS Penelitian Ketua & Anggota
+                $this->update_sks($id_parent);
+            }
+        }
+
+        return [
+            'nidn' => $nidn,
+            'nama' => $nama,
+            'asal' => $asal,
+        ];
+    }
+
+    public function validate_student($id_parent, $request)
+    {
+        if ($request->asal_mahasiswa == 'Luar') {
+            $nim  = null;
+            $nama = $request->mahasiswa_nama;
+            $asal = $request->mahasiswa_asal;
+        } else {
+            if (!Student::find($request->mahasiswa_nim))
+                throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+
+            if (ResearchStudent::where('id_penelitian', $id_parent)->where('nim', $request->mahasiswa_nim)->first()) {
+                throw new \Exception('NIM sudah ada. Periksa kembali.');
+            }
+
+            $nim = $request->mahasiswa_nim;
+            $nama = null;
+            $asal = null;
+        }
+
+        return [
+            'nim' => $nim,
+            'nama' => $nama,
+            'asal' => $asal,
+        ];
     }
 
     public function update_sks($id_penelitian)

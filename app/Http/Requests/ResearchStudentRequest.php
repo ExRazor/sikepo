@@ -24,24 +24,24 @@ class ResearchStudentRequest extends FormRequest
     public function rules()
     {
         if ($this->asal_mahasiswa == 'Luar') {
-            $anggota_nim    = 'nullable';
-            $anggota_nama   = 'required';
-            $anggota_asal   = 'required';
+            $mahasiswa_nim    = 'nullable';
+            $mahasiswa_nama   = 'required';
+            $mahasiswa_asal   = 'required';
         } else if ($this->asal_mahasiswa == '') {
-            $anggota_nim    = 'nullable';
-            $anggota_nama   = 'nullable';
-            $anggota_asal   = 'nullable';
+            $mahasiswa_nim    = 'nullable';
+            $mahasiswa_nama   = 'nullable';
+            $mahasiswa_asal   = 'nullable';
         } else {
-            $anggota_nim    = 'required';
-            $anggota_nama   = 'nullable';
-            $anggota_asal   = 'nullable';
+            $mahasiswa_nim    = 'required';
+            $mahasiswa_nama   = 'nullable';
+            $mahasiswa_asal   = 'nullable';
         }
 
         return [
             'asal_mahasiswa' => 'required',
-            'anggota_nim'    => $anggota_nim . '|numeric',
-            'anggota_nama'   => $anggota_nama,
-            'anggota_asal'   => $anggota_asal,
+            'mahasiswa_nim'    => $mahasiswa_nim . '|numeric',
+            'mahasiswa_nama'   => $mahasiswa_nama,
+            'mahasiswa_asal'   => $mahasiswa_asal,
         ];
     }
 
@@ -50,9 +50,9 @@ class ResearchStudentRequest extends FormRequest
 
         return [
             'asal_mahasiswa' => 'Asal Mahasiswa',
-            'anggota_nim'    => 'NIM',
-            'anggota_nama'   => 'Nama Mahasiswa',
-            'anggota_asal'   => 'Asal Lokasi Mahasiswa',
+            'mahasiswa_nim'    => 'NIM',
+            'mahasiswa_nama'   => 'Nama Mahasiswa',
+            'mahasiswa_asal'   => 'Asal Lokasi Mahasiswa',
         ];
     }
 

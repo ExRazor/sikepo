@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="ml-auto">
-        <a href="{{ route('profile.research.create') }}" class="btn btn-teal btn-block mg-b-10" style="color:white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
+        <a href="{{ route('profile.research.create') }}" class="btn btn-teal btn-block mg-b-10 text-white"><i class="fa fa-plus mg-r-10"></i> Penelitian</a>
     </div>
 </div>
 
@@ -62,7 +62,7 @@
                         @foreach ($penelitianKetua as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.research.show',encode_id($p->id))}}">
+                                <a href="{{route('profile.research.show',encrypt($p->id))}}">
                                     {{ $p->judul_penelitian }}
                                 </a>
                             </td>
@@ -113,7 +113,7 @@
                         @foreach ($penelitianAnggota as $p)
                         <tr>
                             <td>
-                                <a href="{{route('profile.research.show',encode_id($p->id))}}">
+                                <a href="{{route('profile.research.show',encrypt($p->id))}}">
                                     {{ $p->judul_penelitian }}
                                 </a>
                             </td>

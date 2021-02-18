@@ -619,7 +619,7 @@ Breadcrumbs::for('profile-research-create', function ($trail) {
 
 Breadcrumbs::for('profile-research-show', function ($trail, $data) {
     $trail->parent('profile');
-    $trail->push('Data Penelitian: ' . $data->judul_penelitian, route('profile.research.show', encode_id($data->id)));
+    $trail->push('Data Penelitian: ' . $data->judul_penelitian, route('profile.research.show', encrypt($data->id)));
 });
 
 Breadcrumbs::for('profile-research-edit', function ($trail, $data) {

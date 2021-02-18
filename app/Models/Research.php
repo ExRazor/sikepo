@@ -28,7 +28,7 @@ class Research extends BaseModel
 
     public function researchTeacher()
     {
-        return $this->hasMany('App\Models\ResearchTeacher', 'id_penelitian')->orderByRaw('FIELD(status,"Ketua","Anggota") ASC');
+        return $this->hasMany('App\Models\ResearchTeacher', 'id_penelitian')->orderByRaw('FIELD(status,"Ketua","Anggota") ASC')->orderBy('id', 'asc');
     }
 
     public function researchKetua()

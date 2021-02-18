@@ -23,25 +23,25 @@ class ResearchTeacherRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->asal_dosen == 'Luar') {
-            $anggota_nidn   = 'nullable';
-            $anggota_nama   = 'required';
-            $anggota_asal   = 'required';
-        } else if ($this->asal_dosen == '') {
-            $anggota_nidn   = 'nullable';
-            $anggota_nama   = 'nullable';
-            $anggota_asal   = 'nullable';
+        if ($this->asal_peneliti == 'Jurusan') {
+            $peneliti_nidn   = 'required';
+            $peneliti_nama   = 'nullable';
+            $peneliti_asal   = 'nullable';
+        } else if ($this->asal_peneliti == 'Luar') {
+            $peneliti_nidn   = 'nullable';
+            $peneliti_nama   = 'required';
+            $peneliti_asal   = 'required';
         } else {
-            $anggota_nidn   = 'required';
-            $anggota_nama   = 'nullable';
-            $anggota_asal   = 'nullable';
+            $peneliti_nidn   = 'nullable';
+            $peneliti_nama   = 'nullable';
+            $peneliti_asal   = 'nullable';
         }
 
         return [
-            'asal_dosen'     => 'required',
-            'anggota_nidn'   => $anggota_nidn . '|numeric',
-            'anggota_nama'   => $anggota_nama,
-            'anggota_asal'   => $anggota_asal,
+            'asal_peneliti'     => 'required',
+            'peneliti_nidn'   => $peneliti_nidn . '|numeric',
+            'peneliti_nama'   => $peneliti_nama,
+            'peneliti_asal'   => $peneliti_asal,
         ];
     }
 
@@ -49,10 +49,10 @@ class ResearchTeacherRequest extends FormRequest
     {
 
         return [
-            'asal_dosen'     => 'Asal Dosen',
-            'anggota_nidn'   => 'NIDN',
-            'anggota_nama'   => 'Nama Dosen',
-            'anggota_asal'   => 'Asal Lokasi Dosen',
+            'asal_peneliti'  => 'Asal Dosen',
+            'peneliti_nidn'   => 'NIDN',
+            'peneliti_nama'   => 'Nama Dosen',
+            'peneliti_asal'   => 'Asal Lokasi Dosen',
         ];
     }
 

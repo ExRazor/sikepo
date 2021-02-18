@@ -14,16 +14,16 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Asal Dosen:</label>
                         <div class="col-sm-8">
                             <div class="row radio">
-                                <input type="hidden" name="_id" value={{$data->id}}>
+                                <input type="hidden" name="penelitian_id" value={{encrypt($data->id)}}>
                                 <div class="col-lg-5 mg-t-5">
                                     <label class="rdiobox">
-                                        <input name="asal_dosen" type="radio" value="Jurusan" required>
+                                        <input name="asal_peneliti" type="radio" value="Jurusan" required>
                                         <span>Dosen Jurusan</span>
                                     </label>
                                 </div>
                                 <div class="col-lg-5 mg-t-5">
                                     <label class="rdiobox">
-                                        <input name="asal_dosen" type="radio" value="Luar" required>
+                                        <input name="asal_peneliti" type="radio" value="Luar" required>
                                         <span>Dosen Luar</span>
                                     </label>
                                 </div>
@@ -33,19 +33,19 @@
                     <div class="form-group row mg-t-20 tipe-non-lainnya" style="display:none;">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> NIDN:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="anggota_nidn">
+                            <input type="text" class="form-control" name="peneliti_nidn">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20 tipe-lainnya" style="display:none;">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Nama Dosen:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="anggota_nama" placeholder="Tuliskan nama dosen">
+                            <input type="text" class="form-control" name="peneliti_nama" placeholder="Tuliskan nama dosen">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20 tipe-lainnya" style="display:none;">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Asal Dosen:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="anggota_asal" placeholder="Tuliskan asal dosen">
+                            <input type="text" class="form-control" name="peneliti_asal" placeholder="Tuliskan asal dosen">
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
 </div><!-- modal -->
 @push('custom-js')
 <script>
-    $('#modal-member-teacher').on('change', 'input[name=asal_dosen]', function() {
+    $('#modal-member-teacher').on('change', 'input[name=asal_peneliti]', function() {
         var val = $(this).val();
 
         var cont = $('#modal-member-teacher');

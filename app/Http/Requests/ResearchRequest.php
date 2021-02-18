@@ -23,9 +23,14 @@ class ResearchRequest extends FormRequest
      */
     public function rules()
     {
+        $id = null;
+        if ($this->id) {
+            $id = decrypt($this->id);
+        }
+
         return [
             'id_ta'             => 'required',
-            'judul_penelitian'  => 'required',
+            'judul_penelitian'  => 'required|unique:researches,judul_penelitian,' . $id,
             'tema_penelitian'   => 'required',
             'tingkat_penelitian' => 'required',
             'sks_penelitian'    => 'required|numeric',
@@ -33,6 +38,7 @@ class ResearchRequest extends FormRequest
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
+            'bukti_fisik'       => 'nullable',
         ];
     }
 
@@ -48,6 +54,7 @@ class ResearchRequest extends FormRequest
             'sumber_biaya'      => 'Sumber Biaya',
             'sumber_biaya_nama' => 'Lembaga Sumber Biaya',
             'jumlah_biaya'      => 'Jumlah Biaya',
+            'bukti_fisik'       => 'Bukti Fisik',
         ];
     }
 }

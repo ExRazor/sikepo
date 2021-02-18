@@ -14,7 +14,7 @@
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Asal Mahasiswa:</label>
                         <div class="col-sm-8">
                             <div class="row radio">
-                                <input type="hidden" name="_id" value={{$data->id}}>
+                                <input type="hidden" name="penelitian_id" value={{encrypt($data->id)}}>
                                 <div class="col-lg-5 mg-t-5">
                                     <label class="rdiobox">
                                         <input name="asal_mahasiswa" type="radio" value="Jurusan" required>
@@ -33,19 +33,19 @@
                     <div class="form-group row mg-t-20 tipe-non-lainnya" style="display:none;">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> NIM:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="anggota_nim">
+                            <input type="text" class="form-control" name="mahasiswa_nim">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20 tipe-lainnya" style="display:none;">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Nama Mahasiswa:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="anggota_nama" placeholder="Tuliskan nama mahasiswa">
+                            <input type="text" class="form-control" name="mahasiswa_nama" placeholder="Tuliskan nama mahasiswa">
                         </div>
                     </div>
                     <div class="form-group row mg-t-20 tipe-lainnya" style="display:none;">
                         <label class="col-sm-3 form-control-label"><span class="tx-danger">*</span> Asal Mahasiswa:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="anggota_asal" placeholder="Tuliskan asal mahasiswa">
+                            <input type="text" class="form-control" name="mahasiswa_asal" placeholder="Tuliskan asal mahasiswa">
                         </div>
                     </div>
                 </div>
