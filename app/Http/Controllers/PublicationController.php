@@ -111,7 +111,7 @@ class PublicationController extends Controller
         $data         = Publication::where('id', $id)->first();
 
         if (auth()->user()->username != $data->penulisUtama->nidn) {
-            // abort(404);
+            abort(404);
         }
 
         return view('teacher-view.publication.form', compact(['jenis', 'data']));
