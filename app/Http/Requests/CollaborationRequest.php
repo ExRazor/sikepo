@@ -23,7 +23,7 @@ class CollaborationRequest extends FormRequest
      */
     public function rules()
     {
-        $bukti_file = ($this->id ? 'mimes:pdf' : 'required|mimes:pdf');
+        $bukti_file = ($this->id ? 'nullable' : 'required');
 
         return [
             'kd_prodi'          => 'required',
@@ -36,7 +36,7 @@ class CollaborationRequest extends FormRequest
             'waktu'             => 'required',
             'durasi'            => 'required',
             'bukti_nama'        => 'required',
-            'bukti_file'        => $bukti_file,
+            'bukti_file'        => $bukti_file . '|mimes:pdf,zip,rar|size:4096',
         ];
     }
 

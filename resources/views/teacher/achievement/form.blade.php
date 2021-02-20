@@ -76,11 +76,11 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="bukti_file" id="bukti_file" {{ isset($data) ? '' : 'required'}}>
-                                        <label class="custom-file-label custom-file-label-primary" for="bukti_file">Pilih berkas</label>
+                                        <input type="file" class="custom-file-input" name="bukti_file" id="bukti_file" accept=".pdf,.zip,.rar" {{ isset($data) ? '' : 'required'}}>
+                                        <label class="custom-file-label custom-file-label-primary" for="bukti_file">{{ isset($data->bukti_file) ? $data->bukti_file : 'Pilih berkas'}}</label>
                                     </div>
                                     <small class="w-100">
-                                        Berkas harap dikemas dalam 1 PDF.
+                                        Berkas harap dikemas dalam 1 PDF. Maks ukuran 4 MB.
                                     </small>
                                 </div>
                             </div>

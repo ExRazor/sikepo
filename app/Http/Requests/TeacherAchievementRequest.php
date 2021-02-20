@@ -32,7 +32,7 @@ class TeacherAchievementRequest extends FormRequest
             'prestasi'          => 'required',
             'tingkat_prestasi'  => 'required',
             'bukti_nama'        => 'required',
-            'bukti_file'        => 'required|mimes:jpeg,jpg,png,pdf,zip',
+            'bukti_file'        => 'required|mimes:jpeg,jpg,png,pdf,zip|size:4096',
         ];
     }
 

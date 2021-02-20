@@ -38,7 +38,7 @@ class CommunityServiceRequest extends FormRequest
             'sumber_biaya'      => 'required',
             'sumber_biaya_nama' => 'nullable',
             'jumlah_biaya'      => 'required',
-            'bukti_fisik'       => 'nullable',
+            'bukti_fisik'       => 'mimes:pdf,zip,rar|size:4096',
         ];
     }
 

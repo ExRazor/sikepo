@@ -161,6 +161,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 form-control-label">Bukti Fisik: <span class="tx-danger">*</span></label>
+                                <div class="col-md-8">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="bukti_fisik" accept=".pdf,.zip,.rar" {{ isset($data) ? '' : 'required'}}>
+                                        <label class="custom-file-label custom-file-label-primary" for="bukti_fisik">{{ isset($data->bukti_fisik) ? $data->bukti_fisik : 'Pilih berkas'}}</label>
+                                    </div>
+                                    <small class="w-100">
+                                        Maks ukuran: 4 MB
+                                        {{-- Jika bukti fisik lebih dari satu, mohon dirangkum dalam bentuk 1 file PDF/ZIP sebelum diunggah. --}}
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr>
