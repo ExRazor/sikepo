@@ -246,8 +246,13 @@
     select2_dosen(cont,prodi);
 </script> --}}
 <script>
+    asal_penyelenggara_change();
     $('#asal_penyelenggara').on('change', function() {
-        var val = $(this).val();
+        asal_penyelenggara_change();
+    });
+
+    asal_penyelenggara_change() {
+        var val = $('#asal_penyelenggara').val();
 
         var cont    = $('#communityService_form');
         var dosen   = cont.find('.tipe-dosen');
@@ -275,7 +280,7 @@
                 lainnya.find('input').prop('disabled',true).prop('required',false);
             break;
         }
-    });
+    }
 </script>
 @endpush
 

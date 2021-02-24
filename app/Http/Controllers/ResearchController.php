@@ -539,81 +539,95 @@ class ResearchController extends Controller
 
     public function validate_teacher($id_parent, $request)
     {
-        if ($request->asal_peneliti == 'Sendiri') {
-            $nidn = auth()->user()->username;
-            $nama = null;
-            $asal = null;
-        } else if ($request->asal_peneliti == 'Jurusan') {
-            if (!Teacher::find($request->peneliti_nidn))
-                throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.', 404);
-
-            if (ResearchTeacher::where('id_penelitian', $id_parent)->where('nidn', $request->peneliti_nidn)->first())
-                throw new \Exception('NIDN sudah ada. Periksa kembali.', 404);
-
-            $nidn = $request->peneliti_nidn;
-            $nama = null;
-            $asal = null;
-        } else {
-            $nidn   = null;
-            $nama   = $request->peneliti_nama;
-            $asal   = $request->peneliti_asal;
-        }
-
-        if (auth()->user()->hasRole('dosen')) {
+        DB::beginTransaction();
+        try {
             if ($request->asal_peneliti == 'Sendiri') {
-                ResearchTeacher::where('id_penelitian', $id_parent)->where('nidn', auth()->user()->username)->delete();
+                $nidn = auth()->user()->username;
+                $nama = null;
+                $asal = null;
+            } else if ($request->asal_peneliti == 'Jurusan') {
+                if (!Teacher::find($request->peneliti_nidn))
+                    throw new \Exception('NIDN Dosen tidak ditemukan. Periksa kembali.', 404);
+
+                if (ResearchTeacher::where('id_penelitian', $id_parent)->where('nidn', $request->peneliti_nidn)->first())
+                    throw new \Exception('NIDN sudah ada. Periksa kembali.', 404);
+
+                $nidn = $request->peneliti_nidn;
+                $nama = null;
+                $asal = null;
+            } else {
+                $nidn   = null;
+                $nama   = $request->peneliti_nama;
+                $asal   = $request->peneliti_asal;
             }
 
-            if ($request->asal_peneliti != 'Sendiri' && $request->is_ketua && $request->peneliti_nidn != auth()->user()->username) {
-                ResearchTeacher::updateOrCreate(
-                    [
-                        'id_penelitian' => $id_parent,
-                        'nidn'          => auth()->user()->username,
-                    ],
-                    [
-                        'status'        => 'Anggota',
-                        'sks'           => 0,
-                        'nama'          => null,
-                        'asal'          => null,
-                    ]
-                );
+            if (auth()->user()->hasRole('dosen')) {
+                if ($request->asal_peneliti == 'Sendiri') {
+                    ResearchTeacher::where('id_penelitian', $id_parent)->where('nidn', auth()->user()->username)->delete();
+                }
 
-                //Update SKS Penelitian Ketua & Anggota
-                $this->update_sks($id_parent);
+                if ($request->asal_peneliti != 'Sendiri' && $request->is_ketua && $request->peneliti_nidn != auth()->user()->username) {
+                    ResearchTeacher::updateOrCreate(
+                        [
+                            'id_penelitian' => $id_parent,
+                            'nidn'          => auth()->user()->username,
+                        ],
+                        [
+                            'status'        => 'Anggota',
+                            'sks'           => 0,
+                            'nama'          => null,
+                            'asal'          => null,
+                        ]
+                    );
+
+                    //Update SKS Penelitian Ketua & Anggota
+                    $this->update_sks($id_parent);
+                }
             }
+
+            DB::commit();
+            return [
+                'nidn' => $nidn,
+                'nama' => $nama,
+                'asal' => $asal,
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
         }
-
-        return [
-            'nidn' => $nidn,
-            'nama' => $nama,
-            'asal' => $asal,
-        ];
     }
 
     public function validate_student($id_parent, $request)
     {
-        if ($request->asal_mahasiswa == 'Luar') {
-            $nim  = null;
-            $nama = $request->mahasiswa_nama;
-            $asal = $request->mahasiswa_asal;
-        } else {
-            if (!Student::find($request->mahasiswa_nim))
-                throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
+        DB::beginTransaction();
+        try {
+            if ($request->asal_mahasiswa == 'Luar') {
+                $nim  = null;
+                $nama = $request->mahasiswa_nama;
+                $asal = $request->mahasiswa_asal;
+            } else {
+                if (!Student::find($request->mahasiswa_nim))
+                    throw new \Exception('NIM Mahasiswa tidak ditemukan. Periksa kembali.');
 
-            if (ResearchStudent::where('id_penelitian', $id_parent)->where('nim', $request->mahasiswa_nim)->first()) {
-                throw new \Exception('NIM sudah ada. Periksa kembali.');
+                if (ResearchStudent::where('id_penelitian', $id_parent)->where('nim', $request->mahasiswa_nim)->first()) {
+                    throw new \Exception('NIM sudah ada. Periksa kembali.');
+                }
+
+                $nim = $request->mahasiswa_nim;
+                $nama = null;
+                $asal = null;
             }
 
-            $nim = $request->mahasiswa_nim;
-            $nama = null;
-            $asal = null;
+            DB::commit();
+            return [
+                'nim' => $nim,
+                'nama' => $nama,
+                'asal' => $asal,
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
         }
-
-        return [
-            'nim' => $nim,
-            'nama' => $nama,
-            'asal' => $asal,
-        ];
     }
 
     public function update_sks($id_penelitian)

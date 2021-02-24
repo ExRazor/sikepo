@@ -244,8 +244,15 @@
 
 @section('js')
 <script>
+    asal_peneliti_change();
     $('#asal_peneliti').on('change', function() {
-        var val = $(this).val();
+
+        asal_peneliti_change();
+
+    });
+
+    function asal_peneliti_change() {
+        var val = $('#asal_peneliti').val();
 
         var cont    = $('#research_form');
         var dosen   = cont.find('.tipe-dosen');
@@ -273,6 +280,6 @@
                 lainnya.find('input').prop('disabled',true).prop('required',false);
             break;
         }
-    });
+    }
 </script>
 @endsection

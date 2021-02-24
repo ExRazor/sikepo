@@ -210,7 +210,7 @@ Breadcrumbs::for('research-create', function ($trail) {
 
 Breadcrumbs::for('research-show', function ($trail, $data) {
     $trail->parent('research');
-    $trail->push($data->judul_penelitian, route('research.show', encode_id($data->id)));
+    $trail->push($data->judul_penelitian, route('research.show', encrypt($data->id)));
 });
 
 Breadcrumbs::for('research-edit', function ($trail, $data) {
@@ -252,7 +252,7 @@ Breadcrumbs::for('publication-create', function ($trail) {
 
 Breadcrumbs::for('publication-show', function ($trail, $data) {
     $trail->parent('publication');
-    $trail->push($data->judul, route('publication.show', encode_id($data->id)));
+    $trail->push($data->judul, route('publication.show', encrypt($data->id)));
 });
 
 Breadcrumbs::for('publication-edit', function ($trail, $data) {
@@ -661,7 +661,7 @@ Breadcrumbs::for('profile-publication-add', function ($trail) {
 
 Breadcrumbs::for('profile-publication-show', function ($trail, $data) {
     $trail->parent('profile-publication');
-    $trail->push('Data Publikasi: ' . $data->judul, route('profile.publication.show', encode_id($data->id)));
+    $trail->push('Data Publikasi: ' . $data->judul, route('profile.publication.show', encrypt($data->id)));
 });
 
 Breadcrumbs::for('profile-publication-edit', function ($trail, $data) {
