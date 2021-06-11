@@ -39,7 +39,7 @@ class MahasiswaController extends Controller
 
             $jumlah = array(
                 'mhs_baru'  => Student::where('angkatan', $thn_aktif)->where('kd_prodi', $prodi)->count(),
-                'mhs_calon' => StudentQuota::where('id_ta', $id_thn_aktif)->where('kd_prodi', $prodi)->first()->calon_pendaftar
+                'mhs_calon' => StudentQuota::where('id_ta', $id_thn_aktif)->where('kd_prodi', $prodi)->first()->calon_pendaftar ?? 0
             );
         } else {
             $jumlah = array(

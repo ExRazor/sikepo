@@ -69,21 +69,19 @@
     <div class="widget-2">
         <div class="card">
             <div class="card-body">
-                <div class="card-block pd-20">
-                    <table id="table_curriculum_schedule" class="table display responsive nowrap" data-order='[[ 1, "desc" ]]' data-page-length="25" url-target="{{route('ajax.schedule.datatable')}}">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Matkul</th>
-                                <th class="text-center">Akademik</th>
-                                <th class="text-center">Jumlah SKS</th>
-                                <th class="text-center">Nama Dosen</th>
-                                <th class="text-center">Sesuai Prodi</th>
-                                <th class="text-center">Sesuai Bidang</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+                <table id="table_curriculum_schedule" class="table display responsive nowrap" data-order='[[ 1, "desc" ]]' data-page-length="25" url-target="{{route('ajax.schedule.datatable')}}">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Matkul</th>
+                            <th class="text-center">Akademik</th>
+                            <th class="text-center">Jumlah SKS</th>
+                            <th class="text-center">Nama Dosen</th>
+                            <th class="text-center">Sesuai Prodi</th>
+                            <th class="text-center">Sesuai Bidang</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>

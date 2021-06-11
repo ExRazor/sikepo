@@ -99,6 +99,7 @@ class KerjaSamaController extends Controller
             'pengabdian'    => $faktor_jenis['c'] * $jumlah['pengabdian']
         );
 
+        $jumlah['dtps'] = ($jumlah['dtps'] != 0 ? $jumlah['dtps'] : 1);
         $rata_a = ($rata['pendidikan'] + $rata['penelitian'] + $rata['pengabdian']) / $jumlah['dtps'];
 
         if ($rata_a >= 4) {
