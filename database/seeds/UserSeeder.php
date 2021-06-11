@@ -28,8 +28,8 @@ class UserSeeder extends Seeder
             ],
             [
                 // 'id'         => Str::uuid()->toString(),
-                'username'   => 'admin',
-                'password'   => Hash::make('admin123'),
+                'username'   => 'informatika2021',
+                'password'   => Hash::make('informatika2021'),
                 'role'       => 'admin',
                 'kd_prodi'   => null,
                 'name'       => 'Administrator',
